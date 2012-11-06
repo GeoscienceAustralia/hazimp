@@ -22,7 +22,7 @@ to process a series of jobs in a sequential
 order. The order is determined by the queue of jobs.
 """
 
-#import abc
+import abc
 
 class PipeLine(object):
     """
@@ -83,7 +83,7 @@ class PipeLineBuilder(object):
     def __init__(self):
         self.map_job_callable = {}
 
-    #@abc.abstractmethod
+    @abc.abstractmethod
     def build(self, config):
         """
         Build method creates the pipeline by
