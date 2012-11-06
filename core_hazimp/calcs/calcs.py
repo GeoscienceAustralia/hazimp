@@ -1,9 +1,11 @@
-"""
-Need to work out the licence
-"""
+# -*- coding: utf-8 -*-
 
 # pylint: disable=W0221
 # Since the arguemts for __call__ will change from class to calss
+
+"""
+Need to work out the licence
+"""
 
 import sys  
 import inspect

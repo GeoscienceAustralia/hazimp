@@ -1,11 +1,18 @@
+# -*- coding: utf-8 -*-
+
+# pylint: disable=C0103
+# Since function names are based on what they are testing,
+# and if they are testing classes the function names will have Capitals
+# C0103: 16:TestCalcs.test_AddTest: Invalid name "test_AddTest" 
+# (should match [a-z_][a-z0-9_]{2,50}$)
 
 """
-Test the calcs module
+Test the calcs module.
 """
 
 import unittest
 
-from calcs import CALCS
+from core_hazimp.calcs.calcs import CALCS
 
 
 class TestCalcs(unittest.TestCase): 

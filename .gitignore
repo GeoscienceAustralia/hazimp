@@ -1,0 +1,5 @@
+*.pyc
+nosetest*
+.coverage
+debug.log
+*.~*~
