@@ -1,9 +1,0 @@
-[Core]
-Name = Plugin 1
-Module = plugin1
-
-[Documentation]
-Author = John
-Version = 0.1
-Website = http://lotsofplugins.com
-Description = My first plugin
