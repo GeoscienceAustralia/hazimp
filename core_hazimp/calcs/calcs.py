@@ -22,7 +22,7 @@ class Calculator(object):
         """
         self.allargspec_call = None
         self.args_in = None
-        #self.call_funct = None
+        self.call_funct = None
         
         self.getargspec_call()
         
@@ -48,6 +48,7 @@ class AddTest(Calculator):
     def __init__(self):
         super(AddTest, self).__init__()
         self.args_out = ('c_test')
+        self.call_funct = 'add_test'
     
     def __call__(self, a_test, b_test):
         """
@@ -64,6 +65,7 @@ class MultiplyTest(Calculator):
     def __init__(self):
         super(MultiplyTest, self).__init__()
         self.args_out = ('d_test')
+        self.call_funct = 'multiply_test'
     
     def __call__(self, a_test, c_test):
         """
@@ -80,6 +82,7 @@ class MultipleValuesTest(Calculator):
     def __init__(self):
         super(MultipleValuesTest, self).__init__()
         self.args_out = ('e_test', 'f_test')
+        self.call_funct = 'multiple_values_test'
     
     def __call__(self, a_test, b_test):
         """
@@ -102,7 +105,7 @@ def instanciate_classes():
         if inspect.isclass(obj):
             instance = obj()
             if callable(instance):
-                callable_instances[name] = instance
+                callable_instances[instance.call_funct] = instance
     return callable_instances
 
             

@@ -2,7 +2,7 @@
 
 # pylint: disable=C0103
 # Since function names are based on what they are testing,
-# and if they are testing classes the function names will have Capitals
+# and if they are testing classes the function names will have capitals
 # C0103: 16:TestCalcs.test_AddTest: Invalid name "test_AddTest" 
 # (should match [a-z_][a-z0-9_]{2,50}$)
 
@@ -21,7 +21,7 @@ class TestCalcs(unittest.TestCase):
     """
 
     def test_AddTest(self):
-        inst = CALCS["AddTest"]
+        inst = CALCS['add_test']
         self.assertEqual(inst(5, 20), 25)
         self.assertEqual(inst.args_in, ['a_test', 'b_test'])
         self.assertEqual(inst.args_out, ('c_test'))
@@ -29,7 +29,7 @@ class TestCalcs(unittest.TestCase):
         
     def test_MultipleValuesTest(self):
         # Not such a good test though
-        inst = CALCS["MultipleValuesTest"]
+        inst = CALCS['multiple_values_test']
         self.assertEqual(inst(5, 20), (5, 20))
         self.assertEqual(inst.args_in, ['a_test', 'b_test'])
         self.assertEqual(inst.args_out, ('e_test', 'f_test'))
