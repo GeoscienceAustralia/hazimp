@@ -21,7 +21,10 @@ class ExposureAttsBuilder(PipeLineBuilder):
          
 
 class ExposureAttsPipeLine(PipeLine):
-    
+    """
+    Execute the pipeline functions in order, getting input
+    from and putting output in context.exposure_att.
+    """
     def run(self, context):
         
         """
@@ -33,13 +36,16 @@ class ExposureAttsPipeLine(PipeLine):
             args_in = []
             for job_arg in job.args_in:
                 if not context.exposure_att.has_key(job_arg):
+                    #FIXME add warning
                     print "NO CORRECT VARIABLES" 
-                    import sys; sys.exit() 
+                    import sys 
+                    sys.exit() 
                 else:
                     args_in.append(context.exposure_att[job_arg])
             args_out = job(*args_in)
-            #for i, arg_out in enumerate(job.args_out):
-             #   context.exposure_att[arg_out] = args_out[i]
+            assert len(args_out) == len(job.args_out)
+            for i, arg_out in enumerate(job.args_out):
+                context.exposure_att[arg_out] = args_out[i]
 
 
 class Context(object):

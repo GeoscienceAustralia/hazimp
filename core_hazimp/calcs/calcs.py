@@ -47,14 +47,14 @@ class AddTest(Calculator):
     """
     def __init__(self):
         super(AddTest, self).__init__()
-        self.args_out = ('c_test')
+        self.args_out = ['c_test']
         self.call_funct = 'add_test'
     
     def __call__(self, a_test, b_test):
         """
         Add args
         """
-        return a_test + b_test
+        return [a_test + b_test]
     
 
 class MultiplyTest(Calculator):
@@ -64,14 +64,14 @@ class MultiplyTest(Calculator):
     
     def __init__(self):
         super(MultiplyTest, self).__init__()
-        self.args_out = ('d_test')
+        self.args_out = ['d_test']
         self.call_funct = 'multiply_test'
     
     def __call__(self, a_test, c_test):
         """
         Multiply args
         """
-        return a_test * c_test
+        return [a_test * c_test]
  
 
 class MultipleValuesTest(Calculator):
@@ -81,14 +81,14 @@ class MultipleValuesTest(Calculator):
     
     def __init__(self):
         super(MultipleValuesTest, self).__init__()
-        self.args_out = ('e_test', 'f_test')
+        self.args_out = ['e_test', 'f_test']
         self.call_funct = 'multiple_values_test'
     
     def __call__(self, a_test, b_test):
         """
         Return two values
         """
-        return (a_test, b_test)
+        return [a_test, b_test]
                        
             
 #def inundation_pre_look_up_m(max_water_depth_m, floor_height_above_ground_m):
@@ -101,7 +101,7 @@ def instanciate_classes():
     Create a dictionary of calculation names (key) and the calc instance (value)
     """
     callable_instances = {}
-    for name, obj in inspect.getmembers(sys.modules[__name__]):
+    for _, obj in inspect.getmembers(sys.modules[__name__]):
         if inspect.isclass(obj):
             instance = obj()
             if callable(instance):
