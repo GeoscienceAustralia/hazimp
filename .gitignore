@@ -3,3 +3,4 @@ nosetest*
 .coverage
 debug.log
 *.~*~
+#*#
