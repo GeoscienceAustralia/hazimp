@@ -23,5 +23,5 @@ def csv2dict(filename):
                 val = float(val)
             except ValueError:
                 pass
-            file_dict[key].append(val)
+            file_dict[key.strip()].append(val)
     return file_dict
