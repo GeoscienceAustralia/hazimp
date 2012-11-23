@@ -13,9 +13,18 @@ class ExposureAttsBuilder(PipeLineBuilder):
     """
     Builds a calc pipeline for jobs that rely on an intermedary function
     to deal with the context instance, which holds are the data.
+    
     """
     
     def build(self, calcs):
+        """Builds the pipeline.
+        
+        Args:
+           calcs: A list of Calculator instances
+        
+        Returns:
+            A pipeline with the calcs in it, ready to process.
+        """
         pipeline = ExposureAttsPipeLine(calcs)
         return pipeline
          
@@ -30,6 +39,9 @@ class ExposureAttsPipeLine(PipeLine):
         """
         Run all the jobs in queue.
         Handling the context here
+        
+        Args:
+            context: A Context instance with values to calculate on.
         """
         print "context !!", context
         for job in self.jobs:
