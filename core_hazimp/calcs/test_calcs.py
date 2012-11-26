@@ -19,6 +19,11 @@ import unittest
 from core_hazimp.calcs.calcs import CALCS
 
 
+class Dummy:
+    def __init__(self):
+        pass
+        
+        
 class TestCalcs(unittest.TestCase): 
     """
     Test the calcs module
@@ -26,7 +31,10 @@ class TestCalcs(unittest.TestCase):
 
     def test_AddTest(self):
         inst = CALCS['add_test']
-        self.assertEqual(inst(5, 20), [25])
+        context = Dummy
+        context.exposure_att = {'a_test':5, 'b_test':20}
+        inst(context)
+        self.assertEqual(context.exposure_att['c_test'], 25)
         self.assertEqual(inst.args_in, ['a_test', 'b_test'])
         self.assertEqual(inst.args_out, ['c_test'])
 
@@ -34,7 +42,12 @@ class TestCalcs(unittest.TestCase):
     def test_MultipleValuesTest(self):
         # Not such a good test though
         inst = CALCS['multiple_values_test']
-        self.assertEqual(inst(5, 20), [5, 20])
+        context = Dummy
+        context.exposure_att = {'a_test':5, 'b_test':20}
+        inst(context)
+        self.assertEqual(context.exposure_att['e_test'], 5)
+        self.assertEqual(context.exposure_att['f_test'], 20)
+        
         self.assertEqual(inst.args_in, ['a_test', 'b_test'])
         self.assertEqual(inst.args_out, ['e_test', 'f_test'])
         

@@ -12,7 +12,8 @@ from core_hazimp.pipeline import PipeLineBuilder, PipeLine
 class ExposureAttsBuilder(PipeLineBuilder):
     """
     Builds a calc pipeline for jobs that rely on an intermedary function
-    to deal with the context instance, which holds are the data.
+    to deal with the context instance, which holds are the data. So the
+    jobs don't know about the context object.
     
     """
     
@@ -43,7 +44,6 @@ class ExposureAttsPipeLine(PipeLine):
         Args:
             context: A Context instance with values to calculate on.
         """
-        print "context !!", context
         for job in self.jobs:
             args_in = []
             for job_arg in job.args_in:
@@ -77,3 +77,49 @@ class Context(object):
         self.exposure_att = {}
 
 
+
+class ContextBuilder(PipeLineBuilder):
+    """
+    Builds a pipeline for jobs that directly manipulate the context instance.
+    """
+    
+    def build(self, jobs):
+        """Builds the pipeline.
+        
+        Args:
+           jobs: A list of job functions?
+        
+        Returns:
+            A pipeline with the jobs in it, ready to process.
+        """
+        pipeline = ContextPipeLine(jobs)
+        return pipeline
+         
+
+class ContextPipeLine(PipeLine):
+    """
+    Execute the pipeline jobs in order, passing the context
+    to each job.
+    """
+    def run(self, context):
+        
+        """
+        Run all the jobs in queue.
+        
+        Args:
+            context: A Context instance.
+        """
+        for job in self.jobs:
+            args_in = []
+            for job_arg in job.args_in:
+                if not context.exposure_att.has_key(job_arg):
+                    #FIXME add warning
+                    print "NO CORRECT VARIABLES" 
+                    import sys 
+                    sys.exit() 
+                else:
+                    args_in.append(context.exposure_att[job_arg])
+            args_out = job(*args_in)
+            assert len(args_out) == len(job.args_out)
+            for i, arg_out in enumerate(job.args_out):
+                context.exposure_att[arg_out] = args_out[i]

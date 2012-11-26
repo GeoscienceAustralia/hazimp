@@ -32,13 +32,30 @@ class Calculator(object):
         the __call__ function.
         """
         # Returns a named tuple.
-        getargspec_call = inspect.getargspec(self.__call__)
+        getargspec_call = inspect.getargspec(self.calc)
         getargspec_call.args.remove('self')
         self.allargspec_call = getargspec_call
         self.args_in = self.allargspec_call.args
+        self.args_out = None
         
-    def __call__(self, *args):
-        pass
+    def calc(self):
+        print "memory lane"
+        return 333
+        
+    def __call__(self, context):
+        args_in = []
+        for job_arg in self.args_in:
+            if not context.exposure_att.has_key(job_arg):
+                    #FIXME add warning
+                print "NO CORRECT VARIABLES" 
+                import sys 
+                sys.exit() 
+            else:
+                args_in.append(context.exposure_att[job_arg])
+        args_out = self.calc(*args_in)
+        assert len(args_out) == len(self.args_out)
+        for i, arg_out in enumerate(self.args_out):
+            context.exposure_att[arg_out] = args_out[i]
 
 
 class AddTest(Calculator):
@@ -50,7 +67,7 @@ class AddTest(Calculator):
         self.args_out = ['c_test']
         self.call_funct = 'add_test'
     
-    def __call__(self, a_test, b_test):
+    def calc(self, a_test, b_test):
         """
         Add args
         """
@@ -67,7 +84,7 @@ class MultiplyTest(Calculator):
         self.args_out = ['d_test']
         self.call_funct = 'multiply_test'
     
-    def __call__(self, a_test, c_test):
+    def calc(self, a_test, c_test):
         """
         Multiply args
         """
@@ -84,7 +101,7 @@ class MultipleValuesTest(Calculator):
         self.args_out = ['e_test', 'f_test']
         self.call_funct = 'multiple_values_test'
     
-    def __call__(self, a_test, b_test):
+    def calc(self, a_test, b_test):
         """
         Return two values
         """
