@@ -68,6 +68,12 @@ class PipeLine(object):
         """
 
         for job in self.jobs:
+            print "job.call_funct", job.call_funct
+            try:
+                pass
+                #print "job._name_", job._name_
+            except AttributeError:
+                print "job.call_funct", job.call_funct
             job(context)
 
 

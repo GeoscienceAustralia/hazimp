@@ -25,6 +25,7 @@ class Calculator(object):
         self.call_funct = None
         
         self.getargspec_call()
+  
         
     def getargspec_call(self):
         """
@@ -37,10 +38,11 @@ class Calculator(object):
         self.allargspec_call = getargspec_call
         self.args_in = self.allargspec_call.args
         self.args_out = None
-        
+
+                
     def calc(self):
-        print "memory lane"
-        return 333
+        pass
+  
         
     def __call__(self, context):
         args_in = []
