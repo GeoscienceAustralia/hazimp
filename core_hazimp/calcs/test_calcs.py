@@ -20,6 +20,9 @@ from core_hazimp.calcs.calcs import CALCS
 
 
 class Dummy:
+    """
+    Dummy class for testing
+    """
     def __init__(self):
         pass
         
@@ -35,7 +38,7 @@ class TestCalcs(unittest.TestCase):
         context.exposure_att = {'a_test':5, 'b_test':20}
         inst(context)
         self.assertEqual(context.exposure_att['c_test'], 25)
-        self.assertEqual(inst.args_in, ['a_test', 'b_test'])
+        self.assertEqual(inst.context_args_in, ['a_test', 'b_test'])
         self.assertEqual(inst.args_out, ['c_test'])
 
         
@@ -48,9 +51,15 @@ class TestCalcs(unittest.TestCase):
         self.assertEqual(context.exposure_att['e_test'], 5)
         self.assertEqual(context.exposure_att['f_test'], 20)
         
-        self.assertEqual(inst.args_in, ['a_test', 'b_test'])
+        self.assertEqual(inst.context_args_in, ['a_test', 'b_test'])
         self.assertEqual(inst.args_out, ['e_test', 'f_test'])
         
+    def test_ConstantTestTest(self):
+        inst = CALCS['constant_test']
+        context = Dummy
+        context.exposure_att = {'a_test':5, 'b_test':20}
+        inst(context, **{'constant':5})
+        self.assertEqual(context.exposure_att['g_test'], 5*2)
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestCalcs,'test')

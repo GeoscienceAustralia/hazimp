@@ -2,10 +2,11 @@
 
 
 """
-Functins that haven't found a proper module.
+Functions that haven't found a proper module.
 """
 import csv
 from collections import defaultdict
+import inspect
 
 
 def csv2dict(filename):
@@ -25,3 +26,15 @@ def csv2dict(filename):
                 pass
             file_dict[key.strip()].append(val)
     return file_dict
+
+def instanciate_classes(module):
+    """
+    Create a dictionary of calculation names (key) and the calc instance (value)
+    """
+    callable_instances = {}
+    for _, obj in inspect.getmembers(module):
+        if inspect.isclass(obj):
+            instance = obj()
+            if callable(instance):
+                callable_instances[instance.call_funct] = instance
+    return callable_instances

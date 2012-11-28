@@ -31,7 +31,7 @@ class TestWorkFlow(unittest.TestCase):
         context = Context()
         context.exposure_att = {'a_test':a_test, 'b_test':b_test}
         pipeline = Cab.build(calc_list)
-        config = {}
+        config = {'constant_test':{'constant':5}}
         pipeline.run(context, config)
         self.assertEqual(context.exposure_att['d_test'], 35)
     
