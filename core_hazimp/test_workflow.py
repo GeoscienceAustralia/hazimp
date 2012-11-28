@@ -26,11 +26,13 @@ class TestWorkFlow(unittest.TestCase):
         a_test = 5
         b_test = 2
         Cab = ExposureAttsBuilder()
-        calc_list = [CALCS['add_test'], CALCS['multiply_test']]
+        calc_list = [CALCS['add_test'], CALCS['multiply_test'], 
+                     CALCS['constant_test']]
         context = Context()
         context.exposure_att = {'a_test':a_test, 'b_test':b_test}
         pipeline = Cab.build(calc_list)
-        pipeline.run(context)
+        config = {}
+        pipeline.run(context, config)
         self.assertEqual(context.exposure_att['d_test'], 35)
     
 #-------------------------------------------------------------

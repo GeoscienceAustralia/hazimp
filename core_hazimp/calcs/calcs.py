@@ -36,25 +36,31 @@ class Calculator(object):
         getargspec_call = inspect.getargspec(self.calc)
         getargspec_call.args.remove('self')
         self.allargspec_call = getargspec_call
+        print "self.allargspec_call", self.allargspec_call
         self.args_in = self.allargspec_call.args
         self.args_out = None
 
                 
     def calc(self):
         pass
+        
+    def get_call_funct(self):
+        return self.call_funct
   
         
-    def __call__(self, context):
+    def __call__(self, context, **kwargs):
         args_in = []
+        print "self.args_in", self.args_in
         for job_arg in self.args_in:
+            # A calc with no input is ok.
             if not context.exposure_att.has_key(job_arg):
                     #FIXME add warning
+                print "job_arg", job_arg
                 print "NO CORRECT VARIABLES" 
                 import sys 
                 sys.exit() 
-            else:
-                args_in.append(context.exposure_att[job_arg])
-        args_out = self.calc(*args_in)
+            args_in.append(context.exposure_att[job_arg])
+        args_out = self.calc(*args_in, **kwargs)
         assert len(args_out) == len(self.args_out)
         for i, arg_out in enumerate(self.args_out):
             context.exposure_att[arg_out] = args_out[i]
@@ -109,7 +115,23 @@ class MultipleValuesTest(Calculator):
         """
         return [a_test, b_test]
                        
-            
+
+class ConstantTest(Calculator):
+    """
+    Simple test class, returning two values.
+    """
+    
+    def __init__(self):
+        super(ConstantTest, self).__init__()
+        self.args_out = ['g_test']
+        self.call_funct = 'constant_test'
+    
+    def calc(self, constant=None):
+        """
+        Return two values
+        """
+        return [constant*2]
+                                   
 #def inundation_pre_look_up_m(max_water_depth_m, floor_height_above_ground_m):
 #    inundation_above_floor_m = max_water_depth_m - floor_height_above_ground_m
 #    return {'inundation_above_floor_m':inundation_above_floor_m}
