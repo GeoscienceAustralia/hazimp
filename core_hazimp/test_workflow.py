@@ -13,9 +13,12 @@ Test the workflow module.
 """
 
 import unittest
+import tempfile
+import os
 
 from core_hazimp.workflow import ExposureAttsBuilder, Context
 from core_hazimp.calcs.calcs import CALCS
+from core_hazimp.jobs.jobs import JOBS
 
 class TestWorkFlow(unittest.TestCase): 
     """
@@ -26,13 +29,39 @@ class TestWorkFlow(unittest.TestCase):
         a_test = 5
         b_test = 2
         Cab = ExposureAttsBuilder()
-        calc_list = [CALCS['add_test'], CALCS['multiply_test']]
+        calc_list = [CALCS['add_test'], CALCS['multiply_test'], 
+                     CALCS['constant_test']]
         context = Context()
         context.exposure_att = {'a_test':a_test, 'b_test':b_test}
         pipeline = Cab.build(calc_list)
-        pipeline.run(context)
+        config = {'constant_test':{'constant':5}}
+        pipeline.run(context, config)
         self.assertEqual(context.exposure_att['d_test'], 35)
     
+    
+    def test_Job_ContextAwareBuilder(self):
+    
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(suffix='.txt', 
+                                        prefix='test_jobs',
+                                        delete=False)
+        f.write('exposure_lat, exposure_long, a_test, b_test\n')
+        f.write('1., 2., 3., 30.\n')
+        f.write('4., 5., 6., 60.\n')
+        f.close()
+        
+        Cab = ExposureAttsBuilder()
+        calc_list = [JOBS['load_csv_exposure'], CALCS['add_test']]
+        context = Context()
+        
+        pipeline = Cab.build(calc_list)
+        config = {'constant_test':{'c_test':[5., 2.]}, 
+                  'load_csv_exposure':{'exposure_file':f.name}}
+        pipeline.run(context, config)
+        
+        #self.assertEqual(context.exposure_att['d_test'], [33., 66.])
+        
+        os.remove(f.name)
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestWorkFlow,'test')

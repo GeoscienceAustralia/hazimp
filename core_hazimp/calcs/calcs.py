@@ -8,37 +8,43 @@ Need to work out the licence
 """
 
 import sys  
-import inspect
 
-class Calculator(object):
+from core_hazimp.jobs.jobs import Job
+from core_hazimp.misc import instanciate_classes
+
+class Calculator(Job):
     """
-    Abstract class that automatically determines the arguments of 
-    the __call__ function.
+    Abstract Calculator class. Should use abc then.
     """
     def __init__(self):
         """
         Initalise a Calculator object having the attributes
         allargspec_call and args_in.
         """
-        self.allargspec_call = None
-        self.args_in = None
-        self.call_funct = None
-        
-        self.getargspec_call()
-        
-    def getargspec_call(self):
+        super(Calculator, self).__init__()
+    
+                
+    def calc(self):
         """
-        Automatically determine the arguments of 
-        the __call__ function.
+        The actual calculation.
         """
-        # Returns a named tuple.
-        getargspec_call = inspect.getargspec(self.__call__)
-        getargspec_call.args.remove('self')
-        self.allargspec_call = getargspec_call
-        self.args_in = self.allargspec_call.args
-        
-    def __call__(self, *args):
         pass
+        
+        
+    def __call__(self, context, **kwargs):
+        args_in = []
+        for job_arg in self.context_args_in:
+            # A calc with no input is ok.
+            if not context.exposure_att.has_key(job_arg):
+                    #FIXME add Error
+                print "job_arg", job_arg
+                print "NO CORRECT VARIABLES" 
+                sys.exit() 
+            args_in.append(context.exposure_att[job_arg])
+        args_out = self.calc(*args_in, **kwargs)
+        assert len(args_out) == len(self.args_out)
+        for i, arg_out in enumerate(self.args_out):
+            context.exposure_att[arg_out] = args_out[i]
 
 
 class AddTest(Calculator):
@@ -48,9 +54,10 @@ class AddTest(Calculator):
     def __init__(self):
         super(AddTest, self).__init__()
         self.args_out = ['c_test']
+        self.context_args_in = ['a_test', 'b_test']
         self.call_funct = 'add_test'
     
-    def __call__(self, a_test, b_test):
+    def calc(self, a_test, b_test):
         """
         Add args
         """
@@ -64,10 +71,11 @@ class MultiplyTest(Calculator):
     
     def __init__(self):
         super(MultiplyTest, self).__init__()
+        self.context_args_in = ['a_test', 'c_test']
         self.args_out = ['d_test']
         self.call_funct = 'multiply_test'
     
-    def __call__(self, a_test, c_test):
+    def calc(self, a_test, c_test):
         """
         Multiply args
         """
@@ -81,33 +89,36 @@ class MultipleValuesTest(Calculator):
     
     def __init__(self):
         super(MultipleValuesTest, self).__init__()
+        self.context_args_in = ['a_test', 'b_test']
         self.args_out = ['e_test', 'f_test']
         self.call_funct = 'multiple_values_test'
     
-    def __call__(self, a_test, b_test):
+    def calc(self, a_test, b_test):
         """
         Return two values
         """
         return [a_test, b_test]
                        
-            
-#def inundation_pre_look_up_m(max_water_depth_m, floor_height_above_ground_m):
-#    inundation_above_floor_m = max_water_depth_m - floor_height_above_ground_m
-#    return {'inundation_above_floor_m':inundation_above_floor_m}
-    
-    
-def instanciate_classes():
+
+class ConstantTest(Calculator):
     """
-    Create a dictionary of calculation names (key) and the calc instance (value)
+    Simple test class, returning two values.
     """
-    callable_instances = {}
-    for _, obj in inspect.getmembers(sys.modules[__name__]):
-        if inspect.isclass(obj):
-            instance = obj()
-            if callable(instance):
-                callable_instances[instance.call_funct] = instance
-    return callable_instances
+    
+    def __init__(self):
+        super(ConstantTest, self).__init__()
+        self.context_args_in = []
+        self.args_out = ['g_test']
+        self.call_funct = 'constant_test'
+    
+    def calc(self, constant=None):
+        """
+        Return two values
+        """
+        return [constant*2]
+                    
+    
 
             
-CALCS = instanciate_classes()
+CALCS = instanciate_classes(sys.modules[__name__])
 

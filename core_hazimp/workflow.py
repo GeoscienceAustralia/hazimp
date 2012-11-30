@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+# pylint: disable=W0221
+# I'm ok with .run having more arg's
+
 """
 The purpose of this module is to provide objects
 to process a series of jobs in a sequential
@@ -8,11 +11,57 @@ order. The order is determined by the queue of jobs.
 
 from core_hazimp.pipeline import PipeLineBuilder, PipeLine
 
+# The standard string names in the context instance
+EX_LAT = 'exposure_lat'
+EX_LONG = 'exposure_long'
+ 
+def get_job_atts(job, config):
+    """        
+    Check if any attributes from the config file should be passed
+    into the job function. If a key in the config has the same
+    name as the job function pass the value, which must be a
+    dictionary is returned.
+    
+    Args:
+        config: A dictionary of the config info.    
+    
+    Returns:
+        A dictionary to be passed in the job function as a parameter
+    """
+    key = job.get_call_funct()
+    
+    if key in config:
+        job_kwargs = config[key]
+        # FIXME check that the value is a dictionary
+    else:
+        job_kwargs = {}
+        
+    return job_kwargs
+            
+class ConfigAwarePipeLine(PipeLine):
+    """Pipe line that knows passing info in the config dict to the jobs.
+    """
+
+    def run(self, context, config):
+        """        
+        Run all the jobs in queue, where each job take input data and
+        write the results of calculation in context.
+        
+        Args:
+            context: A Context object holding the i/o data for the pipelines
+            config: A dictionary of the config info.    
+        """
+
+        for job in self.jobs:
+            job_kwargs = get_job_atts(job, config)
+            job(context, **job_kwargs)
+            
 
 class ExposureAttsBuilder(PipeLineBuilder):
     """
     Builds a calc pipeline for jobs that rely on an intermedary function
-    to deal with the context instance, which holds are the data.
+    to deal with the context instance, which holds are the data. So the
+    jobs don't know about the context object.
     
     """
     
@@ -25,40 +74,9 @@ class ExposureAttsBuilder(PipeLineBuilder):
         Returns:
             A pipeline with the calcs in it, ready to process.
         """
-        pipeline = ExposureAttsPipeLine(calcs)
+        pipeline = ConfigAwarePipeLine(calcs)
         return pipeline
          
-
-class ExposureAttsPipeLine(PipeLine):
-    """
-    Execute the pipeline functions in order, getting input
-    from and putting output in context.exposure_att.
-    """
-    def run(self, context):
-        
-        """
-        Run all the jobs in queue.
-        Handling the context here
-        
-        Args:
-            context: A Context instance with values to calculate on.
-        """
-        print "context !!", context
-        for job in self.jobs:
-            args_in = []
-            for job_arg in job.args_in:
-                if not context.exposure_att.has_key(job_arg):
-                    #FIXME add warning
-                    print "NO CORRECT VARIABLES" 
-                    import sys 
-                    sys.exit() 
-                else:
-                    args_in.append(context.exposure_att[job_arg])
-            args_out = job(*args_in)
-            assert len(args_out) == len(job.args_out)
-            for i, arg_out in enumerate(job.args_out):
-                context.exposure_att[arg_out] = args_out[i]
-
 
 class Context(object):
     """
@@ -75,5 +93,4 @@ class Context(object):
         
         # The exposure data at the lats and longs
         self.exposure_att = {}
-
 
