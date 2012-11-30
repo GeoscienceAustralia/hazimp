@@ -13,10 +13,11 @@ jobs function.  The function name is used to determine what to pass in.
 
 """
 
-import inspect
-import sys
+import sys 
+from scipy import asarray
 
 from core_hazimp.misc import csv2dict
+from core_hazimp.workflow import  EX_LAT, EX_LONG
 from core_hazimp.misc import instanciate_classes
 
 
@@ -54,38 +55,58 @@ class ConstTest(Job):
         """
         context.exposure_att['c_test'] = c_test 
 
-def load_csv_exposure(context, exposure_file=None, exposure_lat=None,
-                      exposure_long=None):
+class LoadCsvExposure(Job):
     """
     Read a csv exposure file into the context object.
-    
-    
-    Args:
-       context: The context instance, used to move data around.
     """
-    file_dict = csv2dict(exposure_file)
+    def __init__(self):
+        super(LoadCsvExposure, self).__init__()
+        self.call_funct = 'load_csv_exposure'
+
+
+    def __call__(self, context, exposure_file=None, exposure_lat=None,
+                      exposure_long=None):
+        """
+        Read a csv exposure file into the context object.     
+        
+        Args:
+            context: The context instance, used to move data around.
+            exposure_file: The csv file to load.
+            exposure_lat: the title string of the latitude column.
+            exposure_long: the title string of the longitude column.
+        """
     
-    # FIXME Need to do better error handling
+        file_dict = csv2dict(exposure_file)
     
-    if exposure_lat == None:
-        lat_key = EX_LAT
-    else:
-        lat_key = exposure_lat
+        # FIXME Need to do better error handling
     
-    try:
-        context.exposure_lat = file_dict[lat_key]
-    except KeyError:
-        pass
+        if exposure_lat == None:
+            lat_key = EX_LAT
+        else:
+            lat_key = exposure_lat
     
-    if exposure_lat == None:
-        long_key = EX_LONG
-    else:
-        long_key = exposure_long
+        try:
+            context.exposure_lat = asarray(file_dict[lat_key])
+            del file_dict[lat_key]
+        except KeyError:
+            pass
     
-    try:
-        context.exposure_long = file_dict[long_key]
-    except KeyError:
-        pass
+        if exposure_lat == None:
+            long_key = EX_LONG
+        else:
+            long_key = exposure_long
+    
+        try:
+            context.exposure_long = asarray(file_dict[long_key])
+            del file_dict[long_key]
+        except KeyError:
+            pass
+        
+        for key in file_dict:
+            context.exposure_att[key] = asarray(file_dict[key])
+        #try:
+         #   context.exposure_att[key] = asarray(file_dict[key])
+        #context.exposure_att.update(file_dict)
     
      
 JOBS = instanciate_classes(sys.modules[__name__])
