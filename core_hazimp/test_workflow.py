@@ -16,6 +16,8 @@ import unittest
 import tempfile
 import os
 
+from scipy import allclose, asarray
+
 from core_hazimp.workflow import ExposureAttsBuilder, Context
 from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.jobs.jobs import JOBS
@@ -59,7 +61,35 @@ class TestWorkFlow(unittest.TestCase):
                   'load_csv_exposure':{'exposure_file':f.name}}
         pipeline.run(context, config)
         
-        #self.assertEqual(context.exposure_att['d_test'], [33., 66.])
+        self.assertTrue(allclose(context.exposure_att['c_test'],
+                                 asarray([33., 66.])))
+        
+        os.remove(f.name)
+
+    def test_Job_title_fix_ContextAwareBuilder(self):
+    
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(suffix='.txt', 
+                                        prefix='test_jobs',
+                                        delete=False)
+        f.write('LAT, LONG, a_test, b_test\n')
+        f.write('1., 2., 3., 30.\n')
+        f.write('4., 5., 6., 60.\n')
+        f.close()
+        
+        Cab = ExposureAttsBuilder()
+        calc_list = [JOBS['load_csv_exposure'], CALCS['add_test']]
+        context = Context()
+        
+        pipeline = Cab.build(calc_list)
+        config = {'constant_test':{'c_test':[5., 2.]}, 
+                  'load_csv_exposure':{'exposure_file':f.name,
+                                       'exposure_lat':'LAT',
+                                       'exposure_long':'LONG'}}
+        pipeline.run(context, config)
+        
+        self.assertTrue(allclose(context.exposure_att['c_test'],
+                                 asarray([33., 66.])))
         
         os.remove(f.name)
 #-------------------------------------------------------------
