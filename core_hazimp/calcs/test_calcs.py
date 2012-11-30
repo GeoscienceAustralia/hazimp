@@ -15,7 +15,6 @@ Test the calcs module.
 """
 
 import unittest
-
 from core_hazimp.calcs.calcs import CALCS
 
 
@@ -60,8 +59,9 @@ class TestCalcs(unittest.TestCase):
         context.exposure_att = {'a_test':5, 'b_test':20}
         inst(context, **{'constant':5})
         self.assertEqual(context.exposure_att['g_test'], 5*2)
+
 #-------------------------------------------------------------
 if __name__ == "__main__":
-    Suite = unittest.makeSuite(TestCalcs,'test')
-    Runner = unittest.TextTestRunner()
-    Runner.run(Suite)
+    SUITE = unittest.makeSuite(TestCalcs,'test')
+    RUNNER = unittest.TextTestRunner()
+    RUNNER.run(SUITE)

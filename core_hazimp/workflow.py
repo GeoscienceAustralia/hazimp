@@ -11,6 +11,9 @@ order. The order is determined by the queue of jobs.
 
 from core_hazimp.pipeline import PipeLineBuilder, PipeLine
 
+# The standard string names in the context instance
+EX_LAT = 'exposure_lat'
+EX_LONG = 'exposure_long'
  
 def get_job_atts(job, config):
     """        
@@ -53,28 +56,6 @@ class ConfigAwarePipeLine(PipeLine):
             job_kwargs = get_job_atts(job, config)
             job(context, **job_kwargs)
             
-        def get_job_atts(job, config):
-            """        
-            Check if any attributes from the config file should be passed
-            into the job function. If a key in the config has the same
-            name as the job function pass the value, which must be a
-            dictionary is returned.
-            
-            Args:
-                config: A dictionary of the config info.    
-        
-            Returns:
-                A dictionary to be passed in the job function as a parameter
-                """
-            key = job.get_call_funct()
-        
-            if key in config:
-                job_kwargs = config[key]
-        # FIXME check that the value is a dictionary
-            else:
-                job_kwargs = {}
-            
-            return job_kwargs
 
 class ExposureAttsBuilder(PipeLineBuilder):
     """

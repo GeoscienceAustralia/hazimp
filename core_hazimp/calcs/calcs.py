@@ -8,7 +8,6 @@ Need to work out the licence
 """
 
 import sys  
-import inspect
 
 from core_hazimp.jobs.jobs import Job
 from core_hazimp.misc import instanciate_classes
