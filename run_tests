@@ -4,4 +4,4 @@
 
 find . -name "*.pyc" -delete
 
- python2.7 /usr/local/bin/nosetests core_hazimp/ --with-doctest `find core_hazimp/ -name 'test_*.py'` --with-coverage  --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml'
+nosetests core_hazimp/ --with-doctest `find core_hazimp/ -name 'test_*.py'` --with-coverage  --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml'
