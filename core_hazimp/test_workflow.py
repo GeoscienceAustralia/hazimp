@@ -66,15 +66,16 @@ class TestWorkFlow(unittest.TestCase):
         
         os.remove(f.name)
 
+
     def test_Job_title_fix_ContextAwareBuilder(self):
     
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.txt', 
                                         prefix='test_jobs',
                                         delete=False)
-        f.write('LAT, LONG, a_test, b_test\n')
-        f.write('1., 2., 3., 30.\n')
-        f.write('4., 5., 6., 60.\n')
+        f.write('LAT, LONG, a_test, b_test,BUILDING\n')
+        f.write('1., 2., 3., 30.,TAB\n')
+        f.write('4., 5., 6., 60.,DSG\n')
         f.close()
         
         Cab = ExposureAttsBuilder()
@@ -90,7 +91,8 @@ class TestWorkFlow(unittest.TestCase):
         
         self.assertTrue(allclose(context.exposure_att['c_test'],
                                  asarray([33., 66.])))
-        
+        self.assertEqual(context.exposure_att['BUILDING'].tolist(),
+                                 ['TAB', 'DSG'])
         os.remove(f.name)
 #-------------------------------------------------------------
 if __name__ == "__main__":
