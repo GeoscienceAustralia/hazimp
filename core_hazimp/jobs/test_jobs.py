@@ -3,8 +3,6 @@
 # pylint: disable=R0904
 # Disable too many public methods for test cases
 
-
-
 """
 Test the calcs module.
 """
