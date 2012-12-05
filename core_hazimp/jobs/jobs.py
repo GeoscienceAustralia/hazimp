@@ -19,6 +19,7 @@ from scipy import asarray
 from core_hazimp.misc import csv2dict
 from core_hazimp.workflow import  EX_LAT, EX_LONG
 from core_hazimp.misc import instanciate_classes
+from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 
 class Job(object):
@@ -108,5 +109,25 @@ class LoadCsvExposure(Job):
          #   context.exposure_att[key] = asarray(file_dict[key])
         #context.exposure_att.update(file_dict)
     
-     
+
+class LoadXmlVulnerability(Job):
+    """
+    Read the vulnerability sets into the context object.
+    """
+    def __init__(self):
+        super(LoadXmlVulnerability, self).__init__()
+        self.call_funct = 'load_xml_vulnerability'
+
+
+    def __call__(self, context, vulnerability_file=None):
+        """
+        Read a csv exposure file into the context object.     
+        
+        Args:
+            vulnerability_file: The xml file to load.
+        """
+        if vulnerability_file is not None:
+            vuln_sets = vuln_sets_from_xml_file(vulnerability_file)
+            context.vulnerability_sets.update(vuln_sets)
+                           
 JOBS = instanciate_classes(sys.modules[__name__])

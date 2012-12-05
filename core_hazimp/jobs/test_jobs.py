@@ -13,6 +13,7 @@ import os
 from scipy import allclose, asarray
 
 from core_hazimp.jobs.jobs import JOBS
+from core_hazimp.jobs.test_vulnerability_model import build_example
 
 
 class Dummy:
@@ -21,7 +22,7 @@ class Dummy:
     """
     def __init__(self):
         pass
-        
+
         
 class TestJobs(unittest.TestCase): 
     """
@@ -63,6 +64,24 @@ class TestJobs(unittest.TestCase):
         
         os.remove(f.name)
 
+    def test_load_vuln_set(self):
+        # Write a file to test
+        filename = build_example()
+        
+        context = Dummy
+        context.exposure_lat = None
+        context.exposure_long = None
+        context.vulnerability_sets = {}
+        test_kwargs = {'vulnerability_file':filename}
+        inst = JOBS['load_xml_vulnerability']
+        inst(context, **test_kwargs)
+        page = context.vulnerability_sets['PAGER']
+        
+        # This is enough of a check
+        # Other tests check that it is fully loaded.
+        self.assertEqual(page.asset_category, "chickens")
+                                 
+        os.remove(filename)
 #-------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestJobs,'test')

@@ -93,4 +93,7 @@ class Context(object):
         
         # The exposure data at the lats and longs
         self.exposure_att = {}
+        
+        # A dictionary of the vulnerability sets
+        self.vulnerability_sets = {}
 
