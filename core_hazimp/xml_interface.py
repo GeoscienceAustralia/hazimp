@@ -12,8 +12,6 @@
   Copyright 2007 by Geoscience Australia
 """
 
-# pylint: disable=W0141
-# Let 'map' be used.  Fix this if you want.
 
 from scipy import array, NaN
 import xml.dom.minidom 
@@ -131,7 +129,7 @@ class XmlLayer(object):
                 else:
                     raise
             return val
-        
+        # pylint: disable=W0141
         tuple_list = [tuple(map(_float, 
                                 pair.split())) for pair in string.split('\n')]
               
