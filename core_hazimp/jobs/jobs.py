@@ -129,5 +129,31 @@ class LoadXmlVulnerability(Job):
         if vulnerability_file is not None:
             vuln_sets = vuln_sets_from_xml_file(vulnerability_file)
             context.vulnerability_sets.update(vuln_sets)
-                           
+  
+class SimpleLinker(Job):
+    """
+    Link a list of vulnerability functions to each asset, given the
+    vulnerability_sets and exposure columns that represents the
+    vulnerability function id.
+    """
+    def __init__(self):
+        super(SimpleLinker, self).__init__()
+        self.call_funct = 'simple_linker'
+
+
+    def __call__(self, context, vulnerability_set_function_id=None):
+        """
+        Link a list of vulnerability functions to each asset, given the
+        vulnerability_sets and exposure columns that represents the
+        vulnerability function id.    
+        
+        Args:
+            vulnerability_set_function_id: A dictionary with values being
+               vulnerability_sets and values being the exposure title that 
+               holds vulnerability function ID's.
+        """
+        for key in vulnerability_set_function_id:
+            vuln_set = context.vulnerability_sets[key]
+            
+                                 
 JOBS = instanciate_classes(sys.modules[__name__])
