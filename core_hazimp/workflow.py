@@ -94,6 +94,11 @@ class Context(object):
         # The exposure data at the lats and longs
         self.exposure_att = {}
         
-        # A dictionary of the vulnerability sets
+        # for example 'vulnerability_functions' is a list of a list of
+        # vulnerabilty functions.  The outer list is for each asset.
+        
+        
+        # A dictionary of the vulnerability sets.
+        # Not associated with exposures.
         self.vulnerability_sets = {}
 
