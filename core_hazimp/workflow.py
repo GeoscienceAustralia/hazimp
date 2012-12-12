@@ -102,3 +102,7 @@ class Context(object):
         # Not associated with exposures.
         self.vulnerability_sets = {}
 
+
+        # A list of realised vulnerability curves, associated with the
+        # exposure data.
+        self.exposure_vuln_curves = None

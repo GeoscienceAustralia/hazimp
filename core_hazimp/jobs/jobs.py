@@ -148,12 +148,22 @@ class SimpleLinker(Job):
         vulnerability function id.    
         
         Args:
-            vulnerability_set_function_id: A dictionary with values being
-               vulnerability_sets and values being the exposure title that 
+            vulnerability_set_function_id: A dictionary with keys being
+               vulnerability_set_ids and values being the exposure title that 
                holds vulnerability function ID's.
         """
-        for key in vulnerability_set_function_id:
-            vuln_set = context.vulnerability_sets[key]
+        #  wrong
+        # just return a dictionary of key=vulnerability_set_id and value
+        # vulnerability function ID per asset as a vector,
+
+                exposure_vuln_curves = []
+        for vuln_set_key in vulnerability_set_function_id:
+            vuln_set = context.vulnerability_sets[vuln_set_key]
+            exposure_title = vulnerability_set_function_id[vuln_set_key]
+            vuln_function_ids = context.exposure_att[exposure_title]
+        
+            vuln_set.build_realised_vuln_curves(vuln_function_ids)  
+        
             
                                  
 JOBS = instanciate_classes(sys.modules[__name__])
