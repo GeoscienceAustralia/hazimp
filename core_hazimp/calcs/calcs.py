@@ -36,10 +36,8 @@ class Calculator(Job):
         for job_arg in self.context_args_in:
             # A calc with no input is ok.
             if not context.exposure_att.has_key(job_arg):
-                    #FIXME add Error
-                print "job_arg", job_arg
-                print "NO CORRECT VARIABLES" 
-                sys.exit() 
+                raise RuntimeError(
+                    'No correct variables, %s .' % job_arg)
             args_in.append(context.exposure_att[job_arg])
         args_out = self.calc(*args_in, **kwargs)
         assert len(args_out) == len(self.args_out)

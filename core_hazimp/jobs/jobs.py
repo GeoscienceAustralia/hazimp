@@ -21,6 +21,11 @@ from core_hazimp.workflow import  EX_LAT, EX_LONG
 from core_hazimp.misc import instanciate_classes
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
+LOADCSVEXPOSURE = 'load_csv_exposure'
+LOADXMLVULNERABILITY = 'load_xml_vulnerability'
+SIMPLELINKER = 'simple_linker'
+SELECTVULNFUNCTION  = 'select_vulnerability_functions'
+
 
 class Job(object):
     """
@@ -29,7 +34,7 @@ class Job(object):
     def __init__(self):
         """
         Initalise a Calculator object having the attributes
-        allargspec_call and args_in.
+         allargspec_call and args_in.
         """
         self.call_funct = None
                   
@@ -62,7 +67,7 @@ class LoadCsvExposure(Job):
     """
     def __init__(self):
         super(LoadCsvExposure, self).__init__()
-        self.call_funct = 'load_csv_exposure'
+        self.call_funct = LOADCSVEXPOSURE
 
 
     def __call__(self, context, exposure_file=None, exposure_lat=None,
@@ -116,7 +121,7 @@ class LoadXmlVulnerability(Job):
     """
     def __init__(self):
         super(LoadXmlVulnerability, self).__init__()
-        self.call_funct = 'load_xml_vulnerability'
+        self.call_funct = LOADXMLVULNERABILITY
 
 
     def __call__(self, context, vulnerability_file=None):
@@ -138,32 +143,75 @@ class SimpleLinker(Job):
     """
     def __init__(self):
         super(SimpleLinker, self).__init__()
-        self.call_funct = 'simple_linker'
+        self.call_funct = SIMPLELINKER
 
 
-    def __call__(self, context, vulnerability_set_function_id=None):
+    def __call__(self, context, vul_functions_in_exposure=None):
         """
         Link a list of vulnerability functions to each asset, given the
         vulnerability_sets and exposure columns that represents the
         vulnerability function id.    
         
         Args:
-            vulnerability_set_function_id: A dictionary with keys being
+            vul_functions_in_exposure: A dictionary with keys being
                vulnerability_set_ids and values being the exposure title that 
                holds vulnerability function ID's.
+               
+        Content return:
+           vul_function_titles: Add's the exposure_titles
         """
-        #  wrong
-        # just return a dictionary of key=vulnerability_set_id and value
-        # vulnerability function ID per asset as a vector,
+        self.vul_function_titles.update(vul_functions_in_exposure)
+        
+        
+class SelectVulnFunction(Job):
+    """
+    Produce vulnerability curves for each asset, given the
+    vulnerability_sets and exposure columns that represents the
+    vulnerability function id.
+    """
+    def __init__(self):
+        super(SelectVulnFunction, self).__init__()
+        self.call_funct = SELECTVULNFUNCTION
 
-                exposure_vuln_curves = []
-        for vuln_set_key in vulnerability_set_function_id:
+
+    def __call__(self, context, variability_method=None):
+        """
+        Links vulnerability curves to assets.
+        Assumes the necessary vulnerability_sets have been loaded and
+        there is an  exposure column that represents the
+        vulnerability function id.
+        
+        NOTE: This is where the vulnerability function is selected,
+            As well as sampled.
+        
+        Args:
+            variability_method: A dictionary with keys being
+               vulnerability_set_ids and values being the sampling method
+               to generate a vulnerability curve from a vulnerability function.
+               
+        Content return: 
+           exposure_vuln_curves: A dictionary of realised
+               vulnerability curves, associated with the exposure
+               data.
+                key - intensity measure
+                value - realised vulnerability curve instance per asset
+        """
+        
+        exposure_vuln_curves = {}
+        for vuln_set_key in variability_method:
+            # Get the vulnerability set
             vuln_set = context.vulnerability_sets[vuln_set_key]
-            exposure_title = vulnerability_set_function_id[vuln_set_key]
+            # Get the column of function ID's
+            exposure_title = context.vul_function_titles[vuln_set_key]
             vuln_function_ids = context.exposure_att[exposure_title]
+            # sample from the function to get the curve
+            realised_vuln_curves = vuln_set.build_realised_vuln_curves(
+                vuln_function_ids,
+                variability_method=variability_method[vuln_set_key])
+            # Build a dictionary of realised vulnerability curves
+            exposure_vuln_curves[vuln_set_key] = realised_vuln_curves
         
-            vuln_set.build_realised_vuln_curves(vuln_function_ids)  
-        
+        context.exposure_vuln_curves = exposure_vuln_curves
             
                                  
 JOBS = instanciate_classes(sys.modules[__name__])

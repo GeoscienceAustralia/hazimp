@@ -2,16 +2,34 @@
 """
 The main entry point for the hazard impact tool.
 """
-def main(config):
+
+from core_hazimp import console
+from core_hazimp import workflow 
+from core_hazimp import config
+
+def main(config_dic=None, config_file=None):
     """
     Control the haz imp tool.
     This will probably turn into a class at some stage to handle blocking?
     """
-    return config
+    if config_file:
+        config_dic = config.read_file(config_file)
+        
+    if config_dic == None:
+        raise RuntimeError('No configuration information.')
+        
+    context = workflow.Context()
+    calc_jobs = config.job_reader(config_dic)  
+    pipe_factory = workflow.ConfigPipeLineBuilder()
+    pipeline = pipe_factory.build(calc_jobs)
+    pipeline.run(context, config)
+    
+    
 
 
 ################################################################################
 
 if __name__ == "__main__":
-    CONFIG = {}
-    main(CONFIG)
+    CMD_LINE_ARGS = console.cmd_line()    
+    if CMD_LINE_ARGS:
+        main(config_file=CMD_LINE_ARGS.config_file[0])

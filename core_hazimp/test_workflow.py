@@ -18,7 +18,7 @@ import os
 
 from scipy import allclose, asarray
 
-from core_hazimp.workflow import ExposureAttsBuilder, Context
+from core_hazimp.workflow import ConfigPipeLineBuilder, Context
 from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.jobs.jobs import JOBS
 
@@ -30,7 +30,7 @@ class TestWorkFlow(unittest.TestCase):
     def test_ContextAwareBuilder(self):
         a_test = 5
         b_test = 2
-        Cab = ExposureAttsBuilder()
+        Cab = ConfigPipeLineBuilder()
         calc_list = [CALCS['add_test'], CALCS['multiply_test'], 
                      CALCS['constant_test']]
         context = Context()
@@ -52,7 +52,7 @@ class TestWorkFlow(unittest.TestCase):
         f.write('4., 5., 6., 60.\n')
         f.close()
         
-        Cab = ExposureAttsBuilder()
+        Cab = ConfigPipeLineBuilder()
         calc_list = [JOBS['load_csv_exposure'], CALCS['add_test']]
         context = Context()
         
@@ -78,7 +78,7 @@ class TestWorkFlow(unittest.TestCase):
         f.write('4., 5., 6., 60.,DSG\n')
         f.close()
         
-        Cab = ExposureAttsBuilder()
+        Cab = ConfigPipeLineBuilder()
         calc_list = [JOBS['load_csv_exposure'], CALCS['add_test']]
         context = Context()
         

@@ -57,11 +57,9 @@ class ConfigAwarePipeLine(PipeLine):
             job(context, **job_kwargs)
             
 
-class ExposureAttsBuilder(PipeLineBuilder):
+class ConfigPipeLineBuilder(PipeLineBuilder):
     """
-    Builds a calc pipeline for jobs that rely on an intermedary function
-    to deal with the context instance, which holds are the data. So the
-    jobs don't know about the context object.
+    Builds a pipeline for jobs and calcs.
     
     """
     
@@ -100,9 +98,17 @@ class Context(object):
         
         # A dictionary of the vulnerability sets.
         # Not associated with exposures.
+        # key - vulnerability set ID
+        # value - vulnerability set instance
         self.vulnerability_sets = {}
 
-
-        # A list of realised vulnerability curves, associated with the
+        # A dictionary with keys being vulnerability_set_ids and
+        # values being the exposure title that holds vulnerability
+        # function ID's.
+        self.vul_function_titles = {}
+               
+        # A dictionary of realised vulnerability curves, associated with the
         # exposure data.
+        # key - intensity measure
+        # value - realised vulnerability curve instance
         self.exposure_vuln_curves = None
