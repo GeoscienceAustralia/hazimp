@@ -25,6 +25,7 @@ LOADCSVEXPOSURE = 'load_csv_exposure'
 LOADXMLVULNERABILITY = 'load_xml_vulnerability'
 SIMPLELINKER = 'simple_linker'
 SELECTVULNFUNCTION  = 'select_vulnerability_functions'
+LOOKUP = 'look_up'
 
 
 class Job(object):
@@ -160,7 +161,7 @@ class SimpleLinker(Job):
         Content return:
            vul_function_titles: Add's the exposure_titles
         """
-        self.vul_function_titles.update(vul_functions_in_exposure)
+        context.vul_function_titles.update(vul_functions_in_exposure)
         
         
 class SelectVulnFunction(Job):
@@ -213,5 +214,41 @@ class SelectVulnFunction(Job):
         
         context.exposure_vuln_curves = exposure_vuln_curves
             
-                                 
+
+class LookUp(Job):
+    """
+    Produce vulnerability curves for each asset, given the
+    vulnerability_sets and exposure columns that represents the
+    vulnerability function id.
+    """
+    def __init__(self):
+        super(LookUp, self).__init__()
+        self.call_funct = LOOKUP
+
+
+    def __call__(self, context):
+        """
+        Does a look up on all the vulnerability curves, returning the
+        associated loss.
+               
+        Content return: 
+           exposure_vuln_curves: A dictionary of realised
+               vulnerability curves, associated with the exposure
+               data.
+                key - intensity measure
+                value - realised vulnerability curve instance per asset
+        """
+        for intensity_key in context.exposure_vuln_curves:
+            vuln_curve = context.exposure_vuln_curves[intensity_key]
+            int_measure = vuln_curve.intensity_measure_type
+            loss_category_type = vuln_curve.loss_category_type
+            try:
+                intensities = context.exposure_att[int_measure]
+            except KeyError:
+                msg = 'Invalid intensity measure, %s. \n' % int_measure
+                msg += 'vulnerability_set_id is %s. \n' % vulnerability_set_id
+                raise RuntimeError(msg)
+            losses = vuln_curve.look_up(intensities)
+            context.exposure_att[loss_category_type] = losses
+                                         
 JOBS = instanciate_classes(sys.modules[__name__])

@@ -34,16 +34,17 @@ class TestMisc(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(suffix='.txt', 
                                         prefix='test_misc',
                                         delete=False)
-        f.write('X, Y, Z\n')
-        f.write('1., 2., 3.\n')
-        f.write('4., 5., 6.\n')
+        f.write('X, Y, Z, A\n')
+        f.write('1., 2., 3., yeah\n')
+        f.write('4., 5., 6.,me \n')
         f.close()
         
         file_dict = csv2dict(f.name)
         
         self.assertEqual(file_dict, {'X':[1.0, 4.0], 
                                      'Y':[2.0, 5.0],
-                                     'Z':[3.0, 6.0]})
+                                     'Z':[3.0, 6.0],
+                                     'A':['yeah', 'me']})
         os.remove(f.name)
 
         

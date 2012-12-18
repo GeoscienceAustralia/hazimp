@@ -22,7 +22,8 @@ def main(config_dic=None, config_file=None):
     calc_jobs = config.job_reader(config_dic)  
     pipe_factory = workflow.ConfigPipeLineBuilder()
     pipeline = pipe_factory.build(calc_jobs)
-    pipeline.run(context, config)
+    pipeline.run(context, config_dic)
+    return context
     
     
 

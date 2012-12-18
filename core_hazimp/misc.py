@@ -23,7 +23,10 @@ def csv2dict(filename):
             try:
                 val = float(val)
             except ValueError:
-                pass
+                try:
+                    val = val.strip()
+                except AttributeError:
+                    pass
             file_dict[key.strip()].append(val)
     return file_dict
 

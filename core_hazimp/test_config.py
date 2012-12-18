@@ -34,11 +34,15 @@ class TestConfig(unittest.TestCase):
         self.assertIsInstance(job, jobs.ConstTest)
         
         
-    # def not_test_job_reader(self):
-    #     config_dic = {'version':1, 'jobs':'add_test'}
-    #     config.job_reader(config_dic)
+    def test_job_reader(self):
+        config_dic = {'version':1, 'jobs':['add_test']}
+        config.job_reader(config_dic)
         
-        
+      
+    def test_job_reader(self):
+        config_dic = {'version':1, 'jobs':['add_test']}
+        config.job_reader(config_dic)
+          
     
 #-------------------------------------------------------------
 if __name__ == "__main__":

@@ -82,6 +82,10 @@ class TestJobs(unittest.TestCase):
         self.assertEqual(page.asset_category, "chickens")
                                  
         os.remove(filename)
+        
+    def test_SimpleLinker(self):
+        context = Dummy
+        
 #-------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestJobs,'test')
