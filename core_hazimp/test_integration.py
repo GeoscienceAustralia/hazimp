@@ -14,6 +14,7 @@ Test the workflow module.
 
 import unittest
 import tempfile
+import os
 
 from core_hazimp import main
 from core_hazimp.jobs import jobs
@@ -126,10 +127,16 @@ class TestIntegration(unittest.TestCase):
                 'variability_method':{"EQ_building":'mean',
                                        "EQ_contents":'mean'}}
             }
-        main.main(config_dic=config_dic)
+        context = main.main(config_dic=config_dic)
         
-        os.remove(vuln_file)    
-        os.remove(exposure_file)    
+        results = [99., 99.] # FIX
+        self.assertTrue(allclose(context['building_loss'],
+                                 results))
+        
+        os.remove(vulnerability_file)    
+        os.remove(exposure_file)  
+        
+        
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestIntegration,'test')
