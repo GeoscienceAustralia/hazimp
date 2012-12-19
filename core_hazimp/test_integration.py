@@ -16,6 +16,8 @@ import unittest
 import tempfile
 import os
 
+from scipy import allclose
+
 from core_hazimp import main
 from core_hazimp.jobs import jobs
 
@@ -113,7 +115,8 @@ class TestIntegration(unittest.TestCase):
             'jobs':[jobs.LOADCSVEXPOSURE,
                     jobs.LOADXMLVULNERABILITY,
                     jobs.SIMPLELINKER,
-                    jobs.SELECTVULNFUNCTION],
+                    jobs.SELECTVULNFUNCTION,
+                    jobs.LOOKUP],
             jobs.LOADCSVEXPOSURE:{
                 'exposure_file':exposure_file,
                 'exposure_lat':lat_name,
@@ -125,13 +128,19 @@ class TestIntegration(unittest.TestCase):
                                        "EQ_contents":'contents'}},
             jobs.SELECTVULNFUNCTION:{
                 'variability_method':{"EQ_building":'mean',
-                                       "EQ_contents":'mean'}}
+                                       "EQ_contents":'mean'}},
+            jobs.LOOKUP:{}
             }
         context = main.main(config_dic=config_dic)
         
-        results = [99., 99.] # FIX
-        self.assertTrue(allclose(context['building_loss'],
-                                 results))
+        # SW1 loss ratio
+        #  SW1 4 MMI - 0.4 building_loss , 0.004 contents_loss
+        #  SW2 5 MMI - 0.05 building_loss 0.0005 contents_loss
+        
+        results = [0.4, 0.05]
+        actual = context.exposure_att['building_loss']
+        self.assertTrue(allclose(actual,
+                                 results), 'actual: ' + str(actual))
         
         os.remove(vulnerability_file)    
         os.remove(exposure_file)  
