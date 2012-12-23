@@ -217,9 +217,8 @@ class SelectVulnFunction(Job):
 
 class LookUp(Job):
     """
-    Produce vulnerability curves for each asset, given the
-    vulnerability_sets and exposure columns that represents the
-    vulnerability function id.
+    Do a lookup on all the vulnerability curves, returning the
+        associated loss.
     """
     def __init__(self):
         super(LookUp, self).__init__()
@@ -242,10 +241,10 @@ class LookUp(Job):
             vuln_curve = context.exposure_vuln_curves[intensity_key]
             int_measure = vuln_curve.intensity_measure_type
             loss_category_type = vuln_curve.loss_category_type
-            vulnerability_set_id = vuln_curve.vulnerability_set_id
             try:
                 intensities = context.exposure_att[int_measure]
             except KeyError:
+                vulnerability_set_id = vuln_curve.vulnerability_set_id
                 msg = 'Invalid intensity measure, %s. \n' % int_measure
                 msg += 'vulnerability_set_id is %s. \n' % vulnerability_set_id
                 raise RuntimeError(msg)

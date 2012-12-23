@@ -7,7 +7,6 @@
 # (should match [a-z_][a-z0-9_]{2,50}$)
 # pylint: disable=R0904
 # Disable too many public methods for test cases
-
 """
 Test the workflow module.
 """
@@ -28,7 +27,7 @@ def build_example_vuln():
     Returns:
         The name of the file
     """
-    str1 = """<?xml version='1.0' encoding='utf-8'?>
+    str2 = """<?xml version='1.0' encoding='utf-8'?>
 <nrml xmlns="http://openquake.org/xmlns/nrml/0.4"
       xmlns:gml="http://www.opengis.net/gml">
 
@@ -78,7 +77,7 @@ def build_example_vuln():
     f = tempfile.NamedTemporaryFile(suffix='.xml', 
                                     prefix='test_integration',
                                     delete=False)
-    f.write(str1)
+    f.write(str2)
     f.close()
     return f.name
 
