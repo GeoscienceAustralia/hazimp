@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-
+# pylint: disable=C0103
+# Since function names are based on what they are testing,
+# and if they are testing classes the function names will have capitals
+# C0103: 16:TestCalcs.test_AddTest: Invalid name "test_AddTest" 
+# (should match [a-z_][a-z0-9_]{2,50}$)
 # pylint: disable=R0904
 # Disable too many public methods for test cases
 
@@ -14,14 +18,14 @@ from scipy import allclose, asarray
 
 from core_hazimp.jobs.jobs import JOBS
 from core_hazimp.jobs.test_vulnerability_model import build_example
-
+from core_hazimp.jobs import jobs
 
 class Dummy:
     """
     Dummy class for testing
     """
     def __init__(self):
-        pass
+        self.vul_function_titles = {}
 
         
 class TestJobs(unittest.TestCase): 
@@ -84,7 +88,13 @@ class TestJobs(unittest.TestCase):
         os.remove(filename)
         
     def test_SimpleLinker(self):
-        context = Dummy
+        context = Dummy()
+        test_kwargs = {'vul_functions_in_exposure':{'food':100}}
+        inst = JOBS[jobs.SIMPLELINKER]
+        inst(context, **test_kwargs)
+        actual = test_kwargs['vul_functions_in_exposure']
+        self.assertDictEqual(actual, context.vul_function_titles)
+        
         
 #-------------------------------------------------------------
 if __name__ == "__main__":

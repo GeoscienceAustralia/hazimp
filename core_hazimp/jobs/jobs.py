@@ -242,6 +242,7 @@ class LookUp(Job):
             vuln_curve = context.exposure_vuln_curves[intensity_key]
             int_measure = vuln_curve.intensity_measure_type
             loss_category_type = vuln_curve.loss_category_type
+            vulnerability_set_id = vuln_curve.vulnerability_set_id
             try:
                 intensities = context.exposure_att[int_measure]
             except KeyError:

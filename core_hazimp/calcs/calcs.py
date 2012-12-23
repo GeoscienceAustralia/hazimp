@@ -115,8 +115,6 @@ class ConstantTest(Calculator):
         """
         return [constant*2]
                     
-    
-
             
 CALCS = instanciate_classes(sys.modules[__name__])
 

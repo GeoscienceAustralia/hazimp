@@ -33,15 +33,11 @@ class TestConfig(unittest.TestCase):
         job = config.get_job_or_calc(name)
         self.assertIsInstance(job, jobs.ConstTest)
         
-        
+
     def test_job_reader(self):
         config_dic = {'version':1, 'jobs':['add_test']}
-        config.job_reader(config_dic)
-        
-      
-    def test_job_reader(self):
-        config_dic = {'version':1, 'jobs':['add_test']}
-        config.job_reader(config_dic)
+        actual = config.job_reader(config_dic)
+        self.assertListEqual([calcs.CALCS['add_test']], actual)
           
     
 #-------------------------------------------------------------
