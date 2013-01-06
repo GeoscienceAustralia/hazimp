@@ -29,9 +29,27 @@ class Dummy:
         self.vul_function_titles = {}
 
         # For test_SelectVulnFunction
-        context.vulnerability_sets = {}
-
+        self.vulnerability_sets = {}
+        self.exposure_att = {}
         
+
+class DummyVulnSet:
+    """
+    Dummy class of vuln_set for testing.
+    """
+    def __init__(self, vuln_set):
+        # For test_SimpleLinker
+        self.vuln_set = vuln_set
+        
+    def build_realised_vuln_curves(self, vuln_function_ids,
+                variability_method):
+        """For test_SimpleLinker
+        """
+        
+        return (vuln_function_ids,
+                variability_method, 
+                self.vuln_set)
+                
 class TestJobs(unittest.TestCase): 
     """
     Test the calcs module
@@ -100,7 +118,29 @@ class TestJobs(unittest.TestCase):
         self.assertDictEqual(actual, context.vul_function_titles)
         
     def test_SelectVulnFunction(self):
-        # tested in 
+        set1 = 'Contents'
+        set2 = 'Buildings'
+        column1 = set1
+        column2 = set2
+        exp1 = ['con1', 'con2']
+        exp2 = ['bld1', 'bld2']
+        VulnSet1 = DummyVulnSet(set1)
+        VulnSet2 = DummyVulnSet(set2)
+        context = Dummy()
+        context.vulnerability_sets = {set1:VulnSet1, set2:VulnSet2}
+        context.vul_function_titles = {set1:column1, set2:column2}
+        context.exposure_att[column1] = exp1
+        context.exposure_att[column2] = exp2
+
+        variability_method = {set1:'mean1', set2:'mean2'}
+        
+        test_kwargs = {'variability_method':
+                           variability_method}
+        inst = JOBS[jobs.SELECTVULNFUNCTION]
+        inst(context, **test_kwargs)
+        actual = {set1:(exp1, 'mean1', set1), set2:(exp2, 'mean2', set2)}
+        self.assertDictEqual(actual, context.exposure_vuln_curves)
+        
         
 #-------------------------------------------------------------
 if __name__ == "__main__":

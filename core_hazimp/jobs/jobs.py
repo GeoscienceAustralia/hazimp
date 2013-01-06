@@ -169,6 +169,11 @@ class SelectVulnFunction(Job):
     Produce vulnerability curves for each asset, given the
     vulnerability_sets and exposure columns that represents the
     vulnerability function id.
+    
+    From the vulnerability set and a function id you get the 
+    vulnerability function.  
+    Then, using the variability_method e.g. 'mean' you get the
+    vulnerability curve.
     """
     def __init__(self):
         super(SelectVulnFunction, self).__init__()
