@@ -177,6 +177,7 @@ class SelectVulnFunction(Job):
 
     def __call__(self, context, variability_method=None):
         """
+        Specifies what vulnerability sets to use.
         Links vulnerability curves to assets.
         Assumes the necessary vulnerability_sets have been loaded and
         there is an  exposure column that represents the
@@ -189,7 +190,8 @@ class SelectVulnFunction(Job):
             variability_method: A dictionary with keys being
                vulnerability_set_ids and values being the sampling method
                to generate a vulnerability curve from a vulnerability function.
-               
+               e.g. {'EQ_contents': 'mean', 'EQ_building': 'mean'}
+
         Content return: 
            exposure_vuln_curves: A dictionary of realised
                vulnerability curves, associated with the exposure
@@ -197,7 +199,6 @@ class SelectVulnFunction(Job):
                 key - intensity measure
                 value - realised vulnerability curve instance per asset
         """
-        
         exposure_vuln_curves = {}
         for vuln_set_key in variability_method:
             # Get the vulnerability set

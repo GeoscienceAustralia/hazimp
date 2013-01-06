@@ -25,7 +25,11 @@ class Dummy:
     Dummy class for testing
     """
     def __init__(self):
+        # For test_SimpleLinker
         self.vul_function_titles = {}
+
+        # For test_SelectVulnFunction
+        context.vulnerability_sets = {}
 
         
 class TestJobs(unittest.TestCase): 
@@ -95,6 +99,8 @@ class TestJobs(unittest.TestCase):
         actual = test_kwargs['vul_functions_in_exposure']
         self.assertDictEqual(actual, context.vul_function_titles)
         
+    def test_SelectVulnFunction(self):
+        # tested in 
         
 #-------------------------------------------------------------
 if __name__ == "__main__":
