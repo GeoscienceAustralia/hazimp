@@ -21,7 +21,9 @@ import unittest
 import tempfile
 import os
 
-from core_hazimp.misc import csv2dict 
+from scipy import asarray, allclose
+
+from core_hazimp.misc import csv2dict, raster_data_at_points
 
 
 class TestMisc(unittest.TestCase): 
@@ -48,6 +50,29 @@ class TestMisc(unittest.TestCase):
         os.remove(f.name)
 
         
+    def test_raster_data_at_points(self):
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(suffix='.aai', 
+                                        prefix='test_misc',
+                                        delete=False)
+        f.write('ncols 3 \r\n')
+        f.write('nrows 2 \r\n')
+        f.write('xllcorner +0. \r\n')
+        f.write('yllcorner +8. \r\n')
+        f.write('cellsize 1 \r\n')
+        f.write('NODATA_value -9999 \r\n')
+        f.write('1 2 3 \r\n')
+        f.write('4 5 6 ')
+        f.close()
+        
+        lon = asarray([0, 0.9, 1.1])
+        lat = asarray([10, 9.1, 8.9])
+        a_file = f.name
+        data = raster_data_at_points(lon, lat, [a_file])
+        
+        self.assertTrue(allclose(data, asarray([1., 1., 5.])))
+        os.remove(f.name)
+      
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestMisc,'test')
