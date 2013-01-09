@@ -63,27 +63,69 @@ def raster_data_at_points(lat, lon, files):
 def raster_data_at_points_a_file(lon, lat, filename):
     """
     Get data at lat lon points, based on a file.
+    
+    lon, lat must be 1D arrays
     """
+    assert lon.size == lat.size
+    
     dataset = gdal.Open(filename, GA_ReadOnly)
     if dataset is None:
         raise RuntimeError('Invalid file: %s' % filename)
 
+    values = numpy.empty(lon.size)
+    values[:] = numpy.NAN
+    
     # get georeference info
     transform = dataset.GetGeoTransform()
-    x_origin = transform[0]
-    y_origin = transform[3]
-    pixel_width = transform[1]
-    pixel_height = transform[5]
+    upper_left_x = transform[0]
+    x_pixel = transform[1]
+    x_size = dataset.RasterXSize
     
-    band = dataset.GetRasterBand(1) 
+    upper_left_y = transform[3]
+    y_pixel = transform[5]
+    y_size = dataset.RasterYSize
     
-    data_band = band.ReadAsArray(0, 0,
-                                 dataset.RasterXSize,
-                                 dataset.RasterYSize)
+    band = dataset.GetRasterBand(1)  
+    no_data_value =  band.GetNoDataValue()   
+    data_band = band.ReadAsArray(0, 0, x_size, y_size)
+    
+    # get an index of all the values inside the grid
+    # there has to be a better way...
+    bad_indexes = set()
+    bad_indexes = bad_indexes.union(numpy.where(lon < upper_left_x)[0])
+    bad_indexes = bad_indexes.union(
+        numpy.where(lon > upper_left_x + x_size *  x_pixel)[0]) 
+    bad_indexes = bad_indexes.union(numpy.where(lat > upper_left_y)[0])
+    bad_indexes = bad_indexes.union(
+        numpy.where(lat < upper_left_y + y_size *  y_pixel)[0])
+    good_indexes = numpy.array(list(set(
+                range(lon.size)).difference(bad_indexes)))
+    
+    if good_indexes.shape[0] > 0:
+    
+        # compute pixel offset
+        col_offset = numpy.trunc((lon - upper_left_x) / x_pixel).astype(int)
+        row_offset = numpy.trunc((lat - upper_left_y) / y_pixel).astype(int)
+        
+        values[good_indexes] = data_band[row_offset[good_indexes],
+                                         col_offset[good_indexes]]
+        # take into account NODATA_value
+        values = numpy.where(values == no_data_value, numpy.NAN, values)
+    
+    return values
     
     
-    # compute pixel offset
-    x_offset = numpy.trunc((lon - x_origin) / pixel_width).astype(int)
-    y_offset = numpy.trunc((lat - y_origin) / pixel_height).astype(int)
-    data = data_band[x_offset, y_offset]
-    return data
+def unfinished_tcrm_data_at_points(lat, lon, files):
+    """
+    Get data at lat lon points, based on a set of files
+    """
+    data = []
+    
+    source_lat, source_lon = _load_tcrm_nc_lat_lon(files[0])
+    
+    for filename in files:
+        results = raster_data_at_points_a_file(lat, lon, filename)
+        data.append(results)
+    return numpy.asarray(data)
+
+    
