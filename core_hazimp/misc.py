@@ -60,12 +60,15 @@ def raster_data_at_points(lat, lon, files):
     return numpy.asarray(data)
     
        
-def raster_data_at_points_a_file(lon, lat, filename):
+def raster_data_at_points_a_file(lon, lat, filename):# pylint: disable=R0914
     """
     Get data at lat lon points, based on a file.
     
     lon, lat must be 1D arrays
     """
+    # R0914: 63:raster_data_at_points_a_file: Too many local variables (19/15)
+    
+    
     assert lon.size == lat.size
     
     dataset = gdal.Open(filename, GA_ReadOnly)
@@ -101,31 +104,15 @@ def raster_data_at_points_a_file(lon, lat, filename):
     good_indexes = numpy.array(list(set(
                 range(lon.size)).difference(bad_indexes)))
     
-    if good_indexes.shape[0] > 0:
-    
+    if good_indexes.shape[0] > 0:    
         # compute pixel offset
         col_offset = numpy.trunc((lon - upper_left_x) / x_pixel).astype(int)
         row_offset = numpy.trunc((lat - upper_left_y) / y_pixel).astype(int)
         
         values[good_indexes] = data_band[row_offset[good_indexes],
                                          col_offset[good_indexes]]
-        # take into account NODATA_value
+        # Change NODATA_value to NAN
         values = numpy.where(values == no_data_value, numpy.NAN, values)
     
     return values
-    
-    
-def unfinished_tcrm_data_at_points(lat, lon, files):
-    """
-    Get data at lat lon points, based on a set of files
-    """
-    data = []
-    
-    source_lat, source_lon = _load_tcrm_nc_lat_lon(files[0])
-    
-    for filename in files:
-        results = raster_data_at_points_a_file(lat, lon, filename)
-        data.append(results)
-    return numpy.asarray(data)
-
     

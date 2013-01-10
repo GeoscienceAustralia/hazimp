@@ -22,7 +22,7 @@ import tempfile
 import os
 
 import numpy
-from scipy import asarray, allclose, NAN
+from scipy import asarray, allclose
 
 from core_hazimp.misc import csv2dict, raster_data_at_points
 
@@ -76,10 +76,10 @@ class TestMisc(unittest.TestCase):
         lon = asarray([0.0001, 0.0001, 2.999, 2.999])
         lat = asarray([8.0001, 9.999, 9.999, 8.0001])
         data = raster_data_at_points(lon, lat, [f.name])
-        index_g = numpy.array([0,1,3])
-        self.assertTrue(allclose(data[0,index_g], 
+        index_g = numpy.array([0, 1, 3])
+        self.assertTrue(allclose(data[0, index_g], 
                                  asarray([4., 1., 6.])))
-        self.assertTrue(numpy.isnan(data[0,2]))
+        self.assertTrue(numpy.isnan(data[0, 2]))
         
         os.remove(f.name)
       
