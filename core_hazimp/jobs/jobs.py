@@ -16,7 +16,7 @@ jobs function.  The function name is used to determine what to pass in.
 import sys 
 from scipy import asarray
 
-from core_hazimp.misc import csv2dict
+from core_hazimp.misc import csv2dict, raster_data_at_points
 from core_hazimp.workflow import  EX_LAT, EX_LONG
 from core_hazimp.misc import instanciate_classes
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
@@ -26,6 +26,7 @@ LOADXMLVULNERABILITY = 'load_xml_vulnerability'
 SIMPLELINKER = 'simple_linker'
 SELECTVULNFUNCTION  = 'select_vulnerability_functions'
 LOOKUP = 'look_up'
+LOADRASTER = 'load_raster'
 
 
 class Job(object):
@@ -81,6 +82,11 @@ class LoadCsvExposure(Job):
             exposure_file: The csv file to load.
             exposure_lat: the title string of the latitude column.
             exposure_long: the title string of the longitude column.
+            
+        Content return: 
+            exposure_att: Add the file values into this dictionary.
+                key: column titles 
+                value: column values, except the title
         """
     
         file_dict = csv2dict(exposure_file)
@@ -135,6 +141,7 @@ class LoadXmlVulnerability(Job):
         if vulnerability_file is not None:
             vuln_sets = vuln_sets_from_xml_file(vulnerability_file)
             context.vulnerability_sets.update(vuln_sets)
+  
   
 class SimpleLinker(Job):
     """
@@ -257,4 +264,43 @@ class LookUp(Job):
             losses = vuln_curve.look_up(intensities)
             context.exposure_att[loss_category_type] = losses
                                          
+class LoadRaster(Job):
+    """
+    Load one or more files and get the value for all the 
+    exposure points. Primarily this will be used to load hazard data.
+    
+    There may be NAN values in this data
+    """
+    def __init__(self):
+        super(LoadRaster, self).__init__()
+        self.call_funct = LOADRASTER
+
+    def __call__(self, context, file_list=None, attribute_label=None):
+        """
+        Load one or more files and get the value for all the 
+        exposure points. All files have to be of the same attribute.
+             
+        Args:
+           attribute_label: The string to be associated with this data.
+           file_list: A list of files to be loaded.
+             
+        Content return: 
+           exposure_att: Add the file values into this dictionary.
+               key: column titles
+               value: column values, except the title
+        """
+        #FIXME raise errors, re no lat or lon
+        
+        if file_list is not None:
+            file_data = raster_data_at_points(context.exposure_long, 
+                                              context.exposure_lat, file_list)
+            context.exposure_att[attribute_label] = file_data
+
+            
+    
+#____________________________________________________
+#---------------------------------------------------- 
+#                KEEP THIS AT THE END
+#____________________________________________________   
+    
 JOBS = instanciate_classes(sys.modules[__name__])

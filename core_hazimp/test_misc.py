@@ -10,6 +10,7 @@
 # pylint: disable=E1123
 # pylint says;  Passing unexpected keyword argument 'delete' in function call
 # I need to pass it though.
+# pylint: disable=R0801
 
 
 
@@ -26,12 +27,10 @@ from scipy import asarray, allclose
 
 from core_hazimp.misc import csv2dict, raster_data_at_points
 
-
 class TestMisc(unittest.TestCase): 
     """
     Test the calcs module
     """
-
     def test_csv2dict(self):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.txt', 
@@ -53,17 +52,18 @@ class TestMisc(unittest.TestCase):
         
     def test1_raster_data_at_points(self):
         # Write a file to test
+        # pylint: disable=R0801
         f = tempfile.NamedTemporaryFile(suffix='.aai', 
                                         prefix='test_misc',
                                         delete=False)
-        f.write('ncols 3 \r\n')
-        f.write('nrows 2 \r\n')
-        f.write('xllcorner +0. \r\n')
-        f.write('yllcorner +8. \r\n')
-        f.write('cellsize 1 \r\n')
-        f.write('NODATA_value -9999 \r\n')
-        f.write('1 2 -9999 \r\n')
-        f.write('4 5 6 ')
+        f.write('ncols 3  \r\n')
+        f.write('nrows 2  \r\n')
+        f.write('xllcorner +0.  \r\n')
+        f.write('yllcorner +8.  \r\n')
+        f.write('cellsize 1  \r\n')
+        f.write('NODATA_value -9999  \r\n')
+        f.write('1 2 -9999  \r\n')
+        f.write('4 5 6  ')
         f.close()
         # lon 0 - 3
         # lat 8 - 10
@@ -88,13 +88,13 @@ class TestMisc(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(suffix='.aai', 
                                         prefix='test_misc',
                                         delete=False)
-        f.write('ncols 3 \r\n')
-        f.write('nrows 2 \r\n')
-        f.write('xllcorner +0. \r\n')
-        f.write('yllcorner +8. \r\n')
-        f.write('cellsize 1 \r\n')
-        f.write('NODATA_value -9999 \r\n')
-        f.write('1 2 -9999 \r\n')
+        f.write('ncols 3  \r\n ')
+        f.write('nrows 2  \r\n ')
+        f.write('xllcorner +0.  \r\n ')
+        f.write('yllcorner +8.  \r\n ')
+        f.write('cellsize 1  \r\n ')
+        f.write('NODATA_value -9999  \r\n ')
+        f.write('1 2 -9999  \r\n ')
         f.write('4 5 6 ')
         f.close()
         # lon 0 - 3

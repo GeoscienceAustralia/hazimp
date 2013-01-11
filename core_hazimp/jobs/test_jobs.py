@@ -6,6 +6,8 @@
 # (should match [a-z_][a-z0-9_]{2,50}$)
 # pylint: disable=R0904
 # Disable too many public methods for test cases
+# pylint: disable=R0801
+#:  Can not seem to locally disable this warning.
 
 """
 Test the calcs module.
@@ -14,9 +16,9 @@ Test the calcs module.
 import unittest
 import tempfile
 import os
-from scipy import allclose, asarray
+from scipy import allclose, asarray, isnan
 
-from core_hazimp.jobs.jobs import JOBS
+from core_hazimp.jobs.jobs import JOBS, LOADRASTER, LOADCSVEXPOSURE
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 
@@ -140,7 +142,113 @@ class TestJobs(unittest.TestCase):
         inst(context, **test_kwargs)
         actual = {set1:(exp1, 'mean1', set1), set2:(exp2, 'mean2', set2)}
         self.assertDictEqual(actual, context.exposure_vuln_curves)
+ 
+    def test_load_raster(self):
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(suffix='.txt', prefix='test_jobs',
+                                        delete=False)
+        f.write('exposure_lat, exposure_long, ID, haz_actual\n')
+        f.write('8.1, 0.1, 1, 4\n')
+        f.write('7.9, 1.5, 2, -9999\n')
+        f.write('8.9, 2.9, 3, 6\n')
+        f.write('8.9, 3.1, 4, -9999\n')
+        f.write('9.9, 2.9, 5, -9999\n')
+        f.close()
         
+        inst = JOBS[LOADCSVEXPOSURE]
+        context = Dummy
+        context.exposure_lat = None
+        context.exposure_long = None
+        context.exposure_att = {}
+        test_kwargs = {'exposure_file':f.name}
+        inst(context, **test_kwargs)               
+        os.remove(f.name)
+        
+        # Write a hazard file
+        f = tempfile.NamedTemporaryFile(suffix='.aai', prefix='test_jobs',
+                                        delete=False)
+        f.write('ncols 3 \r\n ')
+        f.write('nrows 2 \r\n ')
+        f.write('xllcorner +0. \r\n ')
+        f.write('yllcorner +8. \r\n ')
+        f.write('cellsize 1 \r\n ')
+        f.write('NODATA_value -9999 \r\n ')
+        f.write('1 2 -9999 \r\n ')
+        f.write('4 5 6 ')
+        f.close()
+        haz_v = 'haz_v'
+        inst = JOBS[LOADRASTER]
+        test_kwargs = {'file_list':[f.name], 'attribute_label':haz_v}
+        inst(context, **test_kwargs)
+        the_nans = isnan(context.exposure_att[haz_v])
+        context.exposure_att[haz_v][the_nans] = -9999
+        self.assertTrue(allclose(context.exposure_att[haz_v], 
+                                 context.exposure_att['haz_actual']))
+        
+        
+    def test_load_rasters(self):
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(suffix='.txt', prefix='test_jobs',
+                                        delete=False)
+        f.write('exposure_lat, exposure_long, ID, haz_actual\n')
+        f.write('8.1, 0.1, 1, 4\n')
+        f.write('7.9, 1.5, 2, -9999\n')
+        f.write('8.9, 2.9, 3, 6\n')
+        f.write('8.9, 3.1, 4, -9999\n')
+        f.write('9.9, 2.9, 5, -9999\n')
+        f.close()        
+        
+        inst = JOBS[LOADCSVEXPOSURE]
+        context = Dummy
+        context.exposure_lat = None
+        context.exposure_long = None
+        context.exposure_att = {}
+        test_kwargs = {'exposure_file':f.name}
+        inst(context, **test_kwargs)               
+        os.remove(f.name)
+        
+        # Write a hazard file
+        f = tempfile.NamedTemporaryFile(suffix='.aai', prefix='test_jobs',
+                                        delete=False)
+        f.write('ncols 3 \r\n')
+        f.write('nrows 2 \r\n')
+        f.write('xllcorner +0. \r\n')
+        f.write('yllcorner +8. \r\n')
+        f.write('cellsize 1 \r\n')
+        f.write('NODATA_value -9999 \r\n')
+        f.write('1 2 -9999 \r\n')
+        f.write('4 5 6 ')
+        f.close()
+        files = [f.name]
+        
+        # Write another hazard file
+        f = tempfile.NamedTemporaryFile(suffix='.aai', prefix='test_jobs',
+                                        delete=False)
+        f.write('ncols 3 \r\n')
+        f.write('nrows 2 \r\n')
+        f.write('xllcorner +0. \r\n')
+        f.write('yllcorner +8. \r\n')
+        f.write('cellsize 1 \r\n')
+        f.write('NODATA_value -9999 \r\n')
+        f.write('10 20 -9999 \r\n')
+        f.write('40 50 60 ')
+        f.close()
+        files.append(f.name)
+        
+        haz_v = 'haz_v'
+        inst = JOBS[LOADRASTER]
+        test_kwargs = {'file_list':files, 'attribute_label':haz_v}
+        inst(context, **test_kwargs)
+        the_nans = isnan(context.exposure_att[haz_v][0, :])
+        context.exposure_att[haz_v][0, the_nans] = -9999
+        the_nans = isnan(context.exposure_att[haz_v][1, :])
+        context.exposure_att[haz_v][1, the_nans] = -99990
+        actual = asarray([context.exposure_att['haz_actual'], 
+                          context.exposure_att['haz_actual']*10])
+        self.assertTrue(allclose(context.exposure_att[haz_v], actual))
+        
+        for a_file in files:        
+            os.remove(a_file)
         
 #-------------------------------------------------------------
 if __name__ == "__main__":
