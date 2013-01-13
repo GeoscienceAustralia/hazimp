@@ -87,9 +87,8 @@ def raster_data_at_points_a_file(lon, lat, filename):# pylint: disable=R0914
     upper_left_y = transform[3]
     y_pixel = transform[5]
     y_size = dataset.RasterYSize
-    
     band = dataset.GetRasterBand(1)  
-    no_data_value =  band.GetNoDataValue()   
+    no_data_value =  band.GetNoDataValue() 
     data_band = band.ReadAsArray(0, 0, x_size, y_size)
     
     # get an index of all the values inside the grid

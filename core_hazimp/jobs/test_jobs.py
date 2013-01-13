@@ -167,13 +167,13 @@ class TestJobs(unittest.TestCase):
         # Write a hazard file
         f = tempfile.NamedTemporaryFile(suffix='.aai', prefix='test_jobs',
                                         delete=False)
-        f.write('ncols 3 \r\n ')
-        f.write('nrows 2 \r\n ')
-        f.write('xllcorner +0. \r\n ')
-        f.write('yllcorner +8. \r\n ')
-        f.write('cellsize 1 \r\n ')
-        f.write('NODATA_value -9999 \r\n ')
-        f.write('1 2 -9999 \r\n ')
+        f.write('ncols 3    \r\n')
+        f.write('nrows 2 \r\n')
+        f.write('xllcorner +0.    \r\n')
+        f.write('yllcorner +8. \r\n')
+        f.write('cellsize 1    \r\n')
+        f.write('NODATA_value -9999 \r\n')
+        f.write('1 2 -9999    \r\n')
         f.write('4 5 6 ')
         f.close()
         haz_v = 'haz_v'

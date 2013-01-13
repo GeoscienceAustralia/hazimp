@@ -88,14 +88,14 @@ class TestMisc(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(suffix='.aai', 
                                         prefix='test_misc',
                                         delete=False)
-        f.write('ncols 3  \r\n ')
-        f.write('nrows 2  \r\n ')
-        f.write('xllcorner +0.  \r\n ')
-        f.write('yllcorner +8.  \r\n ')
-        f.write('cellsize 1  \r\n ')
-        f.write('NODATA_value -9999  \r\n ')
-        f.write('1 2 -9999  \r\n ')
-        f.write('4 5 6 ')
+        f.write('ncols 3   \r\n')
+        f.write('nrows 2 \r\n')
+        f.write('xllcorner +0.   \r\n')
+        f.write('yllcorner +8. \r\n')
+        f.write('cellsize 1   \r\n')
+        f.write('NODATA_value -9999 \r\n')
+        f.write('1 2 -9999   \r\n')
+        f.write('4 5 6')
         f.close()
         # lon 0 - 3
         # lat 8 - 10
@@ -117,6 +117,6 @@ class TestMisc(unittest.TestCase):
       
 #-------------------------------------------------------------
 if __name__ == "__main__":
-    Suite = unittest.makeSuite(TestMisc,'test1')
+    Suite = unittest.makeSuite(TestMisc,'test2')
     Runner = unittest.TextTestRunner()
     Runner.run(Suite)
