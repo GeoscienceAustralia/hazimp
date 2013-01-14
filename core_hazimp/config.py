@@ -11,7 +11,7 @@ from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.jobs.jobs import JOBS
 
 
-DEFULT = 1
+DEFAULT = 1
 
 def read_file(file_name):
     """
@@ -42,7 +42,7 @@ def job_reader(config_dic):
     try:
         version = config_dic['version']
     except KeyError:
-        version = DEFULT   
+        version = DEFAULT   
         
     try:    
         reader_function = READERS[version]

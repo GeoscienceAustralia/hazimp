@@ -17,7 +17,7 @@ import os
 
 from scipy import allclose
 
-from core_hazimp import main
+from core_hazimp import hazimp
 from core_hazimp.jobs import jobs
 
 def build_example_vuln():
@@ -130,7 +130,7 @@ class TestIntegration(unittest.TestCase):
                                        "EQ_contents":'mean'}},
             jobs.LOOKUP:{}
             }
-        context = main.main(config_dic=config_dic)
+        context = hazimp.main(config_dic=config_dic)
         
         # SW1 loss ratio
         #  SW1 4 MMI - 0.4 building_loss , 0.004 contents_loss
