@@ -11,8 +11,12 @@ import inspect
 import gdal
 from gdalconst import GA_ReadOnly
 import numpy
+import os
 
 
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
+        
 def csv2dict(filename):
     """
     Read a csv file in and return the information as a dictionary 

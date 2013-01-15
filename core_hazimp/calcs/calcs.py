@@ -12,6 +12,8 @@ import sys
 from core_hazimp.jobs.jobs import Job
 from core_hazimp.misc import instanciate_classes
 
+STRUCT_LOSS = 'structural_loss'
+
 class Calculator(Job):
     """
     Abstract Calculator class. Should use abc then.
@@ -114,6 +116,24 @@ class ConstantTest(Calculator):
         Return two values
         """
         return [constant*2]
+                    
+            
+class CalcLoss(Calculator):
+    """
+    Simple test class, returning two values.
+    """
+    
+    def __init__(self):
+        super(CalcLoss, self).__init__()
+        self.context_args_in = []
+        self.args_out = ['structural_loss']
+        self.call_funct = STRUCT_LOSS #'structural_loss'
+    
+    def calc(self, structural_loss_ratio, structural_value):
+        """
+        Return two values
+        """
+        return [structural_loss_ratio * structural_value]
                     
             
 CALCS = instanciate_classes(sys.modules[__name__])
