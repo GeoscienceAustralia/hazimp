@@ -16,7 +16,7 @@ Test the calcs module.
 
 import unittest
 from core_hazimp.calcs.calcs import CALCS
-
+from core_hazimp.calcs import calcs
 
 class Dummy:
     """
@@ -60,6 +60,14 @@ class TestCalcs(unittest.TestCase):
         inst(context, **{'constant':5})
         self.assertEqual(context.exposure_att['g_test'], 5*2)
 
+    def test_CalcLoss(self):
+        inst = CALCS[calcs.STRUCT_LOSS]
+        context = Dummy
+        context.exposure_att = {'structural_loss_ratio':5,
+                                'structural_value':20}
+        inst(context)
+        self.assertEqual(context.exposure_att['structural_loss'], 5*20)
+        
 #-------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestCalcs,'test')

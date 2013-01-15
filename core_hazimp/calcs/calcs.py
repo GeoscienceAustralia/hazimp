@@ -125,7 +125,7 @@ class CalcLoss(Calculator):
     
     def __init__(self):
         super(CalcLoss, self).__init__()
-        self.context_args_in = []
+        self.context_args_in = ['structural_loss_ratio', 'structural_value']
         self.args_out = ['structural_loss']
         self.call_funct = STRUCT_LOSS #'structural_loss'
     
