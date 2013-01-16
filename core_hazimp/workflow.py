@@ -12,8 +12,8 @@ order. The order is determined by the queue of jobs.
 from core_hazimp.pipeline import PipeLineBuilder, PipeLine
 
 # The standard string names in the context instance
-EX_LAT = 'exposure_lat'
-EX_LONG = 'exposure_long'
+EX_LAT = 'exposure_latitude'
+EX_LONG = 'exposure_longitude'
  
 def get_job_atts(job, config):
     """        

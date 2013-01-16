@@ -72,16 +72,16 @@ class LoadCsvExposure(Job):
         self.call_funct = LOADCSVEXPOSURE
 
 
-    def __call__(self, context, exposure_file=None, exposure_lat=None,
-                      exposure_long=None):
+    def __call__(self, context, exposure_file=None, exposure_latitude=None,
+                      exposure_longitude=None):
         """
         Read a csv exposure file into the context object.     
         
         Args:
             context: The context instance, used to move data around.
             exposure_file: The csv file to load.
-            exposure_lat: the title string of the latitude column.
-            exposure_long: the title string of the longitude column.
+            exposure_latitude: the title string of the latitude column.
+            exposure_longitud: the title string of the longitude column.
             
         Content return: 
             exposure_att: Add the file values into this dictionary.
@@ -93,10 +93,10 @@ class LoadCsvExposure(Job):
     
         # FIXME Need to do better error handling
     
-        if exposure_lat == None:
+        if exposure_latitude == None:
             lat_key = EX_LAT
         else:
-            lat_key = exposure_lat
+            lat_key = exposure_latitude
     
         try:
             context.exposure_lat = asarray(file_dict[lat_key])
@@ -104,10 +104,10 @@ class LoadCsvExposure(Job):
         except KeyError:
             pass
     
-        if exposure_lat == None:
+        if exposure_latitude == None:
             long_key = EX_LONG
         else:
-            long_key = exposure_long
+            long_key = exposure_longitude
     
         try:
             context.exposure_long = asarray(file_dict[long_key])

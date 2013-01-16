@@ -1,13 +1,4 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0103
-# Since function names are based on what they are testing,
-# and if they are testing classes the function names will have capitals
-# C0103: 16:TestCalcs.test_AddTest: Invalid name "test_AddTest" 
-# (should match [a-z_][a-z0-9_]{2,50}$)
-# pylint: disable=R0904
-# Disable too many public methods for test cases
-# pylint: disable=R0801
-#:  Can not seem to locally disable this warning.
 
 """
 Test wind scenarios.
@@ -15,13 +6,23 @@ Test wind scenarios.
 
 import unittest
                 
+from core_hazimp import hazimp
+
 class TestWind(unittest.TestCase): 
     """
     Test the calcs module
     """
 
     def test_const_test(self):
-        pass
+        # First test running an end to end cyclone test based 
+        # on a config dictionary, version 1
+        filename = None
+        config = {'load_csv_exposure':{'exposure_file':filename,
+                                       'exposure_latitude':'LAT',
+                                       'exposure_longitude':'LONG'}}
+        context = hazimp.main(config_dic=)
+        
+        
   
         
 #-------------------------------------------------------------

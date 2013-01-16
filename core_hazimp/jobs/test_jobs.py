@@ -72,7 +72,7 @@ class TestJobs(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(suffix='.txt', 
                                         prefix='test_jobs',
                                         delete=False)
-        f.write('exposure_lat, exposure_long, Z\n')
+        f.write('exposure_latitude, exposure_longitude, Z\n')
         f.write('1., 2., 3.\n')
         f.write('4., 5., 6.\n')
         f.close()
@@ -147,7 +147,7 @@ class TestJobs(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.txt', prefix='test_jobs',
                                         delete=False)
-        f.write('exposure_lat, exposure_long, ID, haz_actual\n')
+        f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
         f.write('8.1, 0.1, 1, 4\n')
         f.write('7.9, 1.5, 2, -9999\n')
         f.write('8.9, 2.9, 3, 6\n')
@@ -190,7 +190,7 @@ class TestJobs(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.txt', prefix='test_jobs',
                                         delete=False)
-        f.write('exposure_lat, exposure_long, ID, haz_actual\n')
+        f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
         f.write('8.1, 0.1, 1, 4\n')
         f.write('7.9, 1.5, 2, -9999\n')
         f.write('8.9, 2.9, 3, 6\n')

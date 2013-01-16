@@ -118,8 +118,8 @@ class TestIntegration(unittest.TestCase):
                     jobs.LOOKUP],
             jobs.LOADCSVEXPOSURE:{
                 'exposure_file':exposure_file,
-                'exposure_lat':lat_name,
-                'exposure_long':long_name },
+                'exposure_latitude':lat_name,
+                'exposure_longitude':long_name },
             jobs.LOADXMLVULNERABILITY:{
                 'vulnerability_file':vulnerability_file},
             jobs.SIMPLELINKER:{
