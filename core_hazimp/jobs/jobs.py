@@ -22,11 +22,11 @@ from core_hazimp.misc import instanciate_classes
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 LOADCSVEXPOSURE = 'load_csv_exposure'
+LOADRASTER = 'load_raster'
 LOADXMLVULNERABILITY = 'load_xml_vulnerability'
 SIMPLELINKER = 'simple_linker'
 SELECTVULNFUNCTION  = 'select_vulnerability_functions'
 LOOKUP = 'look_up'
-LOADRASTER = 'load_raster'
 
 
 class Job(object):

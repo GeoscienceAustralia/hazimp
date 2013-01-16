@@ -16,6 +16,7 @@ import os
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
+EXAMPLE_DIR = os.path.join(ROOT_DIR, 'examples')
         
 def csv2dict(filename):
     """

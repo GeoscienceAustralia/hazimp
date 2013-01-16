@@ -35,12 +35,12 @@ class TestResources(unittest.TestCase):
     def test_domestic_wind_vul_curves(self):
         vuln_sets = vuln_sets_from_xml_file(os.path.join(RESOURCE_DIR, 
                                              'domestic_wind_vul_curves.xml'))
-        self.assertEqual(vuln_sets["domestic_wind"].intensity_measure_type,
+        self.assertEqual(vuln_sets["domestic_wind_2012"].intensity_measure_type,
                          "0.2s gust at 10m height m/s")
         
         # Check the first loss value of the last model
-        vul_funct = vuln_sets["domestic_wind"].vulnerability_functions['dw306']
-        self.assertAlmostEqual(vul_funct.mean_loss[0], 0.004550853)
+        vul_funct = vuln_sets["domestic_wind_2012"].vulnerability_functions['dw306']
+        self.assertAlmostEqual(vul_funct.mean_loss[0], 0.0)
     
 #-------------------------------------------------------------
 if __name__ == "__main__":
