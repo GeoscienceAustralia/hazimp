@@ -7,6 +7,7 @@ Test wind scenarios.
 import unittest
 import os
 
+from scipy import allclose
                 
 from core_hazimp import hazimp                
 from core_hazimp import misc
@@ -14,6 +15,7 @@ from core_hazimp import misc
 from core_hazimp.jobs.jobs import LOADRASTER, LOADCSVEXPOSURE, \
     LOADXMLVULNERABILITY, SIMPLELINKER, SELECTVULNFUNCTION, \
     LOOKUP
+from core_hazimp.calcs.calcs import STRUCT_LOSS
 
 class TestWind(unittest.TestCase): 
     """
@@ -30,7 +32,7 @@ class TestWind(unittest.TestCase):
                                     'domestic_wind_vul_curves.xml')
         config = {
             'jobs':[LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
-            SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP],
+            SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS],
             LOADCSVEXPOSURE:{'exposure_file':exp_filename,
                                  'exposure_latitude':'latitude',
                                  'exposure_longitude':'longitude'},
@@ -40,12 +42,11 @@ class TestWind(unittest.TestCase):
             SIMPLELINKER:{'vul_functions_in_exposure':{
                     'domestic_wind_2012':'wind_vulnerability_model'}},
             SELECTVULNFUNCTION:{'variability_method':{
-                    'domestic_wind_2012':'mean'}},
-            LOOKUP:{}}
+                    'domestic_wind_2012':'mean'}}}
+            
         context = hazimp.main(config_dic=config)
-        
-        
-  
+        self.assertTrue(allclose(context.exposure_att['structural_loss'],
+                                 context.exposure_att['calced-loss']))
         
 #-------------------------------------------------------------
 if __name__ == "__main__":

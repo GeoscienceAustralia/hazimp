@@ -145,3 +145,37 @@ def raster_data_at_points_a_file(lon, lat, filename):# pylint: disable=R0914
     
     return values
     
+    
+         
+def dict2csv(data_dict, filename):
+    """
+    Write a csv file where the key is the column names and the values
+    are numpy arrays.  If the arrays have 2 dimensions the
+    other dimension is averaged so there is only 1 dimension.
+    
+    3 or more dimensions cause an error.
+    
+    Args:
+        filename: The csv file to be written.
+        data_dict: The dictionary with the data
+         
+    """
+    
+    header = []
+    columns = []
+    for key, val in data_dict.iteritems():
+        header.append(key)
+        if len(val.shape) == 2:
+            val = numpy.average(val, axis=1)
+        elif len(val.shape) > 2:
+            msg = 'Too many dimensions in exposure_att %s' % key
+            raise RuntimeError(msg)    
+        columns.append(val)
+    output = numpy.column_stack(tuple(columns))
+    fid = open( filename, 'w' ) 
+    fid.write(",".join(header) + '\n') 
+    numpy.savetxt(fid, output, delimiter=',')
+    fid.close() 
+    
+    
+       
