@@ -250,6 +250,7 @@ class LookUp(Job):
                 key - intensity measure
                 value - realised vulnerability curve instance per asset
         """
+        
         for intensity_key in context.exposure_vuln_curves:
             vuln_curve = context.exposure_vuln_curves[intensity_key]
             int_measure = vuln_curve.intensity_measure_type

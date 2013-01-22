@@ -90,6 +90,8 @@ class Context(object):
         self.exposure_long = None
         
         # The exposure data at the lats and longs
+        # key - data name
+        # value - A numpy array. First dimension is site. 
         self.exposure_att = {}
         
         # for example 'vulnerability_functions' is a list of a list of

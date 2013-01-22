@@ -39,7 +39,8 @@ class TestResources(unittest.TestCase):
                          "0.2s gust at 10m height m/s")
         
         # Check the first loss value of the last model
-        vul_funct = vuln_sets["domestic_wind_2012"].vulnerability_functions['dw306']
+        vul_funct = vuln_sets["domestic_wind_2012"].vulnerability_functions[
+            'dw306']
         self.assertAlmostEqual(vul_funct.mean_loss[0], 0.0)
     
 #-------------------------------------------------------------

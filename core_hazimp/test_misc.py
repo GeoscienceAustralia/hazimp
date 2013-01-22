@@ -70,16 +70,16 @@ class TestMisc(unittest.TestCase):
         
         lon = asarray([0, 0.9, 1.999])
         lat = asarray([9.9, 9.1, 8.9])
-        data = raster_data_at_points(lon, lat, [f.name])   
+        data = raster_data_at_points(lon, lat, [f.name])  
         self.assertTrue(allclose(data, asarray([1., 1., 5.])))
         
         lon = asarray([0.0001, 0.0001, 2.999, 2.999])
         lat = asarray([8.0001, 9.999, 9.999, 8.0001])
         data = raster_data_at_points(lon, lat, [f.name])
         index_g = numpy.array([0, 1, 3])
-        self.assertTrue(allclose(data[0, index_g], 
+        self.assertTrue(allclose(data[index_g], 
                                  asarray([4., 1., 6.])))
-        self.assertTrue(numpy.isnan(data[0, 2]))
+        self.assertTrue(numpy.isnan(data[2]))
         
         os.remove(f.name)
       

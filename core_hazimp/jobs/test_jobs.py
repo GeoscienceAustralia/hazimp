@@ -16,7 +16,7 @@ Test the calcs module.
 import unittest
 import tempfile
 import os
-from scipy import allclose, asarray, isnan
+from scipy import allclose, asarray, isnan, reshape
 
 from core_hazimp.jobs.jobs import JOBS, LOADRASTER, LOADCSVEXPOSURE
 from core_hazimp.jobs.test_vulnerability_model import build_example
@@ -182,26 +182,32 @@ class TestJobs(unittest.TestCase):
         inst(context, **test_kwargs)
         the_nans = isnan(context.exposure_att[haz_v])
         context.exposure_att[haz_v][the_nans] = -9999
+        msg = "context.exposure_att[haz_v] " + str(context.exposure_att[haz_v])
+        msg += "\n not = context.exposure_att['haz_actual'] " + \
+            str(context.exposure_att['haz_actual'])
         self.assertTrue(allclose(context.exposure_att[haz_v], 
-                                 context.exposure_att['haz_actual']))
+                                 context.exposure_att['haz_actual']), msg)
         
+        
+    def test_look_up(self):
+        pass
+        # FIXME Needs test.
         
     def test_load_rasters(self):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.txt', prefix='test_jobs',
                                         delete=False)
-        f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
-        f.write('8.1, 0.1, 1, 4\n')
-        f.write('7.9, 1.5, 2, -9999\n')
-        f.write('8.9, 2.9, 3, 6\n')
-        f.write('8.9, 3.1, 4, -9999\n')
-        f.write('9.9, 2.9, 5, -9999\n')
+        f.write('exposure_latitude, exposure_longitude, ID, haz_0, haz_1\n')
+        f.write('8.1, 0.1, 1, 4, 40\n')
+        f.write('7.9, 1.5, 2, -9999, -9999\n')
+        f.write('8.9, 2.9, 3, 6, 60\n')
+        f.write('8.9, 3.1, 4, -9999, -9999\n')
+        f.write('9.9, 2.9, 5, -9999, -9999\n')
         f.close()        
         
         inst = JOBS[LOADCSVEXPOSURE]
         context = Dummy
-        context.exposure_lat = None
-        context.exposure_long = None
+        context.exposure_lat = context.exposure_long = None
         context.exposure_att = {}
         test_kwargs = {'exposure_file':f.name}
         inst(context, **test_kwargs)               
@@ -239,13 +245,15 @@ class TestJobs(unittest.TestCase):
         inst = JOBS[LOADRASTER]
         test_kwargs = {'file_list':files, 'attribute_label':haz_v}
         inst(context, **test_kwargs)
-        the_nans = isnan(context.exposure_att[haz_v][0, :])
-        context.exposure_att[haz_v][0, the_nans] = -9999
-        the_nans = isnan(context.exposure_att[haz_v][1, :])
-        context.exposure_att[haz_v][1, the_nans] = -99990
-        actual = asarray([context.exposure_att['haz_actual'], 
-                          context.exposure_att['haz_actual']*10])
-        self.assertTrue(allclose(context.exposure_att[haz_v], actual))
+        the_nans = isnan(context.exposure_att[haz_v])
+        context.exposure_att[haz_v][the_nans] = -9999
+        actual = asarray([context.exposure_att['haz_0'], 
+                          context.exposure_att['haz_1']])
+        actual = reshape(actual, (5, 2))
+        msg = "context.exposure_att[haz_av] " \
+            + str(context.exposure_att[haz_v])
+        msg += "\n actual " + str(actual)
+        self.assertTrue(allclose(context.exposure_att[haz_v], actual), msg)
         
         for a_file in files:        
             os.remove(a_file)
@@ -253,5 +261,6 @@ class TestJobs(unittest.TestCase):
 #-------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestJobs,'test')
+    SUITE = unittest.makeSuite(TestJobs,'test_load_rasters')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)

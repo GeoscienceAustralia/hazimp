@@ -22,6 +22,9 @@ def csv2dict(filename):
     """
     Read a csv file in and return the information as a dictionary 
     where the key is the column names and the values are column arrays.
+    
+    Args:
+        filename: The csv file path string.
     """
     csvfile = open(filename, 'rb')
     reader = csv.DictReader(csvfile)
@@ -56,20 +59,42 @@ def instanciate_classes(module):
 def raster_data_at_points(lat, lon, files):
     """
     Get data at lat lon points, based on a set of files
+    
+    Args:
+        filename: The csv file path string.
+        lon: A 1D array of the longitude of the points.
+        lat: A 1d array of the latitude of the points.
+        
+    Returns:
+        A numpy array, shape (sites, hazards) or shape (sites), for one hazard. 
     """
     gdal.AllRegister()
     data = []
     for filename in files:
         results = raster_data_at_points_a_file(lat, lon, filename)
         data.append(results)
-    return numpy.asarray(data)
+    # shape (hazards, sites)
+    data = numpy.asarray(data)
+    if data.shape[0] == 1:
+        # One hazard
+        reshaped_data = numpy.reshape(data, (data.shape[1]))
+    else:
+        reshaped_data = numpy.reshape(data, (-1, data.shape[0]))
+    
+    return reshaped_data
     
        
 def raster_data_at_points_a_file(lon, lat, filename):# pylint: disable=R0914
     """
     Get data at lat lon points, based on a file.
     
-    lon, lat must be 1D arrays
+    Args:
+        filename: The csv file path string.
+        lon: A 1D array of the longitude of the points.
+        lat: A 1d array of the latitude of the points.
+        
+    Returns:
+        A numpy array, First dimension being the points/sites.    
     """
     # R0914: 63:raster_data_at_points_a_file: Too many local variables (19/15)
     
