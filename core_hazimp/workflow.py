@@ -114,3 +114,12 @@ class Context(object):
         # key - intensity measure
         # value - realised vulnerability curve instance
         self.exposure_vuln_curves = None
+        
+        
+class SameLengthData(object):
+    """
+    SameLengthData stores attributes with all the same length.
+    """
+
+    def __init__(self):
+        pass
