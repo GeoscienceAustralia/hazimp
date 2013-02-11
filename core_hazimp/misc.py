@@ -177,7 +177,7 @@ def dict2csv(data_dict, filename):
     numpy.savetxt(fid, output, delimiter=',')
     fid.close() 
     
-def save_exposure2npz(context, filename):
+def save_data(context, filename):
     """
     Write a npz file which has all the exposure arrays.
     
@@ -185,9 +185,7 @@ def save_exposure2npz(context, filename):
         filename: The csv file to be written.
         context: The context object.         
     """
-    write_dict = context.exposure_att + {EX_LAT:context.exposure_lat,
-                                         EX_LONG:context.exposure_long}
-    numpy.savez(filename, *write_dict)
+    context.save_exposure_atts(filename)
     
     
     

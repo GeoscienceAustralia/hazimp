@@ -16,7 +16,7 @@ import unittest
 import tempfile
 import os
 
-from scipy import allclose, asarray
+from scipy import allclose, asarray, array
 
 from core_hazimp import workflow
 from core_hazimp.workflow import ConfigPipeLineBuilder, Context
@@ -72,7 +72,7 @@ class TestWorkFlow(unittest.TestCase):
     
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.txt', 
-                                        prefix='test_jobs',
+                                        prefix='test_Job_title_fix_Co',
                                         delete=False)
         f.write('LAT, LONG, a_test, b_test,BUILDING\n')
         f.write('1., 2., 3., 30.,TAB\n')
@@ -95,6 +95,27 @@ class TestWorkFlow(unittest.TestCase):
         self.assertEqual(context.exposure_att['BUILDING'].tolist(),
                                  ['TAB', 'DSG'])
         os.remove(f.name)
+        
+        
+
+    def test_save_exposure_atts(self):
+    
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(suffix='.npz', 
+                                        prefix='test_save_exposure_atts',
+                                        delete=False)
+        f.close()
+        
+        con = workflow.Context()
+        actual = {'shoes':array([10., 11]), 'depth':array([5., 3.])}
+        con.exposure_att = actual
+        lat = array([1, 2.])
+        con.exposure_lat = lat
+        lon = array([10., 20.])       
+        con.exposure_long = lon
+        con.save_exposure_atts(f.name)
+        
+        
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestWorkFlow,'test')

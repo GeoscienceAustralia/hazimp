@@ -8,6 +8,7 @@ The purpose of this module is to provide objects
 to process a series of jobs in a sequential
 order. The order is determined by the queue of jobs.
 """
+import numpy
 
 from core_hazimp.pipeline import PipeLineBuilder, PipeLine
 
@@ -81,6 +82,7 @@ class Context(object):
     Context allows to read the config file
     and store preprocessing/processing steps
     intermediate results.
+    
     """
 
     def __init__(self):
@@ -115,10 +117,28 @@ class Context(object):
         # value - realised vulnerability curve instance
         self.exposure_vuln_curves = None
         
+   
+    def save_exposure_atts(self, filename):
+        """
+        Save the exposure attributes, including latitude and longitude.
+        The file type saved is based on the filename extension.
+        Options
+           '.npz': Save the arrays into a single file in uncompressed .npz 
+                   format.
         
+        Args:
+            filename: The file to be written.
+        """
+        
+        write_dict = self.exposure_att.copy()
+        write_dict[EX_LAT] = self.exposure_lat
+        write_dict[EX_LONG] = self.exposure_long
+        numpy.savez(filename, *write_dict)
+        
+         
 class SameLengthData(object):
     """
-    SameLengthData stores attributes with all the same length.
+    SameLengthData stores attributes with all the same length. Numpy arrays or lists go in. 
     """
 
     def __init__(self):
