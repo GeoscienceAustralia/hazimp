@@ -16,11 +16,15 @@ Test the calcs module.
 import unittest
 import tempfile
 import os
-from scipy import allclose, asarray, isnan, reshape
+import numpy
 
-from core_hazimp.jobs.jobs import JOBS, LOADRASTER, LOADCSVEXPOSURE
+from scipy import allclose, asarray, isnan, reshape, array
+
+from core_hazimp.jobs.jobs import JOBS, LOADRASTER, LOADCSVEXPOSURE, \
+    SAVEEXPOSURE
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
+from core_hazimp import workflow
 
 class Dummy:
     """
@@ -69,9 +73,10 @@ class TestJobs(unittest.TestCase):
         
     def test_load_csv_exposure(self):
         # Write a file to test
-        f = tempfile.NamedTemporaryFile(suffix='.txt', 
-                                        prefix='test_jobs',
-                                        delete=False)
+        f = tempfile.NamedTemporaryFile(
+            suffix='.txt', 
+            prefix='HAZIMPtest_jobs',
+            delete=False)
         f.write('exposure_latitude, exposure_longitude, Z\n')
         f.write('1., 2., 3.\n')
         f.write('4., 5., 6.\n')
@@ -145,8 +150,9 @@ class TestJobs(unittest.TestCase):
  
     def test_load_raster(self):
         # Write a file to test
-        f = tempfile.NamedTemporaryFile(suffix='.txt', prefix='test_jobs',
-                                        delete=False)
+        f = tempfile.NamedTemporaryFile(
+            suffix='.txt', prefix='HAZIMPtest_jobs',
+            delete=False)
         f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
         f.write('8.1, 0.1, 1, 4\n')
         f.write('7.9, 1.5, 2, -9999\n')
@@ -165,8 +171,9 @@ class TestJobs(unittest.TestCase):
         os.remove(f.name)
         
         # Write a hazard file
-        f = tempfile.NamedTemporaryFile(suffix='.aai', prefix='test_jobs',
-                                        delete=False)
+        f = tempfile.NamedTemporaryFile(
+            suffix='.aai', prefix='HAZIMPtest_jobs',
+            delete=False)
         f.write('ncols 3    \r\n')
         f.write('nrows 2 \r\n')
         f.write('xllcorner +0.    \r\n')
@@ -195,8 +202,9 @@ class TestJobs(unittest.TestCase):
         
     def test_load_rasters(self):
         # Write a file to test
-        f = tempfile.NamedTemporaryFile(suffix='.txt', prefix='test_jobs',
-                                        delete=False)
+        f = tempfile.NamedTemporaryFile(
+            suffix='.txt', prefix='HAZIMPtest_jobs',
+            delete=False)
         f.write('exposure_latitude, exposure_longitude, ID, haz_0, haz_1\n')
         f.write('8.1, 0.1, 1, 4, 40\n')
         f.write('7.9, 1.5, 2, -9999, -9999\n')
@@ -214,8 +222,9 @@ class TestJobs(unittest.TestCase):
         os.remove(f.name)
         
         # Write a hazard file
-        f = tempfile.NamedTemporaryFile(suffix='.aai', prefix='test_jobs',
-                                        delete=False)
+        f = tempfile.NamedTemporaryFile(
+            suffix='.aai', prefix='HAZIMPtest_jobs',
+            delete=False)
         f.write('ncols 3 \r\n')
         f.write('nrows 2 \r\n')
         f.write('xllcorner +0. \r\n')
@@ -228,8 +237,9 @@ class TestJobs(unittest.TestCase):
         files = [f.name]
         
         # Write another hazard file
-        f = tempfile.NamedTemporaryFile(suffix='.aai', prefix='test_jobs',
-                                        delete=False)
+        f = tempfile.NamedTemporaryFile(
+            suffix='.aai', prefix='HAZIMPtest_jobs',
+            delete=False)
         f.write('ncols 3 \r\n')
         f.write('nrows 2 \r\n')
         f.write('xllcorner +0. \r\n')
@@ -257,6 +267,39 @@ class TestJobs(unittest.TestCase):
         
         for a_file in files:        
             os.remove(a_file)
+        
+        
+    def test_save_exposure(self):
+        # get a file name
+        f = tempfile.NamedTemporaryFile(
+            suffix='.npz', 
+            prefix='HAZIMPt_jobs_test_save_exposure',
+            delete=False)
+        f.close()
+        
+        inst = JOBS[SAVEEXPOSURE]
+        con = workflow.Context()
+        actual = {'shoes':array([11., 11]), 'depth':array([[5., 3.], [2., 4]]),
+                  'he':array([199999999,200])}
+        con.exposure_att = actual
+        lat = array([1, 22.])
+        con.exposure_lat = lat
+        lon = array([100., 22.])       
+        con.exposure_long = lon
+        test_kwargs = {'file_name':f.name}
+        inst(con, **test_kwargs)
+         
+        exp_dict = numpy.load(f.name)
+        
+        actual[workflow.EX_LONG] = lon
+        actual[workflow.EX_LAT] = lat
+        for keyish in exp_dict.files:
+            self.assertTrue(allclose(exp_dict[keyish],
+                                     actual[keyish]))
+        
+        
+        os.remove(f.name)
+        
         
 #-------------------------------------------------------------
 if __name__ == "__main__":

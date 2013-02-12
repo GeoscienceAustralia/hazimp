@@ -27,6 +27,7 @@ LOADXMLVULNERABILITY = 'load_xml_vulnerability'
 SIMPLELINKER = 'simple_linker'
 SELECTVULNFUNCTION  = 'select_vulnerability_functions'
 LOOKUP = 'look_up'
+SAVEEXPOSURE = 'save_exposure'
 
 
 class Job(object):
@@ -297,7 +298,27 @@ class LoadRaster(Job):
                                               context.exposure_lat, file_list)
             context.exposure_att[attribute_label] = file_data
 
-            
+                                 
+class SaveExposure(Job):
+    """
+    Save all of the exposure information in the context. 
+    """
+    def __init__(self):
+        super(SaveExposure, self).__init__()
+        self.call_funct = SAVEEXPOSURE
+
+    def __call__(self, context, file_name=None):
+        """
+        Save all of the exposure information in the context. 
+             
+        Args:
+           file_name: The file where the expsoure data will go.
+             
+        """
+        
+        context.save_exposure_atts(file_name)
+
+                       
     
 #____________________________________________________
 #---------------------------------------------------- 
