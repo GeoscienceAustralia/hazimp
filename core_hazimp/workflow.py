@@ -133,13 +133,6 @@ class Context(object):
         write_dict = self.exposure_att.copy()
         write_dict[EX_LAT] = self.exposure_lat
         write_dict[EX_LONG] = self.exposure_long
-        numpy.savez(filename, *write_dict)
+        numpy.savez(filename, **write_dict)
         
          
-class SameLengthData(object):
-    """
-    SameLengthData stores attributes with all the same length. Numpy arrays or lists go in. 
-    """
-
-    def __init__(self):
-        pass

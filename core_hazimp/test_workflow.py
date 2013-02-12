@@ -15,11 +15,12 @@ Test the workflow module.
 import unittest
 import tempfile
 import os
+import numpy
 
 from scipy import allclose, asarray, array
 
 from core_hazimp import workflow
-from core_hazimp.workflow import ConfigPipeLineBuilder, Context
+from core_hazimp.workflow import ConfigPipeLineBuilder, Context, EX_LAT, EX_LONG
 from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.jobs.jobs import JOBS
 
@@ -95,7 +96,8 @@ class TestWorkFlow(unittest.TestCase):
         self.assertEqual(context.exposure_att['BUILDING'].tolist(),
                                  ['TAB', 'DSG'])
         os.remove(f.name)
-        
+
+                
         
 
     def test_save_exposure_atts(self):
@@ -107,13 +109,23 @@ class TestWorkFlow(unittest.TestCase):
         f.close()
         
         con = workflow.Context()
-        actual = {'shoes':array([10., 11]), 'depth':array([5., 3.])}
+        actual = {'shoes':array([10., 11]), 'depth':array([[5., 3.], [2., 4]]),
+                  'he':array([1,2])}
         con.exposure_att = actual
         lat = array([1, 2.])
         con.exposure_lat = lat
         lon = array([10., 20.])       
         con.exposure_long = lon
         con.save_exposure_atts(f.name)
+        exp_dict = numpy.load(f.name)
+        
+        actual[EX_LONG] = lon
+        actual[EX_LAT] = lat
+        for keyish in exp_dict.files:
+            self.assertTrue(allclose(exp_dict[keyish],
+                                     actual[keyish]))
+        
+        os.remove(f.name)
         
         
 #-------------------------------------------------------------
