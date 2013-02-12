@@ -21,7 +21,7 @@ import numpy
 from scipy import allclose, asarray, isnan, reshape, array
 
 from core_hazimp.jobs.jobs import JOBS, LOADRASTER, LOADCSVEXPOSURE, \
-    SAVEEXPOSURE
+    SAVEALL
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 from core_hazimp import workflow
@@ -277,7 +277,7 @@ class TestJobs(unittest.TestCase):
             delete=False)
         f.close()
         
-        inst = JOBS[SAVEEXPOSURE]
+        inst = JOBS[SAVEALL]
         con = workflow.Context()
         actual = {'shoes':array([11., 11]), 'depth':array([[5., 3.], [2., 4]]),
                   'he':array([199999999,200])}

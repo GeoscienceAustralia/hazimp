@@ -27,7 +27,7 @@ LOADXMLVULNERABILITY = 'load_xml_vulnerability'
 SIMPLELINKER = 'simple_linker'
 SELECTVULNFUNCTION  = 'select_vulnerability_functions'
 LOOKUP = 'look_up'
-SAVEEXPOSURE = 'save_exposure'
+SAVEALL = 'save_all'
 
 
 class Job(object):
@@ -305,7 +305,7 @@ class SaveExposure(Job):
     """
     def __init__(self):
         super(SaveExposure, self).__init__()
-        self.call_funct = SAVEEXPOSURE
+        self.call_funct = SAVEALL
 
     def __call__(self, context, file_name=None):
         """

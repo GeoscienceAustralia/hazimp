@@ -16,7 +16,7 @@ from core_hazimp import misc
 
 from core_hazimp.jobs.jobs import LOADRASTER, LOADCSVEXPOSURE, \
     LOADXMLVULNERABILITY, SIMPLELINKER, SELECTVULNFUNCTION, \
-    LOOKUP, SAVEEXPOSURE
+    LOOKUP, SAVEALL
 from core_hazimp.calcs.calcs import STRUCT_LOSS
 
 class TestWind(unittest.TestCase): 
@@ -42,7 +42,7 @@ class TestWind(unittest.TestCase):
         config = {
             'jobs':[LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
             SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
-            SAVEEXPOSURE],
+            SAVEALL],
             LOADCSVEXPOSURE:{'exposure_file':exp_filename,
                                  'exposure_latitude':'latitude',
                                  'exposure_longitude':'longitude'},
@@ -53,7 +53,7 @@ class TestWind(unittest.TestCase):
                     'domestic_wind_2012':'wind_vulnerability_model'}},
             SELECTVULNFUNCTION:{'variability_method':{
                     'domestic_wind_2012':'mean'}},
-            SAVEEXPOSURE:{'file_name':f.name}}
+            SAVEALL:{'file_name':f.name}}
             
         context = hazimp.main(config_dic=config)
         self.assertTrue(allclose(context.exposure_att['structural_loss'],
