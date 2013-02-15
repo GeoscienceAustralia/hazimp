@@ -19,7 +19,7 @@ def main(config_dic=None, config_file=None):
         raise RuntimeError('No configuration information.')
         
     context = workflow.Context()
-    calc_jobs = config.job_reader(config_dic)  
+    calc_jobs = config.template_builder(config_dic)  # config_dic modified
     pipe_factory = workflow.ConfigPipeLineBuilder()
     pipeline = pipe_factory.build(calc_jobs)
     pipeline.run(context, config_dic)

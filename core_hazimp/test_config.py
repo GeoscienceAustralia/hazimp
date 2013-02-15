@@ -36,7 +36,7 @@ class TestConfig(unittest.TestCase):
 
     def test_job_reader(self):
         config_dic = {'version':1, 'jobs':['add_test']}
-        actual = config.job_reader(config_dic)
+        actual = config.template_builder(config_dic)
         self.assertListEqual([calcs.CALCS['add_test']], actual)
           
     
