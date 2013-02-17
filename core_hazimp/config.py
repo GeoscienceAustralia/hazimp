@@ -59,7 +59,7 @@ def template_builder(config_dic):
         reader_function = READERS[str(template)]
     except KeyError:
         raise RuntimeError(
-            'Invalid version number, %s in config file.' % version)
+            'Invalid template name, %s in config file.' % template)
             
     jobs = reader_function(config_dic)
     return jobs 
