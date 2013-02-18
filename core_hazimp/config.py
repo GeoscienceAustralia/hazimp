@@ -19,6 +19,7 @@ DEFAULT = 'default'
 LOADWINDTCRM = 'load_wind_tcrm_ascii'
 TEMPLATE = 'template'
 WINDV1 = 'windv1'
+SAVE = 'save'
 
 def read_file(file_name):
     """
@@ -32,7 +33,6 @@ def read_file(file_name):
     """
     config_file_handle = open(file_name, 'r')
     config_dic = yaml.load(config_file_handle)
-        
     return config_dic    
 
 def template_builder(config_dic):
@@ -98,19 +98,22 @@ def _wind_v1_reader(config_dic):
             SAVEALL]
     vul_filename = os.path.join(misc.RESOURCE_DIR, 
                                 'domestic_wind_vul_curves.xml')
-    file_list = config_dic[LOADWINDTCRM]['file_list']
-    config_dic[LOADRASTER] = {'file_list':file_list,
-                              'attribute_label':'0.2s gust at 10m height m/s'}
-    config_dic[LOADXMLVULNERABILITY] = {'vulnerability_file':vul_filename}
+    config_dic[LOADRASTER] = {
+        'file_list':config_dic[LOADWINDTCRM],
+        'attribute_label':'0.2s gust at 10m height m/s'}
+    config_dic[LOADXMLVULNERABILITY] = {
+        'vulnerability_file':vul_filename}
     config_dic[SIMPLELINKER] = {'vul_functions_in_exposure':{
-                    'domestic_wind_2012':'wind_vulnerability_model'}}
+            'domestic_wind_2012':'wind_vulnerability_model'}}
     config_dic[SELECTVULNFUNCTION] = {'variability_method':{
-                    'domestic_wind_2012':'mean'}}
+            'domestic_wind_2012':'mean'}}
+    config_dic[SAVEALL] = {'file_name':config_dic[SAVE]}
     return get_job_or_calcs(job_names)
     
 def get_job_or_calcs(job_names):
     """
-    Given a list of job or calc names, return a list of job or calc instances.
+    Given a list of job or calc names, return a list of job or calc
+    instances.
     
     arg:
         name: The name if a job or calc.
