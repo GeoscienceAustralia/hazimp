@@ -20,6 +20,7 @@ def main(config_dic=None, config_file=None):
         
     context = workflow.Context()
     calc_jobs = config.template_builder(config_dic)  # config_dic modified
+    config.validate_config(config_dic)
     pipe_factory = workflow.ConfigPipeLineBuilder()
     pipeline = pipe_factory.build(calc_jobs)
     pipeline.run(context, config_dic)

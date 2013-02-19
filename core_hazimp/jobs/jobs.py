@@ -11,12 +11,12 @@ the exposure data.
 And key, value pairs that are in the config file are passed to the
 jobs function.  The function name is used to determine what to pass in.
 
-Assumptions - 
+Special named parameters - 
 
 file_name  - THE attribute used to describe files to load. If the file
-is not present Error out.
+is not present Error out. This is checked in the validate job.
 
-file_list - THE attribute used to describe a list of files. If nay file
+file_list - THE attribute used to describe a list of files. If any file
 is not present Error out.
 
 """
@@ -36,7 +36,8 @@ SIMPLELINKER = 'simple_linker'
 SELECTVULNFUNCTION  = 'select_vulnerability_functions'
 LOOKUP = 'look_up'
 SAVEALL = 'save_all'
-
+VALIDATECONFIG = 'validate_config'
+JOBSKEY = 'jobs'
 
 class Job(object):
     """
@@ -323,7 +324,6 @@ class SaveExposure(Job):
         
         context.save_exposure_atts(file_name)
 
-                       
     
 #____________________________________________________
 #---------------------------------------------------- 
