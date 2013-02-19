@@ -60,7 +60,7 @@ class TestWorkFlow(unittest.TestCase):
         
         pipeline = Cab.build(calc_list)
         config = {'constant_test':{'c_test':[5., 2.]}, 
-                  'load_csv_exposure':{'exposure_file':f.name}}
+                  'load_csv_exposure':{'file_name':f.name}}
         pipeline.run(context, config)
         
         self.assertTrue(allclose(context.exposure_att['c_test'],
@@ -86,7 +86,7 @@ class TestWorkFlow(unittest.TestCase):
         
         pipeline = Cab.build(calc_list)
         config = {'constant_test':{'c_test':[5., 2.]}, 
-                  'load_csv_exposure':{'exposure_file':f.name,
+                  'load_csv_exposure':{'file_name':f.name,
                                        workflow.EX_LAT:'LAT',
                                        workflow.EX_LONG:'LONG'}}
         pipeline.run(context, config)

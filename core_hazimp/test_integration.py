@@ -106,8 +106,8 @@ class TestIntegration(unittest.TestCase):
     def test_exposure_and_vuln_functions(self):
         
         # Create the files
-        vulnerability_file = build_example_vuln()
-        exposure_file, lat_name, long_name  = build_example_exposure()
+        file_vuln = build_example_vuln()
+        file_exp, lat_name, long_name  = build_example_exposure()
         
         config_dic = {
             'version':1,
@@ -117,11 +117,11 @@ class TestIntegration(unittest.TestCase):
                     jobs.SELECTVULNFUNCTION,
                     jobs.LOOKUP],
             jobs.LOADCSVEXPOSURE:{
-                'exposure_file':exposure_file,
+                'file_name':file_exp,
                 'exposure_latitude':lat_name,
                 'exposure_longitude':long_name },
             jobs.LOADXMLVULNERABILITY:{
-                'vulnerability_file':vulnerability_file},
+                'file_name':file_vuln},
             jobs.SIMPLELINKER:{
             'vul_functions_in_exposure':{"EQ_building":'building',
                                        "EQ_contents":'contents'}},
@@ -141,8 +141,8 @@ class TestIntegration(unittest.TestCase):
         self.assertTrue(allclose(actual,
                                  results), 'actual: ' + str(actual))
         
-        os.remove(vulnerability_file)    
-        os.remove(exposure_file)  
+        os.remove(file_vuln)    
+        os.remove(file_exp)  
         
         
 #-------------------------------------------------------------

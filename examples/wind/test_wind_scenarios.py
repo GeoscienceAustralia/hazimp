@@ -50,13 +50,13 @@ class TestWind(unittest.TestCase):
             'jobs':[LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
             SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
             SAVEALL],
-            LOADCSVEXPOSURE:{'exposure_file':exp_filename,
+            LOADCSVEXPOSURE:{'file_name':exp_filename,
                                  'exposure_latitude':'latitude',
                                  'exposure_longitude':'longitude'},
             LOADRASTER:{'file_list':[wind_filename],
                         'attribute_label':
                             '0.2s gust at 10m height m/s'},
-            LOADXMLVULNERABILITY:{'vulnerability_file':vul_filename},
+            LOADXMLVULNERABILITY:{'file_name':vul_filename},
             SIMPLELINKER:{'vul_functions_in_exposure':{
                     'domestic_wind_2012':'wind_vulnerability_model'}},
             SELECTVULNFUNCTION:{'variability_method':{
@@ -91,7 +91,7 @@ class TestWind(unittest.TestCase):
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
         config = {
             TEMPLATE:WINDV1,
-            LOADCSVEXPOSURE:{'exposure_file':exp_filename,
+            LOADCSVEXPOSURE:{'file_name':exp_filename,
                                  'exposure_latitude':'latitude',
                                  'exposure_longitude':'longitude'},
             LOADWINDTCRM:[wind_filename],
@@ -130,7 +130,7 @@ class TestWind(unittest.TestCase):
         
         print(TEMPLATE + ': ' +WINDV1, file=f)
         print(LOADCSVEXPOSURE + ':', file=f)
-        print('  exposure_file: ' + exp_filename, file=f)
+        print('  file_name: ' + exp_filename, file=f)
         print('  exposure_latitude: latitude', file=f)
         print('  exposure_longitude: longitude', file=f)
         print(LOADWINDTCRM + ': [' + wind_filename + ']', file=f)

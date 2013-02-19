@@ -11,6 +11,14 @@ the exposure data.
 And key, value pairs that are in the config file are passed to the
 jobs function.  The function name is used to determine what to pass in.
 
+Assumptions - 
+
+file_name  - THE attribute used to describe files to load. If the file
+is not present Error out.
+
+file_list - THE attribute used to describe a list of files. If nay file
+is not present Error out.
+
 """
 
 import sys 
@@ -73,14 +81,14 @@ class LoadCsvExposure(Job):
         self.call_funct = LOADCSVEXPOSURE
 
 
-    def __call__(self, context, exposure_file=None, exposure_latitude=None,
+    def __call__(self, context, file_name=None, exposure_latitude=None,
                       exposure_longitude=None):
         """
         Read a csv exposure file into the context object.     
         
         Args:
             context: The context instance, used to move data around.
-            exposure_file: The csv file to load.
+            file_name: The csv file to load.
             exposure_latitude: the title string of the latitude column.
             exposure_longitud: the title string of the longitude column.
             
@@ -90,7 +98,7 @@ class LoadCsvExposure(Job):
                 value: column values, except the title
         """
     
-        file_dict = csv2dict(exposure_file)
+        file_dict = csv2dict(file_name)
     
         # FIXME Need to do better error handling
     
@@ -118,9 +126,6 @@ class LoadCsvExposure(Job):
         
         for key in file_dict:
             context.exposure_att[key] = asarray(file_dict[key])
-        #try:
-         #   context.exposure_att[key] = asarray(file_dict[key])
-        #context.exposure_att.update(file_dict)
     
 
 class LoadXmlVulnerability(Job):
@@ -132,15 +137,15 @@ class LoadXmlVulnerability(Job):
         self.call_funct = LOADXMLVULNERABILITY
 
 
-    def __call__(self, context, vulnerability_file=None):
+    def __call__(self, context, file_name=None):
         """
         Read a csv exposure file into the context object.     
         
         Args:
-            vulnerability_file: The xml file to load.
+            file_name: The xml file to load.
         """
-        if vulnerability_file is not None:
-            vuln_sets = vuln_sets_from_xml_file(vulnerability_file)
+        if file_name is not None:
+            vuln_sets = vuln_sets_from_xml_file(file_name)
             context.vulnerability_sets.update(vuln_sets)
   
   

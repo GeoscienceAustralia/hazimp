@@ -87,7 +87,7 @@ class TestJobs(unittest.TestCase):
         context.exposure_lat = None
         context.exposure_long = None
         context.exposure_att = {}
-        test_kwargs = {'exposure_file':f.name}
+        test_kwargs = {'file_name':f.name}
         inst(context, **test_kwargs)
         
         self.assertTrue(allclose(context.exposure_lat, asarray([1.0, 4.0])))
@@ -105,7 +105,7 @@ class TestJobs(unittest.TestCase):
         context.exposure_lat = None
         context.exposure_long = None
         context.vulnerability_sets = {}
-        test_kwargs = {'vulnerability_file':filename}
+        test_kwargs = {'file_name':filename}
         inst = JOBS['load_xml_vulnerability']
         inst(context, **test_kwargs)
         page = context.vulnerability_sets['PAGER']
@@ -166,7 +166,7 @@ class TestJobs(unittest.TestCase):
         context.exposure_lat = None
         context.exposure_long = None
         context.exposure_att = {}
-        test_kwargs = {'exposure_file':f.name}
+        test_kwargs = {'file_name':f.name}
         inst(context, **test_kwargs)               
         os.remove(f.name)
         
@@ -217,7 +217,7 @@ class TestJobs(unittest.TestCase):
         context = Dummy
         context.exposure_lat = context.exposure_long = None
         context.exposure_att = {}
-        test_kwargs = {'exposure_file':f.name}
+        test_kwargs = {'file_name':f.name}
         inst(context, **test_kwargs)               
         os.remove(f.name)
         

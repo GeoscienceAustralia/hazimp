@@ -102,7 +102,7 @@ def _wind_v1_reader(config_dic):
         'file_list':config_dic[LOADWINDTCRM],
         'attribute_label':'0.2s gust at 10m height m/s'}
     config_dic[LOADXMLVULNERABILITY] = {
-        'vulnerability_file':vul_filename}
+        'file_name':vul_filename}
     config_dic[SIMPLELINKER] = {'vul_functions_in_exposure':{
             'domestic_wind_2012':'wind_vulnerability_model'}}
     config_dic[SELECTVULNFUNCTION] = {'variability_method':{
