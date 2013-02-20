@@ -304,6 +304,5 @@ class TestJobs(unittest.TestCase):
 #-------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestJobs,'test')
-    SUITE = unittest.makeSuite(TestJobs,'test_load_rasters')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)

@@ -13,6 +13,8 @@ Test the config module.
 """
 
 import unittest
+import tempfile
+import os
 
 from core_hazimp import config
 from core_hazimp.calcs import calcs # import CALCS
@@ -38,8 +40,77 @@ class TestConfig(unittest.TestCase):
         config_dic = {'version':1, 'jobs':['add_test']}
         actual = config.template_builder(config_dic)
         self.assertListEqual([calcs.CALCS['add_test']], actual)
-          
+         
+    def test_file_can_open(self):
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(
+            suffix='.txt', 
+            prefix='HAZIMPtest_config',
+            delete=False)
+        f.write('yeah\n')
+        f.close()
     
+        self.assertTrue(config.file_can_open(f.name))
+        os.remove(f.name)
+        
+    def test_file_can_openII(self):
+        self.assertFalse(config.file_can_open("/there/should/be/no/file.txt"))
+        
+    def test_file_can_openIII(self):
+        junk_files = []
+        for _ in range(3):
+            # Write a file to test
+            f = tempfile.NamedTemporaryFile(
+                suffix='.txt', 
+                prefix='HAZIMPtest_config',
+                delete=False)
+            f.write('yeah\n')
+            f.close()
+            junk_files.append(f)
+            
+        config_dic = {
+            'dove':{'file_name':junk_files[0].name},
+            'eagle':{'file_list':[junk_files[1].name, junk_files[2].name]}
+            
+        }
+        
+        self.assertTrue(config.check_files_to_load(config_dic))
+        
+        for handle in junk_files:
+            os.remove(handle.name)
+        
+        
+    def test_file_can_openIV(self):
+    
+        # Test that an Error is raised if the files aren't there
+        junk_files = []
+        for _ in range(3):
+            # Write a file to test
+            f = tempfile.NamedTemporaryFile(
+                suffix='.txt', 
+                prefix='HAZIMPtest_config',
+                delete=False)
+            f.write('yeah\n')
+            f.close()
+            junk_files.append(f)
+            
+        for handle in junk_files:
+            os.remove(handle.name)
+            
+        config_dic = {
+            'dove':{'file_name':junk_files[0].name},
+            'eagle':{'file_list':[junk_files[1].name, junk_files[2].name]}
+        }
+        
+        self.assertRaises(RuntimeError, config.check_files_to_load, config_dic)
+        self.assertRaises(RuntimeError, config.validate_config, config_dic)
+
+        
+    def test_check_1st_level_keys(self):     
+        config_dic = {'foo':12}
+        self.assertRaises(RuntimeError, config.check_1st_level_keys, config_dic)
+        
+        
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestConfig,'test')

@@ -1,0 +1,11 @@
+#  python ../../core_hazimp/hazimp.py -c wind_v1.yaml
+template: windv1
+
+load_csv_exposure: 
+  file_name: small_exposure_tcrm.csv
+  exposure_latitude: latitude
+  exposure_longitude: longitude
+  
+load_wind_tcrm_ascii: [gust01.txt]
+  
+save: eagle.npz  

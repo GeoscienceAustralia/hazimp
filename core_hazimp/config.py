@@ -3,6 +3,7 @@
 
 """
 Functions concerning the configuration file.
+
 """
 
 import os
@@ -13,7 +14,8 @@ from core_hazimp.jobs.jobs import JOBS, LOADRASTER, LOADCSVEXPOSURE, \
     LOADXMLVULNERABILITY, SIMPLELINKER, SELECTVULNFUNCTION, \
     LOOKUP, SAVEALL, JOBSKEY
 from core_hazimp.calcs.calcs import STRUCT_LOSS          
-from core_hazimp import misc
+from core_hazimp import misc       
+from core_hazimp import spell_check
 
 DEFAULT = 'default'
 LOADWINDTCRM = 'load_wind_tcrm_ascii'
@@ -21,6 +23,9 @@ TEMPLATE = 'template'
 WINDV1 = 'windv1'
 SAVE = 'save'
 
+# The complete list of first level key names in the post template config dic
+CONFIGKEYS = list(JOBS.keys()) + list(CALCS.keys()) + [JOBSKEY]
+SPELLCHECK = spell_check.SpellCheck(CONFIGKEYS)
 
 
 def read_file(file_name):
@@ -52,6 +57,7 @@ def template_builder(config_dic):
     """    
     try:
         template = config_dic[TEMPLATE]
+        del config_dic[TEMPLATE]
     except KeyError:
         template = DEFAULT   
         
@@ -100,16 +106,32 @@ def _wind_v1_reader(config_dic):
             SAVEALL]
     vul_filename = os.path.join(misc.RESOURCE_DIR, 
                                 'domestic_wind_vul_curves.xml')
+    
+    try:
+        file_list = config_dic[LOADWINDTCRM]    
+    except KeyError:
+        msg = '\nMandatory key not found in config file; %s \n' % LOADWINDTCRM
+        raise RuntimeError(msg)
+                   
     config_dic[LOADRASTER] = {
-        'file_list':config_dic[LOADWINDTCRM],
+        'file_list':file_list,
         'attribute_label':'0.2s gust at 10m height m/s'}
+    del config_dic[LOADWINDTCRM]
     config_dic[LOADXMLVULNERABILITY] = {
         'file_name':vul_filename}
     config_dic[SIMPLELINKER] = {'vul_functions_in_exposure':{
             'domestic_wind_2012':'wind_vulnerability_model'}}
     config_dic[SELECTVULNFUNCTION] = {'variability_method':{
             'domestic_wind_2012':'mean'}}
-    config_dic[SAVEALL] = {'file_name':config_dic[SAVE]}
+    
+    try:
+        file_name = config_dic[SAVE]    
+    except KeyError:
+        msg = '\nMandatory key not found in config file; %s \n' % SAVE
+        raise RuntimeError(msg)
+        
+    config_dic[SAVEALL] = {'file_name':file_name}
+    del config_dic[SAVE]
     return get_job_or_calcs(job_names)
  
     
@@ -154,10 +176,13 @@ def get_job_or_calc(name):
     
 def validate_config(config_dic):
     """
-    Check the config_dic
+    Check the config_dic for various errors.
     
+    Args:
+        config_dic: The configuration dictionary.
     """
     check_files_to_load(config_dic)
+    check_1st_level_keys(config_dic)
     
     
 def file_can_open(file2load):
@@ -181,6 +206,9 @@ def check_files_to_load(config_dic):
     All jobs/calcs that load files label the files as;
        file_name OR
        file_list - for a list of files
+       
+    Args:
+        config_dic: The configuration dictionary
     """
     bad_files = []
     for value in config_dic.values():
@@ -200,8 +228,38 @@ def check_files_to_load(config_dic):
     elif len(bad_files) > 1:
         raise RuntimeError(
             'Invalid files in config file;\n %s ' % bad_files)
+    return True # for testing
         
-
+def check_1st_level_keys(config_dic):
+    """
+    Check the context, based on the config file.
+    
+    This function relies on some assumptions.
+    All jobs/calcs that load files label the files as;
+       file_name OR
+       file_list - for a list of files
+       
+    Args:
+        config_dic: The configuration dictionary
+    """
+    
+    for key in config_dic:
+        if not key in SPELLCHECK.base_words:
+            meantkey = SPELLCHECK.correct(key)
+            msg = '\nInvalid key in config file; %s \n' % key
+            if meantkey == key: 
+                # There was no suggested word                
+                raise RuntimeError(msg)
+            else:            
+                msg += 'Did you mean; %s?' % meantkey
+                raise RuntimeError(msg)
+                
+                
+            
+            
+            
+            
+    
 READERS = {DEFAULT:_reader1,
            WINDV1:_wind_v1_reader}
            

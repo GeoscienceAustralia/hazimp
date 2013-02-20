@@ -1,0 +1,7 @@
+#!/bin/bash
+# First, purge all .pyc files to clean the source tree,
+# in case some modules were deleted or removed.
+
+find . -name "*.pyc" -delete
+
+pylint core_hazimp  --disable=RP0401 --disable=RP0001 --disable=RP0002 --disable=RP0003 --disable=RP0101 --disable=RP0101 --disable=RP0701

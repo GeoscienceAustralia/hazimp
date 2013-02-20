@@ -1,5 +1,4 @@
-
-        # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 """
 A collection of jobs to put into the pipeline.

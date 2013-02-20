@@ -110,7 +110,7 @@ class TestIntegration(unittest.TestCase):
         file_exp, lat_name, long_name  = build_example_exposure()
         
         config_dic = {
-            'version':1,
+            'template':'default',
             'jobs':[jobs.LOADCSVEXPOSURE,
                     jobs.LOADXMLVULNERABILITY,
                     jobs.SIMPLELINKER,
