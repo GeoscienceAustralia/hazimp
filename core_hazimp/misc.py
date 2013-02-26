@@ -187,6 +187,20 @@ def save_data(context, filename):
     """
     context.save_exposure_atts(filename)
     
+
+def get_required_args(func):
+    """
+    Get the arguments required in a function
     
-    
-       
+    http://stackoverflow.com/questions/196960/can-you-list-the-keyword-arguments-a-python-function-receives
+    """
+    # *args and **kwargs are not required, so ignore them.
+    args_and_defaults, _, _, default_vaules = inspect.getargspec(func)
+    defaults = []
+    if default_vaules is None:
+        args = args_and_defaults
+    else:
+        args = args_and_defaults[:-len(default_vaules)]
+        defaults = args_and_defaults[-len(default_vaules):]
+    return args, defaults
+          

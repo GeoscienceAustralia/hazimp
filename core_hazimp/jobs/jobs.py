@@ -10,6 +10,8 @@ the exposure data.
 And key, value pairs that are in the config file are passed to the
 jobs function.  The function name is used to determine what to pass in.
 
+Why are 
+
 Special named parameters - 
 
 file_name  - THE attribute used to describe files to load. If the file
@@ -23,9 +25,8 @@ is not present Error out.
 import sys 
 from scipy import asarray
 
-from core_hazimp.misc import csv2dict, raster_data_at_points
+from core_hazimp import misc
 from core_hazimp.workflow import  EX_LAT, EX_LONG
-from core_hazimp.misc import instanciate_classes
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 LOADCSVEXPOSURE = 'load_csv_exposure'
@@ -55,8 +56,31 @@ class Job(object):
         Return the 'user' name for the function
         """
         return self.call_funct
+ 
+ 
+    def get_required_args_no_context(self):  
+        """
+        Get the arguments and default arguments of the job function.
         
+        Any context parameter will be ignored.
         
+        Returns
+           args - the arguments of the job function.
+           defaults - the default arguments of the job function.
+        """
+        args, defaults = misc.get_required_args(self.__call__)
+        try:
+            args.remove('context')
+        except KeyError:
+            pass
+        try:
+            args.remove('self')
+        except KeyError:
+            pass
+            
+        return args, defaults
+            
+         
 class ConstTest(Job):
     """
     Simple test class. Moving a config value to the context.
@@ -81,7 +105,7 @@ class LoadCsvExposure(Job):
         self.call_funct = LOADCSVEXPOSURE
 
 
-    def __call__(self, context, file_name=None, exposure_latitude=None,
+    def __call__(self, context, file_name, exposure_latitude=None,
                       exposure_longitude=None):
         """
         Read a csv exposure file into the context object.     
@@ -98,7 +122,7 @@ class LoadCsvExposure(Job):
                 value: column values, except the title
         """
     
-        file_dict = csv2dict(file_name)
+        file_dict = misc.csv2dict(file_name)
     
         # FIXME Need to do better error handling
     
@@ -137,7 +161,7 @@ class LoadXmlVulnerability(Job):
         self.call_funct = LOADXMLVULNERABILITY
 
 
-    def __call__(self, context, file_name=None):
+    def __call__(self, context, file_name):
         """
         Read a csv exposure file into the context object.     
         
@@ -160,7 +184,7 @@ class SimpleLinker(Job):
         self.call_funct = SIMPLELINKER
 
 
-    def __call__(self, context, vul_functions_in_exposure=None):
+    def __call__(self, context, vul_functions_in_exposure):
         """
         Link a list of vulnerability functions to each asset, given the
         vulnerability_sets and exposure columns that represents the
@@ -227,7 +251,7 @@ class SelectVulnFunction(Job):
             # sample from the function to get the curve
             realised_vuln_curves = vuln_set.build_realised_vuln_curves(
                 vuln_function_ids,
-                variability_method=variability_method[vuln_set_key])
+                variability_method = variability_method[vuln_set_key])
             # Build a dictionary of realised vulnerability curves
             exposure_vuln_curves[vuln_set_key] = realised_vuln_curves
         
@@ -282,7 +306,7 @@ class LoadRaster(Job):
         super(LoadRaster, self).__init__()
         self.call_funct = LOADRASTER
 
-    def __call__(self, context, file_list=None, attribute_label=None):
+    def __call__(self, context, file_list, attribute_label):
         """
         Load one or more files and get the value for all the 
         exposure points. All files have to be of the same attribute.
@@ -299,8 +323,9 @@ class LoadRaster(Job):
         #FIXME raise errors, re no lat or lon
         
         if file_list is not None:
-            file_data = raster_data_at_points(context.exposure_long, 
-                                              context.exposure_lat, file_list)
+            file_data = misc.raster_data_at_points(
+                context.exposure_long, 
+                context.exposure_lat, file_list)
             context.exposure_att[attribute_label] = file_data
 
                                  
@@ -329,4 +354,4 @@ class SaveExposure(Job):
 #                KEEP THIS AT THE END
 #____________________________________________________   
     
-JOBS = instanciate_classes(sys.modules[__name__])
+JOBS = misc.instanciate_classes(sys.modules[__name__])

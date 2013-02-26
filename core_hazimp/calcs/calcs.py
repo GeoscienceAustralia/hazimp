@@ -34,6 +34,9 @@ class Calculator(Job):
         
         
     def __call__(self, context, **kwargs):
+        """
+        Q: What is **kwargs doing?
+        """
         args_in = []
         for job_arg in self.context_args_in:
             # A calc with no input is ok.
@@ -46,6 +49,7 @@ class Calculator(Job):
         for i, arg_out in enumerate(self.args_out):
             context.exposure_att[arg_out] = args_out[i]
 
+            
 
 class AddTest(Calculator):
     """

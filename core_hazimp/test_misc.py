@@ -25,7 +25,8 @@ import os
 import numpy
 from scipy import asarray, allclose
 
-from core_hazimp.misc import csv2dict, raster_data_at_points, dict2csv
+from core_hazimp.misc import csv2dict, raster_data_at_points, dict2csv, \
+    get_required_args
 
 class TestMisc(unittest.TestCase): 
     """
@@ -171,6 +172,31 @@ class TestMisc(unittest.TestCase):
                                         delete=False)
         self.assertRaises(RuntimeError, dict2csv, *(data_dict, f.name))
         os.remove(f.name)
+        
+    def test_get_required_args(self):
+        def yeah(mandatory, why=0, me=1): # pylint: disable=W0613
+            # pylint: disable=C0111
+            pass 
+        args, defaults = get_required_args(yeah)
+        self.assertTrue(args == ['mandatory'])
+        self.assertTrue(defaults == ['why', 'me'])
+        
+    def test_get_required_argsII(self):
+        def yeah(mandatory): # pylint: disable=W0613
+            # pylint: disable=C0111
+            pass
+        args, defaults = get_required_args(yeah)
+        self.assertTrue(args == ['mandatory'])
+        self.assertTrue(defaults == [])
+        
+    def test_get_required_argsIII(self):
+        def yeah(mandatory=0): # pylint: disable=W0613
+            # pylint: disable=C0111
+            pass
+        args, defaults = get_required_args(yeah)
+        self.assertTrue(defaults == ['mandatory'])
+        self.assertTrue(args == [])
+        
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestMisc,'test')

@@ -110,7 +110,58 @@ class TestConfig(unittest.TestCase):
         config_dic = {'foo':12}
         self.assertRaises(RuntimeError, config.check_1st_level_keys, config_dic)
         
+       
         
+    def test_check_attributes(self):         
+        config_dic = {jobs.JOBSKEY:12}
+        config.check_attributes(config_dic)
+        
+        config_dic = {jobs.LOADCSVEXPOSURE:{
+                'file_name':'yeah',
+                'exposure_latitude':'latitude',
+                'exposure_longitude':'longitude'}
+                      }
+        config.check_attributes(config_dic)
+        
+        config_dic = {jobs.LOADCSVEXPOSURE:{
+                'file_name':'yeah'}
+                      }
+        config.check_attributes(config_dic)
+            
+        config_dic = {
+            'jobs':[jobs.LOADCSVEXPOSURE, jobs.LOADRASTER, 
+            jobs.LOADXMLVULNERABILITY,
+            jobs.SIMPLELINKER, jobs.SELECTVULNFUNCTION, jobs.LOOKUP, 
+            calcs.STRUCT_LOSS,
+            jobs.SAVEALL],
+            jobs.LOADCSVEXPOSURE:{'file_name':'yeah',
+                                 'exposure_latitude':'latitude',
+                                 'exposure_longitude':'longitude'},
+            jobs.LOADRASTER:{'file_list':['ha'],
+                        'attribute_label':
+                            '0.2s gust at 10m height m/s'},
+            jobs.LOADXMLVULNERABILITY:{'file_name':'grolovolo'},
+            jobs.SIMPLELINKER:{'vul_functions_in_exposure':{
+                    'domestic_wind_2012':'wind_vulnerability_model'}},
+            jobs.SELECTVULNFUNCTION:{'variability_method':{
+                    'domestic_wind_2012':'mean'}},
+            jobs.SAVEALL:{'file_name':'fash'}}
+        config.check_attributes(config_dic)
+        
+        config_dic = {jobs.LOADCSVEXPOSURE:{
+                'file_!name':'yeah',
+                'exposure_latitude':'latitude',
+                'exposure_longitude':'longitude'}
+                      }        
+        self.assertRaises(RuntimeError, config.check_attributes, config_dic)
+         
+    def test_check_attributesII(self):  
+        config_dic = {jobs.LOADCSVEXPOSURE:{
+                'file_name':'yeah',
+                'yeahe':'latitude',
+                'expode':'longitude'}
+                      }        
+        self.assertRaises(RuntimeError, config.check_attributes, config_dic)
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestConfig,'test')

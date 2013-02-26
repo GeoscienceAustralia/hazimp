@@ -36,7 +36,6 @@ def get_job_atts(job, config):
         # FIXME check that the value is a dictionary
     else:
         job_kwargs = {}
-        
     return job_kwargs
             
 class ConfigAwarePipeLine(PipeLine):
