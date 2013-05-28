@@ -199,7 +199,58 @@ class TestJobs(unittest.TestCase):
     def test_look_up(self):
         pass
         # FIXME Needs test.
+    
+    def test_LoadCsvExposure(self):
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(
+            suffix='.txt', prefix='HAZIMPtest_jobs',
+            delete=False)
+        f.write('exposure_latitude, exposure_longitude, ID, haz_0, haz_1\n')
+        f.write('8.1, 0.1, 1, 4, 40\n')
+        f.write('7.9, 1.5, 2, -9999, -9999\n')
+        f.write('8.9, 2.9, 3, 6, 60\n')
+        f.write('8.9, 3.1, 4, -9999, -9999\n')
+        f.write('9.9, 2.9, 5, -9999, -9999\n')
+        f.close()        
         
+        inst = JOBS[LOADCSVEXPOSURE]
+        context = Dummy
+        context.exposure_lat = context.exposure_long = None
+        context.exposure_att = {}
+        test_kwargs = {'file_name':f.name}
+        inst(context, **test_kwargs)               
+        os.remove(f.name) 
+        
+        actual = numpy.arange(1, 6)
+        msg = "context.exposure_att['ID'] " \
+            + str(context.exposure_att['ID'])
+        msg += "\n actual " + str(actual)
+        self.assertTrue(allclose(context.exposure_att['ID'], actual), msg)
+        
+     
+    def test_LoadCsvExposureII(self):
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(
+            suffix='.txt', prefix='HAZIMPtest_jobs',
+            delete=False)
+        f.write('latitude, longitude, ID, haz_0, haz_1\n')
+        f.write('8.1, 0.1, 1, 4, 40\n')
+        f.write('7.9, 1.5, 2, -9999, -9999\n')
+        f.write('8.9, 2.9, 3, 6, 60\n')
+        f.write('8.9, 3.1, 4, -9999, -9999\n')
+        f.write('9.9, 2.9, 5, -9999, -9999\n')
+        f.close()        
+        
+        inst = JOBS[LOADCSVEXPOSURE]
+        context = Dummy
+        context.exposure_lat = context.exposure_long = None
+        context.exposure_att = {}
+        test_kwargs = {'file_name':f.name, 'exposure_latitude':'monkey', 
+                       'exposure_longitude':'eagle'}
+        self.assertRaises(RuntimeError, inst, context, **test_kwargs) 
+        os.remove(f.name) 
+        
+           
     def test_load_rasters(self):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(

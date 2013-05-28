@@ -34,13 +34,16 @@ def csv2dict(filename):
         for key, val in row.iteritems():
             try:
                 val = float(val)
-            except ValueError:
+            except (ValueError, TypeError) as e:
                 try:
                     val = val.strip()
                 except AttributeError:
                     pass
             file_dict[key.strip()].append(val)
-    return file_dict
+    # Get a normal dict now, so KeyErrors are thrown.        
+    plain_dic =  dict(file_dict)
+    return plain_dic
+    
 
     
 def instanciate_classes(module):

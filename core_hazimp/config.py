@@ -122,7 +122,7 @@ def _wind_v1_reader(config_dic):
     config_dic[LOADXMLVULNERABILITY] = {
         'file_name':vul_filename}
     config_dic[SIMPLELINKER] = {'vul_functions_in_exposure':{
-            'domestic_wind_2012':'wind_vulnerability_model'}}
+            'domestic_wind_2012':'WIND_VULNERABILITY_FUNCTION_ID'}}
     config_dic[SELECTVULNFUNCTION] = {'variability_method':{
             'domestic_wind_2012':'mean'}}
     

@@ -27,11 +27,11 @@ from core_hazimp.config import LOADWINDTCRM, TEMPLATE, WINDV1, SAVE
 
 class TestWind(unittest.TestCase): 
     """
-    Test the calcs module
+    Do large system based tests.
     """
 
     def test_const_test(self):
-        # First test running an end to end cyclone test based 
+        # First test running an end to end wind test based 
         # on a config dictionary, template default'
         
         # The output file
@@ -51,14 +51,14 @@ class TestWind(unittest.TestCase):
             SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
             SAVEALL],
             LOADCSVEXPOSURE:{'file_name':exp_filename,
-                                 'exposure_latitude':'latitude',
-                                 'exposure_longitude':'longitude'},
+                                 'exposure_latitude':'LATITUDE',
+                                 'exposure_longitude':'LONGITUDE'},
             LOADRASTER:{'file_list':[wind_filename],
                         'attribute_label':
                             '0.2s gust at 10m height m/s'},
             LOADXMLVULNERABILITY:{'file_name':vul_filename},
             SIMPLELINKER:{'vul_functions_in_exposure':{
-                    'domestic_wind_2012':'wind_vulnerability_model'}},
+                    'domestic_wind_2012':'WIND_VULNERABILITY_FUNCTION_ID'}},
             SELECTVULNFUNCTION:{'variability_method':{
                     'domestic_wind_2012':'mean'}},
             SAVEALL:{'file_name':f.name}}
@@ -92,8 +92,8 @@ class TestWind(unittest.TestCase):
         config = {
             TEMPLATE:WINDV1,
             LOADCSVEXPOSURE:{'file_name':exp_filename,
-                                 'exposure_latitude':'latitude',
-                                 'exposure_longitude':'longitude'},
+                                 'exposure_latitude':'LATITUDE',
+                                 'exposure_longitude':'LONGITUDE'},
             LOADWINDTCRM:[wind_filename],
             SAVE:f.name}
             
@@ -131,8 +131,8 @@ class TestWind(unittest.TestCase):
         print(TEMPLATE + ': ' +WINDV1, file=f)
         print(LOADCSVEXPOSURE + ':', file=f)
         print('  file_name: ' + exp_filename, file=f)
-        print('  exposure_latitude: latitude', file=f)
-        print('  exposure_longitude: longitude', file=f)
+        print('  exposure_latitude: LATITUDE', file=f)
+        print('  exposure_longitude: LONGITUDE', file=f)
         print(LOADWINDTCRM + ': [' + wind_filename + ']', file=f)
         print(SAVE + ': ' + f_out.name, file=f)
         f.close()
@@ -151,6 +151,6 @@ class TestWind(unittest.TestCase):
 if __name__ == "__main__":
     
     SUITE = unittest.makeSuite(TestWind,'test')
-    #SUITE = unittest.makeSuite(TestWind,'test_wind_yaml')
+    #SUITE = unittest.makeSuite(TestWind,'test_const_test')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)

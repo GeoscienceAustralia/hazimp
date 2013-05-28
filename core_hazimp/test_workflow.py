@@ -49,7 +49,7 @@ class TestWorkFlow(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(suffix='.txt', 
                                         prefix='test_jobs',
                                         delete=False)
-        f.write('exposure_lat, exposure_long, a_test, b_test\n')
+        f.write('exposure_latitude, exposure_longitude, a_test, b_test\n')
         f.write('1., 2., 3., 30.\n')
         f.write('4., 5., 6., 60.\n')
         f.close()

@@ -64,7 +64,7 @@ class TestCalcs(unittest.TestCase):
         inst = CALCS[calcs.STRUCT_LOSS]
         context = Dummy
         context.exposure_att = {'structural_loss_ratio':5,
-                                'structural_value':20}
+                                'REPLACEMENT_VALUE':20}
         inst(context)
         self.assertEqual(context.exposure_att['structural_loss'], 5*20)
         

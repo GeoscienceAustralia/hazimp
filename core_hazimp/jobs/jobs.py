@@ -135,7 +135,8 @@ class LoadCsvExposure(Job):
             context.exposure_lat = asarray(file_dict[lat_key])
             del file_dict[lat_key]
         except KeyError:
-            pass
+            msg = "No Exposure latitude column labelled '%s'." % lat_key 
+            raise RuntimeError(msg)
     
         if exposure_latitude == None:
             long_key = EX_LONG
@@ -146,8 +147,9 @@ class LoadCsvExposure(Job):
             context.exposure_long = asarray(file_dict[long_key])
             del file_dict[long_key]
         except KeyError:
-            pass
-        
+            msg = "No Exposure longitude column labelled '%s'." % long_key 
+            raise RuntimeError(msg)
+    
         for key in file_dict:
             context.exposure_att[key] = asarray(file_dict[key])
     
@@ -321,7 +323,6 @@ class LoadRaster(Job):
                value: column values, except the title
         """
         #FIXME raise errors, re no lat or lon
-        
         if file_list is not None:
             file_data = misc.raster_data_at_points(
                 context.exposure_long, 

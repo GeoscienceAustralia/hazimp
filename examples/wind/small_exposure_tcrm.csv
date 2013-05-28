@@ -1,4 +1,4 @@
-bid,latitude,longitude,wind_vulnerability_model,structural_value,calced_haz,calced_loss_ratio,calced-loss
+BID,LATITUDE,LONGITUDE,WIND_VULNERABILITY_FUNCTION_ID,REPLACEMENT_VALUE,calced_haz,calced_loss_ratio,calced-loss
 1,-22.99,120.01,dw1,1,10,0,0
 2,-23.01,121.99,dw2,10,80,0.882685594,8.826855936
 3,-22.99,122.01,dw4,100,nan,0,0
