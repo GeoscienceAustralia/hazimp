@@ -34,7 +34,7 @@ def csv2dict(filename):
         for key, val in row.iteritems():
             try:
                 val = float(val)
-            except (ValueError, TypeError) as e:
+            except (ValueError, TypeError):
                 try:
                     val = val.strip()
                 except AttributeError:
