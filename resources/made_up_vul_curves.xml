@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.4"
+      xmlns:gml="http://www.opengis.net/gml">
+
+    <vulnerabilityModel>
+        <config/>
+
+        <discreteVulnerabilitySet vulnerabilitySetID="made_up_2012" 
+assetCategory="" lossCategory="structural_loss_ratio" >
+ <IML IMT="strong_wind" > 10.0 100.0 </IML>
+<discreteVulnerability vulnerabilityFunctionID="dw1" Alpha="0.1258" Beta="4.2271" probabilisticDistribution="LN">
+<lossRatio>0 1 </lossRatio>
+<coefficientsVariation>0 0</coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw2" Alpha="0.1235" Beta="4.2879" probabilisticDistribution="LN">
+<lossRatio>0 .9</lossRatio>
+<coefficientsVariation>0 0</coefficientsVariation>
+</discreteVulnerability>
+
+</discreteVulnerabilitySet>
+</vulnerabilityModel>
+</nrml>
