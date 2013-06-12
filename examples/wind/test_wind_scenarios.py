@@ -1,24 +1,27 @@
 # -*- coding: utf-8 -*-
 
+# pylint: disable=C0103
+# Since function names are based on what they are testing,
+# and if they are testing classes the function names will have capitals
+# C0103: 16:TestCalcs.test_AddTest: Invalid name "test_AddTest"
+# (should match [a-z_][a-z0-9_]{2,50}$)
+# pylint: disable=R0904
+# Disable too many public methods for test cases
+
 """
 Test wind scenarios.
 """
+from __future__ import print_function  # can now use print()
 
-from __future__ import print_function
-from scipy import allclose
-
-from core_hazimp import hazimp
 import unittest
 import os
 import tempfile
 import numpy
-#from __future__ import print_function
 
 from scipy import allclose
 
-from core_hazimp import hazimp
 from core_hazimp import misc
-
+from core_hazimp import hazimp
 from core_hazimp.jobs.jobs import LOADRASTER, LOADCSVEXPOSURE, \
     LOADXMLVULNERABILITY, SIMPLELINKER, SELECTVULNFUNCTION, \
     LOOKUP, SAVEALL

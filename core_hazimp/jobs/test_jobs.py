@@ -342,9 +342,9 @@ class TestJobs(unittest.TestCase):
 
         actual[workflow.EX_LONG] = lon
         actual[workflow.EX_LAT] = lat
-        for keyish in exp_dict.files:
-            self.assertTrue(allclose(exp_dict[keyish],
-                                     actual[keyish]))
+        for the_key in exp_dict.files:
+            self.assertTrue(allclose(exp_dict[the_key],
+                                     actual[the_key]))
         os.remove(f.name)
 
 #-------------------------------------------------------------
