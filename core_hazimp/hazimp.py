@@ -4,8 +4,9 @@ The main entry point for the hazard impact tool.
 """
 
 from core_hazimp import console
-from core_hazimp import workflow 
+from core_hazimp import workflow
 from core_hazimp import config
+
 
 def main(config_dic=None, config_file=None):
     """
@@ -14,10 +15,10 @@ def main(config_dic=None, config_file=None):
     """
     if config_file:
         config_dic = config.read_file(config_file)
-        
-    if config_dic == None:
+
+    if config_dic is None:
         raise RuntimeError('No configuration information.')
-        
+
     context = workflow.Context()
     calc_jobs = config.template_builder(config_dic)  # config_dic modified
     config.validate_config(config_dic)
@@ -25,13 +26,9 @@ def main(config_dic=None, config_file=None):
     pipeline = pipe_factory.build(calc_jobs)
     pipeline.run(context, config_dic)
     return context
-    
-    
 
-
-################################################################################
-
+############################################################################
 if __name__ == "__main__":
-    CMD_LINE_ARGS = console.cmd_line()    
+    CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
         main(config_file=CMD_LINE_ARGS.config_file[0])

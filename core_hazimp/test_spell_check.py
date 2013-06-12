@@ -2,7 +2,7 @@
 # pylint: disable=C0103
 # Since function names are based on what they are testing,
 # and if they are testing classes the function names will have capitals
-# C0103: 16:TestCalcs.test_AddTest: Invalid name "test_AddTest" 
+# C0103: 16:TestCalcs.test_AddTest: Invalid name "test_AddTest"
 # (should match [a-z_][a-z0-9_]{2,50}$)
 # pylint: disable=R0904
 # Disable too many public methods for test cases
@@ -18,7 +18,7 @@ import unittest
 from core_hazimp import spell_check
 
 
-class TestSpellCheck(unittest.TestCase): 
+class TestSpellCheck(unittest.TestCase):
     """
     Test the calcs module
     """
@@ -32,9 +32,8 @@ class TestSpellCheck(unittest.TestCase):
         self.assertTrue(spell.correct('wack') == 'Wack')
         self.assertTrue(spell.correct('wayoff') == 'wayoff')
 
-        
 #-------------------------------------------------------------
 if __name__ == "__main__":
-    SUITE = unittest.makeSuite(TestSpellCheck,'test')
+    SUITE = unittest.makeSuite(TestSpellCheck, 'test')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)

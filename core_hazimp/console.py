@@ -65,5 +65,3 @@ def cmd_line():
             parser.print_help()
 
     return args
-
-

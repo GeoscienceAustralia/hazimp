@@ -10,9 +10,9 @@ the exposure data.
 And key, value pairs that are in the config file are passed to the
 jobs function.  The function name is used to determine what to pass in.
 
-Why are 
+Why are
 
-Special named parameters - 
+Special named parameters -
 
 file_name  - THE attribute used to describe files to load. If the file
 is not present Error out. This is checked in the validate job.
@@ -22,22 +22,23 @@ is not present Error out.
 
 """
 
-import sys 
+import sys
 from scipy import asarray
 
 from core_hazimp import misc
-from core_hazimp.workflow import  EX_LAT, EX_LONG
+from core_hazimp.workflow import EX_LAT, EX_LONG
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 LOADCSVEXPOSURE = 'load_csv_exposure'
 LOADRASTER = 'load_raster'
 LOADXMLVULNERABILITY = 'load_xml_vulnerability'
 SIMPLELINKER = 'simple_linker'
-SELECTVULNFUNCTION  = 'select_vulnerability_functions'
+SELECTVULNFUNCTION = 'select_vulnerability_functions'
 LOOKUP = 'look_up'
 SAVEALL = 'save_all'
 VALIDATECONFIG = 'validate_config'
 JOBSKEY = 'jobs'
+
 
 class Job(object):
     """
@@ -49,21 +50,19 @@ class Job(object):
          allargspec_call and args_in.
         """
         self.call_funct = None
-                  
-        
+
     def get_call_funct(self):
         """
         Return the 'user' name for the function
         """
         return self.call_funct
- 
- 
-    def get_required_args_no_context(self):  
+
+    def get_required_args_no_context(self):
         """
         Get the arguments and default arguments of the job function.
-        
+
         Any context parameter will be ignored.
-        
+
         Returns
            args - the arguments of the job function.
            defaults - the default arguments of the job function.
@@ -77,10 +76,10 @@ class Job(object):
             args.remove('self')
         except KeyError:
             pass
-            
+
         return args, defaults
-            
-         
+
+
 class ConstTest(Job):
     """
     Simple test class. Moving a config value to the context.
@@ -89,12 +88,12 @@ class ConstTest(Job):
         super(ConstTest, self).__init__()
         self.call_funct = 'const_test'
 
-
     def __call__(self, context, c_test=None):
         """
         A dummy job for testing.
         """
-        context.exposure_att['c_test'] = c_test 
+        context.exposure_att['c_test'] = c_test
+
 
 class LoadCsvExposure(Job):
     """
@@ -104,55 +103,54 @@ class LoadCsvExposure(Job):
         super(LoadCsvExposure, self).__init__()
         self.call_funct = LOADCSVEXPOSURE
 
-
     def __call__(self, context, file_name, exposure_latitude=None,
-                      exposure_longitude=None):
+                 exposure_longitude=None):
         """
-        Read a csv exposure file into the context object.     
-        
+        Read a csv exposure file into the context object.
+
         Args:
             context: The context instance, used to move data around.
             file_name: The csv file to load.
             exposure_latitude: the title string of the latitude column.
             exposure_longitud: the title string of the longitude column.
-            
-        Content return: 
+
+        Content return:
             exposure_att: Add the file values into this dictionary.
-                key: column titles 
+                key: column titles
                 value: column values, except the title
         """
-    
+
         file_dict = misc.csv2dict(file_name)
-    
+
         # FIXME Need to do better error handling
-    
-        if exposure_latitude == None:
+
+        if exposure_latitude is None:
             lat_key = EX_LAT
         else:
             lat_key = exposure_latitude
-    
+
         try:
             context.exposure_lat = asarray(file_dict[lat_key])
             del file_dict[lat_key]
         except KeyError:
-            msg = "No Exposure latitude column labelled '%s'." % lat_key 
+            msg = "No Exposure latitude column labelled '%s'." % lat_key
             raise RuntimeError(msg)
-    
-        if exposure_latitude == None:
+
+        if exposure_latitude is None:
             long_key = EX_LONG
         else:
             long_key = exposure_longitude
-    
+
         try:
             context.exposure_long = asarray(file_dict[long_key])
             del file_dict[long_key]
         except KeyError:
-            msg = "No Exposure longitude column labelled '%s'." % long_key 
+            msg = "No Exposure longitude column labelled '%s'." % long_key
             raise RuntimeError(msg)
-    
+
         for key in file_dict:
             context.exposure_att[key] = asarray(file_dict[key])
-    
+
 
 class LoadXmlVulnerability(Job):
     """
@@ -162,19 +160,18 @@ class LoadXmlVulnerability(Job):
         super(LoadXmlVulnerability, self).__init__()
         self.call_funct = LOADXMLVULNERABILITY
 
-
     def __call__(self, context, file_name):
         """
-        Read a csv exposure file into the context object.     
-        
+        Read a csv exposure file into the context object.
+
         Args:
             file_name: The xml file to load.
         """
         if file_name is not None:
             vuln_sets = vuln_sets_from_xml_file(file_name)
             context.vulnerability_sets.update(vuln_sets)
-  
-  
+
+
 class SimpleLinker(Job):
     """
     Link a list of vulnerability functions to each asset, given the
@@ -185,39 +182,37 @@ class SimpleLinker(Job):
         super(SimpleLinker, self).__init__()
         self.call_funct = SIMPLELINKER
 
-
     def __call__(self, context, vul_functions_in_exposure):
         """
         Link a list of vulnerability functions to each asset, given the
         vulnerability_sets and exposure columns that represents the
-        vulnerability function id.    
-        
+        vulnerability function id.
+
         Args:
             vul_functions_in_exposure: A dictionary with keys being
-               vulnerability_set_ids and values being the exposure title that 
+               vulnerability_set_ids and values being the exposure title that
                holds vulnerability function ID's.
-               
+
         Content return:
            vul_function_titles: Add's the exposure_titles
         """
         context.vul_function_titles.update(vul_functions_in_exposure)
-        
-        
+
+
 class SelectVulnFunction(Job):
     """
     Produce vulnerability curves for each asset, given the
     vulnerability_sets and exposure columns that represents the
     vulnerability function id.
-    
-    From the vulnerability set and a function id you get the 
-    vulnerability function.  
+
+    From the vulnerability set and a function id you get the
+    vulnerability function.
     Then, using the variability_method e.g. 'mean' you get the
     vulnerability curve.
     """
     def __init__(self):
         super(SelectVulnFunction, self).__init__()
         self.call_funct = SELECTVULNFUNCTION
-
 
     def __call__(self, context, variability_method=None):
         """
@@ -226,17 +221,17 @@ class SelectVulnFunction(Job):
         Assumes the necessary vulnerability_sets have been loaded and
         there is an  exposure column that represents the
         vulnerability function id.
-        
+
         NOTE: This is where the vulnerability function is selected,
             As well as sampled.
-        
+
         Args:
             variability_method: A dictionary with keys being
                vulnerability_set_ids and values being the sampling method
                to generate a vulnerability curve from a vulnerability function.
                e.g. {'EQ_contents': 'mean', 'EQ_building': 'mean'}
 
-        Content return: 
+        Content return:
            exposure_vuln_curves: A dictionary of realised
                vulnerability curves, associated with the exposure
                data.
@@ -253,12 +248,12 @@ class SelectVulnFunction(Job):
             # sample from the function to get the curve
             realised_vuln_curves = vuln_set.build_realised_vuln_curves(
                 vuln_function_ids,
-                variability_method = variability_method[vuln_set_key])
+                variability_method=variability_method[vuln_set_key])
             # Build a dictionary of realised vulnerability curves
             exposure_vuln_curves[vuln_set_key] = realised_vuln_curves
-        
+
         context.exposure_vuln_curves = exposure_vuln_curves
-            
+
 
 class LookUp(Job):
     """
@@ -269,20 +264,19 @@ class LookUp(Job):
         super(LookUp, self).__init__()
         self.call_funct = LOOKUP
 
-
     def __call__(self, context):
         """
         Does a look up on all the vulnerability curves, returning the
         associated loss.
-               
-        Content return: 
+
+        Content return:
            exposure_vuln_curves: A dictionary of realised
                vulnerability curves, associated with the exposure
                data.
                 key - intensity measure
                 value - realised vulnerability curve instance per asset
         """
-        
+
         for intensity_key in context.exposure_vuln_curves:
             vuln_curve = context.exposure_vuln_curves[intensity_key]
             int_measure = vuln_curve.intensity_measure_type
@@ -296,12 +290,13 @@ class LookUp(Job):
                 raise RuntimeError(msg)
             losses = vuln_curve.look_up(intensities)
             context.exposure_att[loss_category_type] = losses
-                                         
+
+
 class LoadRaster(Job):
     """
-    Load one or more files and get the value for all the 
+    Load one or more files and get the value for all the
     exposure points. Primarily this will be used to load hazard data.
-    
+
     There may be NAN values in this data
     """
     def __init__(self):
@@ -310,14 +305,14 @@ class LoadRaster(Job):
 
     def __call__(self, context, file_list, attribute_label):
         """
-        Load one or more files and get the value for all the 
+        Load one or more files and get the value for all the
         exposure points. All files have to be of the same attribute.
-             
+
         Args:
            attribute_label: The string to be associated with this data.
            file_list: A list of files to be loaded.
-             
-        Content return: 
+
+        Content return:
            exposure_att: Add the file values into this dictionary.
                key: column titles
                value: column values, except the title
@@ -325,14 +320,14 @@ class LoadRaster(Job):
         #FIXME raise errors, re no lat or lon
         if file_list is not None:
             file_data = misc.raster_data_at_points(
-                context.exposure_long, 
+                context.exposure_long,
                 context.exposure_lat, file_list)
             context.exposure_att[attribute_label] = file_data
 
-                                 
+
 class SaveExposure(Job):
     """
-    Save all of the exposure information in the context. 
+    Save all of the exposure information in the context.
     """
     def __init__(self):
         super(SaveExposure, self).__init__()
@@ -340,19 +335,19 @@ class SaveExposure(Job):
 
     def __call__(self, context, file_name=None):
         """
-        Save all of the exposure information in the context. 
-             
+        Save all of the exposure information in the context.
+
         Args:
            file_name: The file where the expsoure data will go.
-             
+
         """
-        
+
         context.save_exposure_atts(file_name)
 
-    
+
 #____________________________________________________
-#---------------------------------------------------- 
+#----------------------------------------------------
 #                KEEP THIS AT THE END
-#____________________________________________________   
-    
+#____________________________________________________
+
 JOBS = misc.instanciate_classes(sys.modules[__name__])

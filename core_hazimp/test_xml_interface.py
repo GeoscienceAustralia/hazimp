@@ -11,7 +11,7 @@ Test the xml interface module.
 
 import unittest
 
-from scipy import allclose, asarray 
+from scipy import allclose, asarray
 
 from core_hazimp.xml_interface import XmlLayer
 
@@ -54,14 +54,14 @@ class TestXmlLayer(unittest.TestCase):
 
         # similar to above but simplified, wrong name for top-level tag
         str2 = '\n'.join([
-                '<EventX magnitude_type="Mw">',
-                '  <polygon>',
-                '    <depth distribution="constant" mean="10"></depth>',
-                '  </polygon>',
-                '  <polygon>',
-                '    <depth distribution="constant" mean="5" />',
-                '  </polygon>',
-                '</EventX>'])
+            '<EventX magnitude_type="Mw">',
+            '  <polygon>',
+            '    <depth distribution="constant" mean="10"></depth>',
+            '  </polygon>',
+            '  <polygon>',
+            '    <depth distribution="constant" mean="5" />',
+            '  </polygon>',
+            '</EventX>'])
         self.xml2 = XmlLayer(string=str2)
 
     def tearDown(self):
@@ -70,9 +70,9 @@ class TestXmlLayer(unittest.TestCase):
 
     def test_attributes(self):
         assert self.xml['Event'][0].attributes['magnitude_type'] == 'Mw'
-        
+
     def test_getting_polygons(self):
-        assert  len(self.xml['polygon']) == 2
+        assert len(self.xml['polygon']) == 2
 
     def test_getting_excludes(self):
         assert len(self.xml['polygon'][0]['exclude']) == 0
@@ -81,8 +81,8 @@ class TestXmlLayer(unittest.TestCase):
     def test_getting_array(self):
         exclude_array = self.xml['polygon'][1]['exclude'][0].array
         expected_exclude_array = [[-32.0, 121], [-34, 122], [-32, 121]]
-        assert allclose(asarray(exclude_array), asarray(expected_exclude_array))
-
+        assert allclose(asarray(exclude_array),
+                        asarray(expected_exclude_array))
 
     def test_top_level_tag_name(self):
         # Test getting some info about the XML document.
@@ -96,7 +96,6 @@ class TestXmlLayer(unittest.TestCase):
 
 #-------------------------------------------------------------
 if __name__ == "__main__":
-    SUITE = unittest.makeSuite(TestXmlLayer,'test')
+    SUITE = unittest.makeSuite(TestXmlLayer, 'test')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)
-       
