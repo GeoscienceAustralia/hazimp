@@ -70,7 +70,9 @@ class TestConfig(unittest.TestCase):
 
         config_dic = {
             'dove': {'file_name': junk_files[0].name},
-            'eagle': {'file_list': [junk_files[1].name, junk_files[2].name]}
+            'eagle': {'file_list': [junk_files[1].name, junk_files[2].name]},
+            'save': {'file_name': 'not_here'},
+            'save_all': {'file_list': ['still_not_here']}
         }
         self.assertTrue(config.check_files_to_load(config_dic))
 

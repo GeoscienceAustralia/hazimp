@@ -216,8 +216,8 @@ def check_files_to_load(config_dic):
         config_dic: The configuration dictionary
     """
     bad_files = []
-    for value in config_dic.values():
-        if isinstance(value, dict):
+    for key, value in config_dic.iteritems():
+        if isinstance(value, dict) and 'save' not in key:
             if 'file_name' in value:
                 file2load = value['file_name']
                 if not file_can_open(file2load):
