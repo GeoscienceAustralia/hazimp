@@ -31,18 +31,30 @@ def csv2dict(filename):
     reader = csv.DictReader(csvfile)
 
     file_dict = defaultdict(list)
-    for row in reader:
+    for i_row, row in enumerate(reader):
         for key, val in row.iteritems():
             try:
                 val = float(val)
             except (ValueError, TypeError):
                 try:
                     val = val.strip()
+                    if len(val) == 0:
+                        if key == 'REPLACEMENT_VALUE':
+                            print " Missing REPLACEMENT_VALUE row " + str(i_row)
+                        #  This is empty.
+                        #  Therefore not a value.
+                        val = numpy.nan                    
                 except AttributeError:
                     pass
             file_dict[key.strip()].append(val)
     # Get a normal dict now, so KeyErrors are thrown.
     plain_dic = dict(file_dict)
+    
+    for index in (0, 407229, 407241, 407244, 407503, 407511):
+        print 'index', index 
+        for key in plain_dic:
+            print key, plain_dic[key][index]
+        
     return plain_dic
 
 

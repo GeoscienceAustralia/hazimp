@@ -9,6 +9,8 @@ Need to work out the licence
 
 import sys
 
+import numpy
+
 from core_hazimp.jobs.jobs import Job
 from core_hazimp.misc import instanciate_classes
 
@@ -122,7 +124,8 @@ class ConstantTest(Calculator):
 
 class CalcLoss(Calculator):
     """
-    Simple test class, returning two values.
+    Multiply the structural_loss_ratio and the structural_value to calc
+    the structural_loss.
     """
 
     def __init__(self):
@@ -135,6 +138,7 @@ class CalcLoss(Calculator):
         """
         Return two values
         """
+        
         return [structural_loss_ratio * structural_value]
 
 
