@@ -39,8 +39,6 @@ def csv2dict(filename):
                 try:
                     val = val.strip()
                     if len(val) == 0:
-                        if key == 'REPLACEMENT_VALUE':
-                            print " Missing REPLACEMENT_VALUE row " + str(i_row)
                         #  This is empty.
                         #  Therefore not a value.
                         val = numpy.nan                    
@@ -50,11 +48,6 @@ def csv2dict(filename):
     # Get a normal dict now, so KeyErrors are thrown.
     plain_dic = dict(file_dict)
     
-    for index in (0, 407229, 407241, 407244, 407503, 407511):
-        print 'index', index 
-        for key in plain_dic:
-            print key, plain_dic[key][index]
-        
     return plain_dic
 
 
