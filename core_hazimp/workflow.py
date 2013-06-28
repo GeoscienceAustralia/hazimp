@@ -132,4 +132,13 @@ class Context(object):
         write_dict = self.exposure_att.copy()
         write_dict[EX_LAT] = self.exposure_lat
         write_dict[EX_LONG] = self.exposure_long
-        numpy.savez(filename, **write_dict)
+        
+        if filename[-4:] == '.csv':
+            #  Only one dimension can be saved.  
+            #  Average the results to the Site (first) dimension.
+            for value in write_dict.intervalues:
+                if len (value.shape) > 1:
+                    #  TODO Log a message here
+                    pass
+        else:
+            numpy.savez(filename, **write_dict)

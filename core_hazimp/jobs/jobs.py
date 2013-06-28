@@ -10,7 +10,6 @@ the exposure data.
 And key, value pairs that are in the config file are passed to the
 jobs function.  The function name is used to determine what to pass in.
 
-Why are
 
 Special named parameters -
 
