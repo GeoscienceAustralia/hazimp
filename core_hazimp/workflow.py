@@ -139,6 +139,7 @@ class Context(object):
             for value in write_dict.intervalues:
                 if len (value.shape) > 1:
                     #  TODO Log a message here
+                    # Do a loop, taking the mean of the last axis
                     pass
         else:
             numpy.savez(filename, **write_dict)
