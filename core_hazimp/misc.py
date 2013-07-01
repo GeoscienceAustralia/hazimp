@@ -4,14 +4,14 @@
 """
 Functions that haven't found a proper module.
 """
+import os
 import csv
 from collections import defaultdict
 import inspect
 
+import numpy
 import gdal
 from gdalconst import GA_ReadOnly
-import numpy
-import os
 
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -31,7 +31,7 @@ def csv2dict(filename):
     reader = csv.DictReader(csvfile)
 
     file_dict = defaultdict(list)
-    for i_row, row in enumerate(reader):
+    for row in reader:
         for key, val in row.iteritems():
             try:
                 val = float(val)
@@ -41,13 +41,13 @@ def csv2dict(filename):
                     if len(val) == 0:
                         #  This is empty.
                         #  Therefore not a value.
-                        val = numpy.nan                    
+                        val = numpy.nan
                 except AttributeError:
                     pass
             file_dict[key.strip()].append(val)
     # Get a normal dict now, so KeyErrors are thrown.
     plain_dic = dict(file_dict)
-    
+
     return plain_dic
 
 
@@ -211,3 +211,10 @@ def get_required_args(func):
         args = args_and_defaults[:-len(default_vaules)]
         defaults = args_and_defaults[-len(default_vaules):]
     return args, defaults
+
+
+def squash_narray(ary):
+    """
+    Calculate the mean on all but the 0 axis of an n-dimensional array.
+    """
+    return ary.reshape((ary.shape[0], -1)).mean(axis=1)

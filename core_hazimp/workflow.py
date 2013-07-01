@@ -9,8 +9,11 @@ to process a series of jobs in a sequential
 order. The order is determined by the queue of jobs.
 """
 import numpy
+import csv
 
+from core_hazimp import misc
 from core_hazimp.pipeline import PipeLineBuilder, PipeLine
+
 
 # The standard string names in the context instance
 EX_LAT = 'exposure_latitude'
@@ -94,7 +97,7 @@ class Context(object):
 
         # The exposure data at the lats and longs
         # key - data name
-        # value - A numpy array. First dimension is site.
+        # value - A numpy array. First dimension is site. (0 axis)
         self.exposure_att = {}
 
         # for example 'vulnerability_functions' is a list of a list of
@@ -128,18 +131,31 @@ class Context(object):
         Args:
             filename: The file to be written.
         """
-
-        write_dict = self.exposure_att.copy()
-        write_dict[EX_LAT] = self.exposure_lat
-        write_dict[EX_LONG] = self.exposure_long
-        
         if filename[-4:] == '.csv':
-            #  Only one dimension can be saved.  
-            #  Average the results to the Site (first) dimension.
-            for value in write_dict.intervalues:
-                if len (value.shape) > 1:
-                    #  TODO Log a message here
-                    # Do a loop, taking the mean of the last axis
-                    pass
+            write_dict = self.exposure_att.copy()
+            keys = write_dict.keys()
+            header = list(keys)
+
+            #  Lat, long ordering for the header
+            header.insert(0, EX_LAT)
+            header.insert(1, EX_LONG)
+
+            body = numpy.column_stack((self.exposure_lat, self.exposure_long))
+            for key in keys:
+                #  Only one dimension can be saved.
+                #  Average the results to the Site (first) dimension.
+                only_1d = misc.squash_narray(write_dict[key])
+                body = numpy.column_stack((body, only_1d))
+
+            # Need numpy 1.7 > to do headers
+            #numpy.savetxt(filename, body, delimiter=',', header='yeah')
+            hnd = open(filename, 'wb')
+            writer = csv.writer(hnd, delimiter=',')
+            writer.writerow(header)
+            for i in range(body.shape[0]):
+                writer.writerow(list(body[i, :]))
         else:
+            write_dict = self.exposure_att.copy()
+            write_dict[EX_LAT] = self.exposure_lat
+            write_dict[EX_LONG] = self.exposure_long
             numpy.savez(filename, **write_dict)

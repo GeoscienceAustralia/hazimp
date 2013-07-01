@@ -24,7 +24,7 @@ import numpy
 from scipy import asarray, allclose
 
 from core_hazimp.misc import csv2dict, raster_data_at_points, dict2csv, \
-    get_required_args
+    get_required_args, squash_narray
 
 
 class TestMisc(unittest.TestCase):
@@ -195,6 +195,17 @@ class TestMisc(unittest.TestCase):
         self.assertTrue(defaults == ['mandatory'])
         self.assertTrue(args == [])
 
+    def test_squash_narray(self):
+        narray = numpy.array([[[50, 150], [45, 135]],
+                              [[52, 152], [47, 137]],
+                              [[54, 154], [49, 139]]])
+        narray_copy = numpy.empty_like(narray)
+        narray_copy[:] = narray
+        squashed = squash_narray(narray)
+
+        # Make sure
+        self.assertTrue(allclose(narray, narray_copy))
+        self.assertTrue(allclose(squashed, numpy.array([95., 97., 99.])))
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestMisc, 'test')

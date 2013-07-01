@@ -20,6 +20,7 @@ import numpy
 from scipy import allclose, asarray, array
 
 from core_hazimp import workflow
+from core_hazimp import misc
 from core_hazimp.workflow import ConfigPipeLineBuilder, Context, EX_LAT, \
     EX_LONG
 from core_hazimp.calcs.calcs import CALCS
@@ -122,6 +123,33 @@ class TestWorkFlow(unittest.TestCase):
         for keyish in exp_dict.files:
             self.assertTrue(allclose(exp_dict[keyish],
                                      actual[keyish]))
+        os.remove(f.name)
+
+    def test_save_exposure_attsII(self):
+
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(suffix='.csv',
+                                        prefix='test_save_exposure_atts',
+                                        delete=False)
+        f.close()
+        con = workflow.Context()
+        actual = {'shoes': array([10., 11, 12]),
+                  'depth': array([[5., 4., 3.], [3., 2, 1], [30., 20, 10]]),
+                  'he': array([1, 2, 0])}
+        con.exposure_att = actual
+        lat = array([1, 2., 3])
+        con.exposure_lat = lat
+        lon = array([10., 20., 30])
+        con.exposure_long = lon
+        con.save_exposure_atts(f.name)
+        exp_dict = misc.csv2dict(f.name)
+
+        actual[EX_LONG] = lon
+        actual[EX_LAT] = lat
+        actual['depth'] = array([4, 2, 20])
+        for key in exp_dict:
+            self.assertTrue(allclose(exp_dict[key],
+                                     actual[key]))
         os.remove(f.name)
 
 #-------------------------------------------------------------

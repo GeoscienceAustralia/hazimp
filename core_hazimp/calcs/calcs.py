@@ -9,8 +9,6 @@ Need to work out the licence
 
 import sys
 
-import numpy
-
 from core_hazimp.jobs.jobs import Job
 from core_hazimp.misc import instanciate_classes
 
@@ -138,7 +136,7 @@ class CalcLoss(Calculator):
         """
         Return two values
         """
-        
+
         return [structural_loss_ratio * structural_value]
 
 
