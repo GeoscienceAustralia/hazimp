@@ -215,6 +215,16 @@ def get_required_args(func):
 
 def squash_narray(ary):
     """
-    Calculate the mean on all but the 0 axis of an n-dimensional array.
+    Reduce an array to 1 dimension. Firstly try to average the values.
+    If that doesn't work only take the first dimension.
+
     """
-    return ary.reshape((ary.shape[0], -1)).mean(axis=1)
+    if ary.ndim > 1:
+        try:
+            d1_ary = ary.reshape((ary.shape[0], -1)).mean(axis=1)
+        except TypeError:
+            # Can't average, just take the first axis
+            d1_ary = ary.reshape((ary.shape[0], -1))[:, 0]
+    else:
+        d1_ary = ary
+    return d1_ary

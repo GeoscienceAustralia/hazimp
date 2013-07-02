@@ -206,6 +206,13 @@ class TestMisc(unittest.TestCase):
         # Make sure
         self.assertTrue(allclose(narray, narray_copy))
         self.assertTrue(allclose(squashed, numpy.array([95., 97., 99.])))
+
+    def test_squash_narrayII(self):
+        narray = numpy.array([[['B', 'O'], ['A', 'T']],
+                              [['A', 'T'], ['O', 'm']],
+                              [['M', 'O'], ['w gras', 's']]])
+        squashed = squash_narray(narray)
+        self.assertTrue(squashed.tolist(), ['B', 'A', 'M'])
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestMisc, 'test')

@@ -150,6 +150,38 @@ class TestWind(unittest.TestCase):
         os.remove(f.name)
         os.remove(f_out.name)
 
+    def test_wind_v1_template_csv(self):
+        # Test running an end to end cyclone test based
+        # on a wind config template.
+
+        # The output file
+        f = tempfile.NamedTemporaryFile(
+            suffix='.csv',
+            prefix='HAZIMPt_wind_scenarios_test_const',
+            delete=False)
+
+        wind_dir = os.path.join(misc.EXAMPLE_DIR, 'wind')
+        exp_filename = os.path.join(wind_dir,
+                                    'small_exposure_tcrm.csv')
+        wind_filename = os.path.join(wind_dir, 'gust01.txt')
+        config = {
+            TEMPLATE: WINDV1,
+            LOADCSVEXPOSURE: {'file_name': exp_filename,
+                              'exposure_latitude': 'LATITUDE',
+                              'exposure_longitude': 'LONGITUDE'},
+            LOADWINDTCRM: [wind_filename],
+            SAVE: f.name}
+
+        context = hazimp.main(config_dic=config)
+        self.assertTrue(allclose(
+            context.exposure_att['structural_loss'],
+            context.exposure_att['calced-loss']))
+
+        exp_dict = misc.csv2dict(f.name)
+        self.assertTrue(allclose(exp_dict['structural_loss'],
+                                 exp_dict['calced-loss']))
+        os.remove(f.name)
+
 #-------------------------------------------------------------
 if __name__ == "__main__":
 
