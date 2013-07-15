@@ -56,7 +56,7 @@ class TestCalcs(unittest.TestCase):
         context = Dummy
         context.exposure_att = {'a_test': 5, 'b_test': 20}
         inst(context, **{'constant': 5})
-        self.assertEqual(context.exposure_att['g_test'], 5*2)
+        self.assertEqual(context.exposure_att['g_test'], 5 * 2)
 
     def test_CalcLoss(self):
         inst = CALCS[calcs.STRUCT_LOSS]
@@ -64,7 +64,7 @@ class TestCalcs(unittest.TestCase):
         context.exposure_att = {'structural_loss_ratio': 5,
                                 'REPLACEMENT_VALUE': 20}
         inst(context)
-        self.assertEqual(context.exposure_att['structural_loss'], 5*20)
+        self.assertEqual(context.exposure_att['structural_loss'], 5 * 20)
 
 #-------------------------------------------------------------
 if __name__ == "__main__":

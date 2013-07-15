@@ -117,7 +117,7 @@ class ConstantTest(Calculator):
         """
         Return two values
         """
-        return [constant*2]
+        return [constant * 2]
 
 
 class CalcLoss(Calculator):
