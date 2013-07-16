@@ -19,6 +19,7 @@ from scipy import allclose
 
 from core_hazimp import hazimp
 from core_hazimp.jobs import jobs
+from core_hazimp import parallel
 
 
 def build_example_vuln():
@@ -138,10 +139,25 @@ class TestIntegration(unittest.TestCase):
         #  SW1 4 MMI - 0.4 building_loss , 0.004 contents_loss
         #  SW2 5 MMI - 0.05 building_loss 0.0005 contents_loss
 
-        results = [0.4, 0.05]
-        actual = context.exposure_att['building_loss']
-        self.assertTrue(allclose(actual,
-                                 results), 'actual: ' + str(actual))
+        if parallel.STATE.size == 1:
+            results = [0.4, 0.05]
+            actual = context.exposure_att['building_loss']
+            self.assertTrue(allclose(actual,
+                                     results), 'actual:' + str(actual) +
+                            '\n results:' + str(results))
+        else:
+            if parallel.STATE.rank == 0:
+                results = [0.4]
+                actual = context.exposure_att['building_loss']
+                self.assertTrue(allclose(actual,
+                                         results), 'actual:' + str(actual) +
+                                '\n results:' + str(results))
+            elif parallel.STATE.rank == 1:
+                results = [0.05]
+                actual = context.exposure_att['building_loss']
+                self.assertTrue(allclose(actual,
+                                         results), 'actual:' + str(actual) +
+                                '\n results:' + str(results))
         os.remove(file_vuln)
         os.remove(file_exp)
 

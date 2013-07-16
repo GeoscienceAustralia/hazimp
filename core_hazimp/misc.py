@@ -46,6 +46,9 @@ def csv2dict(filename, add_ids=False):
                 except AttributeError:
                     pass
             file_dict[key.strip()].append(val)
+
+    for key in file_dict.keys():
+        file_dict[key] = numpy.asarray(file_dict[key])
     # Get a normal dict now, so KeyErrors are thrown.
     plain_dic = dict(file_dict)
     if add_ids:

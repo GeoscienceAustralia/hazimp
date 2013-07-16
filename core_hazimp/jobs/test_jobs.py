@@ -26,6 +26,7 @@ from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 from core_hazimp import workflow
 from core_hazimp import misc
+from core_hazimp import parallel
 
 
 class Dummy:
@@ -92,11 +93,28 @@ class TestJobs(unittest.TestCase):
         test_kwargs = {'file_name': f.name}
         inst(context, **test_kwargs)
 
-        self.assertTrue(allclose(context.exposure_lat, asarray([1.0, 4.0])))
-        self.assertTrue(allclose(context.exposure_long, asarray([2.0, 5.0])))
-        self.assertTrue(allclose(context.exposure_att['Z'],
-                                 asarray([3.0, 6.0])))
-
+        if parallel.STATE.size == 1:
+            self.assertTrue(allclose(context.exposure_lat,
+                                     asarray([1.0, 4.0])))
+            self.assertTrue(allclose(context.exposure_long,
+                                     asarray([2.0, 5.0])))
+            self.assertTrue(allclose(context.exposure_att['Z'],
+                                     asarray([3.0, 6.0])))
+        else:
+            if parallel.STATE.rank == 0:
+                self.assertTrue(allclose(context.exposure_lat,
+                                         asarray([1.0])))
+                self.assertTrue(allclose(context.exposure_long,
+                                         asarray([2.0])))
+                self.assertTrue(allclose(context.exposure_att['Z'],
+                                         asarray([3.0])))
+            elif parallel.STATE.rank == 1:
+                self.assertTrue(allclose(context.exposure_lat,
+                                         asarray([4.0])))
+                self.assertTrue(allclose(context.exposure_long,
+                                         asarray([5.0])))
+                self.assertTrue(allclose(context.exposure_att['Z'],
+                                         asarray([6.0])))
         os.remove(f.name)
 
     def test_load_vuln_set(self):
@@ -220,13 +238,30 @@ class TestJobs(unittest.TestCase):
         context.exposure_att = {}
         test_kwargs = {'file_name': f.name}
         inst(context, **test_kwargs)
+
         os.remove(f.name)
 
-        actual = numpy.arange(1, 6)
-        msg = "context.exposure_att['ID'] " \
-            + str(context.exposure_att['ID'])
-        msg += "\n actual " + str(actual)
-        self.assertTrue(allclose(context.exposure_att['ID'], actual), msg)
+        if parallel.STATE.size == 1:
+            actual = numpy.arange(1, 6)
+            msg = "context.exposure_att['ID'] " \
+                + str(context.exposure_att['ID'])
+            msg += "\n actual " + str(actual)
+            self.assertTrue(allclose(context.exposure_att['ID'], actual), msg)
+        else:
+            if parallel.STATE.rank == 0:
+                actual = numpy.array([1, 3, 5])
+                msg = "context.exposure_att['ID'] " \
+                    + str(context.exposure_att['ID'])
+                msg += "\n actual " + str(actual)
+                self.assertTrue(allclose(context.exposure_att['ID'], actual),
+                                msg)
+            elif parallel.STATE.rank == 1:
+                actual = numpy.array([2, 4])
+                msg = "context.exposure_att['ID'] " \
+                    + str(context.exposure_att['ID'])
+                msg += "\n actual " + str(actual)
+                self.assertTrue(allclose(context.exposure_att['ID'], actual),
+                                msg)
 
     def test_LoadCsvExposureII(self):
         # Write a file to test
@@ -267,7 +302,7 @@ class TestJobs(unittest.TestCase):
         context = Dummy
         context.exposure_lat = context.exposure_long = None
         context.exposure_att = {}
-        test_kwargs = {'file_name': f.name}
+        test_kwargs = {'file_name': f.name, 'use_parallel': False}
         inst(context, **test_kwargs)
         os.remove(f.name)
 
@@ -336,7 +371,7 @@ class TestJobs(unittest.TestCase):
         con.exposure_lat = lat
         lon = array([100., 22.])
         con.exposure_long = lon
-        test_kwargs = {'file_name': f.name}
+        test_kwargs = {'file_name': f.name, 'use_parallel': False}
         inst(con, **test_kwargs)
 
         exp_dict = numpy.load(f.name)

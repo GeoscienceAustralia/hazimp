@@ -69,13 +69,14 @@ def scatter_dict(whole):
     :param whole: The dictionary of 1d arrays to subdict.
     :returns: (chunk of dictionary of 1d arrays, indexes of whole array)
     """
-    array_len = len(whole[whole.keys()[0]])
     if not STATE.is_parallel:
+        array_len = len(whole[whole.keys()[0]])
         return (whole, numpy.array(range(0, array_len)))
     else:
         import pypar
 
     if STATE.rank == 0:
+        array_len = len(whole[whole.keys()[0]])
         for pro in range(0, STATE.size):
             temp_indexes = numpy.array(range(pro, array_len, STATE.size))
             temp_subdict = {}
@@ -100,7 +101,7 @@ def gather_dict(subdict, indexes):
 
     :param indexes: The indexes into the whole array.
     :param subdict: The dictionary of 1d arrays to subset.
-    :returns: (whole array)
+    :returns: whole array
     """
     if not STATE.is_parallel:
         return subdict
@@ -122,7 +123,7 @@ def gather_dict(subdict, indexes):
             # Work-out the shape of arrays
             array_shape = list(subdict[key].shape)
             array_shape[0] = array_len + 1
-            whole[key] = numpy.zeros(tuple(array_shape))
+            whole[key] = numpy.empty(tuple(array_shape), subdict[key].dtype)
             whole[key][indexes, ...] = subdict[key]
         for pro in range(1, STATE.size):
             subdict = pypar.receive(pro)
@@ -134,7 +135,7 @@ def gather_dict(subdict, indexes):
         pypar.send(subdict, 0)
 
 
-def csv2dict_parallel(filename):
+def csv2dict(filename, use_parallel=True):
     """
     Read a csv file in and return the information as a dictionary
     where the key is the column names and the values are column arrays.
@@ -142,14 +143,16 @@ def csv2dict_parallel(filename):
     This dictionary will be chunked and sent to all processors.
 
     :param filename: The csv file path string.
+    :returns: subsection of the array
     """
-    if not STATE.is_parallel:
-        return misc.csv2dict(filename, add_ids=True)
-    whole = None
-    if STATE.rank == 0:
-        whole = misc.csv2dict(filename, add_ids=True)
-    (subdict, indexes) = scatter_dict(whole)
-    return (subdict, indexes)
+    if STATE.is_parallel and use_parallel:
+        whole = None
+        if STATE.rank == 0:
+            whole = misc.csv2dict(filename, add_ids=True)
+        (subdict, _) = scatter_dict(whole)
+    else:
+        subdict = misc.csv2dict(filename, add_ids=True)
+    return subdict
 #-------------------------------------------------------------
 if __name__ == "__main__":
     pass

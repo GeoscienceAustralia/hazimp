@@ -24,6 +24,7 @@ is not present Error out.
 import sys
 from scipy import asarray
 
+from core_hazimp import parallel
 from core_hazimp import misc
 from core_hazimp.workflow import EX_LAT, EX_LONG
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
@@ -103,7 +104,7 @@ class LoadCsvExposure(Job):
         self.call_funct = LOADCSVEXPOSURE
 
     def __call__(self, context, file_name, exposure_latitude=None,
-                 exposure_longitude=None):
+                 exposure_longitude=None, use_parallel=True):
         """
         Read a csv exposure file into the context object.
 
@@ -118,8 +119,7 @@ class LoadCsvExposure(Job):
                 key: column titles
                 value: column values, except the title
         """
-
-        file_dict = misc.csv2dict(file_name)
+        file_dict = parallel.csv2dict(file_name, use_parallel=use_parallel)
 
         # FIXME Need to do better error handling
 
@@ -332,13 +332,13 @@ class SaveExposure(Job):
         super(SaveExposure, self).__init__()
         self.call_funct = SAVEALL
 
-    def __call__(self, context, file_name=None):
+    def __call__(self, context, file_name=None, use_parallel=True):
         """
         Save all of the exposure information in the context.
 
         :params file_name: The file where the expsoure data will go.
         """
-        context.save_exposure_atts(file_name)
+        context.save_exposure_atts(file_name, use_parallel=use_parallel)
 
 
 #____________________________________________________

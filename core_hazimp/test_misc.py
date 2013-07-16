@@ -43,10 +43,17 @@ class TestMisc(unittest.TestCase):
 
         file_dict = csv2dict(f.name)
 
-        self.assertEqual(file_dict, {'X': [1.0, 4.0],
-                                     'Y': [2.0, 5.0],
-                                     'Z': [3.0, 6.0],
-                                     'A': ['yeah', 'me']})
+        actual = {'X': numpy.array([1.0, 4.0]),
+                  'Y': numpy.array([2.0, 5.0]),
+                  'Z': numpy.array([3.0, 6.0]),
+                  'A': numpy.array(['yeah', 'me'])}
+        for key in actual:
+            if key == "A":
+                self.assertTrue(list(file_dict[key]),
+                                         list(actual[key]))
+            else:
+                self.assertTrue(allclose(file_dict[key],
+                                         actual[key]))
         os.remove(f.name)
 
     def test1_raster_data_at_points(self):

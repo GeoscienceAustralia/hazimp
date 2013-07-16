@@ -12,6 +12,7 @@ import numpy
 import csv
 
 from core_hazimp import misc
+from core_hazimp import parallel
 from core_hazimp.pipeline import PipeLineBuilder, PipeLine
 
 
@@ -121,7 +122,7 @@ class Context(object):
         # value - realised vulnerability curves, only dimension is site.
         self.exposure_vuln_curves = None
 
-    def save_exposure_atts(self, filename):
+    def save_exposure_atts(self, filename, use_parallel=True):
         """
         Save the exposure attributes, including latitude and longitude.
         The file type saved is based on the filename extension.
@@ -130,39 +131,48 @@ class Context(object):
                    format.
 
         Args:
-            filename: The file to be written.
+        :param use_parallel: Set to True for parallel behaviour
+        Which is only node 0 writing to file.
+        :param filename: The file to be written.
+        :return write_dict: The whole dictionary, returned for testing.
         """
         write_dict = self.exposure_att.copy()
         write_dict[EX_LAT] = self.exposure_lat
         write_dict[EX_LONG] = self.exposure_long
 
-        assert misc.INTID in write_dict
-        if filename[-4:] == '.csv':
-            keys = write_dict.keys()
-            header = list(keys)
+        if use_parallel:
+            assert misc.INTID in write_dict
+            write_dict = parallel.gather_dict(write_dict,
+                                              write_dict[misc.INTID])
 
-            #  Lat, long ordering for the header
-            header.remove(EX_LAT)
-            header.remove(EX_LONG)
-            header.insert(0, EX_LAT)
-            header.insert(1, EX_LONG)
+        if parallel.STATE.rank == 0 or not use_parallel:
+            if filename[-4:] == '.csv':
+                keys = write_dict.keys()
+                header = list(keys)
 
-            body = None
-            for key in header:
-                #  Only one dimension can be saved.
-                #  Average the results to the Site (first) dimension.
-                only_1d = misc.squash_narray(write_dict[key])
-                if body is None:
-                    body = only_1d
-                else:
-                    body = numpy.column_stack((body, only_1d))
+                #  Lat, long ordering for the header
+                header.remove(EX_LAT)
+                header.remove(EX_LONG)
+                header.insert(0, EX_LAT)
+                header.insert(1, EX_LONG)
 
-            # Need numpy 1.7 > to do headers
-            #numpy.savetxt(filename, body, delimiter=',', header='yeah')
-            hnd = open(filename, 'wb')
-            writer = csv.writer(hnd, delimiter=',')
-            writer.writerow(header)
-            for i in range(body.shape[0]):
-                writer.writerow(list(body[i, :]))
-        else:
-            numpy.savez(filename, **write_dict)
+                body = None
+                for key in header:
+                    #  Only one dimension can be saved.
+                    #  Average the results to the Site (first) dimension.
+                    only_1d = misc.squash_narray(write_dict[key])
+                    if body is None:
+                        body = only_1d
+                    else:
+                        body = numpy.column_stack((body, only_1d))
+
+                # Need numpy 1.7 > to do headers
+                #numpy.savetxt(filename, body, delimiter=',', header='yeah')
+                hnd = open(filename, 'wb')
+                writer = csv.writer(hnd, delimiter=',')
+                writer.writerow(header)
+                for i in range(body.shape[0]):
+                    writer.writerow(list(body[i, :]))
+            else:
+                numpy.savez(filename, **write_dict)
+            return write_dict
