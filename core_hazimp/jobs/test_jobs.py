@@ -25,6 +25,7 @@ from core_hazimp.jobs.jobs import JOBS, LOADRASTER, LOADCSVEXPOSURE, \
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 from core_hazimp import workflow
+from core_hazimp import misc
 
 
 class Dummy:
@@ -329,7 +330,7 @@ class TestJobs(unittest.TestCase):
         con = workflow.Context()
         actual = {'shoes': array([11., 11]),
                   'depth': array([[5., 3.], [2., 4]]),
-                  'he': array([199999999, 200])}
+                  misc.INTID: array([0, 1, 2])}
         con.exposure_att = actual
         lat = array([1, 22.])
         con.exposure_lat = lat

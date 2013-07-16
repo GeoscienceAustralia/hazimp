@@ -109,7 +109,7 @@ class TestWorkFlow(unittest.TestCase):
         con = workflow.Context()
         actual = {'shoes': array([10., 11]),
                   'depth': array([[5., 3.], [2., 4]]),
-                  'he': array([1, 2])}
+                  misc.INTID: array([0, 1, 2])}
         con.exposure_att = actual
         lat = array([1, 2.])
         con.exposure_lat = lat
@@ -135,7 +135,7 @@ class TestWorkFlow(unittest.TestCase):
         con = workflow.Context()
         actual = {'shoes': array([10., 11, 12]),
                   'depth': array([[5., 4., 3.], [3., 2, 1], [30., 20, 10]]),
-                  'he': array([1, 2, 0])}
+                  misc.INTID: array([0, 1, 2])}
         con.exposure_att = actual
         lat = array([1, 2., 3])
         con.exposure_lat = lat
@@ -151,6 +151,7 @@ class TestWorkFlow(unittest.TestCase):
             self.assertTrue(allclose(exp_dict[key],
                                      actual[key]))
         os.remove(f.name)
+
 
 #-------------------------------------------------------------
 if __name__ == "__main__":

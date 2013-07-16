@@ -90,7 +90,7 @@ class Context(object):
     """
 
     def __init__(self):
-
+        # --------------  These variables are saved ----
         # Latitude and longitude values of the exposure data
         self.exposure_lat = None
         self.exposure_long = None
@@ -99,6 +99,7 @@ class Context(object):
         # key - data name
         # value - A numpy array. First dimension is site. (0 axis)
         self.exposure_att = {}
+        # --------------  The above variables are saved ----
 
         # for example 'vulnerability_functions' is a list of a list of
         # vulnerabilty functions.  The outer list is for each asset.
@@ -110,14 +111,14 @@ class Context(object):
         self.vulnerability_sets = {}
 
         # A dictionary with keys being vulnerability_set_ids and
-        # values being the exposure title that holds vulnerability
+        # value being the exposure attribute who's values are vulnerability
         # function ID's.
         self.vul_function_titles = {}
 
         # A dictionary of realised vulnerability curves, associated with the
         # exposure data.
         # key - intensity measure
-        # value - realised vulnerability curve instance
+        # value - realised vulnerability curves, only dimension is site.
         self.exposure_vuln_curves = None
 
     def save_exposure_atts(self, filename):
@@ -131,21 +132,30 @@ class Context(object):
         Args:
             filename: The file to be written.
         """
+        write_dict = self.exposure_att.copy()
+        write_dict[EX_LAT] = self.exposure_lat
+        write_dict[EX_LONG] = self.exposure_long
+
+        assert misc.INTID in write_dict
         if filename[-4:] == '.csv':
-            write_dict = self.exposure_att.copy()
             keys = write_dict.keys()
             header = list(keys)
 
             #  Lat, long ordering for the header
+            header.remove(EX_LAT)
+            header.remove(EX_LONG)
             header.insert(0, EX_LAT)
             header.insert(1, EX_LONG)
 
-            body = numpy.column_stack((self.exposure_lat, self.exposure_long))
-            for key in keys:
+            body = None
+            for key in header:
                 #  Only one dimension can be saved.
                 #  Average the results to the Site (first) dimension.
                 only_1d = misc.squash_narray(write_dict[key])
-                body = numpy.column_stack((body, only_1d))
+                if body is None:
+                    body = only_1d
+                else:
+                    body = numpy.column_stack((body, only_1d))
 
             # Need numpy 1.7 > to do headers
             #numpy.savetxt(filename, body, delimiter=',', header='yeah')
@@ -155,7 +165,4 @@ class Context(object):
             for i in range(body.shape[0]):
                 writer.writerow(list(body[i, :]))
         else:
-            write_dict = self.exposure_att.copy()
-            write_dict[EX_LAT] = self.exposure_lat
-            write_dict[EX_LONG] = self.exposure_long
             numpy.savez(filename, **write_dict)

@@ -19,11 +19,12 @@ RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
 EXAMPLE_DIR = os.path.join(ROOT_DIR, 'examples')
 INTID = 'internal_id'
 
+
 def csv2dict(filename, add_ids=False):
     """
     Read a csv file in and return the information as a dictionary
     where the key is the column names and the values are column arrays.
-    
+
     :param add_ids: If True add a key, value of ids, from 0 to n
     :param filename: The csv file path string.
     """

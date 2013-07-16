@@ -9,6 +9,7 @@ import numpy
 
 from core_hazimp import misc
 
+
 class Parallel(object):
     """ Parallelise to run on a cluster.
 
