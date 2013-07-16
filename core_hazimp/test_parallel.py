@@ -14,7 +14,7 @@ Test the parallel module.
 import numpy
 import unittest
 
-from core_hazimp.parallel import STATE, spread_dict
+from core_hazimp.parallel import STATE, scatter_dict, gather_dict
 
 
 class TestParallel(unittest.TestCase):
@@ -28,7 +28,7 @@ class TestParallel(unittest.TestCase):
     def test_parallel_off(self):
         pass
 
-    def test_parallel_on(self):
+    def test_scatter_dict(self):
         # This test can be run with
         # mpirun -n 2 python test_parallel.py
         # if there is a path problem, try adding -x PYTHONPATH
@@ -40,7 +40,7 @@ class TestParallel(unittest.TestCase):
             return
         whole = {"foo": numpy.array([0, 1, 2, 3]),
                  "woo": numpy.array([0, 10, 20, 30])}
-        (_, subset) = spread_dict(whole)
+        (subset, _) = scatter_dict(whole)
         if STATE.size == 1:
             self.assertDictEqual(whole, subset)
         elif STATE.size == 2:
@@ -59,6 +59,82 @@ class TestParallel(unittest.TestCase):
         else:
             pass
 
+    def test_gather_dict(self):
+        # This test can be run with
+        # mpirun -n 2 python test_parallel.py
+        # if there is a path problem, try adding -x PYTHONPATH
+
+        try:
+            import pypar  # pylint: disable=W0612
+        except ImportError:
+            # can't do this test
+            return
+        subset = {"foo": numpy.array([0, 2]),
+                  "woo": numpy.array([0, 20])}
+
+        if STATE.size == 1:
+            all_indexes = [[0, 1]]
+        elif STATE.size == 2:
+            all_indexes = [[0, 2], [1, 3]]
+        elif STATE.size == 3:
+            all_indexes = [[0, 3], [1, 4], [2, 5]]
+        whole = gather_dict(subset, all_indexes[STATE.rank])
+        if STATE.size == 1:
+            self.assertDictEqual(whole, subset)
+        elif STATE.size == 2 and STATE.rank == 0:
+            act = {"foo": numpy.array([0, 0, 2, 2]),
+                   "woo": numpy.array([0, 0, 20, 20])}
+            for key in act.keys():
+                self.assertSequenceEqual(list(act[key]),
+                                         list(whole[key]))
+        elif STATE.size == 3 and STATE.rank == 0:
+            act = {"foo": numpy.array([0, 0, 0, 2, 2, 2]),
+                   "woo": numpy.array([0, 0, 0, 20, 20, 20])}
+            for key in act.keys():
+                self.assertSequenceEqual(list(act[key]),
+                                         list(whole[key]))
+        else:
+            pass
+
+    def test_gather_dict2D(self):
+        # This test can be run with
+        # mpirun -n 2 python test_parallel.py
+        # if there is a path problem, try adding -x PYTHONPATH
+
+        try:
+            import pypar  # pylint: disable=W0612
+        except ImportError:
+            # can't do this test
+            return
+        # In a real run the subsets will not be the same
+        subset = {"foo": numpy.array([0, 2]),
+                  "woo": numpy.array([[1, 3, 4], [2, 4, 5]])}
+
+        if STATE.size == 1:
+            all_indexes = [[0, 1]]
+        elif STATE.size == 2:
+            all_indexes = [[0, 2], [1, 3]]
+        elif STATE.size == 3:
+            all_indexes = [[0, 3], [1, 4], [2, 5]]
+        whole = gather_dict(subset, all_indexes[STATE.rank])
+        if STATE.size == 1:
+            self.assertDictEqual(whole, subset)
+        elif STATE.size == 2 and STATE.rank == 0:
+            act = {"foo": numpy.array([0, 0, 2, 2]),
+                   "woo": numpy.array([[1, 3, 4], [1, 3, 4],
+                                       [2, 4, 5], [2, 4, 5]])}
+            for key in act.keys():
+                self.assertTrue(numpy.allclose(act[key],
+                                               whole[key]))
+        elif STATE.size == 3 and STATE.rank == 0:
+            act = {"foo": numpy.array([0, 0, 0, 2, 2, 2]),
+                   "woo": numpy.array([[1, 3, 4], [1, 3, 4], [1, 3, 4],
+                                       [2, 4, 5], [2, 4, 5], [2, 4, 5]])}
+            for key in act.keys():
+                self.assertTrue(numpy.allclose(act[key],
+                                               whole[key]))
+        else:
+            pass
 
 #-------------------------------------------------------------
 if __name__ == "__main__":

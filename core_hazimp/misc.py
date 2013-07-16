@@ -17,15 +17,15 @@ from gdalconst import GA_ReadOnly
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
 EXAMPLE_DIR = os.path.join(ROOT_DIR, 'examples')
+INTID = 'internal_id'
 
-
-def csv2dict(filename):
+def csv2dict(filename, add_ids=False):
     """
     Read a csv file in and return the information as a dictionary
     where the key is the column names and the values are column arrays.
-
-    Args:
-        filename: The csv file path string.
+    
+    :param add_ids: If True add a key, value of ids, from 0 to n
+    :param filename: The csv file path string.
     """
     csvfile = open(filename, 'rb')
     reader = csv.DictReader(csvfile)
@@ -47,7 +47,10 @@ def csv2dict(filename):
             file_dict[key.strip()].append(val)
     # Get a normal dict now, so KeyErrors are thrown.
     plain_dic = dict(file_dict)
-
+    if add_ids:
+        # Add internal id info
+        array_len = len(plain_dic[plain_dic.keys()[0]])
+        plain_dic[INTID] = numpy.arange(array_len)
     return plain_dic
 
 

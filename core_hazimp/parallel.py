@@ -58,43 +58,96 @@ class Parallel(object):
 STATE = Parallel()
 
 
-def spread_dict(whole):
+def scatter_dict(whole):
     """
     Broadcast and recieve a dictionary where the values are 1d arrays
-    and the arrays are subsetted for the workers.
+    and the arrays are chunked for the workers.
+    Only rank 0 needs the whole dictionary.
 
-    :param whole: The dictionary of 1d arrays to subset.
-    :returns: (indexes of whole array, subsetted dictionary of 1d arrays)
+    :param whole: The dictionary of 1d arrays to subdict.
+    :returns: (chunk of dictionary of 1d arrays, indexes of whole array)
     """
     array_len = len(whole[whole.keys()[0]])
     if not STATE.is_parallel:
-        return (numpy.array(range(0, array_len)), whole)
+        return (whole, numpy.array(range(0, array_len)))
     else:
         import pypar
 
-    #  subsetting
     if STATE.rank == 0:
-        chunks = []
         for pro in range(0, STATE.size):
             temp_indexes = numpy.array(range(pro, array_len, STATE.size))
-            chunks.append(temp_indexes)
-            #print "indexes",indexes
+            temp_subdict = {}
+            for key in whole.keys():
+                temp_subdict[key] = whole[key][temp_indexes]
             if pro is 0:
                 indexes = temp_indexes
+                subdict = temp_subdict
             else:
                 pypar.send(temp_indexes, pro)
-            temp_subset = {}
-            for key in whole.keys():
-                temp_subset[key] = whole[key][temp_indexes]
-            if pro is 0:
-                subset = temp_subset
-            else:
-                pypar.send(temp_subset, pro)
+                pypar.send(temp_subdict, pro)
     else:
         indexes = pypar.receive(0)
-        subset = pypar.receive(0)
-    return (indexes, subset)
+        subdict = pypar.receive(0)
+    return (subdict, indexes)
 
+
+def gather_dict(subdict, indexes):
+    """
+    Recieve a dictionary from the children where the values are 1d arrays
+    and the arrays are chunks of the whole dictionary.
+
+    :param indexes: The indexes into the whole array.
+    :param subdict: The dictionary of 1d arrays to subset.
+    :returns: (whole array)
+    """
+    if not STATE.is_parallel:
+        return subdict
+    else:
+        import pypar
+
+    # Note, putting dictionary back sequentially
+    if STATE.rank == 0:
+        whole = {}
+        array_len = 0
+        all_indexes = [[]]  # Empty list for processor 0
+        for pro in range(1, STATE.size):
+            temp_indexes = pypar.receive(pro)
+            all_indexes.append(temp_indexes)
+            if temp_indexes[-1] > array_len:
+                array_len = temp_indexes[-1]
+        # Create the whole dictionary, filled with rank 0 info
+        for key in subdict.keys():
+            # Work-out the shape of arrays
+            array_shape = list(subdict[key].shape)
+            array_shape[0] = array_len + 1
+            whole[key] = numpy.zeros(tuple(array_shape))
+            whole[key][indexes,...] = subdict[key]
+        for pro in range(1, STATE.size):
+            subdict = pypar.receive(pro)
+            for key in whole.keys():
+                whole[key][all_indexes[pro],...] = subdict[key]
+        return whole
+    else:
+        pypar.send(indexes, 0)
+        pypar.send(subdict, 0)
+
+
+def csv2dict_parallel(filename):
+    """
+    Read a csv file in and return the information as a dictionary
+    where the key is the column names and the values are column arrays.
+
+    This dictionary will be chunked and sent to all processors.
+
+    :param filename: The csv file path string.
+    """
+    if not STATE.is_parallel:
+        return csv2dict(filename, add_ids=True)
+    whole = None
+    if STATE.rank == 0:
+        whole = csv2dict(filename, add_ids=True)
+    (subdict, indexes) = scatter_dict(whole)
+    return (subdict, indexes)
 #-------------------------------------------------------------
 if __name__ == "__main__":
     pass

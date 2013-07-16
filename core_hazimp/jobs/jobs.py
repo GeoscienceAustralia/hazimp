@@ -336,11 +336,8 @@ class SaveExposure(Job):
         """
         Save all of the exposure information in the context.
 
-        Args:
-           file_name: The file where the expsoure data will go.
-
+        :params file_name: The file where the expsoure data will go.
         """
-
         context.save_exposure_atts(file_name)
 
 
