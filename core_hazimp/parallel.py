@@ -7,6 +7,7 @@ Functions that haven't found a proper module.
 import socket
 import numpy
 
+from core_hazimp import misc
 
 class Parallel(object):
     """ Parallelise to run on a cluster.
@@ -121,11 +122,11 @@ def gather_dict(subdict, indexes):
             array_shape = list(subdict[key].shape)
             array_shape[0] = array_len + 1
             whole[key] = numpy.zeros(tuple(array_shape))
-            whole[key][indexes,...] = subdict[key]
+            whole[key][indexes, ...] = subdict[key]
         for pro in range(1, STATE.size):
             subdict = pypar.receive(pro)
             for key in whole.keys():
-                whole[key][all_indexes[pro],...] = subdict[key]
+                whole[key][all_indexes[pro], ...] = subdict[key]
         return whole
     else:
         pypar.send(indexes, 0)
@@ -142,10 +143,10 @@ def csv2dict_parallel(filename):
     :param filename: The csv file path string.
     """
     if not STATE.is_parallel:
-        return csv2dict(filename, add_ids=True)
+        return misc.csv2dict(filename, add_ids=True)
     whole = None
     if STATE.rank == 0:
-        whole = csv2dict(filename, add_ids=True)
+        whole = misc.csv2dict(filename, add_ids=True)
     (subdict, indexes) = scatter_dict(whole)
     return (subdict, indexes)
 #-------------------------------------------------------------
