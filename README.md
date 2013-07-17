@@ -1,4 +1,4 @@
-hazimp
+HazImp
 ======
 
 Hazard impact assessment tool

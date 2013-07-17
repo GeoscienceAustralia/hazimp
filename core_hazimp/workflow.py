@@ -66,17 +66,13 @@ class ConfigAwarePipeLine(PipeLine):
 class ConfigPipeLineBuilder(PipeLineBuilder):
     """
     Builds a pipeline for jobs and calcs.
-
     """
-
     def build(self, calcs):
         """Builds the pipeline.
 
-        Args:
-           calcs: A list of Calculator instances
+        :param calcs: A list of Calculator instances
 
-        Returns:
-            A pipeline with the calcs in it, ready to process.
+        :returns: A pipeline with the calcs in it, ready to process.
         """
         pipeline = ConfigAwarePipeLine(calcs)
         return pipeline
@@ -84,14 +80,15 @@ class ConfigPipeLineBuilder(PipeLineBuilder):
 
 class Context(object):
     """
-    Context allows to read the config file
-    and store preprocessing/processing steps
-    intermediate results.
-
+    Context is a singlton storing all
+    of the run specific data.
     """
 
     def __init__(self):
         # --------------  These variables are saved ----
+        #  If new variables are added the save functions
+        # will need to be modified.
+
         # Latitude and longitude values of the exposure data
         self.exposure_lat = None
         self.exposure_long = None
@@ -130,7 +127,6 @@ class Context(object):
            '.npz': Save the arrays into a single file in uncompressed .npz
                    format.
 
-        Args:
         :param use_parallel: Set to True for parallel behaviour
         Which is only node 0 writing to file.
         :param filename: The file to be written.
@@ -147,32 +143,52 @@ class Context(object):
 
         if parallel.STATE.rank == 0 or not use_parallel:
             if filename[-4:] == '.csv':
-                keys = write_dict.keys()
-                header = list(keys)
-
-                #  Lat, long ordering for the header
-                header.remove(EX_LAT)
-                header.remove(EX_LONG)
-                header.insert(0, EX_LAT)
-                header.insert(1, EX_LONG)
-
-                body = None
-                for key in header:
-                    #  Only one dimension can be saved.
-                    #  Average the results to the Site (first) dimension.
-                    only_1d = misc.squash_narray(write_dict[key])
-                    if body is None:
-                        body = only_1d
-                    else:
-                        body = numpy.column_stack((body, only_1d))
-
-                # Need numpy 1.7 > to do headers
-                #numpy.savetxt(filename, body, delimiter=',', header='yeah')
-                hnd = open(filename, 'wb')
-                writer = csv.writer(hnd, delimiter=',')
-                writer.writerow(header)
-                for i in range(body.shape[0]):
-                    writer.writerow(list(body[i, :]))
+                save_csv(write_dict, filename)
             else:
                 numpy.savez(filename, **write_dict)
+            # The write_dict is returned for testing
+            # When running in paralled this is a way of getting all
+            # of the context info
             return write_dict
+
+
+def save_csv(write_dict, filename):
+    """
+    Save a dictionary of arrays as a csv file.
+    the first dimension in the arrays is assumed to have the save length
+    for all arrays.
+    In the csv file the keys become titles and the arrays become values.
+
+    If the array is higher than 1d the other dimensions are averaged to get a
+    1d array.
+
+    :param  write_dict: Write as a csv file.
+    :type write_dict: Dictionary.
+    :param filename: The csv file will be written here.
+    """
+    keys = write_dict.keys()
+    header = list(keys)
+
+    #  Lat, long ordering for the header
+    header.remove(EX_LAT)
+    header.remove(EX_LONG)
+    header.insert(0, EX_LAT)
+    header.insert(1, EX_LONG)
+
+    body = None
+    for key in header:
+        #  Only one dimension can be saved.
+        #  Average the results to the Site (first) dimension.
+        only_1d = misc.squash_narray(write_dict[key])
+        if body is None:
+            body = only_1d
+        else:
+            body = numpy.column_stack((body, only_1d))
+
+    # Need numpy 1.7 > to do headers
+    #numpy.savetxt(filename, body, delimiter=',', header='yeah')
+    hnd = open(filename, 'wb')
+    writer = csv.writer(hnd, delimiter=',')
+    writer.writerow(header)
+    for i in range(body.shape[0]):
+        writer.writerow(list(body[i, :]))

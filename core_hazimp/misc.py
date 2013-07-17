@@ -191,24 +191,16 @@ def dict2csv(data_dict, filename):
     fid.close()
 
 
-def save_data(context, filename):
-    """
-    Write a npz file which has all the exposure arrays.
-
-    Args:
-        filename: The csv file to be written.
-        context: The context object.
-    """
-    context.save_exposure_atts(filename)
-
-
 def get_required_args(func):
     """
-    Get the arguments required in a function
+    Get the arguments required in a function, from the function.
 
-    http://stackoverflow.com/questions/196960/
-    can-you-list-the-keyword-arguments-a-python-function-receives
+    :param func: The function that you need to know about.
     """
+
+    #http://stackoverflow.com/questions/196960/
+    #can-you-list-the-keyword-arguments-a-python-function-receives
+
     # *args and **kwargs are not required, so ignore them.
     args_and_defaults, _, _, default_vaules = inspect.getargspec(func)
     defaults = []
