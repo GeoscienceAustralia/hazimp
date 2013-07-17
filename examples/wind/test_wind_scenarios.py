@@ -27,6 +27,7 @@ from core_hazimp.jobs.jobs import LOADRASTER, LOADCSVEXPOSURE, \
     LOOKUP, SAVEALL
 from core_hazimp.calcs.calcs import STRUCT_LOSS
 from core_hazimp.config import LOADWINDTCRM, TEMPLATE, WINDV1, SAVE
+from core_hazimp import parallel
 
 
 class TestWind(unittest.TestCase):
@@ -72,9 +73,11 @@ class TestWind(unittest.TestCase):
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
 
-        exp_dict = numpy.load(f.name)
-        self.assertTrue(allclose(exp_dict['structural_loss'],
-                                 exp_dict['calced-loss']))
+        # Only the head node writes a file
+        if parallel.STATE.rank == 0:
+            exp_dict = numpy.load(f.name)
+            self.assertTrue(allclose(exp_dict['structural_loss'],
+                                     exp_dict['calced-loss']))
         os.remove(f.name)
 
     def test_wind_v1_template(self):
@@ -104,9 +107,11 @@ class TestWind(unittest.TestCase):
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
 
-        exp_dict = numpy.load(f.name)
-        self.assertTrue(allclose(exp_dict['structural_loss'],
-                                 exp_dict['calced-loss']))
+        # Only the head node writes a file
+        if parallel.STATE.rank == 0:
+            exp_dict = numpy.load(f.name)
+            self.assertTrue(allclose(exp_dict['structural_loss'],
+                                     exp_dict['calced-loss']))
         os.remove(f.name)
 
     def test_wind_yaml(self):
@@ -144,9 +149,11 @@ class TestWind(unittest.TestCase):
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
 
-        exp_dict = numpy.load(f_out.name)
-        self.assertTrue(allclose(exp_dict['structural_loss'],
-                                 exp_dict['calced-loss']))
+        # Only the head node writes a file
+        if parallel.STATE.rank == 0:
+            exp_dict = numpy.load(f_out.name)
+            self.assertTrue(allclose(exp_dict['structural_loss'],
+                                     exp_dict['calced-loss']))
         os.remove(f.name)
         os.remove(f_out.name)
 
@@ -177,9 +184,11 @@ class TestWind(unittest.TestCase):
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
 
-        exp_dict = misc.csv2dict(f.name)
-        self.assertTrue(allclose(exp_dict['structural_loss'],
-                                 exp_dict['calced-loss']))
+        # Only the head node writes a file
+        if parallel.STATE.rank == 0:
+            exp_dict = misc.csv2dict(f.name)
+            self.assertTrue(allclose(exp_dict['structural_loss'],
+                                     exp_dict['calced-loss']))
         os.remove(f.name)
 
 #-------------------------------------------------------------

@@ -111,7 +111,7 @@ def gather_dict(subdict, indexes):
     # Note, putting dictionary back sequentially
     if STATE.rank == 0:
         whole = {}
-        array_len = 0
+        array_len = indexes[-1]  # highest index in node 0 array
         all_indexes = [[]]  # Empty list for processor 0
         for pro in range(1, STATE.size):
             temp_indexes = pypar.receive(pro)
