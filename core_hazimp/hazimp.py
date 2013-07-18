@@ -10,8 +10,11 @@ from core_hazimp import config
 
 def main(config_dic=None, config_file=None):
     """
-    Control the haz imp tool.
-    This will probably turn into a class at some stage to handle blocking?
+    Run the HazImp tool, based on the config info.
+
+    :param config_dic: The configuration info, as a dictionary.
+    :param config_file: The configuration info, as a file location.
+    :returns: The config dictionary.
     """
     if config_file:
         config_dic = config.read_file(config_file)

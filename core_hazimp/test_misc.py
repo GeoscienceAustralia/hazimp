@@ -23,7 +23,7 @@ import os
 import numpy
 from scipy import asarray, allclose
 
-from core_hazimp.misc import (csv2dict, raster_data_at_points, 
+from core_hazimp.misc import (csv2dict, raster_data_at_points,
     get_required_args, squash_narray)
 
 

@@ -11,8 +11,8 @@ import yaml
 import copy
 
 from core_hazimp.calcs.calcs import CALCS
-from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE, 
-    LOADXMLVULNERABILITY, SIMPLELINKER, SELECTVULNFUNCTION, 
+from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
+    LOADXMLVULNERABILITY, SIMPLELINKER, SELECTVULNFUNCTION,
     LOOKUP, SAVEALL, JOBSKEY)
 from core_hazimp.calcs.calcs import STRUCT_LOSS
 from core_hazimp import misc

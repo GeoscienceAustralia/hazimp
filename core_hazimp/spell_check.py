@@ -41,8 +41,7 @@ class SpellCheck(object):
     """
     def __init__(self, base_words):
         """
-        arg
-           word_list: The list of known words.
+        :param word_list: The list of known words.
         """
         self.nwords = train(base_words)
         self.base_words = base_words
@@ -61,11 +60,8 @@ class SpellCheck(object):
             The known word is returned
         Otherwise the unknown word is returned.
 
-        arg:
-            word - the word that might have a typo
-
-        returns:
-
+        :param word: The word that might have a typo.
+        :returns: ??
         """
         candidates = self.known([word]) or self.known(edits1(word)) or \
             self.known_edits2(word) or [word]

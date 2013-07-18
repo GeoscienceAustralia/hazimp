@@ -13,7 +13,6 @@ from core_hazimp import misc
 class Parallel(object):
     """ Parallelise to run on a cluster.
 
-    Attributes:
     :param rank: What is the id of this node in the cluster.
     :param size: How many processors are there in the cluster.
     :param node: name of the cluster node.

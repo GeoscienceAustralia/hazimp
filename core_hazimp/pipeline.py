@@ -59,14 +59,11 @@ class PipeLine(object):
 
     def run(self, context):
         """
-
         Run all the jobs in queue, where each job take input data and
         write the results of calculation in context.
 
-        Args:
-            context: A Context object holding the i/o data for the pipelines
+        :param context: Context object holding the i/o data for the pipelines.
         """
-
         for job in self.jobs:
             job(context)
 
@@ -77,7 +74,6 @@ class PipeLineBuilder(object):
     by assembling all the required jobs
     specified in the config file.
     """
-
     __metaclass__ = abc.ABCMeta
 
     def __init__(self):

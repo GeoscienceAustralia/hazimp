@@ -62,7 +62,7 @@ def instanciate_classes(module):
     """
     Create a dictionary of calc names (key) and the calc instance (value).
 
-    :param module: ?? 
+    :param module: ??
     """
     callable_instances = {}
     for _, obj in inspect.getmembers(module):
@@ -80,7 +80,7 @@ def raster_data_at_points(lat, lon, files):
     :param files: A list of files.
     :param lon: A 1D array of the longitude of the points.
     :param lat: A 1d array of the latitude of the points.
-    :returns: A numpy array, shape (sites, hazards) or shape (sites), 
+    :returns: A numpy array, shape (sites, hazards) or shape (sites),
     for one hazard.
     """
     gdal.AllRegister()
@@ -183,6 +183,8 @@ def squash_narray(ary):
     Reduce an array to 1 dimension. Firstly try to average the values.
     If that doesn't work only take the first dimension.
 
+    :param ary: the numpy array to be squashed.
+    :returns: The ary array, averaged to 1d.
     """
     if ary.ndim > 1:
         try:
