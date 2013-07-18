@@ -294,7 +294,7 @@ class LookUp(Job):
 class LoadRaster(Job):
     """
     Load one or more files and get the value for all the
-    exposure points. Primarily this will be used to load hazard data.
+    points. Primarily this will be used to load hazard data.
 
     There may be NAN values in this data
     """
@@ -307,9 +307,8 @@ class LoadRaster(Job):
         Load one or more files and get the value for all the
         exposure points. All files have to be of the same attribute.
 
-        Args:
-           attribute_label: The string to be associated with this data.
-           file_list: A list of files to be loaded.
+        :param attribute_label: The string to be associated with this data.
+        :param file_list: A list of files or a single file to be loaded.
 
         Content return:
            exposure_att: Add the file values into this dictionary.
@@ -317,6 +316,8 @@ class LoadRaster(Job):
                value: column values, except the title
         """
         #FIXME raise errors, re no lat or lon
+        if isinstance(file_list, basestring):
+            file_list = [file_list]
         if file_list is not None:
             file_data = misc.raster_data_at_points(
                 context.exposure_long,

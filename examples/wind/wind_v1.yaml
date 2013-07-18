@@ -4,5 +4,5 @@ load_exposure:
   file_name: WA_Wind_Exposure_2013_Test_only.csv
   exposure_latitude: LATITUDE
   exposure_longitude: LONGITUDE 
-load_wind_ascii: [gust01.txt] 
+load_wind_ascii: [gust01.txt]
 save: wind_impact.csv  
