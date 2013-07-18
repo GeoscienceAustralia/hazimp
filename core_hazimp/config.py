@@ -2,7 +2,7 @@
 
 
 """
-Functions concerning the configuration file.
+Functions concerning the yaml configuration file.
 
 """
 
@@ -11,9 +11,9 @@ import yaml
 import copy
 
 from core_hazimp.calcs.calcs import CALCS
-from core_hazimp.jobs.jobs import JOBS, LOADRASTER, LOADCSVEXPOSURE, \
-    LOADXMLVULNERABILITY, SIMPLELINKER, SELECTVULNFUNCTION, \
-    LOOKUP, SAVEALL, JOBSKEY
+from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE, 
+    LOADXMLVULNERABILITY, SIMPLELINKER, SELECTVULNFUNCTION, 
+    LOOKUP, SAVEALL, JOBSKEY)
 from core_hazimp.calcs.calcs import STRUCT_LOSS
 from core_hazimp import misc
 from core_hazimp import spell_check
@@ -33,11 +33,8 @@ def read_file(file_name):
     """
     Read the configuration file and return the info as a dictionary.
 
-    args:
-        config_file_name
-
-    return:
-        A dictionary of the configuration file
+    :param file_name: The yaml file.
+    :returns: A dictionary of the configuration file
     """
     config_file_handle = open(file_name, 'r')
     config_dic = yaml.load(config_file_handle)
@@ -51,11 +48,8 @@ def template_builder(config_dic):
     the template, build the the job list
     and add predefined info to the config_dic.
 
-    args:
-        config_dic: A dictionary describing the simulation.
-
-    return:
-        A list of jobs to process over.
+    :param config_dic: A dictionary describing the simulation.
+    :returns: A list of jobs to process over.
         ** The config_dic isn't returned, but it is modified.
     """
     try:
@@ -78,11 +72,8 @@ def _reader1(config_dic):
     """
     From a version 1 configuration dictionary build the job list.
 
-    args:
-        config_dic: A dictionary describing the simulation.
-
-    return:
-        A list of jobs to process over.
+    :param config_dic: A dictionary describing the simulation.
+    :returns: A list of jobs to process over.
     """
 
     try:
@@ -98,11 +89,8 @@ def _wind_v1_reader(config_dic):
     """
     From a wind v1 configuration dictionary build the job list.
 
-    args:
-        config_dic: A dictionary describing the simulation.
-
-    return:
-        A list of jobs to process over.
+    :param config_dic: A dictionary describing the simulation.
+    :returns: A list of jobs to process over.
     """
     job_names = [LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
                  SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
@@ -144,11 +132,8 @@ def get_job_or_calcs(job_names):
     Given a list of job or calc names, return a list of job or calc
     instances.
 
-    arg:
-        name: The name if a job or calc.
-
-    return:
-        A list of Job or Calc instances.
+    :param name: The name if a job or calc.
+    :returns: A list of Job or Calc instances.
     """
     jobs = []
     for job_name in job_names:
@@ -161,11 +146,8 @@ def get_job_or_calc(name):
     """
     Given a job or calc name, return the job or calc instance.
 
-    arg:
-        name: The name if a job or calc.
-
-    return:
-        The Job or Calc instance.
+    :param name: The name if a job or calc.
+    :returns: A list of Job or Calc instance.
     """
     try:
         job = CALCS[name]
@@ -182,8 +164,7 @@ def validate_config(config_dic):
     """
     Check the config_dic for various errors.
 
-    Args:
-        config_dic: The configuration dictionary.
+    :param config_dic: A dictionary describing the simulation.
     """
     check_files_to_load(config_dic)
     check_1st_level_keys(config_dic)
@@ -193,7 +174,8 @@ def validate_config(config_dic):
 def file_can_open(file2load):
     """
     Check if a file can be opened.
-    If it can return True.
+    :param file2load: file.
+    :returns: True if file2load can be opened.
     """
     try:
         with open(file2load) as _:
@@ -212,8 +194,8 @@ def check_files_to_load(config_dic):
        file_name OR
        file_list - for a list of files
 
-    Args:
-        config_dic: The configuration dictionary
+    :param config_dic: A dictionary describing the simulation.
+    :raises: RuntimeError
     """
     bad_files = []
     for key, value in config_dic.iteritems():
@@ -245,8 +227,8 @@ def check_1st_level_keys(config_dic):
        file_name OR
        file_list - for a list of files
 
-    Args:
-        config_dic: The configuration dictionary
+    :param config_dic: A dictionary describing the simulation.
+    :raises: RuntimeError
     """
 
     for key in config_dic:
@@ -268,8 +250,8 @@ def check_attributes(config_dic):
     * Missing when they are mandatory
     * typo args
 
-    Args:
-        config_dic: The configuration dictionary
+    :param config_dic: A dictionary describing the simulation.
+    :raises: RuntimeError
     """
 
     # Need to catch;
@@ -282,6 +264,7 @@ def check_attributes(config_dic):
             job_calc_instance = get_job_or_calc(key)
             args, defaults = job_calc_instance.get_required_args_no_context()
             unchecked_config_args = copy.copy(config_dic[key])
+
             # Make sure the mandatory args are there
             # And remove them from the unchecked list
             for arg_call in args:
@@ -299,13 +282,12 @@ def check_attributes(config_dic):
                     del unchecked_config_args[default_call]
                 except KeyError:
                     pass
+
             # If the are still unchecked args then there is an error
             if len(unchecked_config_args) > 0:
                 msg = 'The job %s has the following unkown parameters;\n' % key
                 for unknown_arg in unchecked_config_args:
-
                     msg += '%s\n' % unknown_arg
-
                 raise RuntimeError(msg)
 
 

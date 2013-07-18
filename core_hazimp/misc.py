@@ -60,7 +60,9 @@ def csv2dict(filename, add_ids=False):
 
 def instanciate_classes(module):
     """
-    Create a dictionary of calc names (key) and the calc instance (value)
+    Create a dictionary of calc names (key) and the calc instance (value).
+
+    :param module: ?? 
     """
     callable_instances = {}
     for _, obj in inspect.getmembers(module):
@@ -75,13 +77,11 @@ def raster_data_at_points(lat, lon, files):
     """
     Get data at lat lon points, based on a set of files
 
-    Args:
-        filename: The csv file path string.
-        lon: A 1D array of the longitude of the points.
-        lat: A 1d array of the latitude of the points.
-
-    Returns:
-        A numpy array, shape (sites, hazards) or shape (sites), for one hazard.
+    :param files: A list of files.
+    :param lon: A 1D array of the longitude of the points.
+    :param lat: A 1d array of the latitude of the points.
+    :returns: A numpy array, shape (sites, hazards) or shape (sites), 
+    for one hazard.
     """
     gdal.AllRegister()
     data = []
@@ -99,19 +99,16 @@ def raster_data_at_points(lat, lon, files):
     return reshaped_data
 
 
+# R0914: 63:raster_data_at_points_a_file: Too many local variables (19/15)
 def raster_data_at_points_a_file(lon, lat, filename):  # pylint: disable=R0914
     """
     Get data at lat lon points, based on a file.
 
-    Args:
-        filename: The csv file path string.
-        lon: A 1D array of the longitude of the points.
-        lat: A 1d array of the latitude of the points.
-
-    Returns:
-        A numpy array, First dimension being the points/sites.
+    :param filename: The csv file path string.
+    :param lon: A 1D array of the longitude of the points.
+    :param lat: A 1d array of the latitude of the points.
+    :returns: A numpy array, First dimension being the points/sites.
     """
-    # R0914: 63:raster_data_at_points_a_file: Too many local variables (19/15)
 
     assert lon.size == lat.size
 
@@ -158,37 +155,6 @@ def raster_data_at_points_a_file(lon, lat, filename):  # pylint: disable=R0914
         values = numpy.where(values == no_data_value, numpy.NAN, values)
 
     return values
-
-
-def dict2csv(data_dict, filename):
-    """
-    Write a csv file where the key is the column names and the values
-    are numpy arrays.  If the arrays have 2 dimensions the
-    other dimension is averaged so there is only 1 dimension.
-
-    3 or more dimensions cause an error.
-
-    Args:
-        filename: The csv file to be written.
-        data_dict: The dictionary with the data
-
-    """
-
-    header = []
-    columns = []
-    for key, val in data_dict.iteritems():
-        header.append(key)
-        if len(val.shape) == 2:
-            val = numpy.average(val, axis=1)
-        elif len(val.shape) > 2:
-            msg = 'Too many dimensions in exposure_att %s' % key
-            raise RuntimeError(msg)
-        columns.append(val)
-    output = numpy.column_stack(tuple(columns))
-    fid = open(filename, 'w')
-    fid.write(",".join(header) + '\n')
-    numpy.savetxt(fid, output, delimiter=',')
-    fid.close()
 
 
 def get_required_args(func):

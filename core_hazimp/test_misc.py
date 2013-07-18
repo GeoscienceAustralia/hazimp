@@ -23,8 +23,8 @@ import os
 import numpy
 from scipy import asarray, allclose
 
-from core_hazimp.misc import csv2dict, raster_data_at_points, dict2csv, \
-    get_required_args, squash_narray
+from core_hazimp.misc import (csv2dict, raster_data_at_points, 
+    get_required_args, squash_narray)
 
 
 class TestMisc(unittest.TestCase):
@@ -119,63 +119,6 @@ class TestMisc(unittest.TestCase):
         data = raster_data_at_points(lon, lat, [f.name])
         self.assertTrue(numpy.all(numpy.isnan(data)))
 
-        os.remove(f.name)
-
-    def test_dict2csv(self):
-
-        col_a = asarray([1, 2, 3, 4])
-        col_b = asarray([10, 20, 30, 40])
-        data_dict = {'A': col_a, 'B': col_b}
-        f = tempfile.NamedTemporaryFile(suffix='.csv',
-                                        prefix='test_misc',
-                                        delete=False)
-        dict2csv(data_dict, f.name)
-
-        #with open(f.name) as f:
-        #    content = f.readlines()
-        #print "content", content
-
-        file_dict = csv2dict(f.name)
-
-        for key, val in data_dict.iteritems():
-            self.assertTrue(allclose(val,
-                            file_dict[key]))
-        os.remove(f.name)
-
-    def test_dict2csv_2d(self):
-
-        col_a = asarray([[0, 2], [1, 3], [2, 4], [3, 5]])
-        col_a_averaged = asarray([1, 2, 3, 4])
-        col_b = asarray([10, 20, 30, 40])
-        data_dict = {'A': col_a, 'B': col_b}
-        data_dict_averaged = {'A': col_a_averaged, 'B': col_b}
-        f = tempfile.NamedTemporaryFile(suffix='.csv',
-                                        prefix='test_misc',
-                                        delete=False)
-        dict2csv(data_dict, f.name)
-
-        #with open(f.name) as f:
-        #    content = f.readlines()
-        #print "content", content
-
-        file_dict = csv2dict(f.name)
-
-        for key, val in data_dict_averaged.iteritems():
-            self.assertTrue(allclose(val,
-                            file_dict[key]))
-        os.remove(f.name)
-
-    def test_dict2csv_3d(self):
-
-        col_a = asarray([[[-1, 1], [1, 3]], [[0, 2], [2, 4]],
-                         [[1, 3], [3, 5]], [[2, 4], [4, 6]]])
-        #col_a_averaged = asarray([1, 2, 3, 4])
-        col_b = asarray([10, 20, 30, 40])
-        data_dict = {'A': col_a, 'B': col_b}
-        f = tempfile.NamedTemporaryFile(suffix='.csv',
-                                        prefix='test_misc',
-                                        delete=False)
-        self.assertRaises(RuntimeError, dict2csv, *(data_dict, f.name))
         os.remove(f.name)
 
     def test_get_required_args(self):
