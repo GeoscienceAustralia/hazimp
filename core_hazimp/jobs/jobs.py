@@ -29,7 +29,7 @@ from core_hazimp import misc
 from core_hazimp.workflow import EX_LAT, EX_LONG
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
-LOADCSVEXPOSURE = 'load_csv_exposure'
+LOADCSVEXPOSURE = 'load_exposure'
 LOADRASTER = 'load_raster'
 LOADXMLVULNERABILITY = 'load_xml_vulnerability'
 SIMPLELINKER = 'simple_linker'

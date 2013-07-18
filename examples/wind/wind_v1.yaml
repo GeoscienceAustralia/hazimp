@@ -1,11 +1,8 @@
 #  python ../../core_hazimp/hazimp.py -c wind_v1.yaml
 template: windv1
-
-load_csv_exposure: 
+load_exposure: 
   file_name: WA_Wind_Exposure_2013_Test_only.csv
-  exposure_latitude: latitude
-  exposure_longitude: longitude
-  
-load_wind_tcrm_ascii: [gust01.txt]
-  
-save: eagle.npz  
+  exposure_latitude: LATITUDE
+  exposure_longitude: LONGITUDE 
+load_wind_ascii: [gust01.txt] 
+save: wind_impact.csv  

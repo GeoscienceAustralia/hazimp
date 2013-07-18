@@ -20,8 +20,8 @@ import numpy
 
 from scipy import allclose, asarray, isnan, reshape, array
 
-from core_hazimp.jobs.jobs import JOBS, LOADRASTER, LOADCSVEXPOSURE, \
-    SAVEALL
+from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
+    SAVEALL)
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 from core_hazimp import workflow
@@ -85,7 +85,7 @@ class TestJobs(unittest.TestCase):
         f.write('4., 5., 6.\n')
         f.close()
 
-        inst = JOBS['load_csv_exposure']
+        inst = JOBS[LOADCSVEXPOSURE]
         context = Dummy
         context.exposure_lat = None
         context.exposure_long = None

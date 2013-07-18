@@ -1,4 +1,6 @@
 HazImp
 ======
 
-Hazard impact assessment tool
+A Hazard impact assessment tool.
+
+

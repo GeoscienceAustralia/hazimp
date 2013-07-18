@@ -19,7 +19,7 @@ from core_hazimp import misc
 from core_hazimp import spell_check
 
 DEFAULT = 'default'
-LOADWINDTCRM = 'load_wind_tcrm_ascii'
+LOADWINDTCRM = 'load_wind_ascii'
 TEMPLATE = 'template'
 WINDV1 = 'windv1'
 SAVE = 'save'

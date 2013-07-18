@@ -24,7 +24,7 @@ from core_hazimp import misc
 from core_hazimp.workflow import ConfigPipeLineBuilder, Context, EX_LAT, \
     EX_LONG
 from core_hazimp.calcs.calcs import CALCS
-from core_hazimp.jobs.jobs import JOBS
+from core_hazimp.jobs.jobs import JOBS, LOADCSVEXPOSURE
 from core_hazimp import parallel
 
 
@@ -62,12 +62,12 @@ class TestWorkFlow(unittest.TestCase):
         f2.close()
 
         Cab = ConfigPipeLineBuilder()
-        calc_list = [JOBS['load_csv_exposure'], CALCS['add_test']]
+        calc_list = [JOBS[LOADCSVEXPOSURE], CALCS['add_test']]
         context = Context()
 
         pipeline = Cab.build(calc_list)
         config = {'constant_test': {'c_test': [5., 2.]},
-                  'load_csv_exposure': {'file_name': f.name}}
+                  LOADCSVEXPOSURE: {'file_name': f.name}}
         pipeline.run(context, config)
         cont_dict = context.save_exposure_atts(f2.name)
         os.remove(f2.name)
@@ -95,12 +95,12 @@ class TestWorkFlow(unittest.TestCase):
         f2.close()
 
         Cab = ConfigPipeLineBuilder()
-        calc_list = [JOBS['load_csv_exposure'], CALCS['add_test']]
+        calc_list = [JOBS[LOADCSVEXPOSURE], CALCS['add_test']]
         context = Context()
 
         pipeline = Cab.build(calc_list)
         config = {'constant_test': {'c_test': [5., 2.]},
-                  'load_csv_exposure': {'file_name': f.name,
+                  LOADCSVEXPOSURE: {'file_name': f.name,
                                         workflow.EX_LAT: 'LAT',
                                         workflow.EX_LONG: 'LONG'}}
         pipeline.run(context, config)
