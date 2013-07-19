@@ -2,7 +2,6 @@
 
 """
 Spell checking based on http://norvig.com/spell-correct.html
-
 """
 
 import collections
