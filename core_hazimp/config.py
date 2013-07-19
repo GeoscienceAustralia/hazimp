@@ -192,7 +192,7 @@ def check_files_to_load(config_dic):
     This function relies on some assumptions.
     All jobs/calcs that load files label the files as;
        file_name OR
-       file_list - for a list of files
+       file_list - for a list of files or a file
 
     :param config_dic: A dictionary describing the simulation.
     :raises: RuntimeError
@@ -206,6 +206,8 @@ def check_files_to_load(config_dic):
                     bad_files.append(file2load)
             elif 'file_list' in value:
                 files2load = value['file_list']
+                if isinstance(files2load, basestring):
+                    files2load = [files2load]
                 for file2load in files2load:
                     if not file_can_open(file2load):
                         bad_files.append(file2load)

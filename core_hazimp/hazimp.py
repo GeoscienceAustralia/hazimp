@@ -21,7 +21,6 @@ def main(config_dic=None, config_file=None):
 
     if config_dic is None:
         raise RuntimeError('No configuration information.')
-
     context = workflow.Context()
     calc_jobs = config.template_builder(config_dic)  # config_dic modified
     config.validate_config(config_dic)
