@@ -23,8 +23,9 @@ from scipy import allclose
 from core_hazimp import misc
 from core_hazimp import hazimp
 from core_hazimp.jobs.jobs import (LOADRASTER, LOADCSVEXPOSURE,
-    LOADXMLVULNERABILITY, SIMPLELINKER, SELECTVULNFUNCTION,
-    LOOKUP, SAVEALL)
+                                   LOADXMLVULNERABILITY, SIMPLELINKER,
+                                   SELECTVULNFUNCTION,
+                                   LOOKUP, SAVEALL)
 from core_hazimp.calcs.calcs import STRUCT_LOSS
 from core_hazimp.config import LOADWINDTCRM, TEMPLATE, WINDV1, SAVE
 from core_hazimp import parallel

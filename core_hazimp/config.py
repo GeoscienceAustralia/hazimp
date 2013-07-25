@@ -25,8 +25,9 @@ import copy
 
 from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
-    LOADXMLVULNERABILITY, SIMPLELINKER, SELECTVULNFUNCTION,
-    LOOKUP, SAVEALL, JOBSKEY)
+                                   LOADXMLVULNERABILITY, SIMPLELINKER,
+                                   SELECTVULNFUNCTION,
+                                   LOOKUP, SAVEALL, JOBSKEY)
 from core_hazimp.calcs.calcs import STRUCT_LOSS
 from core_hazimp import misc
 from core_hazimp import spell_check

@@ -49,7 +49,8 @@ class TestParallel(unittest.TestCase):
         # if there is a path problem, try adding -x PYTHONPATH
 
         try:
-            import pypar  # pylint: disable=W0612
+
+            import pypar  # pylint: disable=W0612, W0404
         except ImportError:
             # can't do this test
             return
@@ -80,7 +81,7 @@ class TestParallel(unittest.TestCase):
         # if there is a path problem, try adding -x PYTHONPATH
 
         try:
-            import pypar  # pylint: disable=W0612
+            import pypar  # pylint: disable=W0612, W0404
         except ImportError:
             # can't do this test
             return
@@ -117,7 +118,7 @@ class TestParallel(unittest.TestCase):
         # if there is a path problem, try adding -x PYTHONPATH
 
         try:
-            import pypar  # pylint: disable=W0612
+            import pypar  # pylint: disable=W0612, W0404
         except ImportError:
             # can't do this test
             return

@@ -37,7 +37,7 @@ import numpy
 from scipy import allclose, asarray, isnan, reshape, array
 
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
-    SAVEALL)
+                                   SAVEALL)
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 from core_hazimp import workflow

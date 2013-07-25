@@ -39,7 +39,7 @@ import numpy
 from scipy import asarray, allclose
 
 from core_hazimp.misc import (csv2dict, raster_data_at_points,
-    get_required_args, squash_narray)
+                              get_required_args, squash_narray)
 
 
 class TestMisc(unittest.TestCase):
@@ -65,7 +65,7 @@ class TestMisc(unittest.TestCase):
         for key in actual:
             if key == "A":
                 self.assertTrue(list(file_dict[key]),
-                                         list(actual[key]))
+                                list(actual[key]))
             else:
                 self.assertTrue(allclose(file_dict[key],
                                          actual[key]))

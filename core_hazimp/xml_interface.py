@@ -16,7 +16,7 @@
 """
  Title: xml_interface.py
 
-  Author:  Peter Row 
+  Author:  Peter Row
 
   Description: Class to access XML information
 """

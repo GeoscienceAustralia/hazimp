@@ -36,8 +36,8 @@ from scipy import allclose, asarray, array
 
 from core_hazimp import workflow
 from core_hazimp import misc
-from core_hazimp.workflow import ConfigPipeLineBuilder, Context, EX_LAT, \
-    EX_LONG
+from core_hazimp.workflow import (ConfigPipeLineBuilder, Context, EX_LAT,
+                                  EX_LONG)
 from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.jobs.jobs import JOBS, LOADCSVEXPOSURE
 from core_hazimp import parallel
@@ -72,8 +72,8 @@ class TestWorkFlow(unittest.TestCase):
         f.write('4., 5., 6., 60.\n')
         f.close()
         f2 = tempfile.NamedTemporaryFile(suffix='.csv',
-                                        prefix='test_Job_ContextAwareBuilder',
-                                        delete=False)
+                                         prefix='test_Job_ContextAwareBuilder',
+                                         delete=False)
         f2.close()
 
         Cab = ConfigPipeLineBuilder()
@@ -105,8 +105,8 @@ class TestWorkFlow(unittest.TestCase):
         f.write('4., 5., 6., 60.,DSG\n')
         f.close()
         f2 = tempfile.NamedTemporaryFile(suffix='.csv',
-                                        prefix='test_Job_title_fix_Co',
-                                        delete=False)
+                                         prefix='test_Job_title_fix_Co',
+                                         delete=False)
         f2.close()
 
         Cab = ConfigPipeLineBuilder()
@@ -116,8 +116,8 @@ class TestWorkFlow(unittest.TestCase):
         pipeline = Cab.build(calc_list)
         config = {'constant_test': {'c_test': [5., 2.]},
                   LOADCSVEXPOSURE: {'file_name': f.name,
-                                        workflow.EX_LAT: 'LAT',
-                                        workflow.EX_LONG: 'LONG'}}
+                                    workflow.EX_LAT: 'LAT',
+                                    workflow.EX_LONG: 'LONG'}}
         pipeline.run(context, config)
         cont_dict = context.save_exposure_atts(f2.name)
         os.remove(f2.name)

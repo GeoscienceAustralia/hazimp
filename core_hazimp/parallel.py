@@ -18,6 +18,8 @@
 """
 Functions that haven't found a proper module.
 """
+import atexit
+
 import socket
 import numpy
 
@@ -41,7 +43,7 @@ class Parallel(object):
         """
 
         try:
-            import pypar
+            import pypar   # pylint: disable=W0404
         except ImportError:
             self._not_parallel()
         else:
@@ -54,7 +56,6 @@ class Parallel(object):
                 self.log_file_tag = str(self.rank)
 
                 # Ensure a clean MPI exit
-                import atexit
                 atexit.register(pypar.finalize)
             else:
                 self._not_parallel()
@@ -86,7 +87,7 @@ def scatter_dict(whole):
         array_len = len(whole[whole.keys()[0]])
         return (whole, numpy.array(range(0, array_len)))
     else:
-        import pypar
+        import pypar     # pylint: disable=W0404
 
     if STATE.rank == 0:
         array_len = len(whole[whole.keys()[0]])
@@ -119,7 +120,7 @@ def gather_dict(subdict, indexes):
     if not STATE.is_parallel:
         return subdict
     else:
-        import pypar
+        import pypar    # pylint: disable=W0404
 
     # Note, putting dictionary back sequentially
     if STATE.rank == 0:
