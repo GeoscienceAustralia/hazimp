@@ -1,4 +1,4 @@
-The following software may be included in this product:OpenQuake; Use
+The following software may be included in this product: OpenQuake; Use
 of any of this software is governed by the terms of the license below;
 
 # Copyright (c) 2010-2012, GEM Foundation.
