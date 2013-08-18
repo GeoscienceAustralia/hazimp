@@ -136,6 +136,8 @@ def raster_data_at_points_a_file(lon, lat, filename):  # pylint: disable=R0914
 
     # get georeference info
     transform = dataset.GetGeoTransform()
+    assert transform[2] == 0.0  # image is "north up"
+    assert transform[4] == 0.0  # image is "north up"
     upper_left_x = transform[0]
     x_pixel = transform[1]
     x_size = dataset.RasterXSize

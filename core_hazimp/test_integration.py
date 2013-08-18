@@ -22,8 +22,9 @@
 # (should match [a-z_][a-z0-9_]{2,50}$)
 # pylint: disable=R0904
 # Disable too many public methods for test cases
+
 """
-Test the workflow module.
+Test how all of the modules work in a standard workflow.
 """
 
 import unittest
