@@ -322,14 +322,27 @@ class LoadRaster(Job):
         super(LoadRaster, self).__init__()
         self.call_funct = LOADRASTER
 
-    def __call__(self, context, file_list, attribute_label):
+    # R0913:326: Too many arguments (9/6)
+    # pylint: disable=R0913
+    def __call__(self, context, attribute_label, file_list=None,
+                 raster=None, upper_left_x=None, upper_left_y=None,
+                 cell_size=None, no_data_value=None):
         """
         Load one or more files and get the value for all the
         exposure points. All files have to be of the same attribute.
+        Alternatively a numeric array of the raster data can be passed in.
 
         :param context: The context instance, used to move data around.
         :param attribute_label: The string to be associated with this data.
+
         :param file_list: A list of files or a single file to be loaded.
+        OR
+        :param raster: A 2D numeric array of the raster values, North is up.
+        :param upper_left_x: The longitude at the upper left corner.
+        :param upper_left_y: The latitude at the upper left corner.
+        :param cell_size: The cell size.
+        :param no_data_value: Values in the raster that represent no data.
+
 
         Content return:
            exposure_att: Add the file values into this dictionary.

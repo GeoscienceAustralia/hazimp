@@ -113,7 +113,6 @@ def raster_data_at_points(lat, lon, files):
 
     return reshaped_data
 
-
 # R0914: 63:raster_data_at_points_a_file: Too many local variables (19/15)
 def raster_data_at_points_a_file(lon, lat, filename):  # pylint: disable=R0914
     """
@@ -121,7 +120,7 @@ def raster_data_at_points_a_file(lon, lat, filename):  # pylint: disable=R0914
 
     :param filename: The csv file path string.
     :param lon: A 1D array of the longitude of the points.
-    :param lat: A 1d array of the latitude of the points.
+    :param lat: A 1D array of the latitude of the points.
     :returns: A numpy array, First dimension being the points/sites.
     """
 
@@ -144,7 +143,7 @@ def raster_data_at_points_a_file(lon, lat, filename):  # pylint: disable=R0914
 
     upper_left_y = transform[3]
     y_pixel = transform[5]
-    y_size = dataset.RasterYSize
+    y_size = dataset.RasterYSize  # This will be a negative value.
     band = dataset.GetRasterBand(1)
     no_data_value = band.GetNoDataValue()
     data_band = band.ReadAsArray(0, 0, x_size, y_size)
