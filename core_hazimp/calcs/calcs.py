@@ -36,8 +36,7 @@ class Calculator(Job):
     """
     def __init__(self):
         """
-        Initalise a Calculator object having the attributes
-        allargspec_call and args_in.
+        Initalise a Calculator object.
         """
         super(Calculator, self).__init__()
 
@@ -49,7 +48,7 @@ class Calculator(Job):
 
     def __call__(self, context, **kwargs):
         """
-        Q: What is **kwargs doing?
+        This calls calc, passing in context.exposure_att and **kwargs.
         """
         args_in = []
         for job_arg in self.context_args_in:
