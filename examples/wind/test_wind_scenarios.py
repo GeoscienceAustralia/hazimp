@@ -54,8 +54,8 @@ class TestWind(unittest.TestCase):
                                     'domestic_wind_vul_curves.xml')
         config = {
             'jobs': [LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
-            SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
-            SAVEALL],
+                     SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
+                     SAVEALL],
             LOADCSVEXPOSURE: {'file_name': exp_filename,
                               'exposure_latitude': 'LATITUDE',
                               'exposure_longitude': 'LONGITUDE'},

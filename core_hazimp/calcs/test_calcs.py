@@ -28,6 +28,7 @@ Test the calcs module.
 """
 
 import unittest
+
 from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.calcs import calcs
 

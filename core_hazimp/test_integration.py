@@ -143,8 +143,8 @@ class TestIntegration(unittest.TestCase):
             jobs.LOADXMLVULNERABILITY: {
                 'file_name': file_vuln},
             jobs.SIMPLELINKER: {
-            'vul_functions_in_exposure': {"EQ_building": 'building',
-                                          "EQ_contents": 'contents'}},
+                'vul_functions_in_exposure': {"EQ_building": 'building',
+                                              "EQ_contents": 'contents'}},
             jobs.SELECTVULNFUNCTION: {
                 'variability_method': {"EQ_building": 'mean',
                                        "EQ_contents": 'mean'}},

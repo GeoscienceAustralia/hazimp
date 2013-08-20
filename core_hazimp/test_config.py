@@ -139,10 +139,10 @@ class TestConfig(unittest.TestCase):
 
         config_dic = {
             'jobs': [jobs.LOADCSVEXPOSURE, jobs.LOADRASTER,
-            jobs.LOADXMLVULNERABILITY,
-            jobs.SIMPLELINKER, jobs.SELECTVULNFUNCTION, jobs.LOOKUP,
-            calcs.STRUCT_LOSS,
-            jobs.SAVEALL],
+                     jobs.LOADXMLVULNERABILITY,
+                     jobs.SIMPLELINKER, jobs.SELECTVULNFUNCTION, jobs.LOOKUP,
+                     calcs.STRUCT_LOSS,
+                     jobs.SAVEALL],
             jobs.LOADCSVEXPOSURE: {'file_name': 'yeah',
                                    'exposure_latitude': 'latitude',
                                    'exposure_longitude': 'longitude'},
