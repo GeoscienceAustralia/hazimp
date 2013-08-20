@@ -28,7 +28,7 @@
 # pylint: disable=R0801
 
 """
-Test the misc module.
+Test the raster module.
 """
 
 import unittest
@@ -38,38 +38,13 @@ import os
 import numpy
 from scipy import asarray, allclose
 
-from core_hazimp.misc import (csv2dict, raster_data_at_points,
-                              get_required_args, squash_narray)
+from core_hazimp.raster import Raster
 
 
-class TestMisc(unittest.TestCase):
+class TestRaster(unittest.TestCase):
     """
-    Test the calcs module
+    Test the Raster module
     """
-    def test_csv2dict(self):
-        # Write a file to test
-        f = tempfile.NamedTemporaryFile(suffix='.txt',
-                                        prefix='test_misc',
-                                        delete=False)
-        f.write('X, Y, Z, A\n')
-        f.write('1., 2., 3., yeah\n')
-        f.write('4., 5., 6.,me \n')
-        f.close()
-
-        file_dict = csv2dict(f.name)
-
-        actual = {'X': numpy.array([1.0, 4.0]),
-                  'Y': numpy.array([2.0, 5.0]),
-                  'Z': numpy.array([3.0, 6.0]),
-                  'A': numpy.array(['yeah', 'me'])}
-        for key in actual:
-            if key == "A":
-                self.assertTrue(list(file_dict[key]),
-                                list(actual[key]))
-            else:
-                self.assertTrue(allclose(file_dict[key],
-                                         actual[key]))
-        os.remove(f.name)
 
     def test1_raster_data_at_points(self):
         # Write a file to test
@@ -91,7 +66,10 @@ class TestMisc(unittest.TestCase):
 
         lon = asarray([0, 0.9, 1.999])
         lat = asarray([9.9, 9.1, 8.9])
-        data = raster_data_at_points(lon, lat, [f.name])
+        
+        raster = raster.from_file(f.name)
+        data = raster.raster_data_at_points(lon, lat)
+        
         self.assertTrue(allclose(data, asarray([1., 1., 5.])))
 
         lon = asarray([0.0001, 0.0001, 2.999, 2.999])
@@ -210,6 +188,6 @@ class TestMisc(unittest.TestCase):
         self.assertTrue(squashed.tolist(), ['B', 'A', 'M'])
 #-------------------------------------------------------------
 if __name__ == "__main__":
-    Suite = unittest.makeSuite(TestMisc, 'test')
+    Suite = unittest.makeSuite(TestRaster, 'test')
     Runner = unittest.TextTestRunner()
     Runner.run(Suite)
