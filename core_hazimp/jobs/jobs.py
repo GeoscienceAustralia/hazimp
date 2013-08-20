@@ -61,7 +61,7 @@ class Job(object):
     """
     def __init__(self):
         """
-        Initalise a Calculator object having the attributes
+        Initalise a Job object having the attributes
          allargspec_call and args_in.
         """
         self.call_funct = None
@@ -106,6 +106,9 @@ class ConstTest(Job):
     def __call__(self, context, c_test=None):
         """
         A dummy job for testing.
+
+        :param context: The context instance, used to move data around.
+        :param c_test: Variable to add to context.
         """
         context.exposure_att['c_test'] = c_test
 
@@ -123,16 +126,15 @@ class LoadCsvExposure(Job):
         """
         Read a csv exposure file into the context object.
 
-        Args:
-            context: The context instance, used to move data around.
-            file_name: The csv file to load.
-            exposure_latitude: the title string of the latitude column.
-            exposure_longitud: the title string of the longitude column.
+        :param context: The context instance, used to move data around.
+        :param file_name: The csv file to load.
+        :param exposure_latitude: the title string of the latitude column.
+        :param exposure_longitud: the title string of the longitude column.
 
         Content return:
             exposure_att: Add the file values into this dictionary.
-                key: column titles
-                value: column values, except the title
+            key: column titles
+            value: column values, except the title
         """
         file_dict = parallel.csv2dict(file_name, use_parallel=use_parallel)
 
@@ -178,8 +180,8 @@ class LoadXmlVulnerability(Job):
         """
         Read a csv exposure file into the context object.
 
-        Args:
-            file_name: The xml file to load.
+        :param context: The context instance, used to move data around.
+        :param file_name: The xml file to load.
         """
         if file_name is not None:
             vuln_sets = vuln_sets_from_xml_file(file_name)
@@ -202,10 +204,10 @@ class SimpleLinker(Job):
         vulnerability_sets and exposure columns that represents the
         vulnerability function id.
 
-        Args:
-            vul_functions_in_exposure: A dictionary with keys being
-               vulnerability_set_ids and values being the exposure title that
-               holds vulnerability function ID's.
+        :param context: The context instance, used to move data around.
+        :param vul_functions_in_exposure: A dictionary with keys being
+        vulnerability_set_ids and values being the exposure title that
+        holds vulnerability function ID's.
 
         Content return:
            vul_function_titles: Add's the exposure_titles
@@ -240,17 +242,18 @@ class SelectVulnFunction(Job):
             As well as sampled.
 
         Args:
-            variability_method: A dictionary with keys being
-               vulnerability_set_ids and values being the sampling method
-               to generate a vulnerability curve from a vulnerability function.
-               e.g. {'EQ_contents': 'mean', 'EQ_building': 'mean'}
+        :param context: The context instance, used to move data around.
+        :param variability_method: A dictionary with keys being
+        vulnerability_set_ids and values being the sampling method
+        to generate a vulnerability curve from a vulnerability function.
+        e.g. {'EQ_contents': 'mean', 'EQ_building': 'mean'}
 
         Content return:
            exposure_vuln_curves: A dictionary of realised
                vulnerability curves, associated with the exposure
                data.
-                key - intensity measure
-                value - realised vulnerability curve instance per asset
+           key - intensity measure
+           value - realised vulnerability curve instance per asset
         """
         exposure_vuln_curves = {}
         for vuln_set_key in variability_method:
@@ -282,6 +285,8 @@ class LookUp(Job):
         """
         Does a look up on all the vulnerability curves, returning the
         associated loss.
+
+        :param context: The context instance, used to move data around.
 
         Content return:
            exposure_vuln_curves: A dictionary of realised
@@ -322,6 +327,7 @@ class LoadRaster(Job):
         Load one or more files and get the value for all the
         exposure points. All files have to be of the same attribute.
 
+        :param context: The context instance, used to move data around.
         :param attribute_label: The string to be associated with this data.
         :param file_list: A list of files or a single file to be loaded.
 
@@ -330,7 +336,7 @@ class LoadRaster(Job):
                key: column titles
                value: column values, except the title
         """
-        #FIXME raise errors, re no lat or lon
+
         if isinstance(file_list, basestring):
             file_list = [file_list]
         if file_list is not None:
@@ -352,6 +358,7 @@ class SaveExposure(Job):
         """
         Save all of the exposure information in the context.
 
+        :param context: The context instance, used to move data around.
         :params file_name: The file where the expsoure data will go.
         """
         context.save_exposure_atts(file_name, use_parallel=use_parallel)
