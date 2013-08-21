@@ -66,15 +66,16 @@ class TestRaster(unittest.TestCase):
 
         lon = asarray([0, 0.9, 1.999])
         lat = asarray([9.9, 9.1, 8.9])
-        
-        raster = raster.from_file(f.name)
+
+        raster = Raster.from_file(f.name)
         data = raster.raster_data_at_points(lon, lat)
-        
+
         self.assertTrue(allclose(data, asarray([1., 1., 5.])))
 
         lon = asarray([0.0001, 0.0001, 2.999, 2.999])
         lat = asarray([8.0001, 9.999, 9.999, 8.0001])
-        data = raster_data_at_points(lon, lat, [f.name])
+        raster = Raster.from_file(f.name)
+        data = raster.raster_data_at_points(lon, lat)
         index_g = numpy.array([0, 1, 3])
         self.assertTrue(allclose(data[index_g],
                                  asarray([4., 1., 6.])))
@@ -102,14 +103,16 @@ class TestRaster(unittest.TestCase):
         # Just outside the midpoint of all sides
         lon = asarray([-0.0001, 1.5, 3.0001, 1.5])
         lat = asarray([9., 10.00001, 9.0, 7.99999])
-        data = raster_data_at_points(lon, lat, [f.name])
+        raster = Raster.from_file(f.name)
+        data = raster.raster_data_at_points(lon, lat)
         self.assertTrue(numpy.all(numpy.isnan(data)))
 
         # Inside lower left corner of No data cell
 
         lon = asarray([2.0001])
         lat = asarray([9.000019])
-        data = raster_data_at_points(lon, lat, [f.name])
+        raster = Raster.from_file(f.name)
+        data = raster.raster_data_at_points(lon, lat)
         self.assertTrue(numpy.all(numpy.isnan(data)))
 
         os.remove(f.name)
@@ -138,54 +141,13 @@ class TestRaster(unittest.TestCase):
         # Just outside the midpoint of all sides
         lon = asarray([125, 125, 125, 125, 125, 125])
         lat = asarray([275, 225, 175, 125, 75, 25])
-        data = raster_data_at_points(lon, lat, [f.name])
+        raster = Raster.from_file(f.name)
+        data = raster.raster_data_at_points(lon, lat)
         self.assertTrue(allclose(data, asarray([5.0, 100.0, 35.0,
                                                 50.0, 27.0, 1.0])))
 
         os.remove(f.name)
 
-    def test_get_required_args(self):
-        def yeah(mandatory, why=0, me=1):  # pylint: disable=W0613
-            # pylint: disable=C0111
-            pass
-        args, defaults = get_required_args(yeah)
-        self.assertTrue(args == ['mandatory'])
-        self.assertTrue(defaults == ['why', 'me'])
-
-    def test_get_required_argsII(self):
-        def yeah(mandatory):  # pylint: disable=W0613
-            # pylint: disable=C0111
-            pass
-        args, defaults = get_required_args(yeah)
-        self.assertTrue(args == ['mandatory'])
-        self.assertTrue(defaults == [])
-
-    def test_get_required_argsIII(self):
-        def yeah(mandatory=0):  # pylint: disable=W0613
-            # pylint: disable=C0111
-            pass
-        args, defaults = get_required_args(yeah)
-        self.assertTrue(defaults == ['mandatory'])
-        self.assertTrue(args == [])
-
-    def test_squash_narray(self):
-        narray = numpy.array([[[50, 150], [45, 135]],
-                              [[52, 152], [47, 137]],
-                              [[54, 154], [49, 139]]])
-        narray_copy = numpy.empty_like(narray)
-        narray_copy[:] = narray
-        squashed = squash_narray(narray)
-
-        # Make sure
-        self.assertTrue(allclose(narray, narray_copy))
-        self.assertTrue(allclose(squashed, numpy.array([95., 97., 99.])))
-
-    def test_squash_narrayII(self):
-        narray = numpy.array([[['B', 'O'], ['A', 'T']],
-                              [['A', 'T'], ['O', 'm']],
-                              [['M', 'O'], ['w gras', 's']]])
-        squashed = squash_narray(narray)
-        self.assertTrue(squashed.tolist(), ['B', 'A', 'M'])
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestRaster, 'test')

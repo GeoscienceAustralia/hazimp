@@ -14,19 +14,22 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
- 
-import numpy 
+
+"""
+Manipulate raster data
+"""
+
+import numpy
 import gdal
-from gdalconst import GA_ReadOnly  
-    
-    
+from gdalconst import GA_ReadOnly
+
+
 class Raster():
     """
     A simple class to describe a raster
     """
-    
-    def __init__(self, raster, upper_left_x, upper_left_y, 
+
+    def __init__(self, raster, upper_left_x, upper_left_y,
                  x_pixel, y_pixel, no_data_value, x_size, y_size):
         """
         Note y_pixel will be negative.
@@ -34,23 +37,25 @@ class Raster():
         self.raster = raster
         self.ul_x = upper_left_x
         self.ul_y = upper_left_y
+        self.x_pixel = x_pixel
+        self.y_pixel = y_pixel
         self.no_data_value = no_data_value
         self.x_size = x_size
         self.y_size = y_size
-        
+
     @classmethod
     def from_file(cls, filename):
         """
         Load a file in a raster file format known to GDAL.
         Note, image must be 'North up'.
-        
+
         :param filename: The csv file path string.
         """
-        
+
         dataset = gdal.Open(filename, GA_ReadOnly)
         if dataset is None:
             raise RuntimeError('Invalid file: %s' % filename)
-    
+
         # get georeference info
         transform = dataset.GetGeoTransform()
         assert transform[2] == 0.0  # image is "north up"
@@ -65,29 +70,29 @@ class Raster():
         band = dataset.GetRasterBand(1)
         no_data_value = band.GetNoDataValue()
         raster = band.ReadAsArray(0, 0, x_size, y_size)
-        instance = cls(raster, upper_left_x, upper_left_y, 
+        instance = cls(raster, upper_left_x, upper_left_y,
                        x_pixel, y_pixel, no_data_value, x_size, y_size)
         return instance
-    
+
     @classmethod
-    def from_array(cls, raster, upper_left_x, upper_left_y, 
+    def from_array(cls, raster, upper_left_x, upper_left_y,
                    cell_size, no_data_value):
         raster = numpy.array(raster, dtype='d', copy=False)
         if not len(raster.shape) == 2:
             msg = ('Bad Raster shape %s' % (str(raster.shape)))
             raise TypeError(msg)
-            
+
         x_size = raster.shape[1]
         y_size = raster.shape[0]
-        
+
         x_pixel = cell_size
         y_pixel = -cell_size
-        
-        instance = cls(raster, upper_left_x, upper_left_y, 
+
+        instance = cls(raster, upper_left_x, upper_left_y,
                        x_pixel, y_pixel, no_data_value, x_size, y_size)
         return instance
-        
-    def raster_data_at_points(lon, lat):
+
+    def raster_data_at_points(self, lon, lat):
         """
         Get data at lat lon points of the raster.
 
@@ -95,12 +100,12 @@ class Raster():
         :param lat: A 1D array of the latitude of the points.
         :returns: A numpy array, First dimension being the points/sites.
         """
-        
+
         assert lon.size == lat.size
-        
+
         values = numpy.empty(lon.size)
         values[:] = numpy.NAN
-        
+
         # get an index of all the values inside the grid
         # there has to be a better way...
         bad_indexes = set()
@@ -112,18 +117,18 @@ class Raster():
             numpy.where(lat < self.ul_y + self.y_size * self.y_pixel)[0])
         good_indexes = numpy.array(list(set(
             range(lon.size)).difference(bad_indexes)))
-        
+
         if good_indexes.shape[0] > 0:
             # compute pixel offset
             raw_col_offset = (lon - self.ul_x) / self.x_pixel
             col_offset = numpy.trunc(raw_col_offset).astype(int)
             raw_row_offset = (lat - self.ul_y) / self.y_pixel
             row_offset = numpy.trunc(raw_row_offset).astype(int)
-            
-            values[good_indexes] = data_band[row_offset[good_indexes],
-                                             col_offset[good_indexes]]
+
+            values[good_indexes] = self.raster[row_offset[good_indexes],
+                                               col_offset[good_indexes]]
             # Change NODATA_value to NAN
-            values = numpy.where(values == no_data_value, numpy.NAN, values)
-            
-    return values
-        
+            values = numpy.where(values == self.no_data_value, numpy.NAN,
+                                 values)
+
+        return values

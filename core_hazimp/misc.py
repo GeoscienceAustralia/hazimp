@@ -113,6 +113,7 @@ def raster_data_at_points(lat, lon, files):
 
     return reshaped_data
 
+
 # R0914: 63:raster_data_at_points_a_file: Too many local variables (19/15)
 def raster_data_at_points_a_file(lon, lat, filename):  # pylint: disable=R0914
     """
