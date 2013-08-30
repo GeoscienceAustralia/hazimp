@@ -36,10 +36,9 @@ import tempfile
 import os
 
 import numpy
-from scipy import asarray, allclose
+from scipy import allclose
 
-from core_hazimp.misc import (csv2dict, raster_data_at_points,
-                              get_required_args, squash_narray)
+from core_hazimp.misc import (csv2dict, get_required_args, squash_narray)
 
 
 class TestMisc(unittest.TestCase):
@@ -69,101 +68,6 @@ class TestMisc(unittest.TestCase):
             else:
                 self.assertTrue(allclose(file_dict[key],
                                          actual[key]))
-        os.remove(f.name)
-
-    def test1_raster_data_at_points(self):
-        # Write a file to test
-        # pylint: disable=R0801
-        f = tempfile.NamedTemporaryFile(suffix='.aai',
-                                        prefix='test_misc',
-                                        delete=False)
-        f.write('ncols 3  \r\n')
-        f.write('nrows 2  \r\n')
-        f.write('xllcorner +0.  \r\n')
-        f.write('yllcorner +8.  \r\n')
-        f.write('cellsize 1  \r\n')
-        f.write('NODATA_value -9999  \r\n')
-        f.write('1 2 -9999  \r\n')
-        f.write('4 5 6  ')
-        f.close()
-        # lon 0 - 3
-        # lat 8 - 10
-
-        lon = asarray([0, 0.9, 1.999])
-        lat = asarray([9.9, 9.1, 8.9])
-        data = raster_data_at_points(lon, lat, [f.name])
-        self.assertTrue(allclose(data, asarray([1., 1., 5.])))
-
-        lon = asarray([0.0001, 0.0001, 2.999, 2.999])
-        lat = asarray([8.0001, 9.999, 9.999, 8.0001])
-        data = raster_data_at_points(lon, lat, [f.name])
-        index_g = numpy.array([0, 1, 3])
-        self.assertTrue(allclose(data[index_g],
-                                 asarray([4., 1., 6.])))
-        self.assertTrue(numpy.isnan(data[2]))
-
-        os.remove(f.name)
-
-    def test2_raster_data_at_points(self):
-        # Write a file to test
-        f = tempfile.NamedTemporaryFile(suffix='.aai',
-                                        prefix='test_misc',
-                                        delete=False)
-        f.write('ncols 3   \r\n')
-        f.write('nrows 2 \r\n')
-        f.write('xllcorner +0.   \r\n')
-        f.write('yllcorner +8. \r\n')
-        f.write('cellsize 1   \r\n')
-        f.write('NODATA_value -9999 \r\n')
-        f.write('1 2 -9999   \r\n')
-        f.write('4 5 6')
-        f.close()
-        # lon 0 - 3
-        # lat 8 - 10
-
-        # Just outside the midpoint of all sides
-        lon = asarray([-0.0001, 1.5, 3.0001, 1.5])
-        lat = asarray([9., 10.00001, 9.0, 7.99999])
-        data = raster_data_at_points(lon, lat, [f.name])
-        self.assertTrue(numpy.all(numpy.isnan(data)))
-
-        # Inside lower left corner of No data cell
-
-        lon = asarray([2.0001])
-        lat = asarray([9.000019])
-        data = raster_data_at_points(lon, lat, [f.name])
-        self.assertTrue(numpy.all(numpy.isnan(data)))
-
-        os.remove(f.name)
-
-    def test3_raster_data_at_points(self):
-        # A test based on this info;
-        # http://en.wikipedia.org/wiki/Esri_grid
-        # Let's hope no one edits the data....
-        f = tempfile.NamedTemporaryFile(suffix='.aai',
-                                        prefix='test_misc',
-                                        delete=False)
-        f.write('ncols 4   \r\n')
-        f.write('nrows 6 \r\n')
-        f.write('xllcorner 0.0   \r\n')
-        f.write('yllcorner 0.0 \r\n')
-        f.write('cellsize 50.0   \r\n')
-        f.write('NODATA_value -9999 \r\n')
-        f.write('-9999 -9999 5 2  \r\n')
-        f.write('-9999 20 100 36 \r\n')
-        f.write('3 8 35 10 \r\n')
-        f.write('32 42 50 6 \r\n')
-        f.write('88 75 27 9 \r\n')
-        f.write('13 5 1 -9999 \r\n')
-        f.close()
-
-        # Just outside the midpoint of all sides
-        lon = asarray([125, 125, 125, 125, 125, 125])
-        lat = asarray([275, 225, 175, 125, 75, 25])
-        data = raster_data_at_points(lon, lat, [f.name])
-        self.assertTrue(allclose(data, asarray([5.0, 100.0, 35.0,
-                                                50.0, 27.0, 1.0])))
-
         os.remove(f.name)
 
     def test_get_required_args(self):

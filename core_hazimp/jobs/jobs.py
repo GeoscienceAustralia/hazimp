@@ -41,6 +41,7 @@ from scipy import asarray
 
 from core_hazimp import parallel
 from core_hazimp import misc
+from core_hazimp import raster as raster_module
 from core_hazimp.workflow import EX_LAT, EX_LONG
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
@@ -350,13 +351,28 @@ class LoadRaster(Job):
                value: column values, except the title
         """
 
-        if isinstance(file_list, basestring):
-            file_list = [file_list]
-        if file_list is not None:
-            file_data = misc.raster_data_at_points(
+        # We need a file or a full set of rater info.
+        if file_list is None:
+            assert not raster is None
+            assert not upper_left_x is None
+            assert not upper_left_y is None
+            assert not cell_size is None
+            assert not no_data_value is None
+            a_raster = raster_module.Raster.from_array(raster, upper_left_x,
+                                                       upper_left_y,
+                                                       cell_size,
+                                                       no_data_value)
+            file_data = a_raster.raster_data_at_points(
+                context.exposure_long,
+                context.exposure_lat)
+        else:
+            if isinstance(file_list, basestring):
+                file_list = [file_list]
+            file_data = raster_module.raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat, file_list)
-            context.exposure_att[attribute_label] = file_data
+
+        context.exposure_att[attribute_label] = file_data
 
 
 class SaveExposure(Job):

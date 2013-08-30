@@ -29,8 +29,12 @@ class Raster():
     A simple class to describe a raster
     """
 
+    # R0902: 27:Raster: Too many instance attributes (8/7)
+    # R0913: 34:Raster.__init__: Too many arguments (9/6)
+    # pylint: disable=R0902, R0913
     def __init__(self, raster, upper_left_x, upper_left_y,
                  x_pixel, y_pixel, no_data_value, x_size, y_size):
+
         """
         Note y_pixel will be negative.
         """
@@ -50,6 +54,7 @@ class Raster():
         Note, image must be 'North up'.
 
         :param filename: The csv file path string.
+        :returns: A Raster instance
         """
 
         dataset = gdal.Open(filename, GA_ReadOnly)
@@ -77,6 +82,16 @@ class Raster():
     @classmethod
     def from_array(cls, raster, upper_left_x, upper_left_y,
                    cell_size, no_data_value):
+        """
+        Convert numeric array of raster data and info to a raster instance.
+
+        :param raster: A 2D numeric array of the raster values, North is up.
+        :param upper_left_x: The longitude at the upper left corner.
+        :param upper_left_y: The latitude at the upper left corner.
+        :param cell_size: The cell size.
+        :param no_data_value: Values in the raster that represent no data.
+        :returns: A Raster instance
+        """
         raster = numpy.array(raster, dtype='d', copy=False)
         if not len(raster.shape) == 2:
             msg = ('Bad Raster shape %s' % (str(raster.shape)))
@@ -132,3 +147,31 @@ class Raster():
                                  values)
 
         return values
+
+
+def raster_data_at_points(lon, lat, files):
+    """
+    Get data at lat lon points, based on a set of files
+
+    :param files: A list of files.
+    :param lon: A 1D array of the longitude of the points.
+    :param lat: A 1d array of the latitude of the points.
+    :returns: A numpy array, shape (sites, hazards) or shape (sites),
+    for one hazard.
+    """
+    gdal.AllRegister()
+    data = []
+    for filename in files:
+        a_raster = Raster.from_file(filename)
+        results = a_raster.raster_data_at_points(lon, lat)
+        data.append(results)
+
+    # shape (hazards, sites)
+    data = numpy.asarray(data)
+    if data.shape[0] == 1:
+        # One hazard
+        reshaped_data = numpy.reshape(data, (data.shape[1]))
+    else:
+        reshaped_data = numpy.reshape(data, (-1, data.shape[0]))
+
+    return reshaped_data

@@ -25,8 +25,6 @@ from collections import defaultdict
 import inspect
 
 import numpy
-import gdal
-from gdalconst import GA_ReadOnly
 
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -86,92 +84,6 @@ def instanciate_classes(module):
             if callable(instance):
                 callable_instances[instance.call_funct] = instance
     return callable_instances
-
-
-def raster_data_at_points(lat, lon, files):
-    """
-    Get data at lat lon points, based on a set of files
-
-    :param files: A list of files.
-    :param lon: A 1D array of the longitude of the points.
-    :param lat: A 1d array of the latitude of the points.
-    :returns: A numpy array, shape (sites, hazards) or shape (sites),
-    for one hazard.
-    """
-    gdal.AllRegister()
-    data = []
-    for filename in files:
-        results = raster_data_at_points_a_file(lat, lon, filename)
-        data.append(results)
-    # shape (hazards, sites)
-    data = numpy.asarray(data)
-    if data.shape[0] == 1:
-        # One hazard
-        reshaped_data = numpy.reshape(data, (data.shape[1]))
-    else:
-        reshaped_data = numpy.reshape(data, (-1, data.shape[0]))
-
-    return reshaped_data
-
-
-# R0914: 63:raster_data_at_points_a_file: Too many local variables (19/15)
-def raster_data_at_points_a_file(lon, lat, filename):  # pylint: disable=R0914
-    """
-    Get data at lat lon points, based on a file.
-
-    :param filename: The csv file path string.
-    :param lon: A 1D array of the longitude of the points.
-    :param lat: A 1D array of the latitude of the points.
-    :returns: A numpy array, First dimension being the points/sites.
-    """
-
-    assert lon.size == lat.size
-
-    dataset = gdal.Open(filename, GA_ReadOnly)
-    if dataset is None:
-        raise RuntimeError('Invalid file: %s' % filename)
-
-    values = numpy.empty(lon.size)
-    values[:] = numpy.NAN
-
-    # get georeference info
-    transform = dataset.GetGeoTransform()
-    assert transform[2] == 0.0  # image is "north up"
-    assert transform[4] == 0.0  # image is "north up"
-    upper_left_x = transform[0]
-    x_pixel = transform[1]
-    x_size = dataset.RasterXSize
-
-    upper_left_y = transform[3]
-    y_pixel = transform[5]
-    y_size = dataset.RasterYSize  # This will be a negative value.
-    band = dataset.GetRasterBand(1)
-    no_data_value = band.GetNoDataValue()
-    data_band = band.ReadAsArray(0, 0, x_size, y_size)
-
-    # get an index of all the values inside the grid
-    # there has to be a better way...
-    bad_indexes = set()
-    bad_indexes = bad_indexes.union(numpy.where(lon < upper_left_x)[0])
-    bad_indexes = bad_indexes.union(
-        numpy.where(lon > upper_left_x + x_size * x_pixel)[0])
-    bad_indexes = bad_indexes.union(numpy.where(lat > upper_left_y)[0])
-    bad_indexes = bad_indexes.union(
-        numpy.where(lat < upper_left_y + y_size * y_pixel)[0])
-    good_indexes = numpy.array(list(set(
-        range(lon.size)).difference(bad_indexes)))
-
-    if good_indexes.shape[0] > 0:
-        # compute pixel offset
-        col_offset = numpy.trunc((lon - upper_left_x) / x_pixel).astype(int)
-        row_offset = numpy.trunc((lat - upper_left_y) / y_pixel).astype(int)
-
-        values[good_indexes] = data_band[row_offset[good_indexes],
-                                         col_offset[good_indexes]]
-        # Change NODATA_value to NAN
-        values = numpy.where(values == no_data_value, numpy.NAN, values)
-
-    return values
 
 
 def get_required_args(func):
