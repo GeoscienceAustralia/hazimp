@@ -36,6 +36,7 @@ DEFAULT = 'default'
 LOADWINDTCRM = 'load_wind_ascii'
 TEMPLATE = 'template'
 WINDV1 = 'windv1'
+WINDV2 = 'windv2'
 SAVE = 'save'
 
 # The complete list of first level key names in the post template config dic

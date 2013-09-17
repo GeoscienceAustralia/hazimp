@@ -15,8 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#W0221: 65:ConfigAwarePipeLine.run: Arguments number differs from
+# overridden method
 # pylint: disable=W0221
 # I'm ok with .run having more arg's
+# I should use the ABC though.
 
 """
 The purpose of this module is to provide objects
