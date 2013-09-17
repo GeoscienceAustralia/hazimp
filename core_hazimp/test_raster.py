@@ -117,7 +117,7 @@ class TestRaster(unittest.TestCase):
 
         os.remove(f.name)
 
-    def test3_raster_data_at_points(self):
+    def test3_raster_data_from_array(self):
         # A test based on this info;
         # http://en.wikipedia.org/wiki/Esri_grid
         # Let's hope no one edits the data....
@@ -138,10 +138,20 @@ class TestRaster(unittest.TestCase):
         f.write('13 5 1 -9999 \r\n')
         f.close()
 
+        raster = [[-9999, -9999, 5, 2], [-9999, 20, 100, 36],
+                  [3, 8, 35, 10], [32, 42, 50, 6],
+                  [88, 75, 27, 9], [13, 5, 1, -9999]]
+        upper_left_x = 0.
+        upper_left_y = 300.
+        cell_size = 50.0
+        no_data_value = -9999
+
         # Just outside the midpoint of all sides
         lon = asarray([125, 125, 125, 125, 125, 125])
         lat = asarray([275, 225, 175, 125, 75, 25])
-        raster = Raster.from_file(f.name)
+
+        raster = Raster.from_array(raster, upper_left_x, upper_left_y,
+                                   cell_size, no_data_value)
         data = raster.raster_data_at_points(lon, lat)
         self.assertTrue(allclose(data, asarray([5.0, 100.0, 35.0,
                                                 50.0, 27.0, 1.0])))
