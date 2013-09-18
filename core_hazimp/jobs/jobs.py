@@ -42,7 +42,7 @@ from scipy import asarray
 from core_hazimp import parallel
 from core_hazimp import misc
 from core_hazimp import raster as raster_module
-from core_hazimp.workflow import EX_LAT, EX_LONG
+from core_hazimp.context import EX_LAT, EX_LONG
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 LOADCSVEXPOSURE = 'load_exposure'

@@ -30,14 +30,11 @@ Test the workflow module.
 import unittest
 import tempfile
 import os
-import numpy
 
-from scipy import allclose, asarray, array
+from scipy import allclose, asarray
 
 from core_hazimp import workflow
-from core_hazimp import misc
-from core_hazimp.workflow import (ConfigPipeLineBuilder, Context, EX_LAT,
-                                  EX_LONG)
+from core_hazimp import context
 from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.jobs.jobs import JOBS, LOADCSVEXPOSURE
 from core_hazimp import parallel
@@ -51,15 +48,15 @@ class TestWorkFlow(unittest.TestCase):
     def test_ContextAwareBuilder(self):
         a_test = 5
         b_test = 2
-        Cab = ConfigPipeLineBuilder()
+        Cab = workflow.ConfigPipeLineBuilder()
         calc_list = [CALCS['add_test'], CALCS['multiply_test'],
                      CALCS['constant_test']]
-        context = Context()
-        context.exposure_att = {'a_test': a_test, 'b_test': b_test}
+        cont_in = context.Context()
+        cont_in.exposure_att = {'a_test': a_test, 'b_test': b_test}
         pipeline = Cab.build(calc_list)
         config = {'constant_test': {'constant': 5}}
-        pipeline.run(context, config)
-        self.assertEqual(context.exposure_att['d_test'], 35)
+        pipeline.run(cont_in, config)
+        self.assertEqual(cont_in.exposure_att['d_test'], 35)
 
     def test_Job_ContextAwareBuilder(self):
 
@@ -76,15 +73,15 @@ class TestWorkFlow(unittest.TestCase):
                                          delete=False)
         f2.close()
 
-        Cab = ConfigPipeLineBuilder()
+        Cab = workflow.ConfigPipeLineBuilder()
         calc_list = [JOBS[LOADCSVEXPOSURE], CALCS['add_test']]
-        context = Context()
+        cont_in = context.Context()
 
         pipeline = Cab.build(calc_list)
         config = {'constant_test': {'c_test': [5., 2.]},
                   LOADCSVEXPOSURE: {'file_name': f.name}}
-        pipeline.run(context, config)
-        cont_dict = context.save_exposure_atts(f2.name)
+        pipeline.run(cont_in, config)
+        cont_dict = cont_in.save_exposure_atts(f2.name)
         os.remove(f2.name)
         if parallel.STATE.rank == 0:
             results = cont_dict['c_test']
@@ -109,77 +106,23 @@ class TestWorkFlow(unittest.TestCase):
                                          delete=False)
         f2.close()
 
-        Cab = ConfigPipeLineBuilder()
+        Cab = workflow.ConfigPipeLineBuilder()
         calc_list = [JOBS[LOADCSVEXPOSURE], CALCS['add_test']]
-        context = Context()
+        cont_in = context.Context()
 
         pipeline = Cab.build(calc_list)
         config = {'constant_test': {'c_test': [5., 2.]},
                   LOADCSVEXPOSURE: {'file_name': f.name,
-                                    workflow.EX_LAT: 'LAT',
-                                    workflow.EX_LONG: 'LONG'}}
-        pipeline.run(context, config)
-        cont_dict = context.save_exposure_atts(f2.name)
+                                    context.EX_LAT: 'LAT',
+                                    context.EX_LONG: 'LONG'}}
+        pipeline.run(cont_in, config)
+        cont_dict = cont_in.save_exposure_atts(f2.name)
         os.remove(f2.name)
         if parallel.STATE.rank == 0:
             self.assertTrue(allclose(cont_dict['c_test'],
                                      asarray([33., 66.])))
             self.assertEqual(cont_dict['BUILDING'].tolist(),
                              ['TAB', 'DSG'])
-        os.remove(f.name)
-
-    def test_save_exposure_atts(self):
-
-        # Write a file to test
-        f = tempfile.NamedTemporaryFile(suffix='.npz',
-                                        prefix='test_save_exposure_atts',
-                                        delete=False)
-        f.close()
-
-        con = workflow.Context()
-        actual = {'shoes': array([10., 11]),
-                  'depth': array([[5., 3.], [2., 4]]),
-                  misc.INTID: array([0, 1, 2])}
-        con.exposure_att = actual
-        lat = array([1, 2.])
-        con.exposure_lat = lat
-        lon = array([10., 20.])
-        con.exposure_long = lon
-        con.save_exposure_atts(f.name, use_parallel=False)
-        exp_dict = numpy.load(f.name)
-
-        actual[EX_LONG] = lon
-        actual[EX_LAT] = lat
-        for keyish in exp_dict.files:
-            self.assertTrue(allclose(exp_dict[keyish],
-                                     actual[keyish]))
-        os.remove(f.name)
-
-    def test_save_exposure_attsII(self):
-
-        # Write a file to test
-        f = tempfile.NamedTemporaryFile(suffix='.csv',
-                                        prefix='test_save_exposure_atts',
-                                        delete=False)
-        f.close()
-        con = workflow.Context()
-        actual = {'shoes': array([10., 11, 12]),
-                  'depth': array([[5., 4., 3.], [3., 2, 1], [30., 20, 10]]),
-                  misc.INTID: array([0, 1, 2])}
-        con.exposure_att = actual
-        lat = array([1, 2., 3])
-        con.exposure_lat = lat
-        lon = array([10., 20., 30])
-        con.exposure_long = lon
-        con.save_exposure_atts(f.name, use_parallel=False)
-        exp_dict = misc.csv2dict(f.name)
-
-        actual[EX_LONG] = lon
-        actual[EX_LAT] = lat
-        actual['depth'] = array([4, 2, 20])
-        for key in exp_dict:
-            self.assertTrue(allclose(exp_dict[key],
-                                     actual[key]))
         os.remove(f.name)
 
 

@@ -40,7 +40,7 @@ from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                                    SAVEALL)
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
-from core_hazimp import workflow
+from core_hazimp import context
 from core_hazimp import misc
 from core_hazimp import parallel
 
@@ -83,12 +83,12 @@ class TestJobs(unittest.TestCase):
 
     def test_const_test(self):
         inst = JOBS['const_test']
-        context = Dummy
-        context.exposure_att = {'a_test': 5, 'b_test': 20}
+        con_in = Dummy
+        con_in.exposure_att = {'a_test': 5, 'b_test': 20}
         #config = {'eggs':{'c_test': 25}}
         test_kwargs = {'c_test': 25}
-        inst(context, **test_kwargs)
-        self.assertEqual(context.exposure_att['c_test'], 25)
+        inst(con_in, **test_kwargs)
+        self.assertEqual(con_in.exposure_att['c_test'], 25)
 
     def test_load_csv_exposure(self):
         # Write a file to test
@@ -102,34 +102,34 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        context = Dummy
-        context.exposure_lat = None
-        context.exposure_long = None
-        context.exposure_att = {}
+        con_in = Dummy
+        con_in.exposure_lat = None
+        con_in.exposure_long = None
+        con_in.exposure_att = {}
         test_kwargs = {'file_name': f.name}
-        inst(context, **test_kwargs)
+        inst(con_in, **test_kwargs)
 
         if parallel.STATE.size == 1:
-            self.assertTrue(allclose(context.exposure_lat,
+            self.assertTrue(allclose(con_in.exposure_lat,
                                      asarray([1.0, 4.0])))
-            self.assertTrue(allclose(context.exposure_long,
+            self.assertTrue(allclose(con_in.exposure_long,
                                      asarray([2.0, 5.0])))
-            self.assertTrue(allclose(context.exposure_att['Z'],
+            self.assertTrue(allclose(con_in.exposure_att['Z'],
                                      asarray([3.0, 6.0])))
         else:
             if parallel.STATE.rank == 0:
-                self.assertTrue(allclose(context.exposure_lat,
+                self.assertTrue(allclose(con_in.exposure_lat,
                                          asarray([1.0])))
-                self.assertTrue(allclose(context.exposure_long,
+                self.assertTrue(allclose(con_in.exposure_long,
                                          asarray([2.0])))
-                self.assertTrue(allclose(context.exposure_att['Z'],
+                self.assertTrue(allclose(con_in.exposure_att['Z'],
                                          asarray([3.0])))
             elif parallel.STATE.rank == 1:
-                self.assertTrue(allclose(context.exposure_lat,
+                self.assertTrue(allclose(con_in.exposure_lat,
                                          asarray([4.0])))
-                self.assertTrue(allclose(context.exposure_long,
+                self.assertTrue(allclose(con_in.exposure_long,
                                          asarray([5.0])))
-                self.assertTrue(allclose(context.exposure_att['Z'],
+                self.assertTrue(allclose(con_in.exposure_att['Z'],
                                          asarray([6.0])))
         os.remove(f.name)
 
@@ -137,14 +137,14 @@ class TestJobs(unittest.TestCase):
         # Write a file to test
         filename = build_example()
 
-        context = Dummy
-        context.exposure_lat = None
-        context.exposure_long = None
-        context.vulnerability_sets = {}
+        con_in = Dummy
+        con_in.exposure_lat = None
+        con_in.exposure_long = None
+        con_in.vulnerability_sets = {}
         test_kwargs = {'file_name': filename}
         inst = JOBS['load_xml_vulnerability']
-        inst(context, **test_kwargs)
-        page = context.vulnerability_sets['PAGER']
+        inst(con_in, **test_kwargs)
+        page = con_in.vulnerability_sets['PAGER']
 
         # This is enough of a check
         # Other tests check that it is fully loaded.
@@ -153,12 +153,12 @@ class TestJobs(unittest.TestCase):
         os.remove(filename)
 
     def test_SimpleLinker(self):
-        context = Dummy()
+        con_in = Dummy()
         test_kwargs = {'vul_functions_in_exposure': {'food': 100}}
         inst = JOBS[jobs.SIMPLELINKER]
-        inst(context, **test_kwargs)
+        inst(con_in, **test_kwargs)
         actual = test_kwargs['vul_functions_in_exposure']
-        self.assertDictEqual(actual, context.vul_function_titles)
+        self.assertDictEqual(actual, con_in.vul_function_titles)
 
     def test_SelectVulnFunction(self):
         set1 = 'Contents'
@@ -169,20 +169,20 @@ class TestJobs(unittest.TestCase):
         exp2 = ['bld1', 'bld2']
         VulnSet1 = DummyVulnSet(set1)
         VulnSet2 = DummyVulnSet(set2)
-        context = Dummy()
-        context.vulnerability_sets = {set1: VulnSet1, set2: VulnSet2}
-        context.vul_function_titles = {set1: column1, set2: column2}
-        context.exposure_att[column1] = exp1
-        context.exposure_att[column2] = exp2
+        con_in = Dummy()
+        con_in.vulnerability_sets = {set1: VulnSet1, set2: VulnSet2}
+        con_in.vul_function_titles = {set1: column1, set2: column2}
+        con_in.exposure_att[column1] = exp1
+        con_in.exposure_att[column2] = exp2
 
         variability_method = {set1: 'mean1', set2: 'mean2'}
 
         test_kwargs = {'variability_method':
                        variability_method}
         inst = JOBS[jobs.SELECTVULNFUNCTION]
-        inst(context, **test_kwargs)
+        inst(con_in, **test_kwargs)
         actual = {set1: (exp1, 'mean1', set1), set2: (exp2, 'mean2', set2)}
-        self.assertDictEqual(actual, context.exposure_vuln_curves)
+        self.assertDictEqual(actual, con_in.exposure_vuln_curves)
 
     def test_load_raster(self):
         # Write a file to test
@@ -198,12 +198,12 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        context = Dummy
-        context.exposure_lat = None
-        context.exposure_long = None
-        context.exposure_att = {}
+        con_in = Dummy
+        con_in.exposure_lat = None
+        con_in.exposure_long = None
+        con_in.exposure_att = {}
         test_kwargs = {'file_name': f.name}
-        inst(context, **test_kwargs)
+        inst(con_in, **test_kwargs)
         os.remove(f.name)
 
         # Write a hazard file
@@ -222,14 +222,14 @@ class TestJobs(unittest.TestCase):
         haz_v = 'haz_v'
         inst = JOBS[LOADRASTER]
         test_kwargs = {'file_list': [f.name], 'attribute_label': haz_v}
-        inst(context, **test_kwargs)
-        the_nans = isnan(context.exposure_att[haz_v])
-        context.exposure_att[haz_v][the_nans] = -9999
-        msg = "context.exposure_att[haz_v] " + str(context.exposure_att[haz_v])
-        msg += "\n not = context.exposure_att['haz_actual'] " + \
-            str(context.exposure_att['haz_actual'])
-        self.assertTrue(allclose(context.exposure_att[haz_v],
-                                 context.exposure_att['haz_actual']), msg)
+        inst(con_in, **test_kwargs)
+        the_nans = isnan(con_in.exposure_att[haz_v])
+        con_in.exposure_att[haz_v][the_nans] = -9999
+        msg = "con_in.exposure_att[haz_v] " + str(con_in.exposure_att[haz_v])
+        msg += "\n not = con_in.exposure_att['haz_actual'] " + \
+            str(con_in.exposure_att['haz_actual'])
+        self.assertTrue(allclose(con_in.exposure_att[haz_v],
+                                 con_in.exposure_att['haz_actual']), msg)
 
     def test_look_up(self):
         pass
@@ -249,34 +249,34 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        context = Dummy
-        context.exposure_lat = context.exposure_long = None
-        context.exposure_att = {}
+        con_in = Dummy
+        con_in.exposure_lat = con_in.exposure_long = None
+        con_in.exposure_att = {}
         test_kwargs = {'file_name': f.name}
-        inst(context, **test_kwargs)
+        inst(con_in, **test_kwargs)
 
         os.remove(f.name)
 
         if parallel.STATE.size == 1:
             actual = numpy.arange(1, 6)
-            msg = "context.exposure_att['ID'] " \
-                + str(context.exposure_att['ID'])
+            msg = "con_in.exposure_att['ID'] " \
+                + str(con_in.exposure_att['ID'])
             msg += "\n actual " + str(actual)
-            self.assertTrue(allclose(context.exposure_att['ID'], actual), msg)
+            self.assertTrue(allclose(con_in.exposure_att['ID'], actual), msg)
         else:
             if parallel.STATE.rank == 0:
                 actual = numpy.array([1, 3, 5])
-                msg = "context.exposure_att['ID'] " \
-                    + str(context.exposure_att['ID'])
+                msg = "con_in.exposure_att['ID'] " \
+                    + str(con_in.exposure_att['ID'])
                 msg += "\n actual " + str(actual)
-                self.assertTrue(allclose(context.exposure_att['ID'], actual),
+                self.assertTrue(allclose(con_in.exposure_att['ID'], actual),
                                 msg)
             elif parallel.STATE.rank == 1:
                 actual = numpy.array([2, 4])
-                msg = "context.exposure_att['ID'] " \
-                    + str(context.exposure_att['ID'])
+                msg = "con_in.exposure_att['ID'] " \
+                    + str(con_in.exposure_att['ID'])
                 msg += "\n actual " + str(actual)
-                self.assertTrue(allclose(context.exposure_att['ID'], actual),
+                self.assertTrue(allclose(con_in.exposure_att['ID'], actual),
                                 msg)
 
     def test_LoadCsvExposureII(self):
@@ -293,12 +293,12 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        context = Dummy
-        context.exposure_lat = context.exposure_long = None
-        context.exposure_att = {}
+        con_in = Dummy
+        con_in.exposure_lat = con_in.exposure_long = None
+        con_in.exposure_att = {}
         test_kwargs = {'file_name': f.name, 'exposure_latitude': 'monkey',
                        'exposure_longitude': 'eagle'}
-        self.assertRaises(RuntimeError, inst, context, **test_kwargs)
+        self.assertRaises(RuntimeError, inst, con_in, **test_kwargs)
         os.remove(f.name)
 
     def test_load_rasters(self):
@@ -315,11 +315,11 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        context = Dummy
-        context.exposure_lat = context.exposure_long = None
-        context.exposure_att = {}
+        con_in = Dummy
+        con_in.exposure_lat = con_in.exposure_long = None
+        con_in.exposure_att = {}
         test_kwargs = {'file_name': f.name, 'use_parallel': False}
-        inst(context, **test_kwargs)
+        inst(con_in, **test_kwargs)
         os.remove(f.name)
 
         # Write a hazard file
@@ -355,16 +355,16 @@ class TestJobs(unittest.TestCase):
         haz_v = 'haz_v'
         inst = JOBS[LOADRASTER]
         test_kwargs = {'file_list': files, 'attribute_label': haz_v}
-        inst(context, **test_kwargs)
-        the_nans = isnan(context.exposure_att[haz_v])
-        context.exposure_att[haz_v][the_nans] = -9999
-        actual = asarray([context.exposure_att['haz_0'],
-                          context.exposure_att['haz_1']])
+        inst(con_in, **test_kwargs)
+        the_nans = isnan(con_in.exposure_att[haz_v])
+        con_in.exposure_att[haz_v][the_nans] = -9999
+        actual = asarray([con_in.exposure_att['haz_0'],
+                          con_in.exposure_att['haz_1']])
         actual = reshape(actual, (5, 2))
-        msg = "context.exposure_att[haz_av] " \
-            + str(context.exposure_att[haz_v])
+        msg = "con_in.exposure_att[haz_av] " \
+            + str(con_in.exposure_att[haz_v])
         msg += "\n actual " + str(actual)
-        self.assertTrue(allclose(context.exposure_att[haz_v], actual), msg)
+        self.assertTrue(allclose(con_in.exposure_att[haz_v], actual), msg)
 
         for a_file in files:
             os.remove(a_file)
@@ -378,7 +378,7 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[SAVEALL]
-        con = workflow.Context()
+        con = context.Context()
         actual = {'shoes': array([11., 11]),
                   'depth': array([[5., 3.], [2., 4]]),
                   misc.INTID: array([0, 1, 2])}
@@ -392,8 +392,8 @@ class TestJobs(unittest.TestCase):
 
         exp_dict = numpy.load(f.name)
 
-        actual[workflow.EX_LONG] = lon
-        actual[workflow.EX_LAT] = lat
+        actual[context.EX_LONG] = lon
+        actual[context.EX_LAT] = lat
         for the_key in exp_dict.files:
             self.assertTrue(allclose(exp_dict[the_key],
                                      actual[the_key]))
