@@ -325,7 +325,8 @@ class LoadRaster(Job):
 
     # R0913:326: Too many arguments (9/6)
     # pylint: disable=R0913
-    def __call__(self, context, attribute_label, file_list=None,
+    def __call__(self, context, attribute_label, clip_exposure=None,
+                 file_list=None,
                  raster=None, upper_left_x=None, upper_left_y=None,
                  cell_size=None, no_data_value=None):
         """
@@ -335,7 +336,8 @@ class LoadRaster(Job):
 
         :param context: The context instance, used to move data around.
         :param attribute_label: The string to be associated with this data.
-
+        :param clip_exposure: True if the exposure data is clippped to
+            the hazard data.
         :param file_list: A list of files or a single file to be loaded.
         OR
         :param raster: A 2D numeric array of the raster values, North is up.
@@ -353,7 +355,7 @@ class LoadRaster(Job):
 
         # We need a file or a full set of raster info.
         if file_list is None:
-            # The raster info is being passed as an array.
+            # The raster info is being passed as an array
             assert not raster is None
             assert not upper_left_x is None
             assert not upper_left_y is None
