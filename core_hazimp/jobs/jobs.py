@@ -351,8 +351,9 @@ class LoadRaster(Job):
                value: column values, except the title
         """
 
-        # We need a file or a full set of rater info.
+        # We need a file or a full set of raster info.
         if file_list is None:
+            # The raster info is being passed as an array.
             assert not raster is None
             assert not upper_left_x is None
             assert not upper_left_y is None
