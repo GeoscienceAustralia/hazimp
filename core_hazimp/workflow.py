@@ -85,4 +85,3 @@ class ConfigPipeLineBuilder(PipeLineBuilder):
         """
         pipeline = ConfigAwarePipeLine(calcs)
         return pipeline
-

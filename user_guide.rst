@@ -25,6 +25,12 @@ template is for wind hazards.
 
 Wind Template
 =============
+Given gust information from TCRM and point exposure data the loss associated
+with 
+each site is calculated using the wind template.
+The wind vulnerability functions That are used are built-in to HazImp. They are
+defined in the GA internal report 
+
 Here is an example wind configuration file, which uses the wind template.::
 
      #  python hazimp.py -c wind_v1.yaml

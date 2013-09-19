@@ -50,18 +50,29 @@ class Context(object):
         # will need to be modified.
 
         # Latitude and longitude values of the exposure data
+        # Has a site dimension
         self.exposure_lat = None
         self.exposure_long = None
 
         # Data with a site dimension
         # key - data name
         # value - A numpy array. First dimension is site. (0 axis)
+        # Has a site dimension
         self.exposure_att = {}
+
         # USE ONLY THIS DICTIONARY FOR DATA WITH A SITE DIMENSION
+        #
         # --------------  The above variables are saved ----
 
-        # for example 'vulnerability_functions' is a list of a list of
-        # vulnerabilty functions.  The outer list is for each asset.
+        # Change this to a dictionary of lists, where the dimension of
+        # the list is site.
+        # A dictionary of realised vulnerability curves, associated with the
+        # exposure data.
+        # key - intensity measure
+        # value - One instance of RealisedVulnerabilityCurves.  An att in this
+        #         class has a site dimension.
+        # The only dimension is site.
+        self.exposure_vuln_curves = None
 
         # A dictionary of the vulnerability sets.
         # Not associated with exposures.
@@ -73,12 +84,6 @@ class Context(object):
         # value being the exposure attribute who's values are vulnerability
         # function ID's.
         self.vul_function_titles = {}
-
-        # A dictionary of realised vulnerability curves, associated with the
-        # exposure data.
-        # key - intensity measure
-        # value - realised vulnerability curves, only dimension is site.
-        self.exposure_vuln_curves = None
 
     def save_exposure_atts(self, filename, use_parallel=True):
         """
