@@ -43,18 +43,23 @@ class Context(object):
     Context is a singlton storing all
     of the run specific data.
     """
+    # WARNING
+    # There is high coupling between this and the jobs/vulnerability
+    # curve module.  This holds the data, the methods are spread out.
+    # Consider refactoring by generalising the data this class holds
+    # and accessing the data via methods.
 
     def __init__(self):
         # --------------  These variables are saved ----
         #  If new variables are added the save functions
         # will need to be modified.
 
-        # Latitude and longitude values of the exposure data
+        # Latitude an longitude values of the exposure data
         # Has a site dimension
         self.exposure_lat = None
         self.exposure_long = None
 
-        # Data with a site dimension
+        # Array data with a site dimension
         # key - data name
         # value - A numpy array. First dimension is site. (0 axis)
         # Has a site dimension
@@ -64,8 +69,14 @@ class Context(object):
         #
         # --------------  The above variables are saved ----
 
-        # Change this to a dictionary of lists, where the dimension of
+        # List data with a site dimension
+        # key - Vulnerability Set id
+        # value - List of VulnerabilityCurve instances, where the dimension of
         # the list is site.
+        # Assumption - For a list the intensity measure type and loss category
+        # type do not change
+        self.vuln_curves = {}
+
         # A dictionary of realised vulnerability curves, associated with the
         # exposure data.
         # key - intensity measure
@@ -73,6 +84,7 @@ class Context(object):
         #         class has a site dimension.
         # The only dimension is site.
         self.exposure_vuln_curves = None
+        # FIXME: check if this is needed.
 
         # A dictionary of the vulnerability sets.
         # Not associated with exposures.
@@ -80,6 +92,7 @@ class Context(object):
         # value - vulnerability set instance
         self.vulnerability_sets = {}
 
+        # Mapping info.
         # A dictionary with keys being vulnerability_set_ids and
         # value being the exposure attribute who's values are vulnerability
         # function ID's.
