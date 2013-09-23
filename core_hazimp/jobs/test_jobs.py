@@ -56,7 +56,6 @@ class Dummy:
         # For test_SelectVulnFunction
         self.vulnerability_sets = {}
         self.exposure_att = {}
-        self.vuln_curves = {}
 
 
 class DummyVulnSet:
@@ -69,15 +68,6 @@ class DummyVulnSet:
 
     def build_realised_vuln_curves(self, vuln_function_ids,
                                    variability_method):
-        """For test_SimpleLinker
-        """
-
-        return (vuln_function_ids,
-                variability_method,
-                self.vuln_set)
-
-    def vuln_curve_list(self, vuln_function_ids,
-                        variability_method):
         """For test_SimpleLinker
         """
 
@@ -191,8 +181,6 @@ class TestJobs(unittest.TestCase):
                        variability_method}
         inst = JOBS[jobs.SELECTVULNFUNCTION]
         inst(con_in, **test_kwargs)
-        # These are not the results the actual VulnerabilitySet
-        # would return.  These are the results from a Dummy class.
         actual = {set1: (exp1, 'mean1', set1), set2: (exp2, 'mean2', set2)}
         self.assertDictEqual(actual, con_in.exposure_vuln_curves)
 

@@ -37,7 +37,7 @@ is not present Error out.
 """
 
 import sys
-from scipy import asarray, allclose
+from scipy import asarray
 
 from core_hazimp import parallel
 from core_hazimp import misc
@@ -236,7 +236,7 @@ class SelectVulnFunction(Job):
         Specifies what vulnerability sets to use.
         Links vulnerability curves to assets.
         Assumes the necessary vulnerability_sets have been loaded and
-        there is an exposure column that represents the
+        there is an  exposure column that represents the
         vulnerability function id.
 
         NOTE: This is where the vulnerability function is selected,
@@ -244,14 +244,10 @@ class SelectVulnFunction(Job):
 
         Args:
         :param context: The context instance, used to move data around.
-        :param variability_method: The vulnerability sets that will be
-            looked up and the sampling method used for each set.
-            A dictionary with keys being
-            vulnerability_set_ids and values being the sampling method
-            to generate a vulnerability curve from a vulnerability function.
-            e.g. {'EQ_contents': 'mean', 'EQ_building': 'mean'}
-            Limitation: A vulnerability set can only be used once, since
-            it needs a unique name.
+        :param variability_method: A dictionary with keys being
+        vulnerability_set_ids and values being the sampling method
+        to generate a vulnerability curve from a vulnerability function.
+        e.g. {'EQ_contents': 'mean', 'EQ_building': 'mean'}
 
         Content return:
            exposure_vuln_curves: A dictionary of realised
@@ -274,12 +270,6 @@ class SelectVulnFunction(Job):
             # Build a dictionary of realised vulnerability curves
             exposure_vuln_curves[vuln_set_key] = realised_vuln_curves
 
-            # REFACTOR
-            # sample from the function to get a list of curves
-            vuln_curve_list = vuln_set.vuln_curve_list(
-                vuln_function_ids,
-                variability_method=variability_method[vuln_set_key])
-            context.vuln_curves[vuln_set_key] = vuln_curve_list
         context.exposure_vuln_curves = exposure_vuln_curves
 
 
@@ -300,7 +290,11 @@ class LookUp(Job):
         :param context: The context instance, used to move data around.
 
         Content return:
-            exposure_att Key - the loss category type. Value the loss ratio
+           exposure_vuln_curves: A dictionary of realised
+               vulnerability curves, associated with the exposure
+               data.
+                key - intensity measure
+                value - realised vulnerability curve instance per asset
         """
 
         for intensity_key in context.exposure_vuln_curves:
@@ -317,34 +311,7 @@ class LookUp(Job):
             losses = vuln_curve.look_up(intensities)
             context.exposure_att[loss_category_type] = losses
 
-        # Assumption - For a list the intensity measure type and loss category
-        # type do not change
-        results = {}
-        for intensity_key in context.vuln_curves:
-            losses_sites = []
-            vuln_curve_list = context.vuln_curves[intensity_key]
-            vuln_set = context.vulnerability_sets[intensity_key]
-            int_measure = vuln_set.intensity_measure_type
-            loss_category = vuln_set.loss_category
-            try:
-                intensities = context.exposure_att[int_measure]
-            except KeyError:
-                vulnerability_set_id = vuln_curve.vulnerability_set_id
-                msg = 'Invalid intensity measure, %s. \n' % int_measure
-                msg += 'vulnerability_set_id is %s. \n' % intensity_key
-                raise RuntimeError(msg)
-            for i, vuln_curve in enumerate(vuln_curve_list):
-                # The i:i+1 makes sure the result is an array,
-                # By keeping the site dimension as 1
-                losses_a_site = vuln_curve.look_up(intensities[i:i+1, ...])
-                # The 0 removes the added site dimension
-                losses_sites.append(losses_a_site[0, ...])
-            #context.exposure_att[loss_category] = asarray(losses_sites)
-            results[loss_category_type] = asarray(losses_sites)
-        for key in results:
-            assert allclose(context.exposure_att[key], results[key])
 
-            
 class LoadRaster(Job):
     """
     Load one or more files and get the value for all the
