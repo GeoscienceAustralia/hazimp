@@ -50,6 +50,11 @@ class Context(object):
     """
 
     def __init__(self):
+        # Warning;
+        # If new data is added with a site dimension the 
+        # clip exposure function may need to be updated
+        # so the site data stays consistant.
+        
         # --------------  These variables are saved ----
         #  If new variables are added the save functions
         # will need to be modified.
@@ -83,6 +88,29 @@ class Context(object):
         # value being the exposure attribute who's values are vulnerability
         # function ID's.
         self.vul_function_titles = {}
+        
+    def clip_exposure(self, min_lat, max_lat, min_long, max_long):
+        """
+        Clip the exposure data so only the exposure values within
+        the rectangle formed by  max_lat, min_lat, max_long and
+        min_long are included.
+        
+        Note: This must be called before the exposure_vuln_curves
+        are determined, since the curves have a site dimension.
+        """
+        # assert ...
+        bad_indexes = set()
+        bad_indexes = bad_indexes.union(numpy.where(
+            self.exposure_long < min_long)[0])
+        bad_indexes = bad_indexes.union(numpy.where(
+            self.exposure_long > max_long)[0])
+        bad_indexes = bad_indexes.union(numpy.where(
+            self.exposure_lat < min_lat)[0])
+        bad_indexes = bad_indexes.union(numpy.where(
+            self.exposure_lat > max_lat)[0])
+        good_indexes = numpy.array(list(set(
+            range(self.exposure_lat.size)).difference(bad_indexes)))
+        pass
 
     def save_exposure_atts(self, filename, use_parallel=True):
         """
