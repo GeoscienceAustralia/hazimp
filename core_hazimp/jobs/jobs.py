@@ -244,10 +244,14 @@ class SelectVulnFunction(Job):
 
         Args:
         :param context: The context instance, used to move data around.
-        :param variability_method: A dictionary with keys being
-        vulnerability_set_ids and values being the sampling method
-        to generate a vulnerability curve from a vulnerability function.
-        e.g. {'EQ_contents': 'mean', 'EQ_building': 'mean'}
+        :param variability_method: The vulnerability sets that will be
+            looked up and the sampling method used for each set.
+            A dictionary with keys being
+            vulnerability_set_ids and values being the sampling method
+            to generate a vulnerability curve from a vulnerability function.
+            e.g. {'EQ_contents': 'mean', 'EQ_building': 'mean'}
+            Limitation: A vulnerability set can only be used once, since
+            it needs a unique name. 
 
         Content return:
            exposure_vuln_curves: A dictionary of realised

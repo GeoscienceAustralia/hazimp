@@ -37,6 +37,11 @@ from core_hazimp import parallel
 EX_LAT = 'exposure_latitude'
 EX_LONG = 'exposure_longitude'
 
+# WARNING
+# There is high coupling between this and the jobs/vulnerability
+# curve module.  This holds the data, the methods are spread out.
+# Consider refactoring by generalising the data this class holds
+# and accessing the data via methods.
 
 class Context(object):
     """
@@ -60,18 +65,12 @@ class Context(object):
         # Has a site dimension
         self.exposure_att = {}
 
-        # USE ONLY THIS DICTIONARY FOR DATA WITH A SITE DIMENSION
         #
         # --------------  The above variables are saved ----
 
-        # Change this to a dictionary of lists, where the dimension of
-        # the list is site.
-        # A dictionary of realised vulnerability curves, associated with the
-        # exposure data.
         # key - intensity measure
         # value - One instance of RealisedVulnerabilityCurves.  An att in this
         #         class has a site dimension.
-        # The only dimension is site.
         self.exposure_vuln_curves = None
 
         # A dictionary of the vulnerability sets.
