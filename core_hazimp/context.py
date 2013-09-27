@@ -43,6 +43,7 @@ EX_LONG = 'exposure_longitude'
 # Consider refactoring by generalising the data this class holds
 # and accessing the data via methods.
 
+
 class Context(object):
     """
     Context is a singlton storing all
@@ -51,10 +52,10 @@ class Context(object):
 
     def __init__(self):
         # Warning;
-        # If new data is added with a site dimension the 
+        # If new data is added with a site dimension the
         # clip exposure function may need to be updated
         # so the site data stays consistant.
-        
+
         # --------------  These variables are saved ----
         #  If new variables are added the save functions
         # will need to be modified.
@@ -88,18 +89,18 @@ class Context(object):
         # value being the exposure attribute who's values are vulnerability
         # function ID's.
         self.vul_function_titles = {}
-        
+
     def clip_exposure(self, min_lat, max_lat, min_long, max_long):
         """
         Clip the exposure data so only the exposure values within
         the rectangle formed by  max_lat, min_lat, max_long and
         min_long are included.
-        
+
         Note: This must be called before the exposure_vuln_curves
         are determined, since the curves have a site dimension.
         """
-        assert  self.exposure_vuln_curves == None
-        
+        assert self.exposure_vuln_curves is None
+
         bad_indexes = set()
         bad_indexes = bad_indexes.union(numpy.where(
             self.exposure_long < min_long)[0])
@@ -111,10 +112,10 @@ class Context(object):
             self.exposure_lat > max_lat)[0])
         good_indexes = numpy.array(list(set(
             range(self.exposure_lat.size)).difference(bad_indexes)))
-            
+
         self.exposure_lat = self.exposure_lat[good_indexes, ...]
         self.exposure_long = self.exposure_long[good_indexes, ...]
-        
+
         for key in self.exposure_att:
             self.exposure_att[key] = self.exposure_att[key][good_indexes, ...]
 

@@ -251,7 +251,7 @@ class SelectVulnFunction(Job):
             to generate a vulnerability curve from a vulnerability function.
             e.g. {'EQ_contents': 'mean', 'EQ_building': 'mean'}
             Limitation: A vulnerability set can only be used once, since
-            it needs a unique name. 
+            it needs a unique name.
 
         Content return:
            exposure_vuln_curves: A dictionary of realised

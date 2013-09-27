@@ -106,25 +106,25 @@ class TestContext(unittest.TestCase):
         shoes_array = arange(num_points*2).reshape((-1, 2))
         d3_array = arange(num_points*2*3).reshape((-1, 2, 3))
         id_array = arange(num_points)
-        
+
         con = context.Context()
         sub_set = (3, 5)
         initial = {'shoes': shoes_array,
-                  'd3': d3_array,
-                  misc.INTID: id_array}
+                   'd3': d3_array,
+                   misc.INTID: id_array}
         con.exposure_att = initial
         con.exposure_lat = lat_long[:, 0]
         con.exposure_long = lat_long[:, 1]
         con.clip_exposure(min_lat=-36, max_lat=-24,
                           min_long=120, max_long=140)
-        
+
         actual = {}
         actual[context.EX_LAT] = lat_long[:, 0][sub_set, ...]
         actual[context.EX_LONG] = lat_long[:, 1][sub_set, ...]
         actual['shoes'] = shoes_array[sub_set, ...]
         actual['d3'] = d3_array[sub_set, ...]
         actual[misc.INTID] = id_array[sub_set, ...]
-        
+
         for key in con.exposure_att:
             self.assertTrue(allclose(con.exposure_att[key],
                                      actual[key]))
