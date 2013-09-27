@@ -98,7 +98,8 @@ class Context(object):
         Note: This must be called before the exposure_vuln_curves
         are determined, since the curves have a site dimension.
         """
-        # assert ...
+        assert  self.exposure_vuln_curves == None
+        
         bad_indexes = set()
         bad_indexes = bad_indexes.union(numpy.where(
             self.exposure_long < min_long)[0])
@@ -110,7 +111,12 @@ class Context(object):
             self.exposure_lat > max_lat)[0])
         good_indexes = numpy.array(list(set(
             range(self.exposure_lat.size)).difference(bad_indexes)))
-        pass
+            
+        self.exposure_lat = self.exposure_lat[good_indexes, ...]
+        self.exposure_long = self.exposure_long[good_indexes, ...]
+        
+        for key in self.exposure_att:
+            self.exposure_att[key] = self.exposure_att[key][good_indexes, ...]
 
     def save_exposure_atts(self, filename, use_parallel=True):
         """

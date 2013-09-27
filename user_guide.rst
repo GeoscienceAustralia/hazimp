@@ -15,6 +15,10 @@ HazImp can also be ran in parallel, using mpirun.  For example;::
 
      mpirun -np 4 python hazimp.py -c wind_v1.yaml
      
+To run a wind example do;::
+
+     cd examples/wind
+     python ../../core_hazimp/hazimp.py  -c wind_v1.yaml
 
 Templates
 =========
