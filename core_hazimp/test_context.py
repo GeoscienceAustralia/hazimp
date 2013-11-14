@@ -100,7 +100,7 @@ class TestContext(unittest.TestCase):
     def test_clip_exposure(self):
 
         # These points are in the HazImp notebook.
-        
+
         lat_long = array([[-23, 110], [-23, 130], [-23, 145],
                           [-30, 110], [-35, 121], [-25, 139], [-30, 145],
                           [-37, 130]])
@@ -117,12 +117,12 @@ class TestContext(unittest.TestCase):
         con.exposure_att = initial
         con.exposure_lat = lat_long[:, 0]
         con.exposure_long = lat_long[:, 1]
-        
+
         # After this clip the only points that remain are;
         # [-35, 121] & [-25, 139], indexed as 4 & 5
         con.clip_exposure(min_lat=-36, max_lat=-24,
                           min_long=120, max_long=140)
-        
+
         actual = {}
         actual[context.EX_LAT] = lat_long[:, 0][sub_set, ...]
         actual[context.EX_LONG] = lat_long[:, 1][sub_set, ...]
