@@ -340,8 +340,9 @@ class LoadRaster(Job):
 
         :param context: The context instance, used to move data around.
         :param attribute_label: The string to be associated with this data.
-        :param clip_exposure: True if the exposure data is clippped to
-            the hazard data.
+        :param clip_exposure2all_hazards: True if the exposure data is
+            clippped to the hazard data, so no hazard values are ignored.
+            i.e. If multiple
         :param file_list: A list of files or a single file to be loaded.
         OR
         :param raster: A 2D numeric array of the raster values, North is up.

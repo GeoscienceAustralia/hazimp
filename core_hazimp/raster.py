@@ -159,7 +159,7 @@ def raster_data_at_points(lon, lat, files):
     :returns: A numpy array, shape (sites, hazards) or shape (sites),
     for one hazard.
     """
-    gdal.AllRegister()
+
     data = []
     for filename in files:
         a_raster = Raster.from_file(filename)
