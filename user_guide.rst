@@ -3,7 +3,18 @@ User Guide
 ==========
 
 Introduction
-============
+------------
+HazImp is used to simulate the loss of value to structures from natural hazards using vulnerability curves.  Generally the input information is hazard, such as a wind speed raster and exposure. The exposure information is currently supplied as a csv file, with structure locations given in latitude and longitude. This is combined with vulnerability curve information, described in an xml file. There is an example of a vulnerability curve;
+
+.. figure:: ./examples/diagrams/example_vuln_curve.png
+   :align: center
+
+   *An example vulnerability curve.*
+
+
+
+Quick how-to
+------------
 
 A configuration file is used to define a simulation.  The configuration file is described using yaml, a data serialisation format.  To run HazImp do;::
 
@@ -21,14 +32,14 @@ To run a wind example do;::
      python ../../core_hazimp/hazimp.py  -c wind_v1.yaml
 
 Templates
-=========
+---------
 
 The simplest way to use HazImp is with a template. Currently the only
 template is for wind hazards.
 
 
 Wind Template
-=============
+-------------
 Given gust information from TCRM and point exposure data the loss associated
 with 
 each site is calculated using the wind template.
