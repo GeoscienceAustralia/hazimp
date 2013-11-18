@@ -69,12 +69,16 @@ class TestRaster(unittest.TestCase):
 
         raster = Raster.from_file(f.name)
         data = raster.raster_data_at_points(lon, lat)
-
+        self.assertEqual(raster.ul_x, 0)
+        self.assertEqual(raster.ul_y, 10)
+        self.assertEqual(raster.x_pixel, 1)
+        self.assertEqual(raster.y_pixel, -1)
+        self.assertEqual(raster.x_size, 3)
+        self.assertEqual(raster.y_size, 2)
         self.assertTrue(allclose(data, asarray([1., 1., 5.])))
 
         lon = asarray([0.0001, 0.0001, 2.999, 2.999])
         lat = asarray([8.0001, 9.999, 9.999, 8.0001])
-        raster = Raster.from_file(f.name)
         data = raster.raster_data_at_points(lon, lat)
         index_g = numpy.array([0, 1, 3])
         self.assertTrue(allclose(data[index_g],
@@ -152,10 +156,24 @@ class TestRaster(unittest.TestCase):
 
         raster = Raster.from_array(raster, upper_left_x, upper_left_y,
                                    cell_size, no_data_value)
+        self.assertEqual(raster.ul_x, 0)
+        self.assertEqual(raster.ul_y, 300)
+        self.assertEqual(raster.x_pixel, 50)
+        self.assertEqual(raster.y_pixel, -50)
+        self.assertEqual(raster.x_size, 4)
+        self.assertEqual(raster.y_size, 6)
+
         data = raster.raster_data_at_points(lon, lat)
         self.assertTrue(allclose(data, asarray([5.0, 100.0, 35.0,
                                                 50.0, 27.0, 1.0])))
 
+        # testing extent
+        min_long, min_lat, max_long, max_lat = raster.extent()
+        self.assertEqual(min_long, 0)
+        self.assertEqual(min_lat, 0)
+        self.assertEqual(max_long, 200)
+        self.assertEqual(max_lat, 300)
+        
         os.remove(f.name)
 
 #-------------------------------------------------------------

@@ -26,8 +26,12 @@ from gdalconst import GA_ReadOnly
 
 class Raster():
     """
-    A simple class to describe a raster
+    A simple class to describe a raster.
     """
+    # How about using a geotransform list and taking into account the
+    # rotation of the raster? e.g.
+    # http://geoexamples.blogspot.com.au/2012/01/
+    # creating-files-in-ogr-and-gdal-with.html
 
     # R0902: 27:Raster: Too many instance attributes (8/7)
     # R0913: 34:Raster.__init__: Too many arguments (9/6)
@@ -36,7 +40,21 @@ class Raster():
                  x_pixel, y_pixel, no_data_value, x_size, y_size):
 
         """
-        Note y_pixel will be negative.
+
+        :param raster: A 2D numeric array of the raster values, North is up.
+                       The values are listed in 'English reading order' i.e.
+                       left-right and top-down.
+        :param upper_left_x: The longitude at the upper left corner of the
+                             top left pixel.
+        :param upper_left_y: The latitude at the upper left corner of the
+                             top left pixel.
+        :param x_pixel: w-e pixel resolution. Pixel Width. Horizontal pixel
+                        resolution.
+        :param y_pixel: n-s pixel resolution. Pixel Height. Vertical pixel
+                        resolution. This is negative.
+        :param x_size: Number of columns.
+        :param y_size: Number of rows.
+        :param no_data_value: Values in the raster that represent no data.
         """
         self.raster = raster
         self.ul_x = upper_left_x
@@ -84,7 +102,9 @@ class Raster():
                    cell_size, no_data_value):
         """
         Convert numeric array of raster data and info to a raster instance.
-
+        The values are listed in 'English reading order' i.e.
+        left-right and top-down.
+        
         :param raster: A 2D numeric array of the raster values, North is up.
         :param upper_left_x: The longitude at the upper left corner.
         :param upper_left_y: The latitude at the upper left corner.
@@ -145,8 +165,20 @@ class Raster():
             # Change NODATA_value to NAN
             values = numpy.where(values == self.no_data_value, numpy.NAN,
                                  values)
-
         return values
+
+    def extent(self):
+        """
+        Return the extent, in lats and longs of the raster.
+
+        :returns: min_long, min_lat, max_long, max_lat
+        """
+        
+        max_lat = self.ul_y
+        min_lat = self.ul_y + self.y_pixel *  self.y_size
+        min_long = self.ul_x
+        max_long = self.ul_x + self.x_pixel *  self.x_size
+        return min_long, min_lat, max_long, max_lat
 
 
 def raster_data_at_points(lon, lat, files):
