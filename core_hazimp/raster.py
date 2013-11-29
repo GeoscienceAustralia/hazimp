@@ -104,7 +104,7 @@ class Raster():
         Convert numeric array of raster data and info to a raster instance.
         The values are listed in 'English reading order' i.e.
         left-right and top-down.
-        
+
         :param raster: A 2D numeric array of the raster values, North is up.
         :param upper_left_x: The longitude at the upper left corner.
         :param upper_left_y: The latitude at the upper left corner.
@@ -173,11 +173,11 @@ class Raster():
 
         :returns: min_long, min_lat, max_long, max_lat
         """
-        
+
         max_lat = self.ul_y
-        min_lat = self.ul_y + self.y_pixel *  self.y_size
+        min_lat = self.ul_y + self.y_pixel * self.y_size
         min_long = self.ul_x
-        max_long = self.ul_x + self.x_pixel *  self.x_size
+        max_long = self.ul_x + self.x_pixel * self.x_size
         return min_long, min_lat, max_long, max_lat
 
 

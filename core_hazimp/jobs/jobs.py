@@ -329,7 +329,8 @@ class LoadRaster(Job):
 
     # R0913:326: Too many arguments (9/6)
     # pylint: disable=R0913
-    def __call__(self, context, attribute_label, clip_exposure=None,
+    def __call__(self, context, attribute_label,
+                 clip_exposure2all_hazards=False,
                  file_list=None,
                  raster=None, upper_left_x=None, upper_left_y=None,
                  cell_size=None, no_data_value=None):
@@ -342,7 +343,6 @@ class LoadRaster(Job):
         :param attribute_label: The string to be associated with this data.
         :param clip_exposure2all_hazards: True if the exposure data is
             clippped to the hazard data, so no hazard values are ignored.
-            i.e. If multiple
         :param file_list: A list of files or a single file to be loaded.
         OR
         :param raster: A 2D numeric array of the raster values, North is up.
@@ -352,7 +352,7 @@ class LoadRaster(Job):
         :param no_data_value: Values in the raster that represent no data.
 
 
-        Content return:
+        Context return:
            exposure_att: Add the file values into this dictionary.
                key: column titles
                value: column values, except the title
@@ -370,6 +370,14 @@ class LoadRaster(Job):
                                                        upper_left_y,
                                                        cell_size,
                                                        no_data_value)
+
+            if clip_exposure2all_hazards:
+                # Reduce the context to the hazard area
+                # before the raster info has been added to the context
+                extent = a_raster.extent()
+                print "extent", extent
+                context.clip_exposure(*extent)
+
             file_data = a_raster.raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat)

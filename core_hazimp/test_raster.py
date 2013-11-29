@@ -173,7 +173,7 @@ class TestRaster(unittest.TestCase):
         self.assertEqual(min_lat, 0)
         self.assertEqual(max_long, 200)
         self.assertEqual(max_lat, 300)
-        
+
         os.remove(f.name)
 
 #-------------------------------------------------------------

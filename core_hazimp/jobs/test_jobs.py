@@ -231,6 +231,60 @@ class TestJobs(unittest.TestCase):
         self.assertTrue(allclose(con_in.exposure_att[haz_v],
                                  con_in.exposure_att['haz_actual']), msg)
 
+    def test_load_raster_clipping(self):
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(
+            suffix='.txt', prefix='HAZIMPtest_jobs',
+            delete=False)
+        f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
+        f.write('8.1, 0.1, 1, 4\n')
+        f.write('7.9, 1.5, 2, -9999\n')  # Out of Haz area
+        f.write('8.9, 2.9, 3, 6\n')
+        f.write('8.9, 3.1, 4, -9999\n')  # Out of Haz area
+        f.write('9.9, 2.9, 5, -9999\n')  # In no data area
+        f.close()
+
+        inst = JOBS[LOADCSVEXPOSURE]
+        con_in = Dummy
+        con_in.exposure_lat = None
+        con_in.exposure_long = None
+        con_in.exposure_att = {}
+        test_kwargs = {'file_name': f.name}
+        inst(con_in, **test_kwargs)
+        os.remove(f.name)
+
+        # Write a hazard file
+        f = tempfile.NamedTemporaryFile(
+            suffix='.aai', prefix='HAZIMPtest_jobs',
+            delete=False)
+        f.write('ncols 3    \r\n')
+        f.write('nrows 2 \r\n')
+        f.write('xllcorner +0.    \r\n')
+        f.write('yllcorner +8. \r\n')
+        f.write('cellsize 1    \r\n')
+        f.write('NODATA_value -9999 \r\n')
+        f.write('1 2 -9999    \r\n')
+        f.write('4 5 6 ')
+        f.close()
+        haz_v = 'haz_v'
+        inst = JOBS[LOADRASTER]
+        test_kwargs = {'file_list': [f.name], 'attribute_label': haz_v,
+                       'clip_exposure2all_hazards': True}
+        inst(con_in, **test_kwargs)
+        the_nans = isnan(con_in.exposure_att[haz_v])
+        con_in.exposure_att[haz_v][the_nans] = -9999
+        msg = "con_in.exposure_att[haz_v] " + str(con_in.exposure_att[haz_v])
+        msg += "\n not = con_in.exposure_att['haz_actual'] " + \
+            str(con_in.exposure_att['haz_actual'])
+        self.assertTrue(allclose(con_in.exposure_att[haz_v],
+                                 con_in.exposure_att['haz_actual']), msg)
+        # There should be only 3 exposure points
+        expected = 3
+        msg = "Number of exposure points is "
+        msg += str(len(con_in.exposure_att['ID']))
+        msg += "\n Expected " + str(expected)
+        self.assertTrue(len(con_in.exposure_att['ID']) == expected, msg)
+
     def test_look_up(self):
         pass
         # FIXME Needs test.

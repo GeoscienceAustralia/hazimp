@@ -90,8 +90,8 @@ class Context(object):
         # function ID's.
         self.vul_function_titles = {}
 
-    def clip_exposure(self, min_lat, max_lat, min_long, max_long):
-        """
+    def clip_exposure(self, min_long, min_lat, max_long, max_lat):
+        """ min_long, min_lat, max_long, max_lat
         Clip the exposure data so only the exposure values within
         the rectangle formed by  max_lat, min_lat, max_long and
         min_long are included.
