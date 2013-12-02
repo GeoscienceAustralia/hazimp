@@ -181,22 +181,33 @@ class Raster():
         return min_long, min_lat, max_long, max_lat
 
 
-def raster_data_at_points(lon, lat, files):
+def files_raster_data_at_points(lon, lat, files):
     """
     Get data at lat lon points, based on a set of files
 
     :param files: A list of files.
     :param lon: A 1D array of the longitude of the points.
     :param lat: A 1d array of the latitude of the points.
-    :returns: A numpy array, shape (sites, hazards) or shape (sites),
-    for one hazard.
+    :returns: reshaped_data, max_extent
+      reshaped_data: A numpy array, shape (sites, hazards) or shape (sites),
+        for one hazard.
+      max_extent: [min_long, min_lat, max_long, max_lat] A rectange covering
+        the extents of all of the loaded rasters.
     """
 
     data = []
+    max_extent = None
     for filename in files:
         a_raster = Raster.from_file(filename)
         results = a_raster.raster_data_at_points(lon, lat)
         data.append(results)
+
+        # Working out the maximum extent
+        extent = a_raster.extent()
+        if max_extent is None:
+            max_extent = list(extent)
+        else:
+            max_extent = recalc_max(max_extent, extent)
 
     # shape (hazards, sites)
     data = numpy.asarray(data)
@@ -207,3 +218,19 @@ def raster_data_at_points(lon, lat, files):
         reshaped_data = numpy.reshape(data, (-1, data.shape[0]))
 
     return reshaped_data
+
+def recalc_max(max_extent, extent):
+    """
+    Given an extent and a maximum extent modify maximum extent so
+    it covers the extent area.
+
+    Both parameters describe a rectangle;
+     [min_long, min_lat, max_long, max_lat]
+
+    :param max_extent: A list describing a rectangular area.
+    :param extent: A tuple/list describing the area that must be covered
+                   by max_extent.
+    """
+    lim_funct = (min, min, max, max)
+    return [lim(max_e, ext) for max_e, ext, lim in zip(max_extent, extent,
+                                                       lim_funct)]

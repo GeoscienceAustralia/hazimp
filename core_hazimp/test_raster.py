@@ -38,7 +38,7 @@ import os
 import numpy
 from scipy import asarray, allclose
 
-from core_hazimp.raster import Raster
+from core_hazimp.raster import Raster, recalc_max
 
 
 class TestRaster(unittest.TestCase):
@@ -175,6 +175,22 @@ class TestRaster(unittest.TestCase):
         self.assertEqual(max_lat, 300)
 
         os.remove(f.name)
+
+    def test3_recalc_max(self):
+        max_extent = (0, 0, 0, 0)
+        extent = [-10, -20, 20, 40]
+        max_extent = recalc_max(max_extent, extent)
+        self.assertEqual(max_extent, extent)
+
+        max_extent = (-100, -10, 10, 100)
+        extent = [-10, -20, 20, 40]
+        max_extent = recalc_max(max_extent, extent)
+        self.assertEqual([-100, -20, 20, 100], max_extent)
+
+        old_max_extent = [-100, -100, 100, 100]
+        extent = [-10, -20, 20, 40]
+        max_extent = recalc_max(old_max_extent, extent)
+        self.assertEqual(old_max_extent, max_extent)
 
 #-------------------------------------------------------------
 if __name__ == "__main__":

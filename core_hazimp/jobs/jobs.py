@@ -384,7 +384,7 @@ class LoadRaster(Job):
         else:
             if isinstance(file_list, basestring):
                 file_list = [file_list]
-            file_data = raster_module.raster_data_at_points(
+            file_data = raster_module.files_raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat, file_list)
 
