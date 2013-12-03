@@ -34,7 +34,7 @@ import tempfile
 import os
 import numpy
 
-from scipy import allclose, asarray, isnan, reshape, array, rollaxis
+from scipy import allclose, asarray, isnan, array, rollaxis
 
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                                    SAVEALL)

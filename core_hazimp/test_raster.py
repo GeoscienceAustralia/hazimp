@@ -169,8 +169,11 @@ class TestRaster(unittest.TestCase):
                               [nan, nan], [nan, nan]])
         numpy.testing.assert_equal(data, actual)
 
-        for file in files:
-            os.remove(file)
+        # So pylint doesn't complain..
+        self.assertEqual(actual.shape, data.shape)
+
+        for a_file in files:
+            os.remove(a_file)
 
     def test3_raster_data_from_array(self):
         # A test based on this info;
