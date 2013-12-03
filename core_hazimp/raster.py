@@ -215,9 +215,10 @@ def files_raster_data_at_points(lon, lat, files):
         # One hazard
         reshaped_data = numpy.reshape(data, (data.shape[1]))
     else:
-        reshaped_data = numpy.reshape(data, (-1, data.shape[0]))
+        reshaped_data = numpy.rollaxis(data, 1)
 
     return reshaped_data
+
 
 def recalc_max(max_extent, extent):
     """

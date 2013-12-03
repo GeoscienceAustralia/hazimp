@@ -34,7 +34,7 @@ import tempfile
 import os
 import numpy
 
-from scipy import allclose, asarray, isnan, reshape, array
+from scipy import allclose, asarray, isnan, reshape, array, rollaxis
 
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                                    SAVEALL)
@@ -414,7 +414,7 @@ class TestJobs(unittest.TestCase):
         con_in.exposure_att[haz_v][the_nans] = -9999
         actual = asarray([con_in.exposure_att['haz_0'],
                           con_in.exposure_att['haz_1']])
-        actual = reshape(actual, (5, 2))
+        actual = rollaxis(actual, 1)
         msg = "con_in.exposure_att[haz_av] " \
             + str(con_in.exposure_att[haz_v])
         msg += "\n actual " + str(actual)

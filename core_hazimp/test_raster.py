@@ -36,9 +36,9 @@ import tempfile
 import os
 
 import numpy
-from scipy import asarray, allclose
+from scipy import asarray, allclose, nan
 
-from core_hazimp.raster import Raster, recalc_max
+from core_hazimp.raster import Raster, recalc_max, files_raster_data_at_points
 
 
 class TestRaster(unittest.TestCase):
@@ -121,27 +121,61 @@ class TestRaster(unittest.TestCase):
 
         os.remove(f.name)
 
+    def test2_files_raster_data_at_points(self):
+
+        files = []
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(suffix='.aai',
+                                        prefix='test_misc',
+                                        delete=False)
+        f.write('ncols 2   \r\n')
+        f.write('nrows 2 \r\n')
+        f.write('xllcorner 0.0   \r\n')
+        f.write('yllcorner 1.0 \r\n')
+        f.write('cellsize 1.5   \r\n')
+        f.write('NODATA_value -9999 \r\n')
+        f.write('0 0\r\n')
+        f.write('0 0\r\n')
+        f.close()
+        # lon 0 - 3
+        # lat 1 - 4
+        files.append(f.name)
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(suffix='.aai',
+                                        prefix='test_misc',
+                                        delete=False)
+        f.write('ncols 2   \r\n')
+        f.write('nrows 1 \r\n')
+        f.write('xllcorner 1.0   \r\n')
+        f.write('yllcorner 0.0 \r\n')
+        f.write('cellsize 2.0   \r\n')
+        f.write('NODATA_value -9999 \r\n')
+        f.write('1 2 \r\n')
+        f.close()
+        # lon 1 - 5
+        # lat 0 - 2
+        files.append(f.name)
+
+        # exposure points, and the hazard values
+        # index        0  1  2    3    4   5  6  7
+        # 0 val        0  n  n    0    n   n  n  n
+        # 1 val        n  n  n    1    2   n  n  n
+        lon = asarray([1, 4, 0.5, 1.5, 4, -1, 6, +4])
+        lat = asarray([3, 3, 0.5, 1.5, 1, +3, 1, -1])
+
+        data = files_raster_data_at_points(lon, lat, files)
+        actual = numpy.array([[0, nan], [nan, nan], [nan, nan],
+                              [0, 1], [nan, 2], [nan, nan],
+                              [nan, nan], [nan, nan]])
+        numpy.testing.assert_equal(data, actual)
+
+        for file in files:
+            os.remove(file)
+
     def test3_raster_data_from_array(self):
         # A test based on this info;
         # http://en.wikipedia.org/wiki/Esri_grid
         # Let's hope no one edits the data....
-        f = tempfile.NamedTemporaryFile(suffix='.aai',
-                                        prefix='test_misc',
-                                        delete=False)
-        f.write('ncols 4   \r\n')
-        f.write('nrows 6 \r\n')
-        f.write('xllcorner 0.0   \r\n')
-        f.write('yllcorner 0.0 \r\n')
-        f.write('cellsize 50.0   \r\n')
-        f.write('NODATA_value -9999 \r\n')
-        f.write('-9999 -9999 5 2  \r\n')
-        f.write('-9999 20 100 36 \r\n')
-        f.write('3 8 35 10 \r\n')
-        f.write('32 42 50 6 \r\n')
-        f.write('88 75 27 9 \r\n')
-        f.write('13 5 1 -9999 \r\n')
-        f.close()
-
         raster = [[-9999, -9999, 5, 2], [-9999, 20, 100, 36],
                   [3, 8, 35, 10], [32, 42, 50, 6],
                   [88, 75, 27, 9], [13, 5, 1, -9999]]
@@ -173,8 +207,6 @@ class TestRaster(unittest.TestCase):
         self.assertEqual(min_lat, 0)
         self.assertEqual(max_long, 200)
         self.assertEqual(max_lat, 300)
-
-        os.remove(f.name)
 
     def test3_recalc_max(self):
         max_extent = (0, 0, 0, 0)
