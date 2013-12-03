@@ -375,20 +375,24 @@ class LoadRaster(Job):
                 # Reduce the context to the hazard area
                 # before the raster info has been added to the context
                 extent = a_raster.extent()
-                print "extent", extent
                 context.clip_exposure(*extent)
 
             file_data = a_raster.raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat)
+            context.exposure_att[attribute_label] = file_data
         else:
             if isinstance(file_list, basestring):
                 file_list = [file_list]
-            file_data = raster_module.files_raster_data_at_points(
+            file_data, extent = raster_module.files_raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat, file_list)
+            context.exposure_att[attribute_label] = file_data
 
-        context.exposure_att[attribute_label] = file_data
+            if clip_exposure2all_hazards:
+                # Clipping the exposure points after the data has been added.
+                # Not optimised for speed, but easy to implement.
+                context.clip_exposure(*extent)
 
 
 class SaveExposure(Job):

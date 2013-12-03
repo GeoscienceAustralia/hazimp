@@ -113,11 +113,19 @@ class Context(object):
         good_indexes = numpy.array(list(set(
             range(self.exposure_lat.size)).difference(bad_indexes)))
 
-        self.exposure_lat = self.exposure_lat[good_indexes, ...]
-        self.exposure_long = self.exposure_long[good_indexes, ...]
+        if good_indexes.shape[0] is 0:
+            self.exposure_lat = numpy.array([])
+            self.exposure_long = numpy.array([])
+        else:
+            self.exposure_lat = self.exposure_lat[good_indexes, ...]
+            self.exposure_long = self.exposure_long[good_indexes, ...]
 
         for key in self.exposure_att:
-            self.exposure_att[key] = self.exposure_att[key][good_indexes, ...]
+            if good_indexes.shape[0] is 0:
+                exp_att = numpy.array([])
+            else:
+                exp_att = self.exposure_att[key][good_indexes, ...]
+            self.exposure_att[key] = exp_att
 
     def save_exposure_atts(self, filename, use_parallel=True):
         """

@@ -163,14 +163,13 @@ class TestRaster(unittest.TestCase):
         lon = asarray([1, 4, 0.5, 1.5, 4, -1, 6, +4])
         lat = asarray([3, 3, 0.5, 1.5, 1, +3, 1, -1])
 
-        data = files_raster_data_at_points(lon, lat, files)
+        data, max_extent = files_raster_data_at_points(lon, lat, files)
         actual = numpy.array([[0, nan], [nan, nan], [nan, nan],
                               [0, 1], [nan, 2], [nan, nan],
                               [nan, nan], [nan, nan]])
         numpy.testing.assert_equal(data, actual)
 
-        # So pylint doesn't complain..
-        self.assertEqual(actual.shape, data.shape)
+        self.assertEqual(max_extent, [0, 0, 5, 4])
 
         for a_file in files:
             os.remove(a_file)

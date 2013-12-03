@@ -198,7 +198,7 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        con_in = Dummy
+        con_in = context.Context()
         con_in.exposure_lat = None
         con_in.exposure_long = None
         con_in.exposure_att = {}
@@ -245,11 +245,11 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        con_in = Dummy
+        con_in = context.Context()
         con_in.exposure_lat = None
         con_in.exposure_long = None
         con_in.exposure_att = {}
-        test_kwargs = {'file_name': f.name}
+        test_kwargs = {'file_name': f.name, 'use_parallel': False}
         inst(con_in, **test_kwargs)
         os.remove(f.name)
 
@@ -285,6 +285,51 @@ class TestJobs(unittest.TestCase):
         msg += "\n Expected " + str(expected)
         self.assertTrue(len(con_in.exposure_att['ID']) == expected, msg)
 
+    def test_load_raster_clippingII(self):
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(
+            suffix='.txt', prefix='HAZIMPtest_jobs',
+            delete=False)
+        f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
+        f.write('7.9, 1.5, 2, -9999\n')  # Out of Haz area
+        f.write('8.9, 3.1, 4, -9999\n')  # Out of Haz area
+        f.close()
+
+        inst = JOBS[LOADCSVEXPOSURE]
+        con_in = context.Context()
+        con_in.exposure_lat = None
+        con_in.exposure_long = None
+        con_in.exposure_att = {}
+        test_kwargs = {'file_name': f.name, 'use_parallel': False}
+        inst(con_in, **test_kwargs)
+        os.remove(f.name)
+
+        # Write a hazard file
+        f = tempfile.NamedTemporaryFile(
+            suffix='.aai', prefix='HAZIMPtest_jobs',
+            delete=False)
+        f.write('ncols 3    \r\n')
+        f.write('nrows 2 \r\n')
+        f.write('xllcorner +0.    \r\n')
+        f.write('yllcorner +8. \r\n')
+        f.write('cellsize 1    \r\n')
+        f.write('NODATA_value -9999 \r\n')
+        f.write('1 2 -9999    \r\n')
+        f.write('4 5 6 ')
+        f.close()
+        haz_v = 'haz_v'
+        inst = JOBS[LOADRASTER]
+        test_kwargs = {'file_list': [f.name], 'attribute_label': haz_v,
+                       'clip_exposure2all_hazards': True}
+        inst(con_in, **test_kwargs)
+
+        # There should be only no exposure points
+        expected = 0
+        msg = "Number of exposure points is "
+        msg += str(len(con_in.exposure_att['ID']))
+        msg += "\n Expected " + str(expected)
+        self.assertTrue(len(con_in.exposure_att['ID']) == expected, msg)
+
     def test_look_up(self):
         pass
         # FIXME Needs test.
@@ -303,7 +348,7 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        con_in = Dummy
+        con_in = context.Context()
         con_in.exposure_lat = con_in.exposure_long = None
         con_in.exposure_att = {}
         test_kwargs = {'file_name': f.name}
@@ -369,7 +414,7 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        con_in = Dummy
+        con_in = context.Context()
         con_in.exposure_lat = con_in.exposure_long = None
         con_in.exposure_att = {}
         test_kwargs = {'file_name': f.name, 'use_parallel': False}
@@ -456,5 +501,6 @@ class TestJobs(unittest.TestCase):
 #-------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestJobs, 'test')
+    #SUITE = unittest.makeSuite(TestJobs, 'test_load_raster_clipping')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)
