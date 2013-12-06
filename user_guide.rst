@@ -21,7 +21,8 @@ an xml file. There is an example of a vulnerability curve;
 Quick how-to
 ------------
 
-A configuration file is used to define a simulation.  The configuration file is described using yaml, a data serialisation format.  To run HazImp do;::
+A configuration file is used to define a simulation.  The configuration file is
+described using yaml, a data serialisation format.  To run HazImp do;::
 
      python hazimp.py -c wind_v1.yaml
 
