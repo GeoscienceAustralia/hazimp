@@ -4,7 +4,12 @@ User Guide
 
 Introduction
 ------------
-HazImp is used to simulate the loss of value to structures from natural hazards using vulnerability curves.  Generally the input information is hazard, such as a wind speed raster and exposure. The exposure information is currently supplied as a csv file, with structure locations given in latitude and longitude. This is combined with vulnerability curve information, described in an xml file. There is an example of a vulnerability curve;
+HazImp is used to simulate the loss of value to structures from natural hazards
+using vulnerability curves.  Generally the input information is hazard, such as
+a wind speed raster and exposure. The exposure information is currently
+supplied as a csv file, with structure locations given in latitude and
+longitude. This is combined with vulnerability curve information, described in
+an xml file. There is an example of a vulnerability curve;
 
 .. figure:: ./examples/diagrams/example_vuln_curve.png
    :align: center
