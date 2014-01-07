@@ -343,6 +343,7 @@ class LoadRaster(Job):
         :param attribute_label: The string to be associated with this data.
         :param clip_exposure2all_hazards: True if the exposure data is
             clippped to the hazard data, so no hazard values are ignored.
+
         :param file_list: A list of files or a single file to be loaded.
         OR
         :param raster: A 2D numeric array of the raster values, North is up.

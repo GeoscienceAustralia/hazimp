@@ -23,6 +23,7 @@
 Test the xml interface module.
 """
 
+import math
 import unittest
 
 from scipy import allclose, asarray
@@ -57,9 +58,9 @@ class TestXmlLayer(unittest.TestCase):
              '-32 121',
              '    </exclude>',
              '    <exclude>',
-             '-35 121',
-             '-36 122',
-             '-35 121',
+             '-22 nan',
+             '-36 NaN',
+             '-35 NAN',
              '    </exclude>',
              '    <depth distribution="constant" mean="5" />',
              '  </polygon>',
@@ -98,12 +99,14 @@ class TestXmlLayer(unittest.TestCase):
         assert allclose(asarray(exclude_array),
                         asarray(expected_exclude_array))
 
+    def test_getting_array2(self):
+        exclude_array = self.xml['polygon'][1]['exclude'][1].array
+        math.isnan(exclude_array[2, 1])
+
     def test_top_level_tag_name(self):
         # Test getting some info about the XML document.
         #Mainly to test various operations we will use.
 
-        # test getting name of top-level tag
-        # NOTE: There *must* be a better way to do this!?
         top_tag = self.xml.xml_node.documentElement.nodeName
         msg = "Expected top-level tag of 'Event', got '%s'" % top_tag
         self.failUnlessEqual(top_tag, 'Event', msg)

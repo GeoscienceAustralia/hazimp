@@ -23,7 +23,7 @@
 """
 
 
-from scipy import array, NaN
+from scipy import array
 import xml.dom.minidom
 
 
@@ -100,21 +100,6 @@ class XmlLayer(object):
             attributes_dictionary[str(key)] = str(get_item(key).value)
         return attributes_dictionary
 
-    def keys(self):
-        """
-        Returns:
-            A dictionary of the attributes.
-        """
-        node_list = self.xml_node.childNodes
-        keys = {}
-        for node in node_list:
-            try:
-                name = node.tagName
-                keys[name] = None
-            except AttributeError:
-                pass
-        return keys.keys()
-
     def __array(self):
         """ Converts info into a numpy array.
 
@@ -124,22 +109,8 @@ class XmlLayer(object):
         string = self.xml_node.firstChild.nodeValue
         #In one ugly step. 5.1.3
 
-        def _float(x_string):
-            """ Converts a string into a float of a numpy NaN.
-
-            Returns:
-                A float or a numpy NaN.
-            """
-            try:
-                val = float(x_string)
-            except ValueError:
-                if x_string == 'NaN':
-                    val = NaN
-                else:
-                    raise
-            return val
         # pylint: disable=W0141
-        tuple_list = [tuple(map(_float,
+        tuple_list = [tuple(map(float,
                                 pair.split())) for pair in string.split('\n')]
 
         #or (a bit slower)

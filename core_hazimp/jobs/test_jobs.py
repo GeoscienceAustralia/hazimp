@@ -330,6 +330,48 @@ class TestJobs(unittest.TestCase):
         msg += "\n Expected " + str(expected)
         self.assertTrue(len(con_in.exposure_att['ID']) == expected, msg)
 
+    def test_load_raster_clippingIII(self):
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(
+            suffix='.txt', prefix='HAZIMPtest_jobs',
+            delete=False)
+        f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
+        f.write('7.9, 1.5, 2, -9999\n')  # Out of Haz area
+        f.write('8.9, 3.1, 4, -9999\n')  # Out of Haz area
+        f.close()
+
+        inst = JOBS[LOADCSVEXPOSURE]
+        con_in = context.Context()
+        con_in.exposure_lat = None
+        con_in.exposure_long = None
+        con_in.exposure_att = {}
+        test_kwargs = {'file_name': f.name, 'use_parallel': False}
+        inst(con_in, **test_kwargs)
+        os.remove(f.name)
+
+        raster = array([[1, 2, -9999], [4, 5, 6]])
+        upper_left_x = 0
+        upper_left_y = 10
+        cell_size = 1
+        no_data_value = -9999
+        haz_v = 'haz_v'
+        inst = JOBS[LOADRASTER]
+        test_kwargs = {'attribute_label': haz_v,
+                       'clip_exposure2all_hazards': True,
+                       'raster': raster,
+                       'upper_left_x': upper_left_x,
+                       'upper_left_y': upper_left_y,
+                       'cell_size': cell_size,
+                       'no_data_value': no_data_value}
+        inst(con_in, **test_kwargs)
+
+        # There should be only no exposure points
+        expected = 0
+        msg = "Number of exposure points is "
+        msg += str(len(con_in.exposure_att['ID']))
+        msg += "\n Expected " + str(expected)
+        self.assertTrue(len(con_in.exposure_att['ID']) == expected, msg)
+
     def test_look_up(self):
         pass
         # FIXME Needs test.
