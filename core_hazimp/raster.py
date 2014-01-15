@@ -72,7 +72,7 @@ class Raster():
         Note, image must be 'North up'.
 
         :param filename: The csv file path string.
-        :returns: A Raster instance
+        :returns: A Raster instance.
         """
 
         dataset = gdal.Open(filename, GA_ReadOnly)
