@@ -1,0 +1,12 @@
+[TRIM Context Reference]
+Client=610135
+ClientName=Geoscience Australia
+DB=AG
+DBName=TRIMPROD
+Type=6
+TypeName=Record
+Items=1
+[Item1]
+URI=1994175
+Details=D2012-160356
+Extra=Hazard Impact Assessment: phase 1  Software Requirements Specification
