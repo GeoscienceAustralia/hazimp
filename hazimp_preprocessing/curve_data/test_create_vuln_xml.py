@@ -99,14 +99,14 @@ class TestCreateVulnXML(unittest.TestCase):
 
     def test1_validate_excel_curve_data(self):
         dirs = determine_this_file_path()
-        excel_file = 'Flood_2012_test.xlsx'
+        excel_file = 'Flood_2012_test.xls'
         excel_file = os.path.join(dirs, excel_file)
         valid = create_vuln_xml.validate_excel_curve_data(excel_file)
         self.assertTrue(valid)
         
     def test1_read_excel_curve_data(self):
         dirs = determine_this_file_path()
-        excel_file = 'Flood_2012_test.xlsx'
+        excel_file = 'Flood_2012_test.xls'
         excel_file = os.path.join(dirs, excel_file)
         curves, depths = create_vuln_xml.read_excel_curve_data(excel_file)
 #-------------------------------------------------------------
