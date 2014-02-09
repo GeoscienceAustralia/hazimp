@@ -93,8 +93,8 @@ def get_required_args(func):
     :param func: The function that you need to know about.
     """
 
-    #http://stackoverflow.com/questions/196960/
-    #can-you-list-the-keyword-arguments-a-python-function-receives
+    # http://stackoverflow.com/questions/196960/
+    # can-you-list-the-keyword-arguments-a-python-function-receives
 
     # *args and **kwargs are not required, so ignore them.
     args_and_defaults, _, _, default_vaules = inspect.getargspec(func)

@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#W0221: 65:ConfigAwarePipeLine.run: Arguments number differs from
+# W0221: 65:ConfigAwarePipeLine.run: Arguments number differs from
 # overridden method
 # pylint: disable=W0221
 # I'm ok with .run having more arg's
@@ -54,6 +54,7 @@ def get_job_atts(job, config):
 
 
 class ConfigAwarePipeLine(PipeLine):
+
     """Pipe line that knows passing info in the config dict to the jobs.
     """
 
@@ -73,9 +74,11 @@ class ConfigAwarePipeLine(PipeLine):
 
 
 class ConfigPipeLineBuilder(PipeLineBuilder):
+
     """
     Builds a pipeline for jobs and calcs.
     """
+
     def build(self, calcs):
         """Builds the pipeline.
 

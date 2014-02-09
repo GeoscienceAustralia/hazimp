@@ -33,11 +33,13 @@ def train(features):
 
 
 class SpellCheck(object):
+
     """
     Given a base set of works, check the spelling of a new work and
     suggest what base word was meant.
 
     """
+
     def __init__(self, base_words):
         """
         :param word_list: The list of known words.

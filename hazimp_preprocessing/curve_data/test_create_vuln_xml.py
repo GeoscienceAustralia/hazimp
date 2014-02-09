@@ -41,12 +41,14 @@ from scipy import asarray, allclose
 import create_vuln_xml
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
+
 def determine_this_file_path(file=__file__):
     """
     Workout a path string that describes the directory this file is in.
     """
     current_dir, tail = os.path.split(file)
     return os.path.abspath(current_dir)
+
 
 class TestCreateVulnXML(unittest.TestCase):
 
@@ -69,7 +71,7 @@ class TestCreateVulnXML(unittest.TestCase):
         f.close
         csv_name = f.name
         f = tempfile.NamedTemporaryFile(suffix='.xml',
-                                        prefix='test_creazte_vuln_xml',
+                                        prefix='test_create_vuln_xml',
                                         delete=False)
         xml_name = f.name
         create_vuln_xml.csv_curve2nrml(csv_name, xml_name)
@@ -103,7 +105,7 @@ class TestCreateVulnXML(unittest.TestCase):
         excel_file = os.path.join(dirs, excel_file)
         valid = create_vuln_xml.validate_excel_curve_data(excel_file)
         self.assertTrue(valid)
-        
+
     def test1_read_excel_curve_data(self):
         dirs = determine_this_file_path()
         excel_file = 'Flood_2012_test.xls'

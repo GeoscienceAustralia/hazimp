@@ -42,6 +42,7 @@ from core_hazimp.raster import Raster, recalc_max, files_raster_data_at_points
 
 
 class TestRaster(unittest.TestCase):
+
     """
     Test the Raster module
     """

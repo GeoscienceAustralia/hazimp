@@ -54,12 +54,15 @@ LOOKUP = 'look_up'
 SAVEALL = 'save_all'
 VALIDATECONFIG = 'validate_config'
 JOBSKEY = 'jobs'
+CELLJOIN = 'cell_join'
 
 
 class Job(object):
+
     """
     Abstract Jobs class. Should use abc then.
     """
+
     def __init__(self):
         """
         Initalise a Job object having the attributes
@@ -97,9 +100,11 @@ class Job(object):
 
 
 class ConstTest(Job):
+
     """
     Simple test class. Moving a config value to the context.
     """
+
     def __init__(self):
         super(ConstTest, self).__init__()
         self.call_funct = 'const_test'
@@ -115,9 +120,11 @@ class ConstTest(Job):
 
 
 class LoadCsvExposure(Job):
+
     """
     Read a csv exposure file into the context object.
     """
+
     def __init__(self):
         super(LoadCsvExposure, self).__init__()
         self.call_funct = LOADCSVEXPOSURE
@@ -170,9 +177,11 @@ class LoadCsvExposure(Job):
 
 
 class LoadXmlVulnerability(Job):
+
     """
     Read the vulnerability sets into the context object.
     """
+
     def __init__(self):
         super(LoadXmlVulnerability, self).__init__()
         self.call_funct = LOADXMLVULNERABILITY
@@ -190,11 +199,13 @@ class LoadXmlVulnerability(Job):
 
 
 class SimpleLinker(Job):
+
     """
     Link a list of vulnerability functions to each asset, given the
     vulnerability_sets and exposure columns that represents the
     vulnerability function id.
     """
+
     def __init__(self):
         super(SimpleLinker, self).__init__()
         self.call_funct = SIMPLELINKER
@@ -217,6 +228,7 @@ class SimpleLinker(Job):
 
 
 class SelectVulnFunction(Job):
+
     """
     Produce vulnerability curves for each asset, given the
     vulnerability_sets and exposure columns that represents the
@@ -227,6 +239,7 @@ class SelectVulnFunction(Job):
     Then, using the variability_method e.g. 'mean' you get the
     vulnerability curve.
     """
+
     def __init__(self):
         super(SelectVulnFunction, self).__init__()
         self.call_funct = SELECTVULNFUNCTION
@@ -278,10 +291,12 @@ class SelectVulnFunction(Job):
 
 
 class LookUp(Job):
+
     """
     Do a lookup on all the vulnerability curves, returning the
         associated loss.
     """
+
     def __init__(self):
         super(LookUp, self).__init__()
         self.call_funct = LOOKUP
@@ -317,12 +332,14 @@ class LookUp(Job):
 
 
 class LoadRaster(Job):
+
     """
     Load one or more files and get the value for all the
     points. Primarily this will be used to load hazard data.
 
     There may be NAN values in this data
     """
+
     def __init__(self):
         super(LoadRaster, self).__init__()
         self.call_funct = LOADRASTER
@@ -397,9 +414,11 @@ class LoadRaster(Job):
 
 
 class SaveExposure(Job):
+
     """
     Save all of the exposure information in the context.
     """
+
     def __init__(self):
         super(SaveExposure, self).__init__()
         self.call_funct = SAVEALL

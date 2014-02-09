@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#W0221: 65:ConfigAwarePipeLine.run: Arguments number differs from
+# W0221: 65:ConfigAwarePipeLine.run: Arguments number differs from
 # overridden method
 # pylint: disable=W0221
 # I'm ok with .run having more arg's
@@ -45,6 +45,7 @@ EX_LONG = 'exposure_longitude'
 
 
 class Context(object):
+
     """
     Context is a singlton storing all
     of the run specific data.

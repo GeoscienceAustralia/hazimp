@@ -35,6 +35,7 @@ from core_hazimp import spell_check
 
 
 class TestSpellCheck(unittest.TestCase):
+
     """
     Test the calcs module
     """

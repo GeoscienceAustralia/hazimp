@@ -26,6 +26,7 @@ import abc
 
 
 class PipeLine(object):
+
     """
     PipeLine allows to create a queue of
     jobs and execute them in order.
@@ -69,6 +70,7 @@ class PipeLine(object):
 
 
 class PipeLineBuilder(object):
+
     """
     PipeLineBuilder allows to build a PipeLine
     by assembling all the required jobs

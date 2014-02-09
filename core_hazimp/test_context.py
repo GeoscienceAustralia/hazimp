@@ -39,6 +39,7 @@ from core_hazimp import misc
 
 
 class TestContext(unittest.TestCase):
+
     """
     Test the workflow module
     """
@@ -105,8 +106,8 @@ class TestContext(unittest.TestCase):
                           [-30, 110], [-35, 121], [-25, 139], [-30, 145],
                           [-37, 130]])
         num_points = lat_long.shape[0]
-        shoes_array = arange(num_points*2).reshape((-1, 2))
-        d3_array = arange(num_points*2*3).reshape((-1, 2, 3))
+        shoes_array = arange(num_points * 2).reshape((-1, 2))
+        d3_array = arange(num_points * 2 * 3).reshape((-1, 2, 3))
         id_array = arange(num_points)
 
         con = context.Context()
