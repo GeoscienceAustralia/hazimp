@@ -8,6 +8,7 @@ import numpy
 
 
 class Plane(object):
+
     """
     A plane, defined by best fit to a set of points.
     Designed to estimate a z value.

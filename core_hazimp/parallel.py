@@ -27,6 +27,7 @@ from core_hazimp import misc
 
 
 class Parallel(object):
+
     """ Parallelise to run on a cluster.
 
     :param rank: What is the id of this node in the cluster.
@@ -36,6 +37,7 @@ class Parallel(object):
     :param file_tag: A string that can be added to files to identify who
     wrote the file.
     """
+
     def __init__(self):
         """
         Use is_parallel = False to stop parallelism, eg when running

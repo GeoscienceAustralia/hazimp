@@ -46,9 +46,11 @@ from core_hazimp import parallel
 
 
 class Dummy:
+
     """
     Dummy class for testing
     """
+
     def __init__(self):
         # For test_SimpleLinker
         self.vul_function_titles = {}
@@ -59,9 +61,11 @@ class Dummy:
 
 
 class DummyVulnSet:
+
     """
     Dummy class of vuln_set for testing.
     """
+
     def __init__(self, vuln_set):
         # For test_SimpleLinker
         self.vuln_set = vuln_set
@@ -77,6 +81,7 @@ class DummyVulnSet:
 
 
 class TestJobs(unittest.TestCase):
+
     """
     Test the calcs module
     """

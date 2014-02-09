@@ -36,6 +36,7 @@ from core_hazimp.jobs import plane_from_points
 
 
 class TestPfP(unittest.TestCase):
+
     """
     Test the calcs module
     """
@@ -59,7 +60,7 @@ class TestPfP(unittest.TestCase):
         # v[1]/v[2] = -1 But what are the values?
         self.assertTrue(numpy.allclose(results[0],
                                        numpy.asarray([0.0])))
-        self.assertTrue(numpy.allclose(results[1]/results[2],
+        self.assertTrue(numpy.allclose(results[1] / results[2],
                                        numpy.asarray([-1.0])))
 
     def test_origin_planII(self):
@@ -80,9 +81,9 @@ class TestPfP(unittest.TestCase):
         # (v[0](x) + v[1](y))/ - v[2] = z
         # v[0]/v[2] = 100
         # v[1]/v[2] = 10
-        self.assertTrue(numpy.allclose(results[0]/results[2],
+        self.assertTrue(numpy.allclose(results[0] / results[2],
                                        numpy.asarray([100.0])))
-        self.assertTrue(numpy.allclose(results[1]/results[2],
+        self.assertTrue(numpy.allclose(results[1] / results[2],
                                        numpy.asarray([10.0])))
 
     def test_plan(self):

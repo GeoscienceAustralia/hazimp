@@ -42,9 +42,11 @@ from core_hazimp.misc import (csv2dict, get_required_args, squash_narray)
 
 
 class TestMisc(unittest.TestCase):
+
     """
     Test the calcs module
     """
+
     def test_csv2dict(self):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.txt',

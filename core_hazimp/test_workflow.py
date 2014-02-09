@@ -41,6 +41,7 @@ from core_hazimp import parallel
 
 
 class TestWorkFlow(unittest.TestCase):
+
     """
     Test the workflow module
     """

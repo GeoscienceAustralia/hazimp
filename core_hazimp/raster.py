@@ -25,6 +25,7 @@ from gdalconst import GA_ReadOnly
 
 
 class Raster():
+
     """
     A simple class to describe a raster.
     """
@@ -38,7 +39,6 @@ class Raster():
     # pylint: disable=R0902, R0913
     def __init__(self, raster, upper_left_x, upper_left_y,
                  x_pixel, y_pixel, no_data_value, x_size, y_size):
-
         """
 
         :param raster: A 2D numeric array of the raster values, North is up.

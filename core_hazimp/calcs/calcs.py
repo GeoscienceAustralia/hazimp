@@ -19,7 +19,9 @@
 # Since the arguemts for __call__ will change from class to calss
 
 """
-Need to work out the licence
+Calculations
+
+
 """
 
 import sys
@@ -31,9 +33,11 @@ STRUCT_LOSS = 'structural_loss'
 
 
 class Calculator(Job):
+
     """
     Abstract Calculator class. Should use abc then.
     """
+
     def __init__(self):
         """
         Initalise a Calculator object.
@@ -64,9 +68,11 @@ class Calculator(Job):
 
 
 class AddTest(Calculator):
+
     """
     Simple test class, adding args together.
     """
+
     def __init__(self):
         super(AddTest, self).__init__()
         self.args_out = ['c_test']
@@ -81,6 +87,7 @@ class AddTest(Calculator):
 
 
 class MultiplyTest(Calculator):
+
     """
     Simple test class, multiplying args.
     """
@@ -99,6 +106,7 @@ class MultiplyTest(Calculator):
 
 
 class MultipleValuesTest(Calculator):
+
     """
     Simple test class, returning two values.
     """
@@ -117,6 +125,7 @@ class MultipleValuesTest(Calculator):
 
 
 class ConstantTest(Calculator):
+
     """
     Simple test class, returning two values.
     """
@@ -135,6 +144,7 @@ class ConstantTest(Calculator):
 
 
 class CalcLoss(Calculator):
+
     """
     Multiply the structural_loss_ratio and the structural_value to calc
     the structural_loss.

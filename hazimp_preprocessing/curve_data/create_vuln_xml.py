@@ -144,11 +144,11 @@ def validate_excel_curve_data(excel_file):
     The first 2 rows are titles.
     The first coulmn is the water depth.
     """
-    
+
     default = None
     valid = True
     titles = {}
-    wb = xlrd.open_workbook(excel_file)    
+    wb = xlrd.open_workbook(excel_file)
     for s in wb.sheets():
         title = []
         # The first 3 rows should be titles that are the same,
@@ -170,8 +170,8 @@ def validate_excel_curve_data(excel_file):
         del title[0][1]
         titles[s.name] = title
         default = title
-         
-    if default is None: 
+
+    if default is None:
         valid = False
     else:
         # Check that all sheets have the same title info
@@ -181,10 +181,10 @@ def validate_excel_curve_data(excel_file):
                 print "default", default
                 valid = False
                 break
-                
-    # Check that the first colum, starting at the 4th row, is identical 
-    defalut = None  
-    depths = {}  
+
+    # Check that the first colum, starting at the 4th row, is identical
+    defalut = None
+    depths = {}
     for s in wb.sheets():
         values = []
         for row in range(3, s.nrows):
@@ -193,8 +193,8 @@ def validate_excel_curve_data(excel_file):
             values.append(val)
         depths[s.name] = values
         default = values
-    
-    if default is None: 
+
+    if default is None:
         valid = False
     else:
         # Check that all sheets have the same title info
@@ -204,47 +204,50 @@ def validate_excel_curve_data(excel_file):
                 print "default", default
                 valid = False
                 break
-                
+
     return valid
-  
+
+
 def read_excel_curve_data(excel_file):
     """
     Read in the excel file info.  Specific, undocumented format.
     """
     curves = {}
-    wb = xlrd.open_workbook(excel_file)    
+    wb = xlrd.open_workbook(excel_file)
     a_sheet = wb.sheets()[0]
-    
+
     # Get a list of the depths
     depths = []
     for row in range(3, a_sheet.nrows):
         col = 0
         val = a_sheet.cell(row, col).value
         depths.append(val)
-    
+
     for s in wb.sheets():
         # Read in the structure type
         # The 2nd value on the 1st row.
         raw_cell = s.cell(0, 1).value
         split_cell = raw_cell.split()
         structure = split_cell[0]
-        
+
         di_block = []
         for row in range(3, s.nrows):
             values = []
             for col in range(s.ncols):
                 val = s.cell(row, col).value
-                print val
                 values.append(val)
             di_block.append(values)
+            # Find the highest depth with values
+            if not values[1] == '':
+                highest_depth = values[0]
         print "di_block", di_block
-        
+
         # Let's fill in the curve now.
         # Interpolate if possible
         # Otherwise assume it's constant from the last value.
-        
-        
-    return curves, depths             
+
+    return curves, depths
+
 
 def excel_curve2nrml(csv_filename, xml_filename):
     """
@@ -255,7 +258,7 @@ def excel_curve2nrml(csv_filename, xml_filename):
     """
 
     validate_excel_curve_data()
-    
+
     read_excel_curve_data()
 
     csv_dict = csv2dict(csv_filename)

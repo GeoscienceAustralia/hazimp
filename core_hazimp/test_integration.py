@@ -120,9 +120,11 @@ def build_example_exposure():
 
 
 class TestIntegration(unittest.TestCase):
+
     """
     Test how all of the modules work in a standard workflow.
     """
+
     def test_exposure_and_vuln_functions(self):
 
         # Create the files

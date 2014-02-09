@@ -105,7 +105,7 @@ class TestXmlLayer(unittest.TestCase):
 
     def test_top_level_tag_name(self):
         # Test getting some info about the XML document.
-        #Mainly to test various operations we will use.
+        # Mainly to test various operations we will use.
 
         top_tag = self.xml.xml_node.documentElement.nodeName
         msg = "Expected top-level tag of 'Event', got '%s'" % top_tag

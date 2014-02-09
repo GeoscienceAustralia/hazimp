@@ -37,6 +37,7 @@ from core_hazimp.jobs import jobs
 
 
 class TestConfig(unittest.TestCase):
+
     """
     Test the config module
     """

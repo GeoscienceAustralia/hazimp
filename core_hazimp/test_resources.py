@@ -40,9 +40,11 @@ from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 
 class TestResources(unittest.TestCase):
+
     """
     Test the data in resources.
     """
+
     def test_domestic_wind_vul_curves(self):
         vuln_sets = vuln_sets_from_xml_file(
             os.path.join(RESOURCE_DIR,

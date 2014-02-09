@@ -34,14 +34,17 @@ from core_hazimp.calcs import calcs
 
 
 class Dummy:
+
     """
     Dummy class for testing
     """
+
     def __init__(self):
         pass
 
 
 class TestCalcs(unittest.TestCase):
+
     """
     Test the calcs module
     """
