@@ -108,7 +108,7 @@ class TestCreateVulnXML(unittest.TestCase):
 
     def test1_read_excel_curve_data(self):
         dirs = determine_this_file_path()
-        excel_file = 'Flood_2012_test.xls'
+        excel_file = 'Flood_2012_testb.xls'
         excel_file = os.path.join(dirs, excel_file)
         curves, depths = create_vuln_xml.read_excel_curve_data(excel_file)
 #-------------------------------------------------------------
