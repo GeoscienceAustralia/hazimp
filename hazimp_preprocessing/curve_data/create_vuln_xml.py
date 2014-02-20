@@ -211,8 +211,15 @@ def validate_excel_curve_data(excel_file):
 def read_excel_curve_data(excel_file):
     """
     Read in the excel file info.  Specific, undocumented format.
+    
+    What info has to be in the return dict?
+    
+    vulnerability_set_id
+     asset_category
+      loss_category,
+     csv_dict['IMT'][0], imls)
     """
-    curves = {}
+    curves = {} # the keys are curve names?
     wb = xlrd.open_workbook(excel_file)
     a_sheet = wb.sheets()[0]
 
@@ -241,10 +248,8 @@ def read_excel_curve_data(excel_file):
             if not values[1] == '':
                 highest_depth = values[0]
         print "di_block", di_block
-
-        # Let's fill in the curve now.
-        # Interpolate if possible
-        # Otherwise assume it's constant from the last value.
+        # Get individual curves from the curve block.
+        
 
     return curves, depths
 
