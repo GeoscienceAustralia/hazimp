@@ -219,7 +219,8 @@ def read_excel_curve_data(excel_file):
       loss_category,
      csv_dict['IMT'][0], imls)
     """
-    curves = {} # the keys are curve names?
+    fabric_vuln_curves = {} # the keys are curve names.
+    contents_vuln_curves = {} # the keys are curve names.
     wb = xlrd.open_workbook(excel_file)
     a_sheet = wb.sheets()[0]
 
@@ -250,8 +251,25 @@ def read_excel_curve_data(excel_file):
         print "di_block", di_block
         # Get individual curves from the curve block.
         
-
-    return curves, depths
+        #Convert the curves into an array
+        di_array = numpy.asarray(di_block)
+        
+        insure = {"INSURED":0, "UNINSURED":4}
+        for key in insure:
+            curve_id = s.name + '_' + key
+            fabric_vuln_curves[curve_id] = di_array[:, 1 + insure[key]]
+            curve_id += '_SAVE' 
+            contents_vuln_curves[curve_id] = di_array[:, 2 + insure[key]]
+        
+    return depths, fabric_vuln_curves, contents_vuln_curves  
+    """
+    What info has to be in the return dict?
+    
+    vulnerability_set_id
+     asset_category
+      loss_category,
+     csv_dict['IMT'][0], imls)
+    """
 
 
 def excel_curve2nrml(csv_filename, xml_filename):

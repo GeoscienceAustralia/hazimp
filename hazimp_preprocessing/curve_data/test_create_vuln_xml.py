@@ -106,13 +106,25 @@ class TestCreateVulnXML(unittest.TestCase):
         valid = create_vuln_xml.validate_excel_curve_data(excel_file)
         self.assertTrue(valid)
 
-    def test1_read_excel_curve_data(self):
+    def notest1_read_excel_curve_data(self):
         dirs = determine_this_file_path()
         excel_file = 'Flood_2012_testb.xls'
         excel_file = os.path.join(dirs, excel_file)
-        curves, depths = create_vuln_xml.read_excel_curve_data(excel_file)
+        temp = create_vuln_xml.read_excel_curve_data(excel_file)
+        depths, fabric_vuln, contents_vuln = temp
+        
+    def test1_read_excel_curve_data(self):
+        dirs = determine_this_file_path()
+        excel_file = 'synthetic_data_Flood_2012.xls'
+        excel_file = os.path.join(dirs, excel_file)
+        temp = create_vuln_xml.read_excel_curve_data(excel_file)
+        depths, fabric_vuln, contents_vuln = temp
+        print "fabric_vuln", fabric_vuln
+        print "contents_vuln", contents_vuln
+        
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestCreateVulnXML, 'test')
+    Suite = unittest.makeSuite(TestCreateVulnXML, '')
     Runner = unittest.TextTestRunner()
     Runner.run(Suite)
