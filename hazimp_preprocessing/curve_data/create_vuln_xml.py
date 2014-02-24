@@ -6,7 +6,6 @@ It is being modified on a needs basis.
 
 """
 
-import os
 import csv
 import numpy
 
@@ -182,8 +181,17 @@ def validate_excel_curve_data(excel_file):
                 valid = False
                 break
 
-    # Check that the first colum, starting at the 4th row, is identical
-    defalut = None
+    valid = check_identical_depths(wb, valid)
+    return valid
+
+
+def check_identical_depths(wb, valid):
+    """
+    Check that the depth values are the same for all workbooks.
+    Check that the first colum, starting at the 4th row, is identical.
+    """
+
+    default = None
     depths = {}
     for s in wb.sheets():
         values = []
@@ -211,16 +219,14 @@ def validate_excel_curve_data(excel_file):
 def read_excel_curve_data(excel_file):
     """
     Read in the excel file info.  Specific, undocumented format.
-    
+
     What info has to be in the return dict?
-    
+
     vulnerability_set_id
      asset_category
       loss_category,
      csv_dict['IMT'][0], imls)
     """
-    fabric_vuln_curves = {} # the keys are curve names.
-    contents_vuln_curves = {} # the keys are curve names.
     wb = xlrd.open_workbook(excel_file)
     a_sheet = wb.sheets()[0]
 
@@ -230,46 +236,42 @@ def read_excel_curve_data(excel_file):
         col = 0
         val = a_sheet.cell(row, col).value
         depths.append(val)
+    fabric_vuln_curves, contents_vuln_curves = read_excel_worksheet(wb)
+
+    return depths, fabric_vuln_curves, contents_vuln_curves
+
+
+def read_excel_worksheet(wb):
+    """
+    Read an excel worksheet
+
+
+    """
+    fabric_vuln_curves = {}  # the keys are curve names.
+    contents_vuln_curves = {}  # the keys are curve names.
 
     for s in wb.sheets():
-        # Read in the structure type
-        # The 2nd value on the 1st row.
-        raw_cell = s.cell(0, 1).value
-        split_cell = raw_cell.split()
-        structure = split_cell[0]
-
         di_block = []
         for row in range(3, s.nrows):
             values = []
             for col in range(s.ncols):
-                val = s.cell(row, col).value
-                values.append(val)
+                values.append(s.cell(row, col).value)
             di_block.append(values)
-            # Find the highest depth with values
-            if not values[1] == '':
-                highest_depth = values[0]
-        print "di_block", di_block
         # Get individual curves from the curve block.
-        
-        #Convert the curves into an array
+        # Convert the curves into an array
         di_array = numpy.asarray(di_block)
-        
-        insure = {"INSURED":0, "UNINSURED":4}
+        insure = {"INSURED": 0, "UNINSURED": 4}
         for key in insure:
-            curve_id = s.name + '_' + key
-            fabric_vuln_curves[curve_id] = di_array[:, 1 + insure[key]]
-            curve_id += '_SAVE' 
-            contents_vuln_curves[curve_id] = di_array[:, 2 + insure[key]]
-        
-    return depths, fabric_vuln_curves, contents_vuln_curves  
-    """
-    What info has to be in the return dict?
-    
-    vulnerability_set_id
-     asset_category
-      loss_category,
-     csv_dict['IMT'][0], imls)
-    """
+            # Read in the structure type
+            # The 2nd value on the 1st row.
+            curve_id_base =  s.cell(0, 1).value.split()[0] + '_' + key
+            fabric_vuln_curves[curve_id_base] = di_array[:, 1 + insure[key]]
+            tag_offset = {'_SAVE': 2, '_NOACTION': 3, '_EXPOSE': 4}
+            for tag in tag_offset:
+                curve_id = curve_id_base + tag
+                contents_vuln_curves[curve_id] = di_array[:, tag_offset[tag]
+                                                          + insure[key]]
+    return fabric_vuln_curves, contents_vuln_curves
 
 
 def excel_curve2nrml(csv_filename, xml_filename):
@@ -280,9 +282,10 @@ def excel_curve2nrml(csv_filename, xml_filename):
     at the file flood_2012_test.xlsx.
     """
 
-    validate_excel_curve_data()
+    validate_excel_curve_data(xml_filename)
 
-    read_excel_curve_data()
+    depths, fabric_vuln_curves, contents_vuln_curves = read_excel_curve_data(
+        xml_filename)
 
     csv_dict = csv2dict(csv_filename)
     vulnerability_set_id = csv_dict['vulnerabilitySetID'][0]

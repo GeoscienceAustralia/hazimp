@@ -34,7 +34,7 @@ import unittest
 import tempfile
 import os
 
-from scipy import asarray, allclose
+from scipy import asarray, allclose, array
 
 # W0403: 37: Relative import 'create_vuln_xml', should be 'curve_data.yadda'
 # pylint: disable=w0403
@@ -42,11 +42,11 @@ import create_vuln_xml
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 
-def determine_this_file_path(file=__file__):
+def determine_this_file_path(this_file=__file__):
     """
     Workout a path string that describes the directory this file is in.
     """
-    current_dir, tail = os.path.split(file)
+    current_dir, _ = os.path.split(this_file)
     return os.path.abspath(current_dir)
 
 
@@ -99,32 +99,43 @@ class TestCreateVulnXML(unittest.TestCase):
         os.remove(csv_name)
         os.remove(xml_name)
 
-    def test1_validate_excel_curve_data(self):
-        dirs = determine_this_file_path()
-        excel_file = 'Flood_2012_test.xls'
-        excel_file = os.path.join(dirs, excel_file)
-        valid = create_vuln_xml.validate_excel_curve_data(excel_file)
-        self.assertTrue(valid)
-
-    def notest1_read_excel_curve_data(self):
-        dirs = determine_this_file_path()
-        excel_file = 'Flood_2012_testb.xls'
-        excel_file = os.path.join(dirs, excel_file)
-        temp = create_vuln_xml.read_excel_curve_data(excel_file)
-        depths, fabric_vuln, contents_vuln = temp
-        
     def test1_read_excel_curve_data(self):
         dirs = determine_this_file_path()
         excel_file = 'synthetic_data_Flood_2012.xls'
         excel_file = os.path.join(dirs, excel_file)
         temp = create_vuln_xml.read_excel_curve_data(excel_file)
-        depths, fabric_vuln, contents_vuln = temp
-        print "fabric_vuln", fabric_vuln
-        print "contents_vuln", contents_vuln
-        
+        depths, fab, contents = temp
+
+        self.assertTrue(allclose(depths, array([0., 1.0])))
+
+        actually_fab = {u'FCM1_INSURED': array([0., 0.1]),
+                        u'FCM2_INSURED': array([0., 0.12]),
+                        u'FCM1_UNINSURED': array([0., 0.5]),
+                        u'FCM2_UNINSURED': array([0., 0.52])}
+        act_cont = {
+            u'FCM1_INSURED_SAVE': array([0., 0.2]),
+            u'FCM1_INSURED_NOACTION': array([0., 0.3]),
+            u'FCM1_INSURED_EXPOSE': array([0., 0.4]),
+            u'FCM1_UNINSURED_SAVE': array([0., 0.6]),
+            u'FCM1_UNINSURED_NOACTION': array([0., 0.7]),
+            u'FCM1_UNINSURED_EXPOSE': array([0., 0.8]),
+            u'FCM2_INSURED_SAVE': array([0., 0.22]),
+            u'FCM2_INSURED_NOACTION': array([0., 0.32]),
+            u'FCM2_INSURED_EXPOSE': array([0., 0.42]),
+            u'FCM2_UNINSURED_SAVE': array([0., 0.62]),
+            u'FCM2_UNINSURED_NOACTION': array([0., 0.72]),
+            u'FCM2_UNINSURED_EXPOSE': array([0., 0.82])
+        }
+
+        for key in actually_fab:
+            self.assertTrue(allclose(actually_fab[key], fab[key]))
+
+        for key in act_cont:
+            self.assertTrue(allclose(act_cont[key], contents[key]))
+
+
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestCreateVulnXML, 'test')
-    Suite = unittest.makeSuite(TestCreateVulnXML, '')
     Runner = unittest.TextTestRunner()
     Runner.run(Suite)
