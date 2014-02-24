@@ -272,8 +272,12 @@ def read_excel_worksheet(wb):
                 contents_vuln_curves[curve_id] = di_array[:, tag_offset[tag]
                                                           + insure[key]]
     return fabric_vuln_curves, contents_vuln_curves
-
-
+    
+FLOOD_HOUSE_FABRIC = 'structural_domestic_wind_2012'
+FLOOD_HOUSE_CONTENTS = 'contents_domestic_wind_2012'
+LOSS_CAT_FABRIC = 'structural_loss_ratio'
+LOSS_CAT_CONTENTS = 'contents_loss_ratio'
+FLOOD_IMT = 'water depth m'
 def excel_curve2nrml(csv_filename, xml_filename):
     """
     Read in an excel flood curve file and convert it to an NRML file.
@@ -286,38 +290,31 @@ def excel_curve2nrml(csv_filename, xml_filename):
 
     depths, fabric_vuln_curves, contents_vuln_curves = read_excel_curve_data(
         xml_filename)
+    curve_info = [{'curves': fabric_vuln_curves,
+                   'set_id': FLOOD_HOUSE_FABRIC,
+                   'asset': '',
+                   'loss_category': LOSS_CAT_FABRIC,
+                   'file_name': 'structural_flood_curves.xml'},
+                  {'curves': contents_vuln_curves,
+                   'set_id': FLOOD_HOUSE_FABRIC,
+                   'asset': '',
+                   'loss_category': LOSS_CAT_CONTENTS,
+                   'file_name': 'contents_flood_curves.xml'}]
+    for set_id in curve_info:
+    
+        # open the csv file to read the rows
+        reader = csv.DictReader(open(set_id['file_name'], 'rb'))
+        xml_h = open(xml_filename, 'w')
+        write_nrml_top(xml_h, set_id['set_id'], set_id['asset_id'],
+                       set_id['loss_category'],
+                       FLOOD_IMT, depths)
 
-    csv_dict = csv2dict(csv_filename)
-    vulnerability_set_id = csv_dict['vulnerabilitySetID'][0]
-    try:
-        asset_category = csv_dict['assetCategory'][0]
-    except IndexError:
-        # Assume asset_category is empty
-        asset_category = ''
-    loss_category = csv_dict['lossCategory'][0]
-    imls = [v for v in csv_dict['IML'] if not v == '']
 
-    # open the csv file to read the rows
-    reader = csv.DictReader(open(csv_filename, 'rb'))
-    xml_h = open(xml_filename, 'w')
-    write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category,
-                   csv_dict['IMT'][0], imls)
-
-    # Loop over the csv file info
-    for row in reader:
-        row = {k.strip(): v.strip() for k, v in row.iteritems()}
-        if row['Alpha'] == 'N/A':
-            # This row has no model
-            continue
-        coef_var = ''
-        loss_ratio = ''
-        for iml in imls:
-            if numpy.isnan(iml):
-                continue
-            loss_ratio += str(row[str(int(iml))]) + ' '
-            coef_var += '0 '
-        write_nrml_curve(xml_h, row['vulnerabilityFunctionID'], loss_ratio,
-                         coef_var, row['Alpha'], row['Beta'])
+        # Loop over the csv file info
+        for curve_dic in set_id['curves']:
+            for curve_id in curve_dic
+        write_nrml_curve(xml_h, curve_id, curve_dic[curve_id],
+                         'coef_var')
     write_nrml_close(xml_h)
 
 #-----------------------------------------------------------
