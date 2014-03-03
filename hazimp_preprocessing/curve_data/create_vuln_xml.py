@@ -303,9 +303,9 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
                    'asset': '',
                    'loss_category': LOSS_CAT_CONTENTS,
                    'file_name': contents_filename}]
-                   
+
     for set_id in curve_info:
-       
+
         xml_h = open(set_id['file_name'], 'w')
         write_nrml_top(xml_h, set_id['set_id'], set_id['asset'],
                        set_id['loss_category'],
@@ -320,7 +320,7 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
                 loss_ratio += str(iml) + ' '
                 coef_var += '0 '
             write_nrml_curve(xml_h, curve_dic_key, loss_ratio,
-                                 coef_var)
+                             coef_var)
         write_nrml_close(xml_h)
 
 #-----------------------------------------------------------
