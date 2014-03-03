@@ -264,7 +264,7 @@ def read_excel_worksheet(wb):
         for key in insure:
             # Read in the structure type
             # The 2nd value on the 1st row.
-            curve_id_base =  s.cell(0, 1).value.split()[0] + '_' + key
+            curve_id_base = s.cell(0, 1).value.split()[0] + '_' + key
             fabric_vuln_curves[curve_id_base] = di_array[:, 1 + insure[key]]
             tag_offset = {'_SAVE': 2, '_NOACTION': 3, '_EXPOSE': 4}
             for tag in tag_offset:
@@ -272,13 +272,16 @@ def read_excel_worksheet(wb):
                 contents_vuln_curves[curve_id] = di_array[:, tag_offset[tag]
                                                           + insure[key]]
     return fabric_vuln_curves, contents_vuln_curves
-    
+
+
 FLOOD_HOUSE_FABRIC = 'structural_domestic_wind_2012'
 FLOOD_HOUSE_CONTENTS = 'contents_domestic_wind_2012'
 LOSS_CAT_FABRIC = 'structural_loss_ratio'
 LOSS_CAT_CONTENTS = 'contents_loss_ratio'
 FLOOD_IMT = 'water depth m'
-def excel_curve2nrml(csv_filename, xml_filename):
+
+
+def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
     """
     Read in an excel flood curve file and convert it to an NRML file.
 
@@ -286,35 +289,38 @@ def excel_curve2nrml(csv_filename, xml_filename):
     at the file flood_2012_test.xlsx.
     """
 
-    validate_excel_curve_data(xml_filename)
+    validate_excel_curve_data(xls_filename)
 
     depths, fabric_vuln_curves, contents_vuln_curves = read_excel_curve_data(
-        xml_filename)
+        xls_filename)
     curve_info = [{'curves': fabric_vuln_curves,
                    'set_id': FLOOD_HOUSE_FABRIC,
                    'asset': '',
                    'loss_category': LOSS_CAT_FABRIC,
-                   'file_name': 'structural_flood_curves.xml'},
+                   'file_name': fabric_filename},
                   {'curves': contents_vuln_curves,
                    'set_id': FLOOD_HOUSE_FABRIC,
                    'asset': '',
                    'loss_category': LOSS_CAT_CONTENTS,
-                   'file_name': 'contents_flood_curves.xml'}]
+                   'file_name': contents_filename}]
+                   
     for set_id in curve_info:
-    
-        # open the csv file to read the rows
-        reader = csv.DictReader(open(set_id['file_name'], 'rb'))
-        xml_h = open(xml_filename, 'w')
-        write_nrml_top(xml_h, set_id['set_id'], set_id['asset_id'],
+       
+        xml_h = open(set_id['file_name'], 'w')
+        write_nrml_top(xml_h, set_id['set_id'], set_id['asset'],
                        set_id['loss_category'],
                        FLOOD_IMT, depths)
-
-
         # Loop over the csv file info
-        for curve_dic in set_id['curves']:
-            for curve_id in curve_dic
-        write_nrml_curve(xml_h, curve_id, curve_dic[curve_id],
-                         'coef_var')
+        for curve_dic_key in set_id['curves']:
+            curve_values = set_id['curves'][curve_dic_key]
+            coef_var = ''
+            loss_ratio = ''
+            # creating the coef_var vector
+            for iml in curve_values:
+                loss_ratio += str(iml) + ' '
+                coef_var += '0 '
+            write_nrml_curve(xml_h, curve_dic_key, loss_ratio,
+                                 coef_var)
     write_nrml_close(xml_h)
 
 #-----------------------------------------------------------

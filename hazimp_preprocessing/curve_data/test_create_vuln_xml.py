@@ -134,6 +134,43 @@ class TestCreateVulnXML(unittest.TestCase):
             self.assertTrue(allclose(act_cont[key], contents[key]))
 
 
+    def test1_excel_curve2nrml(self):
+        dirs = determine_this_file_path()
+        excel_file = 'synthetic_data_Flood_2012.xls'
+        excel_file = os.path.join(dirs, excel_file)
+        contents_filename = 'contents_synthetic.xml'
+        fabric_filename = 'fabric_synthetic.xml'
+        create_vuln_xml.excel_curve2nrml(contents_filename, fabric_filename,
+                                         excel_file)
+        # load in the xml file to see if it's ok.
+        self.assertTrue(allclose(depths, array([0., 1.0])))
+
+        actually_fab = {u'FCM1_INSURED': array([0., 0.1]),
+                        u'FCM2_INSURED': array([0., 0.12]),
+                        u'FCM1_UNINSURED': array([0., 0.5]),
+                        u'FCM2_UNINSURED': array([0., 0.52])}
+        act_cont = {
+            u'FCM1_INSURED_SAVE': array([0., 0.2]),
+            u'FCM1_INSURED_NOACTION': array([0., 0.3]),
+            u'FCM1_INSURED_EXPOSE': array([0., 0.4]),
+            u'FCM1_UNINSURED_SAVE': array([0., 0.6]),
+            u'FCM1_UNINSURED_NOACTION': array([0., 0.7]),
+            u'FCM1_UNINSURED_EXPOSE': array([0., 0.8]),
+            u'FCM2_INSURED_SAVE': array([0., 0.22]),
+            u'FCM2_INSURED_NOACTION': array([0., 0.32]),
+            u'FCM2_INSURED_EXPOSE': array([0., 0.42]),
+            u'FCM2_UNINSURED_SAVE': array([0., 0.62]),
+            u'FCM2_UNINSURED_NOACTION': array([0., 0.72]),
+            u'FCM2_UNINSURED_EXPOSE': array([0., 0.82])
+        }
+
+        for key in actually_fab:
+            self.assertTrue(allclose(actually_fab[key], fab[key]))
+
+        for key in act_cont:
+            self.assertTrue(allclose(act_cont[key], contents[key]))
+
+
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestCreateVulnXML, 'test')
