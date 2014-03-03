@@ -299,7 +299,7 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
                    'loss_category': LOSS_CAT_FABRIC,
                    'file_name': fabric_filename},
                   {'curves': contents_vuln_curves,
-                   'set_id': FLOOD_HOUSE_FABRIC,
+                   'set_id': FLOOD_HOUSE_CONTENTS,
                    'asset': '',
                    'loss_category': LOSS_CAT_CONTENTS,
                    'file_name': contents_filename}]
@@ -321,7 +321,7 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
                 coef_var += '0 '
             write_nrml_curve(xml_h, curve_dic_key, loss_ratio,
                                  coef_var)
-    write_nrml_close(xml_h)
+        write_nrml_close(xml_h)
 
 #-----------------------------------------------------------
 if __name__ == "__main__":

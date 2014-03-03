@@ -41,7 +41,6 @@ from scipy import asarray, allclose, array
 import create_vuln_xml
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
-
 def determine_this_file_path(this_file=__file__):
     """
     Workout a path string that describes the directory this file is in.
@@ -143,12 +142,18 @@ class TestCreateVulnXML(unittest.TestCase):
         create_vuln_xml.excel_curve2nrml(contents_filename, fabric_filename,
                                          excel_file)
         # load in the xml file to see if it's ok.
-        self.assertTrue(allclose(depths, array([0., 1.0])))
+        vuln_sets = vuln_sets_from_xml_file(contents_filename)
+        
+        skey = create_vuln_xml.FLOOD_HOUSE_CONTENTS
+        self.assertTrue(allclose(vuln_sets[skey].intensity_measure_level,
+                                 asarray([0, 1])))
+        self.assertEqual(vuln_sets[skey].intensity_measure_type, 
+                         "water depth m")
+        self.assertEqual(vuln_sets[skey].vulnerability_set_id, skey)
+        self.assertEqual(vuln_sets[skey].asset_category, "")
+        self.assertEqual(vuln_sets[skey].loss_category, 
+                         "contents_loss_ratio")
 
-        actually_fab = {u'FCM1_INSURED': array([0., 0.1]),
-                        u'FCM2_INSURED': array([0., 0.12]),
-                        u'FCM1_UNINSURED': array([0., 0.5]),
-                        u'FCM2_UNINSURED': array([0., 0.52])}
         act_cont = {
             u'FCM1_INSURED_SAVE': array([0., 0.2]),
             u'FCM1_INSURED_NOACTION': array([0., 0.3]),
@@ -164,12 +169,39 @@ class TestCreateVulnXML(unittest.TestCase):
             u'FCM2_UNINSURED_EXPOSE': array([0., 0.82])
         }
 
-        for key in actually_fab:
-            self.assertTrue(allclose(actually_fab[key], fab[key]))
-
         for key in act_cont:
-            self.assertTrue(allclose(act_cont[key], contents[key]))
+            vul_funct = vuln_sets[skey].vulnerability_functions[key]
+            self.assertTrue(allclose(vul_funct.mean_loss,
+                                     act_cont[key]))
+            self.assertTrue(allclose(vul_funct.coefficient_of_variation,
+                                     array([0., 0.])))
 
+        vuln_sets = vuln_sets_from_xml_file(fabric_filename)
+        
+        skey = create_vuln_xml.FLOOD_HOUSE_FABRIC
+        self.assertTrue(allclose(vuln_sets[skey].intensity_measure_level,
+                                 asarray([0, 1])))
+        self.assertEqual(vuln_sets[skey].intensity_measure_type, 
+                         "water depth m")
+        self.assertEqual(vuln_sets[skey].vulnerability_set_id, skey)
+        self.assertEqual(vuln_sets[skey].asset_category, "")
+        self.assertEqual(vuln_sets[skey].loss_category, 
+                         "structural_loss_ratio")
+        actually_fab = {u'FCM1_INSURED': array([0., 0.1]),
+                        u'FCM2_INSURED': array([0., 0.12]),
+                        u'FCM1_UNINSURED': array([0., 0.5]),
+                        u'FCM2_UNINSURED': array([0., 0.52])}
+
+        for key in actually_fab:
+            vul_funct = vuln_sets[skey].vulnerability_functions[key]
+            self.assertTrue(allclose(vul_funct.mean_loss,
+                                     actually_fab[key]))
+            self.assertTrue(allclose(vul_funct.coefficient_of_variation,
+                                     array([0., 0.])))
+
+
+        os.remove(contents_filename)
+        os.remove(fabric_filename)
 
 #-------------------------------------------------------------
 if __name__ == "__main__":
