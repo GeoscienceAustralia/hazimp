@@ -9,7 +9,8 @@ using vulnerability curves.  Generally the input information is hazard, such as
 a wind speed raster and exposure. The exposure information is currently
 supplied as a csv file, with structure locations given in latitude and
 longitude. This is combined with vulnerability curve information, described in
-an xml file. There is an example of a vulnerability curve;
+an xml file. Figure 1.1 is an example of a vulnerability curve, showing a hazard
+value of the x-axis and the loss associated with that hazard on the y-axis;
 
 .. figure:: ./examples/diagrams/example_vuln_curve.png
    :align: center
@@ -21,8 +22,10 @@ an xml file. There is an example of a vulnerability curve;
 Quick how-to
 ------------
 
-A configuration file is used to define a simulation.  The configuration file is
-described using yaml, a data serialisation format.  To run HazImp do;::
+A configuration file can be used to define a HazImp simulation.  The configuration
+file is described using yaml, a data serialisation format.  HazImp can also be
+used by another Python application, by passing the configuration infomation in
+as a dictionary. To run HazImp from a configuration file do;::
 
      python hazimp.py -c wind_v1.yaml
 
@@ -40,8 +43,9 @@ To run a wind example do;::
 Templates
 ---------
 
-The simplest way to use HazImp is with a template. Currently the only
-template is for wind hazards.
+The simplest way to use HazImp is with a template. There is currently a wind
+template.  Templates take into account internal vulnerability curves and the
+data flow needed to produce loss information.
 
 
 Wind Template
@@ -52,7 +56,7 @@ each site is calculated using the wind template.
 The wind vulnerability functions That are used are built-in to HazImp. They are
 defined in the GA internal report 
 
-Here is an example wind configuration file, which uses the wind template.::
+Here is the example wind configuration file (from examples/wind), which uses the wind template.::
 
      #  python hazimp.py -c wind_v1.yaml
      template: windv1
@@ -70,10 +74,10 @@ The rest of the file can be understood by the following key value pairs;
     The type of template to use.  This example describes the *windv1* template.
 
 *load_exposure*
-    This describes how to load the exposure data *load_exposure* has key values pairs of;
+    This section describes how to load the exposure data. It has 3 sub-sections;
 
     *file_name*
-        The name of the file to load.  Currently only csv files are supported.  The first row of the csv file must be the title row.
+        The name of the csv exposure file to load. The first row of the csv file is the title row.
     
     *exposure_latitude*
         The title of the csv column with latitude values.
@@ -82,7 +86,20 @@ The rest of the file can be understood by the following key value pairs;
         The title of the csv column with longitude values.
 
 *load_wind_ascii*
-    A list of ascii grid wind hazard files to load or a single file.  The file format is grid ascii.  The values is the file must be *0.2s gust at 10m height m/s*.
+    A list of ascii grid wind hazard files to load or a single file.  The file
+    format is grid ascii.  The values in the file must be *0.2s gust at 10m
+    height m/s*, since that is the axis of the HazImp wind vulnerability curves.
 
 *save*
-    The file where the results will be saved.  All the results to calculate the damage due to the wind hazard are saved to file. The above example saves to a csv file, since the file name ends in *.csv*.  This has the disadvantage of averaging data from multiple wind hazards.  The information can also be saved as numpy arrays.  This can be done by not using the *.npz* extension.
+    The file where the results will be saved.  All the results to calculate the
+    damage due to the wind hazard are saved to file. The above example saves to
+    a csv file, since the file name ends in *.csv*.  This has the disadvantage
+    of averaging data from multiple wind hazards.  The information can also be
+    saved as numpy arrays.  This can be done by using the *.npz* extension.
+    This data can be accessed using Python scripts and is not averaged.
+    
+    
+Without Templates
+----------------- 
+
+
