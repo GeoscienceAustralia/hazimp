@@ -22,41 +22,51 @@ value of the x-axis and the loss associated with that hazard on the y-axis;
 Quick how-to
 ------------
 
-A configuration file can be used to define a HazImp simulation.  The configuration
-file is described using yaml, a data serialisation format.  HazImp can also be
-used by another Python application, by passing the configuration infomation in
-as a dictionary. To run HazImp from a configuration file do;::
+A configuration file can be used to define a HazImp simulation.  The
+configuration file is described using yaml, a data serialisation
+format.  HazImp can also be used by another Python application, by
+passing the configuration infomation in as a dictionary. 
 
-     python hazimp.py -c wind_v1.yaml
-
-Use -c to specify the configuration file.
-
-HazImp can also be ran in parallel, using mpirun.  For example;::
-
-     mpirun -np 4 python hazimp.py -c wind_v1.yaml
-     
-To run a wind example do;::
+For example, to run a wind example do;::
 
      cd examples/wind
      python ../../core_hazimp/hazimp.py  -c wind_v1.yaml
 
+
+The -c specifies the configuration file.
+
+HazImp can also be ran in parallel, using mpirun.  For example;::
+
+     mpirun -np 4 python ../../core_hazimp/hazimp.py  -c wind_v1.yaml
+ 
+
+There are a suite of HazImp tests to test the install and code during
+software developemnt.  To run these, in the root HazImp directory
+do;::
+
+    ./all_tests     
+
+
+
 Templates
 ---------
 
-The simplest way to use HazImp is with a template. There is currently a wind
-template.  Templates take into account internal vulnerability curves and the
-data flow needed to produce loss information.
+The simplest way to use HazImp is with a template. There is currently
+a wind template.  Templates take into account internal vulnerability
+curves and the data flow needed to produce loss information,
+simplifying the configuration file.
 
 
 Wind Template
 -------------
-Given gust information from TCRM and point exposure data the loss associated
-with 
-each site is calculated using the wind template.
-The wind vulnerability functions That are used are built-in to HazImp. They are
-defined in the GA internal report 
 
-Here is the example wind configuration file (from examples/wind), which uses the wind template.::
+Given gust information from TCRM and point exposure data the loss
+associated with each site is calculated using the wind template.  The
+wind vulnerability functions That are used are built-in to
+HazImp. They are defined in the GA internal report
+
+Here is the example wind configuration file (from examples/wind),
+which uses the wind template.::
 
      #  python hazimp.py -c wind_v1.yaml
      template: windv1

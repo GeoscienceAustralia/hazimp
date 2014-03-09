@@ -13,9 +13,20 @@ import xlrd
 from core_hazimp.misc import csv2dict
 
 
+FLOOD_HOUSE_FABRIC = 'structural_domestic_wind_2012'
+FLOOD_HOUSE_CONTENTS = 'contents_domestic_wind_2012'
+LOSS_CAT_FABRIC = 'structural_loss_ratio'
+LOSS_CAT_CONTENTS = 'contents_loss_ratio'
+FLOOD_IMT = 'water depth m'
+
+
 def xml_write_variable(xml_h, name, value):
     """
-    Add the variable name and value to an xml file.
+    Add a variable name and value to an xml file.
+
+    :param xml_h: A handle to the xml file.
+    :param name: The name of the variable.
+    :param value: The value of the variable.
     """
     xml_h.write('%s="' % name)
     try:
@@ -35,6 +46,14 @@ def write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category,
                    imt, imls):
     """
     Write the top section of an nrml file.
+
+    :param xml_h: A handle to the xml file.
+    :param vulnerability_set_id: String name of the vulnerability set.
+    :param asset_category: String name of the assert category.
+    :param loss_category: String name of the loss category.
+    :param imt: String name of the intensity measure type.
+    :param imls: 1D vector of the intensity measure values (x-axis) of the
+                 vuln curve.
     """
 
     intro = """<?xml version='1.0' encoding='utf-8'?>
@@ -65,6 +84,14 @@ def write_nrml_curve(xml_h, vulnerability_function_id, loss_ratio,
     """
     Write the curve info of an nrml file.
 
+    :param xml_h: A handle to the xml file.
+    :param vulnerability_function_id: String name of the vuln function.
+    :param loss_ratio: 1D vector of the loss ratio values (y-axis) of the
+                 vuln curve.
+    :param coef_var: 1D vector of the coefficient of variation values (y-axis)
+                     of the vuln curve.
+    :param alpa: curve variable - not used, just to help describe the curve.
+    :param beta: curve variable - not used, just to help describe the curve.
     """
     xml_h.write("<discreteVulnerability ")
     xml_write_variable(xml_h, "vulnerabilityFunctionID",
@@ -87,6 +114,8 @@ def write_nrml_curve(xml_h, vulnerability_function_id, loss_ratio,
 def write_nrml_close(xml_h):
     """
     Write the final section of an nrml file and close it.
+
+    :param xml_h: A handle to the xml file.
     """
     xml_h.write('</discreteVulnerabilitySet>\n')
     xml_h.write('</vulnerabilityModel>\n')
@@ -97,6 +126,9 @@ def write_nrml_close(xml_h):
 def csv_curve2nrml(csv_filename, xml_filename):
     """
     Read in a csv hazard curve file and convert it to an NRML file.
+
+    :param csv_filename: The csv file to be read.
+    :param xml_filename: The NRML file to be written.
     """
     # Read the file twice.
     # Once for the non-per-curve info and then
@@ -142,6 +174,8 @@ def validate_excel_curve_data(excel_file):
     from sheet to sheet.
     The first 2 rows are titles.
     The first coulmn is the water depth.
+
+    :param excel_file: The excel file to validate.
     """
 
     default = None
@@ -181,16 +215,18 @@ def validate_excel_curve_data(excel_file):
                 valid = False
                 break
 
-    valid = check_identical_depths(wb, valid)
-    return valid
+    return valid and check_identical_depths(wb)
 
 
-def check_identical_depths(wb, valid):
+def check_identical_depths(wb):
     """
     Check that the depth values are the same for all workbooks.
     Check that the first colum, starting at the 4th row, is identical.
+
+    :param wb: The excel workbook xlrd object.
     """
 
+    valid = True
     default = None
     depths = {}
     for s in wb.sheets():
@@ -220,12 +256,7 @@ def read_excel_curve_data(excel_file):
     """
     Read in the excel file info.  Specific, undocumented format.
 
-    What info has to be in the return dict?
-
-    vulnerability_set_id
-     asset_category
-      loss_category,
-     csv_dict['IMT'][0], imls)
+    :param excel_file: The excel workbook.
     """
     wb = xlrd.open_workbook(excel_file)
     a_sheet = wb.sheets()[0]
@@ -245,7 +276,7 @@ def read_excel_worksheet(wb):
     """
     Read an excel worksheet
 
-
+    :param wb: The excel workbook xlrd object.
     """
     fabric_vuln_curves = {}  # the keys are curve names.
     contents_vuln_curves = {}  # the keys are curve names.
@@ -274,19 +305,16 @@ def read_excel_worksheet(wb):
     return fabric_vuln_curves, contents_vuln_curves
 
 
-FLOOD_HOUSE_FABRIC = 'structural_domestic_wind_2012'
-FLOOD_HOUSE_CONTENTS = 'contents_domestic_wind_2012'
-LOSS_CAT_FABRIC = 'structural_loss_ratio'
-LOSS_CAT_CONTENTS = 'contents_loss_ratio'
-FLOOD_IMT = 'water depth m'
-
-
 def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
     """
     Read in an excel flood curve file and convert it to an NRML file.
 
     The excel file format is specific and best understood by looking
     at the file flood_2012_test.xlsx.
+
+    :param contents_filename: The contents NRML file to be created.
+    :param fabric_filename: The fabric NRML file to be created.
+    :param xls_filename: The excel file that is the basis of the NRML files.
     """
 
     validate_excel_curve_data(xls_filename)
