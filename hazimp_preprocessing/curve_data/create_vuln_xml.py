@@ -355,6 +355,9 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
 if __name__ == "__main__":
     # csv_curve2nrml('domestic_wind_vul_curves.csv',
     #               'domestic_wind_vul_curves.xml')
-    excel_curve2nrml('content_flood_vul_curves.xml',
-                     'fabric_flood_vul_curves.xml',
-                     'Flood_2012_testb.xls')
+    #excel_curve2nrml('content_flood_vul_curves.xml',
+     #                'fabric_flood_vul_curves.xml',
+     #                'Flood_2012_testb.xls')
+    excel_curve2nrml('content_flood_avg_curve.xml',
+                     'fabric_flood_avg_curve.xml',
+                     'Flood_2012_averaged.xls')
