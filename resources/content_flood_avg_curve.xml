@@ -5,7 +5,7 @@
     <vulnerabilityModel>
         <config/>
 
-        <discreteVulnerabilitySet vulnerabilitySetID="contents_domestic_wind_2012" 
+        <discreteVulnerabilitySet vulnerabilitySetID="contents_domestic_flood_2012" 
 assetCategory="" lossCategory="contents_loss_ratio" >
  <IML IMT="water depth m" >-0.3 0.0 0.05 0.1 0.3 0.5 1.0 1.5 2.0 2.4 2.5 2.7 2.8 3.0 3.1 3.3 4.0 5.1 5.4 </IML>
 <discreteVulnerability vulnerabilityFunctionID="FCMA_INSURED_SAVE" probabilisticDistribution="LN">

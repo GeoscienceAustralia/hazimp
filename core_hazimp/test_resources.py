@@ -48,13 +48,13 @@ class TestResources(unittest.TestCase):
     def test_domestic_wind_vul_curves(self):
         vuln_sets = vuln_sets_from_xml_file(
             os.path.join(RESOURCE_DIR,
-                         'domestic_wind_vul_curves.xml'))
-        actual = vuln_sets["domestic_wind_2012"].intensity_measure_type
-        self.assertEqual(actual, "0.2s gust at 10m height m/s")
+                         'content_flood_avg_curve.xml'))
+        set_id = vuln_sets["contents_domestic_flood_2012"]
+        actual = set_id.intensity_measure_type
+        self.assertEqual(actual, "water depth m")
 
         # Check the first loss value of the last model
-        vul_funct = vuln_sets["domestic_wind_2012"].vulnerability_functions[
-            'dw306']
+        vul_funct = set_id.vulnerability_functions['FCMA_INSURED_NOACTION']
         self.assertAlmostEqual(vul_funct.mean_loss[0], 0.0)
 
 #-------------------------------------------------------------
