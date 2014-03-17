@@ -107,11 +107,35 @@ def _wind_v1_reader(config_dic):
     :param config_dic: A dictionary describing the simulation.
     :returns: A list of jobs to process over.
     """
+    vul_filename = os.path.join(misc.RESOURCE_DIR,
+                                'domestic_wind_vul_curves_old.xml')
+
+    return _wind_vx_reader(config_dic, vul_filename=vul_filename)
+
+
+def _wind_v2_reader(config_dic):
+    """
+    From a wind v1 configuration dictionary build the job list.
+
+    :param config_dic: A dictionary describing the simulation.
+    :returns: A list of jobs to process over.
+    """
+    vul_filename = os.path.join(misc.RESOURCE_DIR,
+                                'synthetic_domestic_wind_vul_curves.xml')
+
+    _wind_vx_reader(config_dic, vul_filename=vul_filename)
+
+def _wind_vx_reader(config_dic, vul_filename=None):
+    """
+    From a wind configuration dictionary build the job list.
+
+    :param config_dic: A dictionary describing the simulation.
+    :param vul_filename: The vulnerability file to use.
+    :returns: A list of jobs to process over.
+    """
     job_names = [LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
                  SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
                  SAVEALL]
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'domestic_wind_vul_curves.xml')
 
     try:
         file_list = config_dic[LOADWINDTCRM]
