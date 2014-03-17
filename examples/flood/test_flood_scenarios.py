@@ -27,7 +27,7 @@ from core_hazimp.jobs.jobs import (LOADRASTER, LOADCSVEXPOSURE,
                                    SELECTVULNFUNCTION,
                                    LOOKUP, SAVEALL)
 from core_hazimp.calcs.calcs import STRUCT_LOSS
-from core_hazimp.config import LOADWINDTCRM, TEMPLATE, WINDV1, SAVE
+from core_hazimp.config import LOADWINDTCRM, TEMPLATE, WINDV1, SAVE, WINDV2
 from core_hazimp import parallel
 
 
@@ -38,7 +38,7 @@ class TestWind(unittest.TestCase):
 
     def test_const_test(self):
         # First test running an end to end wind test based
-        # on a config dictionary, template default'
+        # on a config dictionary, no template
 
         # The output file
         f = tempfile.NamedTemporaryFile(
@@ -48,10 +48,10 @@ class TestWind(unittest.TestCase):
 
         wind_dir = os.path.join(misc.EXAMPLE_DIR, 'wind')
         exp_filename = os.path.join(wind_dir,
-                                    'small_exposure_tcrm.csv')
+                                    'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
         vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                    'domestic_wind_vul_curves.xml')
+                                    'synthetic_domestic_wind_vul_curves.xml')
         config = {
             'jobs': [LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
                      SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
@@ -81,7 +81,7 @@ class TestWind(unittest.TestCase):
                                      exp_dict['calced-loss']))
         os.remove(f.name)
 
-    def test_wind_v1_template(self):
+    def test_wind_v2_template(self):
         # Test running an end to end cyclone test based
         # on a wind config template.
 
@@ -93,10 +93,10 @@ class TestWind(unittest.TestCase):
 
         wind_dir = os.path.join(misc.EXAMPLE_DIR, 'wind')
         exp_filename = os.path.join(wind_dir,
-                                    'small_exposure_tcrm.csv')
+                                    'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
         config = {
-            TEMPLATE: WINDV1,
+            TEMPLATE: WINDV2,
             LOADCSVEXPOSURE: {'file_name': exp_filename,
                               'exposure_latitude': 'LATITUDE',
                               'exposure_longitude': 'LONGITUDE'},
@@ -104,6 +104,7 @@ class TestWind(unittest.TestCase):
             SAVE: f.name}
 
         context = hazimp.main(config_dic=config)
+
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
@@ -115,7 +116,7 @@ class TestWind(unittest.TestCase):
                                      exp_dict['calced-loss']))
         os.remove(f.name)
 
-    def test_wind_v1_templatIIe(self):
+    def test_wind_v2_templateII(self):
         # Test running an end to end cyclone test based
         # on a wind config template.
         # Use a string to describe the hazard file, not a list of strings
@@ -128,10 +129,10 @@ class TestWind(unittest.TestCase):
 
         wind_dir = os.path.join(misc.EXAMPLE_DIR, 'wind')
         exp_filename = os.path.join(wind_dir,
-                                    'small_exposure_tcrm.csv')
+                                    'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
         config = {
-            TEMPLATE: WINDV1,
+            TEMPLATE: WINDV2,
             LOADCSVEXPOSURE: {'file_name': exp_filename,
                               'exposure_latitude': 'LATITUDE',
                               'exposure_longitude': 'LONGITUDE'},
@@ -156,7 +157,7 @@ class TestWind(unittest.TestCase):
 
         wind_dir = os.path.join(misc.EXAMPLE_DIR, 'wind')
         exp_filename = os.path.join(wind_dir,
-                                    'small_exposure_tcrm.csv')
+                                    'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
 
         # The output file
@@ -171,7 +172,7 @@ class TestWind(unittest.TestCase):
             prefix='HAZIMPt_wind_scenarios_test_const',
             delete=False)
 
-        print(TEMPLATE + ': ' + WINDV1, file=f)
+        print(TEMPLATE + ': ' + WINDV2, file=f)
         print(LOADCSVEXPOSURE + ': ', file=f)
         print('  file_name: ' + exp_filename, file=f)
         print('  exposure_latitude: LATITUDE', file=f)
@@ -205,10 +206,10 @@ class TestWind(unittest.TestCase):
 
         wind_dir = os.path.join(misc.EXAMPLE_DIR, 'wind')
         exp_filename = os.path.join(wind_dir,
-                                    'small_exposure_tcrm.csv')
+                                    'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
         config = {
-            TEMPLATE: WINDV1,
+            TEMPLATE: WINDV2,
             LOADCSVEXPOSURE: {'file_name': exp_filename,
                               'exposure_latitude': 'LATITUDE',
                               'exposure_longitude': 'LONGITUDE'},
