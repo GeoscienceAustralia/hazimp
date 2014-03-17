@@ -123,7 +123,8 @@ def _wind_v2_reader(config_dic):
     vul_filename = os.path.join(misc.RESOURCE_DIR,
                                 'synthetic_domestic_wind_vul_curves.xml')
 
-    _wind_vx_reader(config_dic, vul_filename=vul_filename)
+    return _wind_vx_reader(config_dic, vul_filename=vul_filename)
+
 
 def _wind_vx_reader(config_dic, vul_filename=None):
     """
@@ -333,4 +334,5 @@ def check_attributes(config_dic):
 
 
 READERS = {DEFAULT: _reader1,
-           WINDV1: _wind_v1_reader}
+           WINDV1: _wind_v1_reader,
+           WINDV2: _wind_v2_reader}
