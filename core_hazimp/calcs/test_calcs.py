@@ -28,6 +28,7 @@ Test the calcs module.
 """
 
 import unittest
+import numpy
 
 from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.calcs import calcs
@@ -49,12 +50,35 @@ class TestCalcs(unittest.TestCase):
     Test the calcs module
     """
 
-    def test_AddTest(self):
+    def test_Add(self):
         inst = CALCS['add_test']
         context = Dummy
         context.exposure_att = {'a_test': 5, 'b_test': 20}
         inst(context)
         self.assertEqual(context.exposure_att['c_test'], 25)
+        self.assertEqual(inst.context_args_in, ['a_test', 'b_test'])
+        self.assertEqual(inst.args_out, ['c_test'])
+
+    def test_AddII(self):
+        inst = CALCS['add_test']
+        context = Dummy
+        context.exposure_att = {'a_test': numpy.array([1, 2]),
+                                'b_test': numpy.array([3, 4])}
+        inst(context)
+        self.assertTrue(numpy.allclose(context.exposure_att['c_test'],
+                                       numpy.array([4, 6])))
+        self.assertEqual(inst.context_args_in, ['a_test', 'b_test'])
+        self.assertEqual(inst.args_out, ['c_test'])
+
+    def test_AddIII(self):
+        # FIXME convert to strings
+        inst = CALCS['add_test']
+        context = Dummy
+        context.exposure_att = {'a_test': numpy.array([1, 2]),
+                                'b_test': numpy.array([3, 4])}
+        inst(context)
+        self.assertTrue(numpy.allclose(context.exposure_att['c_test'],
+                                       numpy.array([4, 6])))
         self.assertEqual(inst.context_args_in, ['a_test', 'b_test'])
         self.assertEqual(inst.args_out, ['c_test'])
 
