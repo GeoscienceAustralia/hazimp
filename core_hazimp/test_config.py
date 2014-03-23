@@ -46,7 +46,7 @@ class TestConfig(unittest.TestCase):
         # messy test.  Relies on calcs.py and jobs.py
         name = 'add_test'
         job = config.get_job_or_calc(name)
-        self.assertIsInstance(job, calcs.AddTest)
+        self.assertIsInstance(job, calcs.Add)
 
         name = 'const_test'
         job = config.get_job_or_calc(name)

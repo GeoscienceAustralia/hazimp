@@ -67,14 +67,14 @@ class Calculator(Job):
             context.exposure_att[arg_out] = args_out[i]
 
 
-class AddTest(Calculator):
+class Add(Calculator):
 
     """
     Simple test class, adding args together.
     """
 
     def __init__(self):
-        super(AddTest, self).__init__()
+        super(Add, self).__init__()
         self.args_out = ['c_test']
         self.context_args_in = ['a_test', 'b_test']
         self.call_funct = 'add_test'
@@ -139,6 +139,8 @@ class ConstantTest(Calculator):
     def calc(self, constant=None):
         """
         Return two values
+
+class Concatenate()
         """
         return [constant * 2]
 
