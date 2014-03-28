@@ -45,7 +45,7 @@ from core_hazimp import misc
 from core_hazimp import parallel
 
 
-class Dummy:
+class Dummy(object):
 
     """
     Dummy class for testing
@@ -60,7 +60,7 @@ class Dummy:
         self.exposure_att = {}
 
 
-class DummyVulnSet:
+class DummyVulnSet(object):
 
     """
     Dummy class of vuln_set for testing.

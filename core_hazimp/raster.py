@@ -24,7 +24,7 @@ import gdal
 from gdalconst import GA_ReadOnly
 
 
-class Raster():
+class Raster(object):
 
     """
     A simple class to describe a raster.

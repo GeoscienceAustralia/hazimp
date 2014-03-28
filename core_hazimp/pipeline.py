@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this software. If not, see <http://www.gnu.org/licenses/>.
 
+# pylint: disable=R0922
+# Above disable doesn't seem to work.
 
 """
 The purpose of this module is to provide objects
@@ -70,7 +72,6 @@ class PipeLine(object):
 
 
 class PipeLineBuilder(object):
-
     """
     PipeLineBuilder allows to build a PipeLine
     by assembling all the required jobs
