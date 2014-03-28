@@ -12,3 +12,6 @@ mpirun -n 2 nosetests examples/ --with-doctest `find examples/ -name 'test_*.py'
 mpirun -n 2 nosetests core_hazimp/ --with-doctest `find core_hazimp/ -name 'test_*.py'` --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
 
 pep8 .
+
+# autopep8 hazimp_preprocessing/curve_data/*.py --in-place --aggressive
+# autopep8 core_hazimp/*.py --in-place --aggressive

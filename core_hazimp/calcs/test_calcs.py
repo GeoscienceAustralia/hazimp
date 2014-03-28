@@ -74,11 +74,11 @@ class TestCalcs(unittest.TestCase):
         # FIXME convert to strings
         inst = CALCS['add_test']
         context = Dummy
-        context.exposure_att = {'a_test': numpy.array([1, 2]),
-                                'b_test': numpy.array([3, 4])}
+        context.exposure_att = {'a_test': numpy.array(['a', 'b']),
+                                'b_test': numpy.array(['c', 'd'])}
         inst(context)
-        self.assertTrue(numpy.allclose(context.exposure_att['c_test'],
-                                       numpy.array([4, 6])))
+        self.assertEqual(context.exposure_att['c_test'].tolist(),
+                         ['ac', 'bd'])
         self.assertEqual(inst.context_args_in, ['a_test', 'b_test'])
         self.assertEqual(inst.args_out, ['c_test'])
 

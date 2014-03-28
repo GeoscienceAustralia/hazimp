@@ -72,6 +72,7 @@ class PipeLine(object):
 
 
 class PipeLineBuilder(object):
+
     """
     PipeLineBuilder allows to build a PipeLine
     by assembling all the required jobs

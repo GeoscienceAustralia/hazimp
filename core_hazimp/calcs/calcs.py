@@ -26,6 +26,8 @@ Calculations
 
 import sys
 
+import numpy
+
 from core_hazimp.jobs.jobs import Job
 from core_hazimp.misc import instanciate_classes
 
@@ -83,7 +85,12 @@ class Add(Calculator):
         """
         Add args
         """
-        return [a_test + b_test]
+        try:
+            result = [a_test + b_test]
+        except TypeError:
+            # Assume numpy array with strings
+            result = [numpy.core.defchararray.add(a_test, b_test)]
+        return result
 
 
 class MultiplyTest(Calculator):
