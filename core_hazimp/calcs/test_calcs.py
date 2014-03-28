@@ -34,7 +34,7 @@ from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.calcs import calcs
 
 
-class Dummy:
+class Dummy(object):
 
     """
     Dummy class for testing
