@@ -17,7 +17,7 @@ FLOOD_HOUSE_FABRIC = 'structural_domestic_flood_2012'
 FLOOD_HOUSE_CONTENTS = 'contents_domestic_flood_2012'
 LOSS_CAT_FABRIC = 'structural_loss_ratio'
 LOSS_CAT_CONTENTS = 'contents_loss_ratio'
-FLOOD_IMT = 'water depth m'
+FLOOD_IMT = 'water depth above ground floor (m)'
 
 
 def xml_write_variable(xml_h, name, value):
@@ -359,11 +359,11 @@ if __name__ == "__main__":
     if True:
         csv_curve2nrml('synthetic_domestic_wind_vul_curves.csv',
                        'synthetic_domestic_wind_vul_curves.xml')
-    if False:
+    if True:
         excel_curve2nrml('content_flood_vul_curves.xml',
                          'fabric_flood_vul_curves.xml',
                          'Flood_2012_testb.xls')
-    if False:
+    if True:
         excel_curve2nrml('content_flood_avg_curve.xml',
                          'fabric_flood_avg_curve.xml',
                          'Flood_2012_averaged.xls')
