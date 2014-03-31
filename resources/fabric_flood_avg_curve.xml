@@ -7,7 +7,7 @@
 
         <discreteVulnerabilitySet vulnerabilitySetID="structural_domestic_flood_2012" 
 assetCategory="" lossCategory="structural_loss_ratio" >
- <IML IMT="water depth m" >-0.3 0.0 0.05 0.1 0.3 0.5 1.0 1.5 2.0 2.4 2.5 2.7 2.8 3.0 3.1 3.3 4.0 5.1 5.4 </IML>
+ <IML IMT="water depth above ground floor (m)" >-0.3 0.0 0.05 0.1 0.3 0.5 1.0 1.5 2.0 2.4 2.5 2.7 2.8 3.0 3.1 3.3 4.0 5.1 5.4 </IML>
 <discreteVulnerability vulnerabilityFunctionID="FCMA_INSURED" probabilisticDistribution="LN">
 <lossRatio>0.00636363636364 0.0281818181818 0.15 0.271818181818 0.308181818182 0.309090909091 0.343636363636 0.436363636364 0.457272727273 0.52612987013 0.55038961039 0.594545454545 0.624772727273 0.669772727273 0.680727272727 0.688545454545 0.718181818182 0.75012987013 0.753636363636 </lossRatio>
 <coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>

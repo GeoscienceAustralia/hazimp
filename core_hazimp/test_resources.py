@@ -51,7 +51,7 @@ class TestResources(unittest.TestCase):
                          'content_flood_avg_curve.xml'))
         set_id = vuln_sets["contents_domestic_flood_2012"]
         actual = set_id.intensity_measure_type
-        self.assertEqual(actual, "water depth m")
+        self.assertEqual(actual, "water depth above ground floor (m)")
 
         # Check the first loss value of the last model
         vul_funct = set_id.vulnerability_functions['FCMA_INSURED_NOACTION']
