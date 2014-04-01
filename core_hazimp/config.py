@@ -34,10 +34,13 @@ from core_hazimp import spell_check
 
 DEFAULT = 'default'
 LOADWINDTCRM = 'load_wind_ascii'
+LOADFLOODASCII = 'load_flood_ascii'
 TEMPLATE = 'template'
-WINDV1 = 'windv1'
-WINDV2 = 'windv2'
+WINDV1 = 'wind_v1'
+WINDV2 = 'wind_v2'
+FLOODFABRICV1 = 'flood_fabric_v1'
 SAVE = 'save'
+FLOOD_X_AXIS = 'water depth above ground floor (m)'
 
 # The complete list of first level key names in the post template config dic
 CONFIGKEYS = list(JOBS.keys()) + list(CALCS.keys()) + [JOBSKEY]
@@ -102,20 +105,27 @@ def _reader1(config_dic):
 
 def _wind_v1_reader(config_dic):
     """
+    The wind v1 format uses the actual wind vulnerability curves.
+    Due to linsencing restrictions the file is not currently
+    available.
+
     From a wind v1 configuration dictionary build the job list.
 
     :param config_dic: A dictionary describing the simulation.
     :returns: A list of jobs to process over.
     """
     vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'domestic_wind_vul_curves_old.xml')
+                                'domestic_wind_vul_curves.xml')
 
     return _wind_vx_reader(config_dic, vul_filename=vul_filename)
 
 
 def _wind_v2_reader(config_dic):
     """
-    From a wind v1 configuration dictionary build the job list.
+    The vulnerability curves in this set are synthetic.
+    They are not correct, but they have no lisencing restrictions.
+
+    From a wind v2 configuration dictionary build the job list.
 
     :param config_dic: A dictionary describing the simulation.
     :returns: A list of jobs to process over.
@@ -150,9 +160,57 @@ def _wind_vx_reader(config_dic, vul_filename=None):
     del config_dic[LOADWINDTCRM]
     config_dic[LOADXMLVULNERABILITY] = {
         'file_name': vul_filename}
+    # The vulnerabilitySetID from the nrml file = 'domestic_wind_2012'
+    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     config_dic[SIMPLELINKER] = {'vul_functions_in_exposure': {
                                 'domestic_wind_2012':
                                 'WIND_VULNERABILITY_FUNCTION_ID'}}
+    config_dic[SELECTVULNFUNCTION] = {'variability_method': {
+                                      'domestic_wind_2012': 'mean'}}
+
+    try:
+        file_name = config_dic[SAVE]
+    except KeyError:
+        msg = '\nMandatory key not found in config file; %s \n' % SAVE
+        raise RuntimeError(msg)
+
+    config_dic[SAVEALL] = {'file_name': file_name}
+    del config_dic[SAVE]
+    return get_job_or_calcs(job_names)
+
+
+def _flood_fabric_v1_reader(config_dic, vul_filename=None):
+    """
+    From a flood template v1 configuration dictionary build the job list.
+
+    :param config_dic: A dictionary describing the simulation.
+    :returns: A list of jobs to process over.
+    """
+    job_names = [LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
+                 SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
+                 SAVEALL]
+
+    try:
+        file_list = config_dic[LOADFLOODASCII]
+    except KeyError:
+        msg = '\nMandatory key not found in config file; %s\n' % LOADFLOODASCII
+        raise RuntimeError(msg)
+
+    config_dic[LOADRASTER] = {
+        'file_list': file_list,
+        'attribute_label': FLOOD_X_AXIS}
+    del config_dic[LOADFLOODASCII]
+
+    vul_filename = os.path.join(misc.RESOURCE_DIR,
+                                'fabric_flood_avg_curve.xml')
+
+    config_dic[LOADXMLVULNERABILITY] = {
+        'file_name': vul_filename}
+    # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
+    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    config_dic[SIMPLELINKER] = {'vul_functions_in_exposure': {
+                                'structural_domestic_flood_2012':
+                                'FLOOD_VULNERABILITY_FUNCTION_ID'}}
     config_dic[SELECTVULNFUNCTION] = {'variability_method': {
                                       'domestic_wind_2012': 'mean'}}
 
@@ -335,4 +393,5 @@ def check_attributes(config_dic):
 
 READERS = {DEFAULT: _reader1,
            WINDV1: _wind_v1_reader,
-           WINDV2: _wind_v2_reader}
+           WINDV2: _wind_v2_reader,
+           FLOODFABRICV1: _flood_fabric_v1_reader}
