@@ -1,5 +1,5 @@
 #  python ../../core_hazimp/hazimp.py -c wind_v1.yaml
-template: windv2
+template: wind_v2
 load_exposure: 
   file_name:  WA_subset.csv
   exposure_latitude: LATITUDE
