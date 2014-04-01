@@ -356,13 +356,13 @@ if __name__ == "__main__":
     if False:
         csv_curve2nrml('domestic_wind_vul_curves.csv',
                        'domestic_wind_vul_curves.xml')
-    if True:
+    if False:
         csv_curve2nrml('synthetic_domestic_wind_vul_curves.csv',
                        'synthetic_domestic_wind_vul_curves.xml')
     if True:
         excel_curve2nrml('content_flood_vul_curves.xml',
                          'fabric_flood_vul_curves.xml',
-                         'Flood_2012_testb.xls')
+                         'Flood_2012_actual_cleaned.xls')
     if True:
         excel_curve2nrml('content_flood_avg_curve.xml',
                          'fabric_flood_avg_curve.xml',
