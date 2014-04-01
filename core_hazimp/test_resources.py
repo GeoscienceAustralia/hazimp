@@ -54,7 +54,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(actual, "water depth above ground floor (m)")
 
         # Check the first loss value of the last model
-        vul_funct = set_id.vulnerability_functions['FCMA_INSURED_NOACTION']
+        vul_funct = set_id.vulnerability_functions['FCM1_INSURED_NOACTION']
         self.assertAlmostEqual(vul_funct.mean_loss[0], 0.0)
 
 #-------------------------------------------------------------
