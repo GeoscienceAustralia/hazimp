@@ -27,11 +27,13 @@ from core_hazimp.jobs.jobs import (LOADRASTER, LOADCSVEXPOSURE,
                                    SELECTVULNFUNCTION,
                                    LOOKUP, SAVEALL)
 from core_hazimp.calcs.calcs import STRUCT_LOSS
-from core_hazimp.config import LOADWINDTCRM, TEMPLATE, WINDV1, SAVE, WINDV2
+from core_hazimp.config import (LOADWINDTCRM, TEMPLATE, WINDV1, SAVE, WINDV2,
+                                FLOODFABRICV1, LOADFLOODASCII)
 from core_hazimp import parallel
 
 
 class TestWind(unittest.TestCase):
+
     """
     Do large system based tests.
     """
@@ -201,19 +203,19 @@ class TestWind(unittest.TestCase):
         # The output file
         f = tempfile.NamedTemporaryFile(
             suffix='.csv',
-            prefix='HAZIMPt_wind_scenarios_test_const',
+            prefix='HAZIMP_flood_scenarios_test_const',
             delete=False)
 
-        wind_dir = os.path.join(misc.EXAMPLE_DIR, 'wind')
-        exp_filename = os.path.join(wind_dir,
-                                    'syn_small_exposure_tcrm.csv')
-        wind_filename = os.path.join(wind_dir, 'gust01.txt')
+        resource_dir = os.path.join(misc.EXAMPLE_DIR, 'flood')
+        exp_filename = os.path.join(resource_dir,
+                                    'small_exposure.csv')
+        haz_filename = os.path.join(resource_dir, 'depth_small_synthetic.txt')
         config = {
-            TEMPLATE: WINDV2,
+            TEMPLATE: FLOODFABRICV1,
             LOADCSVEXPOSURE: {'file_name': exp_filename,
                               'exposure_latitude': 'LATITUDE',
                               'exposure_longitude': 'LONGITUDE'},
-            LOADWINDTCRM: [wind_filename],
+            LOADFLOODASCII: [haz_filename],
             SAVE: f.name}
 
         context = hazimp.main(config_dic=config)
@@ -232,6 +234,6 @@ class TestWind(unittest.TestCase):
 if __name__ == "__main__":
 
     SUITE = unittest.makeSuite(TestWind, 'test')
-    #SUITE = unittest.makeSuite(TestWind, 'test_const_test')
+    SUITE = unittest.makeSuite(TestWind, 'test_wind_v1_template_csv')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)

@@ -1,8 +1,8 @@
-#  python ../../core_hazimp/hazimp.py -c wind_v1.yaml
-template: windv1
+#  python ../../core_hazimp/hazimp.py -c flood_v1.yaml
+template: flood_fabric_v1
 load_exposure: 
-  file_name:  WA_subset.csv
+  file_name:  small_exposure.csv
   exposure_latitude: LATITUDE
   exposure_longitude: LONGITUDE 
-load_wind_ascii:  gust-0363.asc
-save: wind_impact.csv  
+load_wind_ascii:  depth_synthetic.asc
+save: flood_impact.csv  
