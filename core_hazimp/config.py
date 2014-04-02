@@ -179,9 +179,10 @@ def _wind_vx_reader(config_dic, vul_filename=None):
     return get_job_or_calcs(job_names)
 
 
-def _flood_fabric_v1_reader(config_dic, vul_filename=None):
+def _flood_fabric_v1_reader(config_dic):
     """
-    From a flood template v1 configuration dictionary build the job list.
+    From a flood fabric template v1 configuration dictionary
+    build the job list.
 
     :param config_dic: A dictionary describing the simulation.
     :returns: A list of jobs to process over.
@@ -210,9 +211,9 @@ def _flood_fabric_v1_reader(config_dic, vul_filename=None):
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     config_dic[SIMPLELINKER] = {'vul_functions_in_exposure': {
                                 'structural_domestic_flood_2012':
-                                'FLOOD_VULNERABILITY_FUNCTION_ID'}}
+                                'FABRIC_FLOOD_FUNCTION_ID'}}
     config_dic[SELECTVULNFUNCTION] = {'variability_method': {
-                                      'domestic_wind_2012': 'mean'}}
+        'structural_domestic_flood_2012': 'mean'}}
 
     try:
         file_name = config_dic[SAVE]
