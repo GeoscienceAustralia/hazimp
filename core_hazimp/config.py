@@ -55,8 +55,14 @@ def read_file(file_name):
     :returns: A dictionary of the configuration file
     """
     config_file_handle = open(file_name, 'r')
-    config_dic = yaml.load(config_file_handle)
-
+    config_inf = yaml.load(config_file_handle)
+    if isinstance(config_inf, dict):
+        config_dic = config_inf
+    else:
+        # Assume a list of dictionaries
+        config_dic = {}
+        for form in config_inf:
+            config_dic.update(form)
     return config_dic
 
 
@@ -181,15 +187,14 @@ def _wind_vx_reader(config_dic, vul_filename=None):
 
 def _flood_fabric_v1_reader(config_dic):
     """
-    From a flood fabric template v1 configuration dictionary
-    build the job list.
-
+    This function does two things;
+       * From a flood fabric template v1 configuration dictionary
+       build the job list.
+       * Set up the attributes of the jobs and calc's specifically
+       for a flood study.
     :param config_dic: A dictionary describing the simulation.
     :returns: A list of jobs to process over.
     """
-    job_names = [LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
-                 SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
-                 SAVEALL]
 
     try:
         file_list = config_dic[LOADFLOODASCII]
@@ -223,6 +228,11 @@ def _flood_fabric_v1_reader(config_dic):
 
     config_dic[SAVEALL] = {'file_name': file_name}
     del config_dic[SAVE]
+
+    # Build the job list
+    job_names = [LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
+                 SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
+                 SAVEALL]
     return get_job_or_calcs(job_names)
 
 
