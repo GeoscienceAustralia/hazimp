@@ -111,5 +111,6 @@ class ConfigAwareJob(object):
         """
         Inject the atts_to_add to the job call.
         """
-        job_kwargs.update(self.atts_to_add)
+        if not self.atts_to_add is None:
+            job_kwargs.update(self.atts_to_add)
         self.job_instance(*args, **job_kwargs)

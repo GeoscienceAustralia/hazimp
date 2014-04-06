@@ -31,14 +31,19 @@ from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
 from core_hazimp.calcs.calcs import STRUCT_LOSS
 from core_hazimp import misc
 from core_hazimp import spell_check
+from core_hazimp import workflow
 
-DEFAULT = 'default'
+DEFAULT = 'default'  # 'old_default'
+NEWDEFAULT = 'NEWdefault'    # 'default'
 LOADWINDTCRM = 'load_wind_ascii'
 LOADFLOODASCII = 'load_flood_ascii'
 TEMPLATE = 'template'
+TEMP = 'temp_default'
 WINDV1 = 'wind_v1'
 WINDV2 = 'wind_v2'
+WINDV3 = 'wind_v3'
 FLOODFABRICV1 = 'flood_fabric_v1'
+FLOODFABRICV2 = 'flood_fabric_v2'
 SAVE = 'save'
 FLOOD_X_AXIS = 'water depth above ground floor (m)'
 
@@ -64,6 +69,45 @@ def read_file(file_name):
         for form in config_inf:
             config_dic.update(form)
     return config_dic
+
+
+def read_config_file(file_name):
+    """
+    Read the configuration file and return the info as a list.
+
+    :param file_name: The yaml file.
+    :returns: A list of the configuration file
+    """
+    config_file_handle = open(file_name, 'r')
+    the_conf = yaml.load(config_file_handle)
+    # print "the_conf", the_conf
+    return the_conf
+
+
+def instance_builder(config_list):
+    """
+    From the configuration list build and knowing
+    the template, build the the job instances
+    and add attributes in the config to the instances.
+
+    :param config_list: A list describing the simulation.
+    :returns: A list of job instances to process over.
+    """
+    # print "config_list", config_list
+    template = config_list[0][TEMPLATE]
+    try:
+        template = config_list[0][TEMPLATE]
+        del config_list[0]
+    except KeyError:
+        template = DEFAULT
+    try:
+        reader_function = READERS[str(template)]
+    except KeyError:
+        raise RuntimeError(
+            'Invalid template name, %s in config file.' % template)
+
+    jobs = reader_function(config_list)
+    return jobs
 
 
 def template_builder(config_dic):
@@ -107,6 +151,25 @@ def _reader1(config_dic):
             'No jobs label in config file.')
 
     return get_job_or_calcs(job_names)
+
+
+def _reader2(config_list):
+    """
+    From an untemplated configuration list build the job list.
+
+    :param config_dic: A dictionary describing the simulation.
+    :returns: A list of jobs to process over.
+    """
+    job_insts = []
+    for jobcalc_dic in config_list:
+        # Assuming one key dictionary
+        # FIXME
+        job_string = jobcalc_dic.keys()[0]
+        job_inst = _get_job_or_calc(job_string)
+        caj = workflow.ConfigAwareJob(job_inst,
+                                      atts_to_add=jobcalc_dic[job_string])
+        job_insts.append(caj)
+    return job_insts
 
 
 def _wind_v1_reader(config_dic):
@@ -236,6 +299,79 @@ def _flood_fabric_v1_reader(config_dic):
     return get_job_or_calcs(job_names)
 
 
+def find_atts(config_list, job):
+    """
+    Find the attributes on a job in a config_list.
+
+    :param config_list:
+    :param job: The job name as a string.
+    """
+    atts = None
+    for ele in config_list:
+        if job in ele:
+            atts = ele[job]
+    if atts is None:
+        msg = '\nMandatory key not found in config file; %s\n' % job
+        raise RuntimeError(msg)
+    return atts
+
+
+def _flood_fabric_v2_reader(config_list):
+    """
+    This function does two things;
+       * From a flood fabric template v1 configuration dictionary
+       build the job list.
+       * Set up the attributes of the jobs and calc's specifically
+       for a flood study.
+    :param config_list: A list describing the simulation.
+    :returns: A list of jobs to process over.
+    """
+    job_insts = []
+
+    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    _add_job(job_insts, LOADCSVEXPOSURE, atts)
+
+    file_list = find_atts(config_list, LOADFLOODASCII)
+    atts = {'file_list': file_list, 'attribute_label': FLOOD_X_AXIS}
+    _add_job(job_insts, LOADRASTER, atts)
+    vul_filename = os.path.join(misc.RESOURCE_DIR,
+                                'fabric_flood_avg_curve.xml')
+    _add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
+
+    # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
+    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    atts = {'vul_functions_in_exposure': {
+            'structural_domestic_flood_2012':
+            'FABRIC_FLOOD_FUNCTION_ID'}}
+    _add_job(job_insts, SIMPLELINKER, atts)
+
+    atts = {'variability_method': {
+            'structural_domestic_flood_2012': 'mean'}}
+    _add_job(job_insts, SELECTVULNFUNCTION, atts)
+
+    _add_job(job_insts, LOOKUP)
+    _add_job(job_insts, STRUCT_LOSS)
+
+    file_name = find_atts(config_list, SAVE)
+    _add_job(job_insts, SAVEALL, {'file_name': file_name})
+
+    return job_insts
+
+
+def _add_job(jobs, new_job, atts=None):
+    """
+    Given a list of jobs, add a new job and it's att's to the job.
+
+    :param jobs: A list of jobs.
+    :param new_job: The new job, as a string.
+    :param atts: The attributes of the new job.
+    """
+    job_inst = _get_job_or_calc(new_job)
+    caj = workflow.ConfigAwareJob(job_inst,
+                                  atts_to_add=atts)
+    jobs.append(caj)
+
+
 def get_job_or_calcs(job_names):
     """
     Given a list of job or calc names, return a list of job or calc
@@ -246,12 +382,12 @@ def get_job_or_calcs(job_names):
     """
     jobs = []
     for job_name in job_names:
-        jobs.append(get_job_or_calc(job_name))
+        jobs.append(_get_job_or_calc(job_name))
 
     return jobs
 
 
-def get_job_or_calc(name):
+def _get_job_or_calc(name):
     """
     Given a job or calc name, return the job or calc instance.
 
@@ -372,7 +508,7 @@ def check_attributes(config_dic):
         if key == JOBSKEY:
             pass
         else:
-            job_calc_instance = get_job_or_calc(key)
+            job_calc_instance = _get_job_or_calc(key)
             args, defaults = job_calc_instance.get_required_args_no_context()
             unchecked_config_args = copy.copy(config_dic[key])
 
@@ -405,4 +541,8 @@ def check_attributes(config_dic):
 READERS = {DEFAULT: _reader1,
            WINDV1: _wind_v1_reader,
            WINDV2: _wind_v2_reader,
-           FLOODFABRICV1: _flood_fabric_v1_reader}
+           FLOODFABRICV1: _flood_fabric_v1_reader,
+           NEWDEFAULT: _reader2,
+           TEMP: _reader2,
+           WINDV3: None,  # _wind_v3_reader,
+           FLOODFABRICV2: _flood_fabric_v2_reader}

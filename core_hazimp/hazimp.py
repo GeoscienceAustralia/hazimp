@@ -23,6 +23,7 @@ from core_hazimp import console
 from core_hazimp import context
 from core_hazimp import workflow
 from core_hazimp import config
+from core_hazimp import pipeline
 
 
 def main(config_dic=None, config_file=None):
@@ -42,12 +43,38 @@ def main(config_dic=None, config_file=None):
     calc_jobs = config.template_builder(config_dic)  # config_dic modified
     config.validate_config(config_dic)
     pipe_factory = workflow.ConfigPipeLineBuilder()
-    pipeline = pipe_factory.build(calc_jobs)
-    pipeline.run(cont_in, config_dic)
+    the_pipeline = pipe_factory.build(calc_jobs)
+    the_pipeline.run(cont_in, config_dic)
+    return cont_in
+
+
+def start(config_list=None, config_file=None, cont_in=None):
+    """
+    Run the HazImp tool, based on the config info.
+
+    :param config_list: The configuration info, as a list.
+    :param config_file: The configuration info, as a file location.
+    :param cont_in: Only used in testing. A context instance.
+    :returns: The config dictionary.
+    """
+    if config_file:
+        config_list = config.read_config_file(config_file)
+
+    if config_list is None:
+        raise RuntimeError('No configuration information.')
+
+    if cont_in is None:
+        cont_in = context.Context()
+    calc_jobs = config.instance_builder(config_list)
+    # FIXME get the validation code going
+    # config.validate_config(config_dic)
+    the_pipeline = pipeline.PipeLine(calc_jobs)
+    the_pipeline.run(cont_in)
     return cont_in
 
 ############################################################################
 if __name__ == "__main__":
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
-        main(config_file=CMD_LINE_ARGS.config_file[0])
+        # main(config_file=CMD_LINE_ARGS.config_file[0])
+        start(config_file=CMD_LINE_ARGS.config_file[0])

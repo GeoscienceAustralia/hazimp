@@ -45,11 +45,11 @@ class TestConfig(unittest.TestCase):
     def test_get_job_or_calc(self):
         # messy test.  Relies on calcs.py and jobs.py
         name = 'add_test'
-        job = config.get_job_or_calc(name)
+        job = config._get_job_or_calc(name)  # pylint: disable=W0212
         self.assertIsInstance(job, calcs.Add)
 
         name = 'const_test'
-        job = config.get_job_or_calc(name)
+        job = config._get_job_or_calc(name)  # pylint: disable=W0212
         self.assertIsInstance(job, jobs.ConstTest)
 
     def test_job_reader(self):
@@ -170,6 +170,22 @@ class TestConfig(unittest.TestCase):
             'yeahe': 'latitude',
             'expode': 'longitude'}}
         self.assertRaises(RuntimeError, config.check_attributes, config_dic)
+
+    def test_find_atts(self):
+        config_list = [{jobs.LOADCSVEXPOSURE: {
+            'file_name': 'yeah',
+            'yeahe': 'latitude',
+            'expode': 'longitude'}}]
+        self.assertRaises(RuntimeError, config.find_atts, config_list, 'foo')
+
+    def test_find_attsII(self):
+        actual_atts = {'file_name': 'yeah',
+                       'yeahe': 'latitude',
+                       'expode': 'longitude'}
+        config_list = [{jobs.LOADCSVEXPOSURE: actual_atts}]
+        atts = config.find_atts(config_list, jobs.LOADCSVEXPOSURE)
+        self.assertEqual(atts, actual_atts)
+
 #-------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestConfig, 'test')
