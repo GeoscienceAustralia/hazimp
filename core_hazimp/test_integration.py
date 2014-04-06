@@ -131,15 +131,16 @@ class TestIntegration(unittest.TestCase):
         file_vuln = build_example_vuln()
         file_exp, lat_name, long_name = build_example_exposure()
 
-        the_config = [{'template':'temp_default'},
-                      {jobs.LOADCSVEXPOSURE: {'file_name': file_exp,
-                                              'exposure_latitude': lat_name,
-                                              'exposure_longitude': long_name}},
+        the_config = [{'template': 'temp_default'},
+                      {jobs.LOADCSVEXPOSURE:
+                       {'file_name': file_exp,
+                        'exposure_latitude': lat_name,
+                        'exposure_longitude': long_name}},
                       {jobs.LOADXMLVULNERABILITY: {'file_name': file_vuln}},
-                      {jobs.SIMPLELINKER: {'vul_functions_in_exposure': 
+                      {jobs.SIMPLELINKER: {'vul_functions_in_exposure':
                                            {"EQ_building": 'building',
                                             "EQ_contents": 'contents'}}},
-                      {jobs.SELECTVULNFUNCTION: {'variability_method': 
+                      {jobs.SELECTVULNFUNCTION: {'variability_method':
                                                  {"EQ_building": 'mean',
                                                   "EQ_contents": 'mean'}}},
                       {jobs.LOOKUP: None}]
@@ -171,7 +172,7 @@ class TestIntegration(unittest.TestCase):
         os.remove(file_vuln)
         os.remove(file_exp)
 
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestIntegration, 'test')
     Runner = unittest.TextTestRunner()

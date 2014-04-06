@@ -15,3 +15,4 @@ pep8 .
 
 # autopep8 hazimp_preprocessing/curve_data/*.py --in-place --aggressive
 # autopep8 core_hazimp/*.py --in-place --aggressive
+# autopep8 examples/*/*.py --in-place --aggressive

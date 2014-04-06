@@ -113,7 +113,7 @@ class TestPfP(unittest.TestCase):
         est_z = plane.estimate_z(x, y)
         self.assertTrue(numpy.allclose(est_z, actual_z))
 
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestPfP, 'test')
     RUNNER = unittest.TextTestRunner()

@@ -351,7 +351,7 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
                              coef_var)
         write_nrml_close(xml_h)
 
-#-----------------------------------------------------------
+# -----------------------------------------------------------
 if __name__ == "__main__":
     if False:
         csv_curve2nrml('domestic_wind_vul_curves.csv',

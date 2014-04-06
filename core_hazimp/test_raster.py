@@ -227,7 +227,7 @@ class TestRaster(unittest.TestCase):
         max_extent = recalc_max(old_max_extent, extent)
         self.assertEqual(old_max_extent, max_extent)
 
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestRaster, 'test')
     Runner = unittest.TextTestRunner()

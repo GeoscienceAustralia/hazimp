@@ -136,7 +136,7 @@ class TestContext(unittest.TestCase):
                                      actual[key]))
 
 
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestContext, 'test')
     Runner = unittest.TextTestRunner()

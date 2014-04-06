@@ -171,8 +171,8 @@ def _reader2(config_list):
     if False:
         for job in job_insts:
             print "*******************************************"
-            print "job.job_instance",job.job_instance
-            print "job.atts_to_add",job.atts_to_add
+            print "job.job_instance", job.job_instance
+            print "job.atts_to_add", job.atts_to_add
     return job_insts
 
 
@@ -265,7 +265,7 @@ def _wind_v3_reader(config_list):
     _add_job(job_insts, LOADCSVEXPOSURE, atts)
 
     file_list = find_atts(config_list, LOADWINDTCRM)
-    atts = {'file_list': file_list, 
+    atts = {'file_list': file_list,
             'attribute_label': '0.2s gust at 10m height m/s'}
     _add_job(job_insts, LOADRASTER, atts)
 
@@ -277,7 +277,7 @@ def _wind_v3_reader(config_list):
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     atts = {'vul_functions_in_exposure': {
             'domestic_wind_2012':
-                'WIND_VULNERABILITY_FUNCTION_ID'}}
+            'WIND_VULNERABILITY_FUNCTION_ID'}}
     _add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
@@ -524,7 +524,7 @@ def check_1st_level_keys(config_dic):
     """
 
     for key in config_dic:
-        if not key in SPELLCHECK.base_words:
+        if key not in SPELLCHECK.base_words:
             meantkey = SPELLCHECK.correct(key)
             msg = '\nInvalid key in config file; %s \n' % key
             if meantkey == key:

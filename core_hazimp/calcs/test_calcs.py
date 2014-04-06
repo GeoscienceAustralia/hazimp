@@ -109,7 +109,7 @@ class TestCalcs(unittest.TestCase):
         inst(context)
         self.assertEqual(context.exposure_att['structural_loss'], 5 * 20)
 
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestCalcs, 'test')
     RUNNER = unittest.TextTestRunner()

@@ -195,7 +195,7 @@ def save_csv(write_dict, filename):
             body = numpy.column_stack((body, only_1d))
 
     # Need numpy 1.7 > to do headers
-    #numpy.savetxt(filename, body, delimiter=',', header='yeah')
+    # numpy.savetxt(filename, body, delimiter=',', header='yeah')
     hnd = open(filename, 'wb')
     writer = csv.writer(hnd, delimiter=',')
     writer.writerow(header)

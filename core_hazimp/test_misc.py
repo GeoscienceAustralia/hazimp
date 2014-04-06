@@ -114,7 +114,7 @@ class TestMisc(unittest.TestCase):
                               [['M', 'O'], ['w gras', 's']]])
         squashed = squash_narray(narray)
         self.assertTrue(squashed.tolist(), ['B', 'A', 'M'])
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestMisc, 'test')
     Runner = unittest.TextTestRunner()

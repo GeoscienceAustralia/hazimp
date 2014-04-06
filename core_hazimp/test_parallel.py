@@ -152,7 +152,7 @@ class TestParallel(unittest.TestCase):
         else:
             pass
 
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     suite = unittest.makeSuite(TestParallel, 'test')
     runner = unittest.TextTestRunner()
