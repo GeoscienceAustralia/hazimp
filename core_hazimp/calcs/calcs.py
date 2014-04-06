@@ -146,8 +146,6 @@ class ConstantTest(Calculator):
     def calc(self, constant=None):
         """
         Return two values
-
-class Concatenate()
         """
         return [constant * 2]
 

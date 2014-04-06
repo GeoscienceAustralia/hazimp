@@ -24,8 +24,6 @@ to process a series of jobs in a sequential
 order. The order is determined by the queue of jobs.
 """
 
-import abc
-
 
 class PipeLine(object):
 
@@ -78,29 +76,29 @@ class PipeLineBuilder(object):
     by assembling all the required jobs
     specified in the config file.
     """
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self):
         self.map_job_callable = {}
 
-    @abc.abstractmethod
-    def build(self, config):
+    def build(self, jobs):
+        """Builds the pipeline.
+
+        :param jobs: A list of job instances
+
+        :returns: A pipeline with the job/calcs in it, ready to process.
         """
-        Build method creates the pipeline by
-        assembling all the steps required.
-        The steps described in the config
-        could be preprocessing or processing
-        steps
-        """
-        pass
+        pipeline = PipeLine(jobs)
+        return pipeline
 
     def append_jobs(self, pipeline, jobs):
         """
         Add jobs to the pipeline by looking
         at the list of jobs defined in the
         config
-        """
 
+        :param jobs: A list of strings.
+        """
+        # This method is not used
         for job in jobs:
             if job in self.map_job_callable:
                 pipeline.add_job(self.map_job_callable[job])
