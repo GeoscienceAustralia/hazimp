@@ -88,3 +88,28 @@ class ConfigPipeLineBuilder(PipeLineBuilder):
         """
         pipeline = ConfigAwarePipeLine(calcs)
         return pipeline
+
+
+class ConfigAwareJob(object):
+
+    """
+    Build a job object that can inject more attributes into the job function
+    call.
+    """
+
+    def __init__(self, job_instance, atts_to_add=None):
+        """
+        :param job_instance: An instance of a job.
+        :param atts_to_add: A dictionary of attributes that will be passed
+                            into the function all.
+        """
+
+        self.job_instance = job_instance
+        self.atts_to_add = atts_to_add
+
+    def __call__(self, *args, **job_kwargs):
+        """
+        Inject the atts_to_add to the job call.
+        """
+        job_kwargs.update(self.atts_to_add)
+        self.job_instance(*args, **job_kwargs)
