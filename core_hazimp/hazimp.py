@@ -26,7 +26,7 @@ from core_hazimp import config
 from core_hazimp import pipeline
 
 
-def main(config_dic=None, config_file=None):
+def main_old(config_dic=None, config_file=None):
     """
     Run the HazImp tool, based on the config info.
 

@@ -94,7 +94,6 @@ def instance_builder(config_list):
     :returns: A list of job instances to process over.
     """
     # print "config_list", config_list
-    template = config_list[0][TEMPLATE]
     try:
         template = config_list[0][TEMPLATE]
         del config_list[0]
@@ -169,6 +168,11 @@ def _reader2(config_list):
         caj = workflow.ConfigAwareJob(job_inst,
                                       atts_to_add=jobcalc_dic[job_string])
         job_insts.append(caj)
+    if False:
+        for job in job_insts:
+            print "*******************************************"
+            print "job.job_instance",job.job_instance
+            print "job.atts_to_add",job.atts_to_add
     return job_insts
 
 
@@ -246,6 +250,47 @@ def _wind_vx_reader(config_dic, vul_filename=None):
     config_dic[SAVEALL] = {'file_name': file_name}
     del config_dic[SAVE]
     return get_job_or_calcs(job_names)
+
+
+def _wind_v3_reader(config_list):
+    """
+    From a wind configuration list build the job list.
+
+    :param config_list: A list describing the simulation.
+    :returns: A list of jobs to process over.
+    """
+    job_insts = []
+
+    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    _add_job(job_insts, LOADCSVEXPOSURE, atts)
+
+    file_list = find_atts(config_list, LOADWINDTCRM)
+    atts = {'file_list': file_list, 
+            'attribute_label': '0.2s gust at 10m height m/s'}
+    _add_job(job_insts, LOADRASTER, atts)
+
+    vul_filename = os.path.join(misc.RESOURCE_DIR,
+                                'synthetic_domestic_wind_vul_curves.xml')
+    _add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
+
+    # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
+    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    atts = {'vul_functions_in_exposure': {
+            'domestic_wind_2012':
+                'WIND_VULNERABILITY_FUNCTION_ID'}}
+    _add_job(job_insts, SIMPLELINKER, atts)
+
+    atts = {'variability_method': {
+            'domestic_wind_2012': 'mean'}}
+    _add_job(job_insts, SELECTVULNFUNCTION, atts)
+
+    _add_job(job_insts, LOOKUP)
+    _add_job(job_insts, STRUCT_LOSS)
+
+    file_name = find_atts(config_list, SAVE)
+    _add_job(job_insts, SAVEALL, {'file_name': file_name})
+
+    return job_insts
 
 
 def _flood_fabric_v1_reader(config_dic):
@@ -544,5 +589,5 @@ READERS = {DEFAULT: _reader1,
            FLOODFABRICV1: _flood_fabric_v1_reader,
            NEWDEFAULT: _reader2,
            TEMP: _reader2,
-           WINDV3: None,  # _wind_v3_reader,
+           WINDV3: _wind_v3_reader,
            FLOODFABRICV2: _flood_fabric_v2_reader}

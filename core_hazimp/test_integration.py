@@ -131,27 +131,19 @@ class TestIntegration(unittest.TestCase):
         file_vuln = build_example_vuln()
         file_exp, lat_name, long_name = build_example_exposure()
 
-        config_dic = {
-            'template': 'default',
-            'jobs': [jobs.LOADCSVEXPOSURE,
-                     jobs.LOADXMLVULNERABILITY,
-                     jobs.SIMPLELINKER,
-                     jobs.SELECTVULNFUNCTION,
-                     jobs.LOOKUP],
-            jobs.LOADCSVEXPOSURE: {
-                'file_name': file_exp,
-                'exposure_latitude': lat_name,
-                'exposure_longitude': long_name},
-            jobs.LOADXMLVULNERABILITY: {
-                'file_name': file_vuln},
-            jobs.SIMPLELINKER: {
-                'vul_functions_in_exposure': {"EQ_building": 'building',
-                                              "EQ_contents": 'contents'}},
-            jobs.SELECTVULNFUNCTION: {
-                'variability_method': {"EQ_building": 'mean',
-                                       "EQ_contents": 'mean'}},
-            jobs.LOOKUP: {}}
-        context = hazimp.main(config_dic=config_dic)
+        the_config = [{'template':'temp_default'},
+                      {jobs.LOADCSVEXPOSURE: {'file_name': file_exp,
+                                              'exposure_latitude': lat_name,
+                                              'exposure_longitude': long_name}},
+                      {jobs.LOADXMLVULNERABILITY: {'file_name': file_vuln}},
+                      {jobs.SIMPLELINKER: {'vul_functions_in_exposure': 
+                                           {"EQ_building": 'building',
+                                            "EQ_contents": 'contents'}}},
+                      {jobs.SELECTVULNFUNCTION: {'variability_method': 
+                                                 {"EQ_building": 'mean',
+                                                  "EQ_contents": 'mean'}}},
+                      {jobs.LOOKUP: None}]
+        context = hazimp.start(config_list=the_config)
 
         # SW1 loss ratio
         #  SW1 4 MMI - 0.4 building_loss , 0.004 contents_loss
