@@ -37,7 +37,7 @@ class TestWind(unittest.TestCase):
     Do large system based tests.
     """
 
-    def test_wind_v1_template_csv(self):
+    def test_flood_v1_template(self):
         # Test running an end to end cyclone test based
         # on a wind config template.
 
@@ -71,7 +71,8 @@ class TestWind(unittest.TestCase):
                                      exp_dict['calced-loss']))
         os.remove(f.name)
 
-    def test_wind_v1_template_csvII(self):
+
+    def test_flood_v1_template_list(self):
         # Test running an end to end wind test based
         # on a wind config template.
 
@@ -84,13 +85,12 @@ class TestWind(unittest.TestCase):
         exp_filename = os.path.join(resource_dir,
                                     'small_exposure.csv')
         haz_filename = os.path.join(resource_dir, 'depth_small_synthetic.txt')
-        config = [
-            {TEMPLATE: FLOODFABRICV2},
-            {LOADCSVEXPOSURE: {'file_name': exp_filename,
-                               'exposure_latitude': 'LATITUDE',
-                               'exposure_longitude': 'LONGITUDE'}},
-            {LOADFLOODASCII: [haz_filename]},
-            {SAVE: f.name}]
+        config = [{TEMPLATE: FLOODFABRICV2},
+                  {LOADCSVEXPOSURE: {'file_name': exp_filename,
+                                     'exposure_latitude': 'LATITUDE',
+                                     'exposure_longitude': 'LONGITUDE'}},
+                  {LOADFLOODASCII: [haz_filename]},
+                  {SAVE: f.name}]
 
         context = hazimp.start(config_list=config)
         self.assertTrue(allclose(
