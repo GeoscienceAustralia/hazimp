@@ -37,6 +37,7 @@ class Raster(object):
     # R0902: 27:Raster: Too many instance attributes (8/7)
     # R0913: 34:Raster.__init__: Too many arguments (9/6)
     # pylint: disable=R0902, R0913
+
     def __init__(self, raster, upper_left_x, upper_left_y,
                  x_pixel, y_pixel, no_data_value, x_size, y_size):
         """

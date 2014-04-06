@@ -379,11 +379,11 @@ class LoadRaster(Job):
         # We need a file or a full set of raster info.
         if file_list is None:
             # The raster info is being passed as an array
-            assert not raster is None
-            assert not upper_left_x is None
-            assert not upper_left_y is None
-            assert not cell_size is None
-            assert not no_data_value is None
+            assert raster is not None
+            assert upper_left_x is not None
+            assert upper_left_y is not None
+            assert cell_size is not None
+            assert no_data_value is not None
             a_raster = raster_module.Raster.from_array(raster, upper_left_x,
                                                        upper_left_y,
                                                        cell_size,
@@ -433,9 +433,9 @@ class SaveExposure(Job):
         context.save_exposure_atts(file_name, use_parallel=use_parallel)
 
 
-#____________________________________________________
-#----------------------------------------------------
+# ____________________________________________________
+# ----------------------------------------------------
 #                KEEP THIS AT THE END
-#____________________________________________________
+# ____________________________________________________
 
 JOBS = misc.instanciate_classes(sys.modules[__name__])

@@ -169,6 +169,6 @@ def csv2dict(filename, use_parallel=True):
     else:
         subdict = misc.csv2dict(filename, add_ids=True)
     return subdict
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     pass

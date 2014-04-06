@@ -49,7 +49,7 @@ class TestSpellCheck(unittest.TestCase):
         self.assertTrue(spell.correct('wack') == 'Wack')
         self.assertTrue(spell.correct('wayoff') == 'wayoff')
 
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestSpellCheck, 'test')
     RUNNER = unittest.TextTestRunner()

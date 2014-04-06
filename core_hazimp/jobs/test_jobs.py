@@ -90,7 +90,6 @@ class TestJobs(unittest.TestCase):
         inst = JOBS['const_test']
         con_in = Dummy
         con_in.exposure_att = {'a_test': 5, 'b_test': 20}
-        #config = {'eggs':{'c_test': 25}}
         test_kwargs = {'c_test': 25}
         inst(con_in, **test_kwargs)
         self.assertEqual(con_in.exposure_att['c_test'], 25)
@@ -545,9 +544,9 @@ class TestJobs(unittest.TestCase):
                                      actual[the_key]))
         os.remove(f.name)
 
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestJobs, 'test')
-    #SUITE = unittest.makeSuite(TestJobs, 'test_load_raster_clipping')
+    # SUITE = unittest.makeSuite(TestJobs, 'test_load_raster_clipping')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)

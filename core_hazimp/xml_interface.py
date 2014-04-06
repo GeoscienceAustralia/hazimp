@@ -116,16 +116,16 @@ class XmlLayer(object):
                                 pair.split())) for pair in string.split('\n')]
 
         # or (a bit slower)
-        #list_of_strings = string.split('\n')
+        # list_of_strings = string.split('\n')
         # split it up into small strings
 
-        #list_of_lists = [coordinate.split() for coordinate in list_of_strings]
+        # l_of_lists = [coordinate.split() for coordinate in list_of_strings]
         # split the small strings (coordinates) into ['lat','long'] lists
 
-        #list_of_lists = [map(float,coord) for coord in list_of_lists]
+        # list_of_lists = [map(float,coord) for coord in list_of_lists]
         # coordintates into [lat,long] lists
 
-        #list_of_tuples = [tuple(coordinate) for coordinate in list_of_lists]
+        # list_of_tuples = [tuple(coordinate) for coordinate in list_of_lists]
         # coordintates into (lat,long)
 
         # or
