@@ -131,7 +131,7 @@ class TestIntegration(unittest.TestCase):
         file_vuln = build_example_vuln()
         file_exp, lat_name, long_name = build_example_exposure()
 
-        the_config = [{'template': 'temp_default'},
+        the_config = [{'template': 'default'},
                       {jobs.LOADCSVEXPOSURE:
                        {'file_name': file_exp,
                         'exposure_latitude': lat_name,

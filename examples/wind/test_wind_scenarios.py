@@ -28,7 +28,7 @@ from core_hazimp.jobs.jobs import (LOADRASTER, LOADCSVEXPOSURE,
                                    LOOKUP, SAVEALL)
 from core_hazimp.calcs.calcs import STRUCT_LOSS
 from core_hazimp.config import (LOADWINDTCRM, TEMPLATE, WINDV1, SAVE, WINDV2,
-                                WINDV3, TEMP)
+                                WINDV3, DEFAULT)
 from core_hazimp import parallel
 
 
@@ -56,7 +56,7 @@ class TestWind(unittest.TestCase):
         sim_at = {'domestic_wind_2012': 'WIND_VULNERABILITY_FUNCTION_ID'}
         slv_at = {'domestic_wind_2012': 'mean'}
         config = [
-            {TEMPLATE: TEMP},
+            {TEMPLATE: DEFAULT},
             {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                'exposure_latitude': 'LATITUDE',
                                'exposure_longitude': 'LONGITUDE'}},

@@ -53,9 +53,9 @@ class TestConfig(unittest.TestCase):
         self.assertIsInstance(job, jobs.ConstTest)
 
     def test_job_reader(self):
-        config_dic = {'version': 1, 'jobs': ['add_test']}
-        actual = config.template_builder(config_dic)
-        self.assertListEqual([calcs.CALCS['add_test']], actual)
+        the_config = [{'add_test': None}]
+        actual = config.instance_builder(the_config)
+        self.assertEqual(calcs.CALCS['add_test'], actual[0].job_instance)
 
     def test_file_can_open(self):
         # Write a file to test
