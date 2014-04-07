@@ -34,11 +34,11 @@ from core_hazimp import spell_check
 from core_hazimp import workflow
 
 DEFAULT = 'default'  # 'old_default'
-NEWDEFAULT = 'NEWdefault'    # 'default'
+# NEWDEFAULT = 'NEWdefault'    # 'default'
 LOADWINDTCRM = 'load_wind_ascii'
 LOADFLOODASCII = 'load_flood_ascii'
 TEMPLATE = 'template'
-TEMP = 'temp_default'
+#TEMP = 'temp_default'
 WINDV1 = 'wind_v1'
 WINDV2 = 'wind_v2'
 WINDV3 = 'wind_v3'
@@ -583,11 +583,7 @@ def check_attributes(config_dic):
                 raise RuntimeError(msg)
 
 
-READERS = {DEFAULT: _reader1,
-           WINDV1: _wind_v1_reader,
-           WINDV2: _wind_v2_reader,
+READERS = {DEFAULT: _reader2,
            FLOODFABRICV1: _flood_fabric_v1_reader,
-           NEWDEFAULT: _reader2,
-           TEMP: _reader2,
            WINDV3: _wind_v3_reader,
            FLOODFABRICV2: _flood_fabric_v2_reader}
