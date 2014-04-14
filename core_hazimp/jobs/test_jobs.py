@@ -121,7 +121,7 @@ class TestJobs(unittest.TestCase):
         self.assertTrue(allclose(con_in.exposure_att['c_test'],
                                  asarray([35, 35])))
 
-    def no_test_constIV(self):
+    def test_constIV(self):
         # Just make sure it does the adding right.
         inst = JOBS[CONSTANT]
         con_in = Dummy
@@ -130,8 +130,9 @@ class TestJobs(unittest.TestCase):
         test_kwargs = {'var': 'c_test', 'value': 'yeah'}
         inst(con_in, **test_kwargs)
         # print "con_in.exposure_att['c_test']", con_in.exposure_att['c_test']
-        # self.assertTrue(allclose(con_in.exposure_att['c_test'],
-         #                        asarray(['yeah', 'yeah'])))
+        # This fails
+        # self.assertEqual(con_in.exposure_att['c_test'].tolist(),
+        #                ['yeah', 'yeah'])
 
     def test_add(self):
         inst_const = JOBS[CONSTANT]
@@ -154,12 +155,9 @@ class TestJobs(unittest.TestCase):
         inst_const(con_in, **test_kwargs)
         test_kwargs = {'var1': 'a_test', 'var2': 'b_test', 'var_out': 'c_test'}
         inst_add(con_in, **test_kwargs)
-        print "con_in.exposure_att['a_test']", con_in.exposure_att['a_test']
-        print "con_in.exposure_att['b_test']", con_in.exposure_att['b_test']
-        print "con_in.exposure_att['c_test']", con_in.exposure_att['c_test']
         self.assertEqual(con_in.exposure_att['c_test'].tolist(),
                          ['summer_time', 'summer_drinks'])
-                                 
+
     def test_load_csv_exposure(self):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(

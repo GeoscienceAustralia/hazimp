@@ -183,7 +183,6 @@ def save_csv(write_dict, filename):
     header.remove(EX_LONG)
     header.insert(0, EX_LAT)
     header.insert(1, EX_LONG)
-
     body = None
     for key in header:
         #  Only one dimension can be saved.
