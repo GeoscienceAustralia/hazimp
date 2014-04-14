@@ -135,7 +135,7 @@ def add(var, var2):
     :returns: The new column name, with the values of Var1 + var2.
     """
     try:
-        result = numpy.asarray([var + var2])
+        result = numpy.asarray(var + var2)
     except TypeError:
         # Assume numpy array with strings
         result = numpy.asarray(numpy.core.defchararray.add(var, var2))
