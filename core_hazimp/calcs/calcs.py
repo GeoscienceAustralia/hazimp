@@ -26,10 +26,8 @@ Calculations
 
 import sys
 
-import numpy
-
 from core_hazimp.jobs.jobs import Job
-from core_hazimp.misc import instanciate_classes
+from core_hazimp import misc
 
 STRUCT_LOSS = 'structural_loss'
 
@@ -85,12 +83,8 @@ class Add(Calculator):
         """
         Add args
         """
-        try:
-            result = [a_test + b_test]
-        except TypeError:
-            # Assume numpy array with strings
-            result = [numpy.core.defchararray.add(a_test, b_test)]
-        return result
+        # This needs to return a list, since it is a list of outputs
+        return [misc.add(a_test, b_test)]
 
 
 class MultiplyTest(Calculator):
@@ -171,4 +165,4 @@ class CalcLoss(Calculator):
         return [structural_loss_ratio * structural_value]
 
 
-CALCS = instanciate_classes(sys.modules[__name__])
+CALCS = misc.instanciate_classes(sys.modules[__name__])

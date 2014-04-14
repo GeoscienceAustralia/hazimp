@@ -124,3 +124,19 @@ def squash_narray(ary):
     else:
         d1_ary = ary
     return d1_ary
+
+
+def add(var, var2):
+    """
+    Add the values of two numpy arrays together.
+
+    :param var: The values in this array are added.
+    :param var2: The values in this array are added.
+    :returns: The new column name, with the values of Var1 + var2.
+    """
+    try:
+        result = numpy.asarray([var + var2])
+    except TypeError:
+        # Assume numpy array with strings
+        result = numpy.asarray(numpy.core.defchararray.add(var, var2))
+    return result

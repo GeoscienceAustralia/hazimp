@@ -33,6 +33,7 @@ from core_hazimp import parallel
 
 
 class TestWind(unittest.TestCase):
+
     """
     Do large system based tests.
     """
@@ -62,7 +63,7 @@ class TestWind(unittest.TestCase):
                                'exposure_longitude': 'LONGITUDE'}},
             {LOADRASTER: {'file_list': [wind_filename],
                           'attribute_label':
-                              '0.2s gust at 10m height m/s'}},
+                          '0.2s gust at 10m height m/s'}},
             {LOADXMLVULNERABILITY: {'file_name':
                                     vul_filename}},
             {SIMPLELINKER: {'vul_functions_in_exposure': sim_at}},
