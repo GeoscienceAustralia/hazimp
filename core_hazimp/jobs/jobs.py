@@ -45,6 +45,8 @@ from core_hazimp import raster as raster_module
 from core_hazimp.context import EX_LAT, EX_LONG
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
+ADD = 'add'
+CONSTANT = 'constant'
 LOADCSVEXPOSURE = 'load_exposure'
 LOADRASTER = 'load_raster'
 LOADXMLVULNERABILITY = 'load_xml_vulnerability'
@@ -117,6 +119,50 @@ class ConstTest(Job):
         :param c_test: Variable to add to context.
         """
         context.exposure_att['c_test'] = c_test
+
+
+class Const(Job):
+
+    """
+    Given a key and a constant value, insert a vector of the value.
+    """
+
+    def __init__(self):
+        super(Const, self).__init__()
+        self.call_funct = CONSTANT
+
+    def __call__(self, context, var, value):
+        """
+        A dummy job for testing.
+
+        :param context: The context instance, used to move data around.
+        :param var: Variable to add to context.
+        :param value: Value of the variable added.
+        """
+        context.exposure_att[var] = value
+
+
+class Add(Job):
+
+    """
+    Given a key and a constant value, insert a vector of the value.
+    """
+
+    def __init__(self):
+        super(Add, self).__init__()
+        self.call_funct = ADD
+
+    def __call__(self, context, var1, var2, var_out):
+        """
+        Add two columns together, put the answer in a second column.
+
+        :param context: The context instance, used to move data around.
+        :param var1: The values in this column are added.
+        :param var2: The values in this column are added.
+        :param var_out: The new column name, with the values of Var1 + var2.
+        """
+        context.exposure_att[var_out] = misc.add(context.exposure_att[var1],
+                                                 context.exposure_att[var2])
 
 
 class LoadCsvExposure(Job):

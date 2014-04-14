@@ -37,7 +37,8 @@ import numpy
 from scipy import allclose, asarray, isnan, array, rollaxis
 
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
-                                   SAVEALL)
+                                   SAVEALL, CONSTANT, ADD)
+from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 from core_hazimp import context
@@ -94,6 +95,71 @@ class TestJobs(unittest.TestCase):
         inst(con_in, **test_kwargs)
         self.assertEqual(con_in.exposure_att['c_test'], 25)
 
+    def test_const(self):
+        inst = JOBS[CONSTANT]
+        con_in = Dummy
+        con_in.exposure_att = {'a_test': 5, 'b_test': 20}
+        test_kwargs = {'var': 'c_test', 'value': 25}
+        inst(con_in, **test_kwargs)
+        self.assertEqual(con_in.exposure_att['c_test'], 25)
+
+    def test_constII(self):
+        inst = JOBS[CONSTANT]
+        con_in = Dummy
+        con_in.exposure_att = {'a_test': 5, 'b_test': 20}
+        test_kwargs = {'var': 'c_test', 'value': 'yeah'}
+        inst(con_in, **test_kwargs)
+        self.assertEqual(con_in.exposure_att['c_test'], 'yeah')
+
+    def test_constIII(self):
+        inst = JOBS[CONSTANT]
+        con_in = Dummy
+        con_in.exposure_att = {'a_test': numpy.array([25, 20]),
+                               'b_test': numpy.array([2, 40])}
+        test_kwargs = {'var': 'c_test', 'value': 35}
+        inst(con_in, **test_kwargs)
+        self.assertTrue(allclose(con_in.exposure_att['c_test'],
+                                 asarray([35, 35])))
+
+    def no_test_constIV(self):
+        # Just make sure it does the adding right.
+        inst = JOBS[CONSTANT]
+        con_in = Dummy
+        con_in.exposure_att = {'a_test': numpy.array([25, 20]),
+                               'b_test': numpy.array([2, 40])}
+        test_kwargs = {'var': 'c_test', 'value': 'yeah'}
+        inst(con_in, **test_kwargs)
+        # print "con_in.exposure_att['c_test']", con_in.exposure_att['c_test']
+        # self.assertTrue(allclose(con_in.exposure_att['c_test'],
+         #                        asarray(['yeah', 'yeah'])))
+
+    def test_add(self):
+        inst_const = JOBS[CONSTANT]
+        inst_add = JOBS[ADD]
+        con_in = Dummy
+        con_in.exposure_att = {'b_test': numpy.array([2, 40])}
+        test_kwargs = {'var': 'a_test', 'value': 20}
+        inst_const(con_in, **test_kwargs)
+        test_kwargs = {'var1': 'a_test', 'var2': 'b_test', 'var_out': 'c_test'}
+        inst_add(con_in, **test_kwargs)
+        self.assertTrue(allclose(con_in.exposure_att['c_test'],
+                                 asarray([22, 60])))
+
+    def test_add(self):
+        inst_const = JOBS[CONSTANT]
+        inst_add = JOBS[ADD]
+        con_in = Dummy
+        con_in.exposure_att = {'b_test': numpy.array(['_time', '_drinks'])}
+        test_kwargs = {'var': 'a_test', 'value': 'summer'}
+        inst_const(con_in, **test_kwargs)
+        test_kwargs = {'var1': 'a_test', 'var2': 'b_test', 'var_out': 'c_test'}
+        inst_add(con_in, **test_kwargs)
+        print "con_in.exposure_att['a_test']", con_in.exposure_att['a_test']
+        print "con_in.exposure_att['b_test']", con_in.exposure_att['b_test']
+        print "con_in.exposure_att['c_test']", con_in.exposure_att['c_test']
+        self.assertEqual(con_in.exposure_att['c_test'].tolist(),
+                         ['summer_time', 'summer_drinks'])
+                                 
     def test_load_csv_exposure(self):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
