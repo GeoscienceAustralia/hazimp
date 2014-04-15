@@ -91,6 +91,18 @@ class Context(object):
         # function ID's.
         self.vul_function_titles = {}
 
+    def get_site_count(self):
+        """
+        Get the number of sites the context is storing.
+
+        :return: The number of sites the context is storing or None if
+                 there are no sites.
+        """
+        if self.exposure_long is None:
+            return None
+        else:
+            return len(self.exposure_long)
+
     def clip_exposure(self, min_long, min_lat, max_long, max_lat):
         """ min_long, min_lat, max_long, max_lat
         Clip the exposure data so only the exposure values within

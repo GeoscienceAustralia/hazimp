@@ -37,7 +37,7 @@ is not present Error out.
 """
 
 import sys
-from scipy import asarray
+import scipy
 
 from core_hazimp import parallel
 from core_hazimp import misc
@@ -139,7 +139,10 @@ class Const(Job):
         :param var: Variable to add to context.
         :param value: Value of the variable added.
         """
-        context.exposure_att[var] = value
+        sites = context.get_site_count()
+        # This uses a lot of memory,
+        # but it keeps the context instance simple.
+        context.exposure_att[var] = scipy.tile(scipy.asarray(value), sites)
 
 
 class Add(Job):
@@ -193,6 +196,8 @@ class LoadCsvExposure(Job):
         file_dict = parallel.csv2dict(file_name, use_parallel=use_parallel)
 
         # FIXME Need to do better error handling
+        # FIXME this function can only be called once.
+        # Multiple calls will corrupt the context data.
 
         if exposure_latitude is None:
             lat_key = EX_LAT
@@ -200,7 +205,7 @@ class LoadCsvExposure(Job):
             lat_key = exposure_latitude
 
         try:
-            context.exposure_lat = asarray(file_dict[lat_key])
+            context.exposure_lat = scipy.asarray(file_dict[lat_key])
             del file_dict[lat_key]
         except KeyError:
             msg = "No Exposure latitude column labelled '%s'." % lat_key
@@ -212,14 +217,14 @@ class LoadCsvExposure(Job):
             long_key = exposure_longitude
 
         try:
-            context.exposure_long = asarray(file_dict[long_key])
+            context.exposure_long = scipy.asarray(file_dict[long_key])
             del file_dict[long_key]
         except KeyError:
             msg = "No Exposure longitude column labelled '%s'." % long_key
             raise RuntimeError(msg)
 
         for key in file_dict:
-            context.exposure_att[key] = asarray(file_dict[key])
+            context.exposure_att[key] = scipy.asarray(file_dict[key])
 
 
 class LoadXmlVulnerability(Job):

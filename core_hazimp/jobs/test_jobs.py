@@ -38,7 +38,6 @@ from scipy import allclose, asarray, isnan, array, rollaxis
 
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                                    SAVEALL, CONSTANT, ADD)
-from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 from core_hazimp import context
@@ -52,13 +51,18 @@ class Dummy(object):
     Dummy class for testing
     """
 
-    def __init__(self):
+    def __init__(self, site_count=None):
         # For test_SimpleLinker
         self.vul_function_titles = {}
 
         # For test_SelectVulnFunction
         self.vulnerability_sets = {}
         self.exposure_att = {}
+        self.site_count = site_count
+
+    def get_site_count(self):
+        """ Return the number of sites"""
+        return self.site_count
 
 
 class DummyVulnSet(object):
@@ -89,7 +93,7 @@ class TestJobs(unittest.TestCase):
 
     def test_const_test(self):
         inst = JOBS['const_test']
-        con_in = Dummy
+        con_in = Dummy(site_count=1)
         con_in.exposure_att = {'a_test': 5, 'b_test': 20}
         test_kwargs = {'c_test': 25}
         inst(con_in, **test_kwargs)
@@ -97,7 +101,7 @@ class TestJobs(unittest.TestCase):
 
     def test_const(self):
         inst = JOBS[CONSTANT]
-        con_in = Dummy
+        con_in = Dummy(site_count=1)
         con_in.exposure_att = {'a_test': 5, 'b_test': 20}
         test_kwargs = {'var': 'c_test', 'value': 25}
         inst(con_in, **test_kwargs)
@@ -105,7 +109,7 @@ class TestJobs(unittest.TestCase):
 
     def test_constII(self):
         inst = JOBS[CONSTANT]
-        con_in = Dummy
+        con_in = Dummy(site_count=1)
         con_in.exposure_att = {'a_test': 5, 'b_test': 20}
         test_kwargs = {'var': 'c_test', 'value': 'yeah'}
         inst(con_in, **test_kwargs)
@@ -113,7 +117,7 @@ class TestJobs(unittest.TestCase):
 
     def test_constIII(self):
         inst = JOBS[CONSTANT]
-        con_in = Dummy
+        con_in = Dummy(site_count=2)
         con_in.exposure_att = {'a_test': numpy.array([25, 20]),
                                'b_test': numpy.array([2, 40])}
         test_kwargs = {'var': 'c_test', 'value': 35}
@@ -124,20 +128,20 @@ class TestJobs(unittest.TestCase):
     def test_constIV(self):
         # Just make sure it does the adding right.
         inst = JOBS[CONSTANT]
-        con_in = Dummy
+        con_in = Dummy(site_count=2)
         con_in.exposure_att = {'a_test': numpy.array([25, 20]),
                                'b_test': numpy.array([2, 40])}
         test_kwargs = {'var': 'c_test', 'value': 'yeah'}
         inst(con_in, **test_kwargs)
         # print "con_in.exposure_att['c_test']", con_in.exposure_att['c_test']
         # This fails
-        # self.assertEqual(con_in.exposure_att['c_test'].tolist(),
-        #                ['yeah', 'yeah'])
+        self.assertEqual(con_in.exposure_att['c_test'].tolist(),
+                         ['yeah', 'yeah'])
 
     def test_add(self):
         inst_const = JOBS[CONSTANT]
         inst_add = JOBS[ADD]
-        con_in = Dummy
+        con_in = Dummy(site_count=2)
         con_in.exposure_att = {'b_test': numpy.array([2, 40])}
         test_kwargs = {'var': 'a_test', 'value': 20}
         inst_const(con_in, **test_kwargs)
@@ -146,10 +150,10 @@ class TestJobs(unittest.TestCase):
         self.assertTrue(allclose(con_in.exposure_att['c_test'],
                                  asarray([22, 60])))
 
-    def test_add(self):
+    def test_addII(self):
         inst_const = JOBS[CONSTANT]
         inst_add = JOBS[ADD]
-        con_in = Dummy
+        con_in = Dummy(site_count=2)
         con_in.exposure_att = {'b_test': numpy.array(['_time', '_drinks'])}
         test_kwargs = {'var': 'a_test', 'value': 'summer'}
         inst_const(con_in, **test_kwargs)
@@ -170,7 +174,7 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        con_in = Dummy
+        con_in = Dummy()
         con_in.exposure_lat = None
         con_in.exposure_long = None
         con_in.exposure_att = {}
@@ -205,7 +209,7 @@ class TestJobs(unittest.TestCase):
         # Write a file to test
         filename = build_example()
 
-        con_in = Dummy
+        con_in = Dummy()
         con_in.exposure_lat = None
         con_in.exposure_long = None
         con_in.vulnerability_sets = {}
