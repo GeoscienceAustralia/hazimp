@@ -71,6 +71,18 @@ class TestContext(unittest.TestCase):
                                      actual[keyish]))
         os.remove(f.name)
 
+    def test_get_site_count(self):
+        con = context.Context()
+        actual = {'shoes': array([10., 11]),
+                  'depth': array([[5., 3.], [2., 4]]),
+                  misc.INTID: array([0, 1, 2])}
+        con.exposure_att = actual
+        lat = array([1, 2.])
+        con.exposure_lat = lat
+        lon = array([10., 20.])
+        con.exposure_long = lon
+        self.assertEqual(con.get_site_count(), 2)
+
     def test_save_exposure_attsII(self):
 
         # Write a file to test

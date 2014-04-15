@@ -36,7 +36,7 @@ from scipy import allclose, asarray
 from core_hazimp import workflow
 from core_hazimp import context
 from core_hazimp.calcs.calcs import CALCS
-from core_hazimp.jobs.jobs import JOBS, LOADCSVEXPOSURE
+from core_hazimp.jobs.jobs import JOBS, LOADCSVEXPOSURE, CONSTANT
 from core_hazimp import parallel
 from core_hazimp import pipeline
 
@@ -64,10 +64,14 @@ class TestWorkFlow(unittest.TestCase):
         atts = {'file_name': f.name,
                 context.EX_LAT: 'LAT',
                 context.EX_LONG: 'LONG'}
-        caj1 = workflow.ConfigAwareJob(JOBS[LOADCSVEXPOSURE],
-                                       atts_to_add=atts)
+        caj1 = workflow.ConfigAwareJob(JOBS[LOADCSVEXPOSURE], atts_to_add=atts)
 
-        calc_list = [caj1, CALCS['add_test']]
+        atts = {'var': 'con_test', 'value': 'yeah'}
+        caj2 = workflow.ConfigAwareJob(JOBS[CONSTANT], atts_to_add=atts)
+        atts = {'var': 'con2_test', 'value': 30}
+        caj3 = workflow.ConfigAwareJob(JOBS[CONSTANT], atts_to_add=atts)
+
+        calc_list = [caj1, caj2, caj3, CALCS['add_test']]
         cont_in = context.Context()
 
         the_pipeline = pipeline.PipeLine(calc_list)
@@ -79,6 +83,10 @@ class TestWorkFlow(unittest.TestCase):
                                      asarray([33., 66.])))
             self.assertEqual(cont_dict['BUILDING'].tolist(),
                              ['TAB', 'DSG'])
+            self.assertTrue(allclose(cont_dict['con2_test'],
+                                     asarray([30., 30.])))
+            self.assertEqual(cont_dict['con_test'].tolist(),
+                             ['yeah', 'yeah'])
         os.remove(f.name)
 
     def test_Builder(self):
