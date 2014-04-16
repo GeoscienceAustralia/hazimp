@@ -72,7 +72,7 @@ class TestConfig(unittest.TestCase):
     def test_file_can_openII(self):
         self.assertFalse(config.file_can_open("/there/should/be/no/file.txt"))
 
-    def test_file_can_openIII(self):
+    def test_check_files_to_load(self):
         junk_files = []
         for _ in range(3):
             # Write a file to test
@@ -83,14 +83,18 @@ class TestConfig(unittest.TestCase):
             f.write('yeah\n')
             f.close()
             junk_files.append(f)
-
-        config_dic = {
-            'dove': {'file_name': junk_files[0].name},
-            'eagle': {'file_list': [junk_files[1].name, junk_files[2].name]},
-            'save': {'file_name': 'not_here'},
-            'save_all': {'file_list': ['still_not_here']}
-        }
-        self.assertTrue(config.check_files_to_load(config_dic))
+            
+        atts = {'file_name': junk_files[0].name}
+        self.assertTrue(config.check_files_to_load(atts))
+        
+        atts = {'file_list': [junk_files[1].name, junk_files[2].name]}
+        self.assertTrue(config.check_files_to_load(atts))
+        
+        atts = {'file_name': 'not_here'}
+        self.assertTrue(config.check_files_to_load(atts))
+        
+        atts = {'file_list': ['still_not_here']}
+        self.assertTrue(config.check_files_to_load(atts))
 
         for handle in junk_files:
             os.remove(handle.name)
@@ -117,59 +121,41 @@ class TestConfig(unittest.TestCase):
             'eagle': {'file_list': [junk_files[1].name, junk_files[2].name]}
         }
 
-        self.assertRaises(RuntimeError, config.check_files_to_load, config_dic)
-        self.assertRaises(RuntimeError, config.validate_config, config_dic)
+        self.assertRaises(RuntimeError, config.check_files_to_load_old, config_dic)
+        self.assertRaises(RuntimeError, config.validate_config_old, config_dic)
 
     def test_check_1st_level_keys(self):
-        config_dic = {'foo': 12}
+    
+        # Hard to do a good test for this function.
         self.assertRaises(RuntimeError, config.check_1st_level_keys,
-                          config_dic)
+                          'yeah')
 
     def test_check_attributes(self):
-        config_dic = {jobs.JOBSKEY: 12}
-        config.check_attributes(config_dic)
-
-        config_dic = {jobs.LOADCSVEXPOSURE: {
-            'file_name': 'yeah',
-            'exposure_latitude': 'latitude',
-            'exposure_longitude': 'longitude'}}
-        config.check_attributes(config_dic)
-
-        config_dic = {jobs.LOADCSVEXPOSURE: {'file_name': 'yeah'}}
-        config.check_attributes(config_dic)
-
-        config_dic = {
-            'jobs': [jobs.LOADCSVEXPOSURE, jobs.LOADRASTER,
-                     jobs.LOADXMLVULNERABILITY,
-                     jobs.SIMPLELINKER, jobs.SELECTVULNFUNCTION, jobs.LOOKUP,
-                     calcs.STRUCT_LOSS,
-                     jobs.SAVEALL],
-            jobs.LOADCSVEXPOSURE: {'file_name': 'yeah',
-                                   'exposure_latitude': 'latitude',
-                                   'exposure_longitude': 'longitude'},
-            jobs.LOADRASTER: {'file_list': ['ha'],
-                              'attribute_label':
-                              '0.2s gust at 10m height m/s'},
-            jobs.LOADXMLVULNERABILITY: {'file_name': 'grolovolo'},
-            jobs.SIMPLELINKER: {'vul_functions_in_exposure': {
-                'domestic_wind_2012': 'wind_vulnerability_model'}},
-            jobs.SELECTVULNFUNCTION: {'variability_method': {
-                'domestic_wind_2012': 'mean'}},
-            jobs.SAVEALL: {'file_name': 'fash'}}
-        config.check_attributes(config_dic)
-
-        config_dic = {jobs.LOADCSVEXPOSURE: {
-            'file_!name': 'yeah',
-            'exposure_latitude': 'latitude',
-            'exposure_longitude': 'longitude'}}
-        self.assertRaises(RuntimeError, config.check_attributes, config_dic)
+        atts = {'file_name': 'yeah',
+                'exposure_latitude': 'latitude',
+                'exposure_longitude': 'longitude'}
+        inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
+        config.check_attributes(inst, atts)
 
     def test_check_attributesII(self):
-        config_dic = {jobs.LOADCSVEXPOSURE: {
-            'file_name': 'yeah',
-            'yeahe': 'latitude',
-            'expode': 'longitude'}}
-        self.assertRaises(RuntimeError, config.check_attributes, config_dic)
+        atts = {'file_name': 'yeah', 'yeahe': 'latitude'}
+        inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
+        self.assertRaises(RuntimeError, config.check_attributes, inst, atts)
+        
+    def test_check_attributesIII(self):
+        atts = {'file_names': 'yeah', 'yeahe': 'latitude'}
+        inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
+        self.assertRaises(RuntimeError, config.check_attributes, inst, atts)
+
+    def test_check_attributesIV(self):
+        atts = {'file_name': 'yeah'}
+        inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
+        config.check_attributes(inst, atts)
+
+    def test_check_attributesV(self):
+        atts = {'variability_method': {'domestic_wind_2012': 'mean'}}
+        inst = jobs.JOBS[jobs.SELECTVULNFUNCTION]
+        config.check_attributes(inst, atts)
 
     def test_find_atts(self):
         config_list = [{jobs.LOADCSVEXPOSURE: {
