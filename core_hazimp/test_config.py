@@ -83,49 +83,24 @@ class TestConfig(unittest.TestCase):
             f.write('yeah\n')
             f.close()
             junk_files.append(f)
-            
+
         atts = {'file_name': junk_files[0].name}
         self.assertTrue(config.check_files_to_load(atts))
-        
+
         atts = {'file_list': [junk_files[1].name, junk_files[2].name]}
         self.assertTrue(config.check_files_to_load(atts))
-        
+
         atts = {'file_name': 'not_here'}
         self.assertTrue(config.check_files_to_load(atts))
-        
+
         atts = {'file_list': ['still_not_here']}
         self.assertTrue(config.check_files_to_load(atts))
 
         for handle in junk_files:
             os.remove(handle.name)
 
-    def test_file_can_openIV(self):
-
-        # Test that an Error is raised if the files aren't there
-        junk_files = []
-        for _ in range(3):
-            # Write a file to test
-            f = tempfile.NamedTemporaryFile(
-                suffix='.txt',
-                prefix='HAZIMPtest_config',
-                delete=False)
-            f.write('yeah\n')
-            f.close()
-            junk_files.append(f)
-
-        for handle in junk_files:
-            os.remove(handle.name)
-
-        config_dic = {
-            'dove': {'file_name': junk_files[0].name},
-            'eagle': {'file_list': [junk_files[1].name, junk_files[2].name]}
-        }
-
-        self.assertRaises(RuntimeError, config.check_files_to_load_old, config_dic)
-        self.assertRaises(RuntimeError, config.validate_config_old, config_dic)
-
     def test_check_1st_level_keys(self):
-    
+
         # Hard to do a good test for this function.
         self.assertRaises(RuntimeError, config.check_1st_level_keys,
                           'yeah')
@@ -135,13 +110,13 @@ class TestConfig(unittest.TestCase):
                 'exposure_latitude': 'latitude',
                 'exposure_longitude': 'longitude'}
         inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
-        config.check_attributes(inst, atts)
+        self.assertTrue(config.check_attributes(inst, atts))
 
     def test_check_attributesII(self):
         atts = {'file_name': 'yeah', 'yeahe': 'latitude'}
         inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
         self.assertRaises(RuntimeError, config.check_attributes, inst, atts)
-        
+
     def test_check_attributesIII(self):
         atts = {'file_names': 'yeah', 'yeahe': 'latitude'}
         inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
@@ -150,12 +125,12 @@ class TestConfig(unittest.TestCase):
     def test_check_attributesIV(self):
         atts = {'file_name': 'yeah'}
         inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
-        config.check_attributes(inst, atts)
+        self.assertTrue(config.check_attributes(inst, atts))
 
     def test_check_attributesV(self):
         atts = {'variability_method': {'domestic_wind_2012': 'mean'}}
         inst = jobs.JOBS[jobs.SELECTVULNFUNCTION]
-        config.check_attributes(inst, atts)
+        self.assertTrue(config.check_attributes(inst, atts))
 
     def test_find_atts(self):
         config_list = [{jobs.LOADCSVEXPOSURE: {
