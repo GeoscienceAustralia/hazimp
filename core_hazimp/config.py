@@ -33,7 +33,7 @@ from core_hazimp import misc
 from core_hazimp import spell_check
 from core_hazimp import workflow
 
-DEFAULT = 'default' 
+DEFAULT = 'default'
 LOADWINDTCRM = 'load_wind_ascii'
 LOADFLOODASCII = 'load_flood_ascii'
 TEMPLATE = 'template'
@@ -92,14 +92,14 @@ def instance_builder(config_list):
     :returns: A list of job instances to process over.
     """
     # print "config_list", config_list
-    
+
     # Check that each element in the list is a single key dictionary.
     for jobcalc_dic in config_list:
-        if not len(jobcalc_dic) == 1: 
+        if not len(jobcalc_dic) == 1:
             msg = '\nConfig bad format. Forgotten dash? Two key dictionary?\n'
             msg += '%s \n' % jobcalc_dic
             raise RuntimeError(msg)
-            
+
     try:
         template = config_list[0][TEMPLATE]
         del config_list[0]
@@ -166,12 +166,12 @@ def _reader2(config_list):
     :returns: A list of jobs to process over.
     """
     job_insts = []
-    
+
     for jobcalc_dic in config_list:
         new_string = jobcalc_dic.keys()[0]
         atts = jobcalc_dic[new_string]
         _add_job(job_insts, new_string, atts=atts)
-        
+
     # For testing
     if False:
         for job in job_insts:
@@ -419,7 +419,7 @@ def _add_job(jobs, new_job, atts=None):
     if atts is None:
         atts = {}
     job_inst = _get_job_or_calc(new_job)
-    check_attributes(job_inst, atts)
+    validate_job_instance(job_inst, atts)
     caj = workflow.ConfigAwareJob(job_inst,
                                   atts_to_add=atts)
     jobs.append(caj)
@@ -456,7 +456,7 @@ def _get_job_or_calc(name):
             check_1st_level_keys(name)
     return job
 
-    
+
 def check_1st_level_keys(bad_name):
     """
     Give an informative error if a calc name is wrong.
@@ -464,10 +464,10 @@ def check_1st_level_keys(bad_name):
     :param bad_name: A job name that can not be resolved.
     :raises: RuntimeError
     """
-    
+
     # Check that it is bad.
     assert bad_name not in SPELLCHECK.base_words
-    
+
     meantkey = SPELLCHECK.correct(bad_name)
     msg = '\nInvalid key in config file; %s \n' % bad_name
     if meantkey == bad_name:
@@ -477,27 +477,16 @@ def check_1st_level_keys(bad_name):
         msg += 'Did you mean; %s?' % meantkey
         raise RuntimeError(msg)
 
-                
-def validate_config(config_dic):
-    """
-    Check the config_dic for various errors.
 
-    :param config_dic: A dictionary describing the simulation.
+def validate_job_instance(job_inst, atts):
     """
-    check_files_to_load(config_dic)
-    # check_1st_level_keys(config_dic)
-    # check_attributes(config_dic)
+    Check the job instance for various errors.
 
-
-def validate_config_old(config_dic):
+    :param job_inst: A reference to the job function.
+    :param atts: The function attributes from config.
     """
-    Check the config_dic for various errors.
-
-    :param config_dic: A dictionary describing the simulation.
-    """
-    check_files_to_load_old(config_dic)
-    check_1st_level_keys_old(config_dic)
-    check_attributes_old(config_dic)
+    check_files_to_load(atts)
+    check_attributes(job_inst, atts)
 
 
 def file_can_open(file2load):
@@ -545,65 +534,6 @@ def check_files_to_load(atts):
             'Invalid file name, %s in config file.' % bad_file[0])
     return True  # for testing
 
-def check_files_to_load_old(config_dic):
-    """
-    Check the context, based on the config file.
-
-    This function relies on some assumptions.
-    All jobs/calcs that load files label the files as;
-       file_name OR
-       file_list - for a list of files or a file
-
-    :param config_dic: A dictionary describing the simulation.
-    :raises: RuntimeError
-    """
-    bad_files = []
-    for key, value in config_dic.iteritems():
-        if isinstance(value, dict) and 'save' not in key:
-            if 'file_name' in value:
-                file2load = value['file_name']
-                if not file_can_open(file2load):
-                    bad_files.append(file2load)
-            elif 'file_list' in value:
-                files2load = value['file_list']
-                if isinstance(files2load, basestring):
-                    files2load = [files2load]
-                for file2load in files2load:
-                    if not file_can_open(file2load):
-                        bad_files.append(file2load)
-    if len(bad_files) == 1:
-        raise RuntimeError(
-            'Invalid file name, %s in config file.' % bad_files[0])
-    elif len(bad_files) > 1:
-        raise RuntimeError(
-            'Invalid files in config file;\n %s ' % bad_files)
-    return True  # for testing
-
-                
-def check_1st_level_keys_old(config_dic):
-    """
-    Check the context, based on the config file.
-
-    This function relies on some assumptions.
-    All jobs/calcs that load files label the files as;
-       file_name OR
-       file_list - for a list of files
-
-    :param config_dic: A dictionary describing the simulation.
-    :raises: RuntimeError
-    """
-
-    for key in config_dic:
-        if key not in SPELLCHECK.base_words:
-            meantkey = SPELLCHECK.correct(key)
-            msg = '\nInvalid key in config file; %s \n' % key
-            if meantkey == key:
-                # There was no suggested word
-                raise RuntimeError(msg)
-            else:
-                msg += 'Did you mean; %s?' % meantkey
-                raise RuntimeError(msg)
-
 
 def check_attributes(job_calc_function, config_args):
     """
@@ -619,7 +549,7 @@ def check_attributes(job_calc_function, config_args):
     unchecked_config_args = copy.copy(config_args)
     args, defaults = job_calc_function.get_required_args_no_context()
     name = job_calc_function.call_funct
-    
+
     # Make sure the mandatory args are there
     # And remove them from the unchecked list
     for arg_call in args:
@@ -644,7 +574,10 @@ def check_attributes(job_calc_function, config_args):
         for unknown_arg in unchecked_config_args:
             msg += '%s\n' % unknown_arg
         raise RuntimeError(msg)
-           
+
+    # For testing
+    return True
+
 
 READERS = {DEFAULT: _reader2,
            FLOODFABRICV1: _flood_fabric_v1_reader,
