@@ -27,7 +27,7 @@ from core_hazimp.calcs.calcs import CALCS
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION,
-                                   LOOKUP, SAVEALL, JOBSKEY)
+                                   LOOKUP, SAVEALL)
 from core_hazimp.calcs.calcs import STRUCT_LOSS
 from core_hazimp import misc
 from core_hazimp import spell_check
@@ -37,8 +37,6 @@ DEFAULT = 'default'
 LOADWINDTCRM = 'load_wind_ascii'
 LOADFLOODASCII = 'load_flood_ascii'
 TEMPLATE = 'template'
-WINDV1 = 'wind_v1'
-WINDV2 = 'wind_v2'
 WINDV3 = 'wind_v3'
 FLOODFABRICV1 = 'flood_fabric_v1'
 FLOODFABRICV2 = 'flood_fabric_v2'
@@ -46,7 +44,7 @@ SAVE = 'save'
 FLOOD_X_AXIS = 'water depth above ground floor (m)'
 
 # The complete list of first level key names in the post template config dic
-CONFIGKEYS = list(JOBS.keys()) + list(CALCS.keys()) + [JOBSKEY]
+CONFIGKEYS = list(JOBS.keys()) + list(CALCS.keys())
 SPELLCHECK = spell_check.SpellCheck(CONFIGKEYS)
 
 
@@ -141,23 +139,6 @@ def template_builder(config_dic):
     return jobs
 
 
-def _reader1(config_dic):
-    """
-    From a version 1 configuration dictionary build the job list.
-
-    :param config_dic: A dictionary describing the simulation.
-    :returns: A list of jobs to process over.
-    """
-
-    try:
-        job_names = config_dic[JOBSKEY]
-    except KeyError:
-        raise RuntimeError(
-            'No jobs label in config file.')
-
-    return get_job_or_calcs(job_names)
-
-
 def _reader2(config_list):
     """
     From an untemplated configuration list build the job list.
@@ -179,82 +160,6 @@ def _reader2(config_list):
             print "job.job_instance", job.job_instance
             print "job.atts_to_add", job.atts_to_add
     return job_insts
-
-
-def _wind_v1_reader(config_dic):
-    """
-    The wind v1 format uses the actual wind vulnerability curves.
-    Due to linsencing restrictions the file is not currently
-    available.
-
-    From a wind v1 configuration dictionary build the job list.
-
-    :param config_dic: A dictionary describing the simulation.
-    :returns: A list of jobs to process over.
-    """
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'domestic_wind_vul_curves.xml')
-
-    return _wind_vx_reader(config_dic, vul_filename=vul_filename)
-
-
-def _wind_v2_reader(config_dic):
-    """
-    The vulnerability curves in this set are synthetic.
-    They are not correct, but they have no lisencing restrictions.
-
-    From a wind v2 configuration dictionary build the job list.
-
-    :param config_dic: A dictionary describing the simulation.
-    :returns: A list of jobs to process over.
-    """
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'synthetic_domestic_wind_vul_curves.xml')
-
-    return _wind_vx_reader(config_dic, vul_filename=vul_filename)
-
-
-def _wind_vx_reader(config_dic, vul_filename=None):
-    """
-    From a wind configuration dictionary build the job list.
-
-    :param config_dic: A dictionary describing the simulation.
-    :param vul_filename: The vulnerability file to use.
-    :returns: A list of jobs to process over.
-    """
-    job_names = [LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
-                 SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
-                 SAVEALL]
-
-    try:
-        file_list = config_dic[LOADWINDTCRM]
-    except KeyError:
-        msg = '\nMandatory key not found in config file; %s \n' % LOADWINDTCRM
-        raise RuntimeError(msg)
-
-    config_dic[LOADRASTER] = {
-        'file_list': file_list,
-        'attribute_label': '0.2s gust at 10m height m/s'}
-    del config_dic[LOADWINDTCRM]
-    config_dic[LOADXMLVULNERABILITY] = {
-        'file_name': vul_filename}
-    # The vulnerabilitySetID from the nrml file = 'domestic_wind_2012'
-    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    config_dic[SIMPLELINKER] = {'vul_functions_in_exposure': {
-                                'domestic_wind_2012':
-                                'WIND_VULNERABILITY_FUNCTION_ID'}}
-    config_dic[SELECTVULNFUNCTION] = {'variability_method': {
-                                      'domestic_wind_2012': 'mean'}}
-
-    try:
-        file_name = config_dic[SAVE]
-    except KeyError:
-        msg = '\nMandatory key not found in config file; %s \n' % SAVE
-        raise RuntimeError(msg)
-
-    config_dic[SAVEALL] = {'file_name': file_name}
-    del config_dic[SAVE]
-    return get_job_or_calcs(job_names)
 
 
 def _wind_v3_reader(config_list):

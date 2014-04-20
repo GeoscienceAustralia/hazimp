@@ -55,7 +55,6 @@ SELECTVULNFUNCTION = 'select_vulnerability_functions'
 LOOKUP = 'look_up'
 SAVEALL = 'save_all'
 VALIDATECONFIG = 'validate_config'
-JOBSKEY = 'jobs'
 CELLJOIN = 'cell_join'
 
 
