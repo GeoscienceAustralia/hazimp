@@ -87,7 +87,7 @@ def scatter_dict(whole):
     """
     if not STATE.is_parallel:
         array_len = len(whole[whole.keys()[0]])
-        return (whole, numpy.array(range(0, array_len)))
+        return whole, numpy.array(range(0, array_len))
     else:
         import pypar     # pylint: disable=W0404
 
@@ -107,7 +107,7 @@ def scatter_dict(whole):
     else:
         indexes = pypar.receive(0)
         subdict = pypar.receive(0)
-    return (subdict, indexes)
+    return subdict, indexes
 
 
 def gather_dict(subdict, indexes):
