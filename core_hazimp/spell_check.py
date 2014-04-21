@@ -42,7 +42,7 @@ class SpellCheck(object):
 
     def __init__(self, base_words):
         """
-        :param word_list: The list of known words.
+        :param base_words: The list of known words.
         """
         self.nwords = train(base_words)
         self.base_words = base_words
