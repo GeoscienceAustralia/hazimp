@@ -21,7 +21,6 @@ The main entry point for the hazard impact tool.
 
 from core_hazimp import console
 from core_hazimp import context
-from core_hazimp import workflow
 from core_hazimp import config
 from core_hazimp import pipeline
 

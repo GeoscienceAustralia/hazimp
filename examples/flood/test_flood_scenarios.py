@@ -16,18 +16,12 @@ from __future__ import print_function  # can now use print()
 import unittest
 import os
 import tempfile
-import numpy
-
 from scipy import allclose
 
 from core_hazimp import misc
 from core_hazimp import hazimp
-from core_hazimp.jobs.jobs import (LOADRASTER, LOADCSVEXPOSURE,
-                                   LOADXMLVULNERABILITY, SIMPLELINKER,
-                                   SELECTVULNFUNCTION,
-                                   LOOKUP, SAVEALL)
-from core_hazimp.calcs.calcs import STRUCT_LOSS
-from core_hazimp.config import (TEMPLATE, SAVE, FLOODFABRICV1, LOADFLOODASCII,
+from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE)
+from core_hazimp.config import (TEMPLATE, SAVE, LOADFLOODASCII,
                                 FLOODFABRICV2)
 from core_hazimp import parallel
 

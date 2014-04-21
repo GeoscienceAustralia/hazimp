@@ -26,10 +26,9 @@ from core_hazimp.jobs.jobs import (LOADRASTER, LOADCSVEXPOSURE,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION,
                                    LOOKUP, SAVEALL)
-from core_hazimp.calcs.calcs import STRUCT_LOSS
-from core_hazimp.config import (LOADWINDTCRM, TEMPLATE, WINDV1, SAVE, WINDV2,
-                                WINDV3, DEFAULT)
+from core_hazimp.calcs import calcs
 from core_hazimp import parallel
+from core_hazimp import config
 
 
 class TestWind(unittest.TestCase):
@@ -56,8 +55,8 @@ class TestWind(unittest.TestCase):
                                     'synthetic_domestic_wind_vul_curves.xml')
         sim_at = {'domestic_wind_2012': 'WIND_VULNERABILITY_FUNCTION_ID'}
         slv_at = {'domestic_wind_2012': 'mean'}
-        config = [
-            {TEMPLATE: DEFAULT},
+        a_config = [
+            {config.TEMPLATE: config.DEFAULT},
             {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                'exposure_latitude': 'LATITUDE',
                                'exposure_longitude': 'LONGITUDE'}},
@@ -69,10 +68,10 @@ class TestWind(unittest.TestCase):
             {SIMPLELINKER: {'vul_functions_in_exposure': sim_at}},
             {SELECTVULNFUNCTION: {'variability_method': slv_at}},
             {LOOKUP: None},
-            {STRUCT_LOSS: None},
+            {calcs.STRUCT_LOSS: None},
             {SAVEALL: {'file_name': f.name}}]
 
-        context = hazimp.start(config_list=config)
+        context = hazimp.start(config_list=a_config)
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
@@ -98,14 +97,14 @@ class TestWind(unittest.TestCase):
         exp_filename = os.path.join(wind_dir,
                                     'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
-        config = [{TEMPLATE: WINDV3},
-                  {LOADCSVEXPOSURE: {'file_name': exp_filename,
-                                     'exposure_latitude': 'LATITUDE',
-                                     'exposure_longitude': 'LONGITUDE'}},
-                  {LOADWINDTCRM: [wind_filename]},
-                  {SAVE: f.name}]
+        a_config = [{config.TEMPLATE: config.WINDV3},
+                    {LOADCSVEXPOSURE: {'file_name': exp_filename,
+                                       'exposure_latitude': 'LATITUDE',
+                                       'exposure_longitude': 'LONGITUDE'}},
+                    {config.LOADWINDTCRM: [wind_filename]},
+                    {config.SAVE: f.name}]
 
-        context = hazimp.start(config_list=config)
+        context = hazimp.start(config_list=a_config)
 
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
@@ -139,13 +138,19 @@ class TestWind(unittest.TestCase):
             prefix='HAZIMP_wind_scenarios_test_const',
             delete=False)
 
-        print(' - ' + TEMPLATE + ': ' + WINDV3, file=f)
-        print(' - ' + LOADCSVEXPOSURE + ': ', file=f)
+        print(' - ' + config.TEMPLATE + ': ' + config.WINDV3, file=f)
+        print(' - ' + config.LOADCSVEXPOSURE + ': ', file=f)
         print('      file_name: ' + exp_filename, file=f)
         print('      exposure_latitude: LATITUDE', file=f)
         print('      exposure_longitude: LONGITUDE', file=f)
-        print(' - ' + LOADWINDTCRM + ': [' + wind_filename + ']', file=f)
-        print(' - ' + SAVE + ': ' + f_out.name, file=f)
+        print(
+            ' - ' +
+            config.LOADWINDTCRM +
+            ': [' +
+            wind_filename +
+            ']',
+            file=f)
+        print(' - ' + config.SAVE + ': ' + f_out.name, file=f)
         f.close()
 
         context = hazimp.start(config_file=f.name)
@@ -175,14 +180,15 @@ class TestWind(unittest.TestCase):
         exp_filename = os.path.join(wind_dir,
                                     'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
-        config = [{TEMPLATE: WINDV3},
-                  {LOADCSVEXPOSURE: {'file_name': exp_filename,
-                                     'exposure_latitude': 'LATITUDE',
-                                     'exposure_longitude': 'LONGITUDE'}},
-                  {LOADWINDTCRM: [wind_filename]},
-                  {SAVE: f.name}]
+        a_config = [{config.TEMPLATE: config.WINDV3},
+                    {config.LOADCSVEXPOSURE:
+                     {'file_name': exp_filename,
+                      'exposure_latitude': 'LATITUDE',
+                      'exposure_longitude': 'LONGITUDE'}},
+                    {config.LOADWINDTCRM: [wind_filename]},
+                    {config.SAVE: f.name}]
 
-        context = hazimp.start(config_list=config)
+        context = hazimp.start(config_list=a_config)
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
