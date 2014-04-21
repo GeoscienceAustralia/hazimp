@@ -33,7 +33,6 @@ from core_hazimp.parallel import STATE, scatter_dict, gather_dict
 
 
 class TestParallel(unittest.TestCase):
-
     def setUp(self):
         pass
 
@@ -94,7 +93,8 @@ class TestParallel(unittest.TestCase):
             all_indexes = [[0, 2], [1, 3]]
         elif STATE.size == 3:
             all_indexes = [[0, 3], [1, 4], [2, 5]]
-        whole = gather_dict(subset, all_indexes[STATE.rank])
+        if STATE.size < 4:
+            whole = gather_dict(subset, all_indexes[STATE.rank])
         if STATE.size == 1:
             self.assertDictEqual(whole, subset)
         elif STATE.size == 2 and STATE.rank == 0:
@@ -132,7 +132,8 @@ class TestParallel(unittest.TestCase):
             all_indexes = [[0, 2], [1, 3]]
         elif STATE.size == 3:
             all_indexes = [[0, 3], [1, 4], [2, 5]]
-        whole = gather_dict(subset, all_indexes[STATE.rank])
+        if STATE.size < 4:
+            whole = gather_dict(subset, all_indexes[STATE.rank])
         if STATE.size == 1:
             self.assertDictEqual(whole, subset)
         elif STATE.size == 2 and STATE.rank == 0:
