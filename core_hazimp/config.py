@@ -143,7 +143,7 @@ def _reader2(config_list):
     """
     From an untemplated configuration list build the job list.
 
-    :param config_dic: A dictionary describing the simulation.
+    :param config_list: A list describing the simulation.
     :returns: A list of jobs to process over.
     """
     job_insts = []
@@ -335,7 +335,7 @@ def get_job_or_calcs(job_names):
     Given a list of job or calc names, return a list of job or calc
     instances.
 
-    :param name: The name if a job or calc.
+    :param job_names: a list of job or calc names.
     :returns: A list of Job or Calc instances.
     """
     jobs = []
