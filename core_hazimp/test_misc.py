@@ -73,25 +73,36 @@ class TestMisc(unittest.TestCase):
         os.remove(f.name)
 
     def test_get_required_args(self):
-        def yeah(mandatory, why=0, me=1):  # pylint: disable=W0613
-            # pylint: disable=C0111
-            pass
+        def yeah(mandatory, why=0, me=1):
+            """
+            :param mandatory:
+            :param why:
+            :param me:
+            :return:
+            """
+            return mandatory + why + me
         args, defaults = get_required_args(yeah)
         self.assertTrue(args == ['mandatory'])
         self.assertTrue(defaults == ['why', 'me'])
 
-    def test_get_required_argsII(self):
-        def yeah(mandatory):  # pylint: disable=W0613
-            # pylint: disable=C0111
-            pass
+    def test_get_required_args2(self):
+        def yeah(mandatory):
+            """
+            :param mandatory:
+            :return:
+            """
+            return mandatory
         args, defaults = get_required_args(yeah)
         self.assertTrue(args == ['mandatory'])
         self.assertTrue(defaults == [])
 
-    def test_get_required_argsIII(self):
-        def yeah(mandatory=0):  # pylint: disable=W0613
-            # pylint: disable=C0111
-            pass
+    def test_get_required_args3(self):
+        def yeah(mandatory=0):
+            """
+            :param mandatory:
+            :return:
+            """
+            return mandatory
         args, defaults = get_required_args(yeah)
         self.assertTrue(defaults == ['mandatory'])
         self.assertTrue(args == [])
@@ -108,12 +119,12 @@ class TestMisc(unittest.TestCase):
         self.assertTrue(allclose(narray, narray_copy))
         self.assertTrue(allclose(squashed, numpy.array([95., 97., 99.])))
 
-    def test_squash_narrayII(self):
+    def test_squash_narray2(self):
         narray = numpy.array([[['B', 'O'], ['A', 'T']],
                               [['A', 'T'], ['O', 'm']],
                               [['M', 'O'], ['w gras', 's']]])
         squashed = squash_narray(narray)
-        self.assertTrue(squashed.tolist(), ['B', 'A', 'M'])
+        self.assertListEqual(squashed.tolist(), ['B', 'A', 'M'])
 # -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestMisc, 'test')
