@@ -352,6 +352,7 @@ def _get_job_or_calc(name):
     :param name: The name if a job or calc.
     :returns: A list of Job or Calc instance.
     """
+    job = None
     try:
         job = CALCS[name]
     except KeyError:
@@ -410,15 +411,15 @@ def file_can_open(file2load):
 
 def check_files_to_load(atts):
     """
-    Check the context, based on the config file.
+    Check the context, based on config attributes.
 
     This function relies on some assumptions.
     All jobs/calcs that load files label the files as;
        file_name OR
        file_list - for a list of files or a file
 
-    :param config_list: A list describing the simulation.
-    :raises: RuntimeError
+    :param atts: The function attributes from config.
+    :raises: True for testing or RuntimeError
     """
     bad_file = []
     for key, value in atts.iteritems():
