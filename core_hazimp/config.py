@@ -38,7 +38,6 @@ LOADWINDTCRM = 'load_wind_ascii'
 LOADFLOODASCII = 'load_flood_ascii'
 TEMPLATE = 'template'
 WINDV3 = 'wind_v3'
-FLOODFABRICV1 = 'flood_fabric_v1'
 FLOODFABRICV2 = 'flood_fabric_v2'
 SAVE = 'save'
 FLOOD_X_AXIS = 'water depth above ground floor (m)'
@@ -201,57 +200,6 @@ def _wind_v3_reader(config_list):
     _add_job(job_insts, SAVEALL, {'file_name': file_name})
 
     return job_insts
-
-
-def _flood_fabric_v1_reader(config_dic):
-    """
-    This function does two things;
-       * From a flood fabric template v1 configuration dictionary
-       build the job list.
-       * Set up the attributes of the jobs and calc's specifically
-       for a flood study.
-    :param config_dic: A dictionary describing the simulation.
-    :returns: A list of jobs to process over.
-    """
-
-    try:
-        file_list = config_dic[LOADFLOODASCII]
-    except KeyError:
-        msg = '\nMandatory key not found in config file; %s\n' % LOADFLOODASCII
-        raise RuntimeError(msg)
-
-    config_dic[LOADRASTER] = {
-        'file_list': file_list,
-        'attribute_label': FLOOD_X_AXIS}
-    del config_dic[LOADFLOODASCII]
-
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'fabric_flood_avg_curve.xml')
-
-    config_dic[LOADXMLVULNERABILITY] = {
-        'file_name': vul_filename}
-    # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
-    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    config_dic[SIMPLELINKER] = {'vul_functions_in_exposure': {
-                                'structural_domestic_flood_2012':
-                                'FABRIC_FLOOD_FUNCTION_ID'}}
-    config_dic[SELECTVULNFUNCTION] = {'variability_method': {
-        'structural_domestic_flood_2012': 'mean'}}
-
-    try:
-        file_name = config_dic[SAVE]
-    except KeyError:
-        msg = '\nMandatory key not found in config file; %s \n' % SAVE
-        raise RuntimeError(msg)
-
-    config_dic[SAVEALL] = {'file_name': file_name}
-    del config_dic[SAVE]
-
-    # Build the job list
-    job_names = [LOADCSVEXPOSURE, LOADRASTER, LOADXMLVULNERABILITY,
-                 SIMPLELINKER, SELECTVULNFUNCTION, LOOKUP, STRUCT_LOSS,
-                 SAVEALL]
-    return get_job_or_calcs(job_names)
 
 
 def find_atts(config_list, job):
@@ -486,6 +434,5 @@ def check_attributes(job_calc_function, config_args):
 
 
 READERS = {DEFAULT: _reader2,
-           FLOODFABRICV1: _flood_fabric_v1_reader,
            WINDV3: _wind_v3_reader,
            FLOODFABRICV2: _flood_fabric_v2_reader}
