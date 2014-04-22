@@ -43,8 +43,6 @@ def start(config_list=None, config_file=None, cont_in=None):
     if cont_in is None:
         cont_in = context.Context()
     calc_jobs = config.instance_builder(config_list)
-    # FIXME get the validation code going
-    # config.validate_config(calc_jobs)
     the_pipeline = pipeline.PipeLine(calc_jobs)
     the_pipeline.run(cont_in)
     return cont_in
