@@ -6,10 +6,10 @@ find . -name "*.pyc" -delete
 
 pylint core_hazimp  --disable=RP0401 --disable=RP0001 --disable=RP0002 --disable=RP0003 --disable=RP0101 --disable=RP0101 --disable=RP0701 #--disable=RP0801
 
-mpirun -n 2 nosetests examples/ --with-doctest `find examples/ -name 'test_*.py'` --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+mpirun -n 2 -mca btl ^openib nosetests examples/ --with-doctest `find examples/ -name 'test_*.py'` --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
 # --nocapture let standard out go to standard out
 
-mpirun -n 2 nosetests core_hazimp/ --with-doctest `find core_hazimp/ -name 'test_*.py'` --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+mpirun -n 2 -mca btl ^openib nosetests core_hazimp/ --with-doctest `find core_hazimp/ -name 'test_*.py'` --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
 
 pep8 .
 
