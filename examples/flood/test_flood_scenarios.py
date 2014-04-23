@@ -20,6 +20,7 @@ from scipy import allclose
 
 from core_hazimp import misc
 from core_hazimp import hazimp
+from core_hazimp.calcs.calcs import FLOOR_HEIGHT
 from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE)
 from core_hazimp.config import (TEMPLATE, SAVE, LOADFLOODASCII,
                                 FLOODFABRICV2)
@@ -49,6 +50,7 @@ class TestFlood(unittest.TestCase):
                   {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                      'exposure_latitude': 'LATITUDE',
                                      'exposure_longitude': 'LONGITUDE'}},
+                  {FLOOR_HEIGHT: .3},
                   {LOADFLOODASCII: [haz_filename]},
                   {SAVE: f.name}]
 

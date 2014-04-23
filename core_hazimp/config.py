@@ -23,12 +23,12 @@ import os
 import yaml
 import copy
 
-from core_hazimp.calcs.calcs import CALCS
+from core_hazimp.calcs.calcs import CALCS, FLOOR_HEIGHT, FLOOR_HEIGHT_CALC
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION,
-                                   LOOKUP, SAVEALL)
-from core_hazimp.calcs.calcs import STRUCT_LOSS
+                                   LOOKUP, SAVEALL, CONSTANT)
+from core_hazimp.calcs.calcs import STRUCT_LOSS, WATER_DEPTH
 from core_hazimp import misc
 from core_hazimp import spell_check
 from core_hazimp import workflow
@@ -40,7 +40,7 @@ TEMPLATE = 'template'
 WINDV3 = 'wind_v3'
 FLOODFABRICV2 = 'flood_fabric_v2'
 SAVE = 'save'
-FLOOD_X_AXIS = 'water depth above ground floor (m)'
+
 
 # The complete list of first level key names in the post template config dic
 CONFIGKEYS = list(JOBS.keys()) + list(CALCS.keys())
@@ -235,11 +235,17 @@ def _flood_fabric_v2_reader(config_list):
     _add_job(job_insts, LOADCSVEXPOSURE, atts)
 
     file_list = find_atts(config_list, LOADFLOODASCII)
-    atts = {'file_list': file_list, 'attribute_label': FLOOD_X_AXIS}
+    atts = {'file_list': file_list, 'attribute_label': WATER_DEPTH}
     _add_job(job_insts, LOADRASTER, atts)
     vul_filename = os.path.join(misc.RESOURCE_DIR,
                                 'fabric_flood_avg_curve.xml')
     _add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
+
+    floor_height_value = find_atts(config_list, FLOOR_HEIGHT)
+    atts = {'var': FLOOR_HEIGHT, 'value': floor_height_value}
+    _add_job(job_insts, CONSTANT, atts)
+
+    _add_job(job_insts, FLOOR_HEIGHT_CALC)
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
