@@ -30,6 +30,11 @@ from core_hazimp.jobs.jobs import Job
 from core_hazimp import misc
 
 STRUCT_LOSS = 'structural_loss'
+FLOOR_HEIGHT_CALC = 'floor_height'
+WATER_DEPTH = 'water_depth'
+FLOOR_HEIGHT = 'floor_height_(m)'
+FLOOD_X_AXIS = 'water depth above ground floor (m)'
+# 'ground_floor_water_depth_m'
 
 
 class Calculator(Job):
@@ -47,6 +52,9 @@ class Calculator(Job):
     def calc(self):
         """
         The actual calculation.
+
+        Note, the returned value is a LIST.
+        This is done so multiple values can be returned.
         """
         pass
 
@@ -67,26 +75,6 @@ class Calculator(Job):
             context.exposure_att[arg_out] = args_out[i]
 
 
-class Add(Calculator):
-
-    """
-    Simple test class, adding args together.
-    """
-
-    def __init__(self):
-        super(Add, self).__init__()
-        self.args_out = ['c_test']
-        self.context_args_in = ['a_test', 'b_test']
-        self.call_funct = 'add_test'
-
-    def calc(self, a_test, b_test):
-        """
-        Add args
-        """
-        # This needs to return a list, since it is a list of outputs
-        return [misc.add(a_test, b_test)]
-
-
 class MultiplyTest(Calculator):
 
     """
@@ -101,7 +89,10 @@ class MultiplyTest(Calculator):
 
     def calc(self, a_test, c_test):
         """
-        Multiply args
+        Multiply values
+        :param a_test:
+        :param c_test:
+        :return: the product of a_test and c_test
         """
         return [a_test * c_test]
 
@@ -120,7 +111,11 @@ class MultipleValuesTest(Calculator):
 
     def calc(self, a_test, b_test):
         """
-        Return two values
+        Testing how two values could be returned.
+
+        :param a_test:
+        :param b_test:
+        :return:
         """
         return [a_test, b_test]
 
@@ -129,6 +124,7 @@ class ConstantTest(Calculator):
 
     """
     Simple test class, returning two values.
+    A Constant class to use is in the jobs file
     """
 
     def __init__(self):
@@ -139,13 +135,38 @@ class ConstantTest(Calculator):
 
     def calc(self, constant=None):
         """
-        Return two values
+        Testing returning a constant value, multiplied by two.
+        :param constant:
+        :return:
         """
         return [constant * 2]
 
 
-class CalcLoss(Calculator):
+class Add(Calculator):
 
+    """
+    Simple test class, adding args together.
+    """
+
+    def __init__(self):
+        super(Add, self).__init__()
+        self.args_out = ['c_test']
+        self.context_args_in = ['a_test', 'b_test']
+        self.call_funct = 'add_test'
+
+    def calc(self, a_val, b_val):
+        # This needs to return a list, since it is a list of outputs
+        """
+        Add a_test and b_test.
+
+        :param a_val: Can be a number or a string.
+        :param b_val: Can be a number or a string.
+        :return: Return the sum of a_test and b_test.
+        """
+        return [misc.add(a_val, b_val)]
+
+
+class CalcLoss(Calculator):
     """
     Multiply the structural_loss_ratio and the structural_value to calc
     the structural_loss.
@@ -159,10 +180,36 @@ class CalcLoss(Calculator):
 
     def calc(self, structural_loss_ratio, structural_value):
         """
-        Return two values
+        Calculate the structural loss, given the structural value and
+            the loss ratio.
+        :param structural_loss_ratio:
+        :param structural_value:
+        :return: The structural loss
         """
-
         return [structural_loss_ratio * structural_value]
 
+
+class CalcFloorInundation(Calculator):
+    """
+    Calculate the water depth above ground floor;
+    water depth(m) - floor height(m) = water depth above ground floor(m)
+    """
+
+    def __init__(self):
+        super(CalcFloorInundation, self).__init__()
+        self.context_args_in = [WATER_DEPTH, FLOOR_HEIGHT]
+        self.args_out = [FLOOD_X_AXIS]
+        self.call_funct = FLOOR_HEIGHT_CALC
+
+    def calc(self, water_depth, floor_height):
+        """
+        Note the water depth and floor height have to have the same datum.
+        e.g. above ground or Australian Height Datum
+
+        :param water_depth: water depth (m)
+        :param floor_height: floor height (m)
+        :return: water depth above ground floor (m)
+        """
+        return [water_depth - floor_height]
 
 CALCS = misc.instanciate_classes(sys.modules[__name__])
