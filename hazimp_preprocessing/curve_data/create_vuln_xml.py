@@ -31,9 +31,9 @@ def xml_write_variable(xml_h, name, value):
     xml_h.write('%s="' % name)
     try:
         xml_h.write(value)
-    except (TypeError):
+    except TypeError:
         if numpy.isnan(value):
-            # This is what we need for blank sring values.
+            # This is what we need for blank string values.
             # Probably not universal though.
             xml_h.write('')
         else:
@@ -90,7 +90,7 @@ def write_nrml_curve(xml_h, vulnerability_function_id, loss_ratio,
                  vuln curve.
     :param coef_var: 1D vector of the coefficient of variation values (y-axis)
                      of the vuln curve.
-    :param alpa: curve variable - not used, just to help describe the curve.
+    :param alpha: curve variable - not used, just to help describe the curve.
     :param beta: curve variable - not used, just to help describe the curve.
     """
     xml_h.write("<discreteVulnerability ")
