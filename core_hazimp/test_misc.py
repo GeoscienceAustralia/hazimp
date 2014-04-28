@@ -38,7 +38,8 @@ import os
 import numpy
 from scipy import allclose
 
-from core_hazimp.misc import (csv2dict, get_required_args, squash_narray)
+from core_hazimp.misc import (csv2dict, get_required_args, sorted_dict_values,
+                              squash_narray, weighted_values)
 
 
 class TestMisc(unittest.TestCase):
@@ -81,6 +82,7 @@ class TestMisc(unittest.TestCase):
             :return:
             """
             return mandatory + why + me
+
         args, defaults = get_required_args(yeah)
         self.assertTrue(args == ['mandatory'])
         self.assertTrue(defaults == ['why', 'me'])
@@ -92,6 +94,7 @@ class TestMisc(unittest.TestCase):
             :return:
             """
             return mandatory
+
         args, defaults = get_required_args(yeah)
         self.assertTrue(args == ['mandatory'])
         self.assertTrue(defaults == [])
@@ -103,6 +106,7 @@ class TestMisc(unittest.TestCase):
             :return:
             """
             return mandatory
+
         args, defaults = get_required_args(yeah)
         self.assertTrue(defaults == ['mandatory'])
         self.assertTrue(args == [])
@@ -125,7 +129,57 @@ class TestMisc(unittest.TestCase):
                               [['M', 'O'], ['w gras', 's']]])
         squashed = squash_narray(narray)
         self.assertListEqual(squashed.tolist(), ['B', 'A', 'M'])
-# -------------------------------------------------------------
+
+    def test_weighted_values_close_to_1(self):
+        values = numpy.array([1.0, 2.0, 3.0])
+        probabilities = numpy.array([0.33, 0.33, 0.33])
+        size = (5,)
+        forced_random = numpy.array([0.32, 0.34, 0.65, 0.7, 0.99])
+        result = weighted_values(values, probabilities, size,
+                                 forced_random=forced_random)
+        actual = numpy.array([1, 2, 2, 3, 3])
+        msg = 'fail. ' + str(result) + '!=' + str(actual)
+        self.assertTrue(allclose(result, actual), msg)
+
+    def test_weighted_values_bad_sum(self):
+        values = numpy.array([1.1, 2.2, 3.3])
+        probabilities = numpy.array([1000.2, 0.5, 0.8])
+        size = (5,)
+        self.assertRaises(RuntimeError, weighted_values, values,
+                          probabilities, size)
+
+    def test_weighted_values_bad_array_size(self):
+        values = numpy.array([1.1, 2.2, 3.3])
+        probabilities = numpy.array([0.5, 0.3])
+        size = (5,)
+        self.assertRaises(AssertionError, weighted_values, values,
+                          probabilities, size)
+
+    def test_weighted_values_check_results(self):
+        values = numpy.array([1.0, 2.0, 3.0])
+        probabilities = numpy.array([0.2, 0.5, 0.3])
+        size = (5,)
+        forced_random = numpy.array([0.19, 0.21, 0.69, 0.71, 0.99])
+        result = weighted_values(values, probabilities, size,
+                                 forced_random=forced_random)
+        actual = numpy.array([1, 2, 2, 3, 3])
+        msg = 'fail. ' + str(result) + '!=' + str(actual)
+        self.assertTrue(allclose(result, actual), msg)
+
+    def test_weighted_values_2d_array(self):
+        values = numpy.array([1.0, 2.0, 3.0])
+        probabilities = numpy.array([0.2, 0.5, 0.3])
+        size = (2, 3)
+        forced_random = numpy.array([[0.19, 0.21, 0.69], [0.71, 0.99, 0.5]])
+        self.assertRaises(AssertionError, weighted_values, values,
+                          probabilities, size, forced_random=forced_random)
+
+    def test_sorted_dict_values(self):
+        adict = {'socks': 3, 'feet': 2, 'boots': 1}
+        r_keys, r_values = sorted_dict_values(adict)
+        self.assertEqual(r_keys, ['boots', 'feet', 'socks'])
+        self.assertEqual(r_values, [1, 2, 3])
+#  -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestMisc, 'test')
     Runner = unittest.TextTestRunner()

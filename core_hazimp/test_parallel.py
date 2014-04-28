@@ -33,6 +33,7 @@ from core_hazimp.parallel import STATE, scatter_dict, gather_dict
 
 
 class TestParallel(unittest.TestCase):
+
     def setUp(self):
         pass
 

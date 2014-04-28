@@ -33,6 +33,7 @@ import unittest
 import tempfile
 import os
 
+import scipy
 
 from core_hazimp import context
 from core_hazimp import hazimp
@@ -54,7 +55,7 @@ class TestHazimp(unittest.TestCase):
         b_test = 2
         cont_in = context.Context()
         cont_in.exposure_att = {'a_test': a_test, 'b_test': b_test}
-        cont_in.exposure_long = [11.0]
+        cont_in.exposure_long = scipy.asarray([11.0])
 
         cont_in = hazimp.start(config_list=config_list, cont_in=cont_in)
         self.assertEqual(cont_in.exposure_att['d_test'], 35)
@@ -79,7 +80,8 @@ class TestHazimp(unittest.TestCase):
         a_test = 5
         b_test = 2
         cont_in = context.Context()
-        cont_in.exposure_long = [11.0]
+        cont_in.exposure_long = scipy.asarray([11.0])
+
         cont_in.exposure_att = {'a_test': a_test, 'b_test': b_test}
 
         cont_in = hazimp.start(config_file=f.name, cont_in=cont_in)

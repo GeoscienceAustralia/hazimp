@@ -167,6 +167,7 @@ class Add(Calculator):
 
 
 class CalcLoss(Calculator):
+
     """
     Multiply the structural_loss_ratio and the structural_value to calc
     the structural_loss.
@@ -190,6 +191,7 @@ class CalcLoss(Calculator):
 
 
 class CalcFloorInundation(Calculator):
+
     """
     Calculate the water depth above ground floor;
     water depth(m) - floor height(m) = water depth above ground floor(m)

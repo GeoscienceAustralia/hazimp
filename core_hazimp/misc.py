@@ -25,6 +25,7 @@ from collections import defaultdict
 import inspect
 
 import numpy
+from numpy.random import random_sample
 
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -140,3 +141,55 @@ def add(var, var2):
         # Assume numpy array with strings
         result = numpy.asarray(numpy.core.defchararray.add(var, var2))
     return result
+
+
+def weighted_values(values, probabilities, size, forced_random=None):
+    """
+    Return values weighted by the probabilities.
+
+    precondition: The sum of probabilities should sum to 1
+    Code from: goo.gl/oBo2zz
+
+    :param values:  The values to go into the final array
+    :param probabilities:  The probabilities of the values
+    :param size: The array size/shape. Must be 1D.
+    :return: The array of values, made using the probabilities
+    """
+
+    msg = "Due to numpy.digitize the array must be 1D. "
+    assert len(size) == 1, msg
+
+    assert isinstance(probabilities, numpy.ndarray)
+    assert isinstance(values, numpy.ndarray)
+
+    assert values.shape == probabilities.shape
+
+    if not numpy.allclose(probabilities.sum(), 1.0, atol=0.01):
+        msg = 'Weights should sum to 1.0, got ', probabilities
+        raise RuntimeError(msg)
+
+    # Re-normalise weights so they sum to 1 exactly
+    probabilities = probabilities / abs(probabilities.sum())  # normalize
+
+    if forced_random is None:
+        rand_array = random_sample(size)
+    else:
+        assert forced_random.shape == size
+        rand_array = forced_random
+    bins = numpy.add.accumulate(probabilities)
+    return values[numpy.digitize(rand_array, bins)]
+
+
+def sorted_dict_values(adict):
+    """
+    Given a dictionary return the sorted keys and values,
+    sorting with respect to the keys.
+
+    code from: goo.gl/Sb7Czw
+    :param adict: A dictionary.
+    :return: The sorted keys and the corresponding values
+        as two lists.
+    """
+    keys = sorted(adict.keys())
+    keys.sort()
+    return keys, [adict[key] for key in keys]

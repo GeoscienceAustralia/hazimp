@@ -56,6 +56,7 @@ LOOKUP = 'look_up'
 SAVEALL = 'save_all'
 VALIDATECONFIG = 'validate_config'
 CELLJOIN = 'cell_join'
+RANDOM_CONSTANT = 'random_constant'
 
 
 class Job(object):
@@ -132,16 +133,47 @@ class Const(Job):
 
     def __call__(self, context, var, value):
         """
-        A dummy job for testing.
+        Given a key and a constant value, insert a vector of the value.
 
         :param context: The context instance, used to move data around.
         :param var: Variable to add to context.
         :param value: Value of the variable added.
         """
-        sites = context.get_site_count()
+        shape = context.get_site_shape()
         # This uses a lot of memory,
         # but it keeps the context instance simple.
-        context.exposure_att[var] = scipy.tile(scipy.asarray(value), sites)
+        context.exposure_att[var] = scipy.tile(scipy.asarray(value), shape)
+
+
+class RandomConst(Job):
+
+    """
+    Given a key and a dictionary of values with an associated probability
+    probabilistically assign a value to each element in the array.
+    """
+
+    def __init__(self):
+        super(RandomConst, self).__init__()
+        self.call_funct = RANDOM_CONSTANT
+
+    def __call__(self, context, var, values, forced_random=None):
+        """
+        A dummy job for testing.
+
+        :param context: The context instance, used to move data around.
+        :param var: Variable to add to context.
+        :param values: Value of the variable added.
+        :param forced_random: Used for testing.  A vector or value to be used
+                as the random numbers.
+        """
+        shape = context.get_site_shape()
+        s_keys, s_probs = misc.sorted_dict_values(values)
+        s_probs = scipy.asarray(s_probs)
+        s_keys = scipy.asarray(s_keys)
+        values_array = misc.weighted_values(s_keys, s_probs, shape,
+                                            forced_random=forced_random)
+
+        context.exposure_att[var] = values_array
 
 
 class Add(Job):
@@ -185,7 +217,7 @@ class LoadCsvExposure(Job):
         :param context: The context instance, used to move data around.
         :param file_name: The csv file to load.
         :param exposure_latitude: the title string of the latitude column.
-        :param exposure_longitud: the title string of the longitude column.
+        :param exposure_longitude: the title string of the longitude column.
 
         Content return:
             exposure_att: Add the file values into this dictionary.
