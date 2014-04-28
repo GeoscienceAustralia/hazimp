@@ -37,7 +37,7 @@ import numpy
 from scipy import allclose, asarray, isnan, array, rollaxis
 
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
-                                   SAVEALL, CONSTANT, ADD)
+                                   SAVEALL, CONSTANT, ADD, RANDOM_CONSTANT)
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 from core_hazimp import context
@@ -51,18 +51,18 @@ class Dummy(object):
     Dummy class for testing
     """
 
-    def __init__(self, site_count=None):
+    def __init__(self, site_shape=None):
         # For test_SimpleLinker
         self.vul_function_titles = {}
 
         # For test_SelectVulnFunction
         self.vulnerability_sets = {}
         self.exposure_att = {}
-        self.site_count = site_count
+        self.site_shape = site_shape
 
-    def get_site_count(self):
+    def get_site_shape(self):
         """ Return the number of sites"""
-        return self.site_count
+        return self.site_shape
 
 
 class DummyVulnSet(object):
@@ -93,7 +93,7 @@ class TestJobs(unittest.TestCase):
 
     def test_const_test(self):
         inst = JOBS['const_test']
-        con_in = Dummy(site_count=1)
+        con_in = Dummy(site_shape=(1,))
         con_in.exposure_att = {'a_test': 5, 'b_test': 20}
         test_kwargs = {'c_test': 25}
         inst(con_in, **test_kwargs)
@@ -101,23 +101,23 @@ class TestJobs(unittest.TestCase):
 
     def test_const(self):
         inst = JOBS[CONSTANT]
-        con_in = Dummy(site_count=1)
+        con_in = Dummy(site_shape=(1,))
         con_in.exposure_att = {'a_test': 5, 'b_test': 20}
         test_kwargs = {'var': 'c_test', 'value': 25}
         inst(con_in, **test_kwargs)
         self.assertEqual(con_in.exposure_att['c_test'], 25)
 
-    def test_constII(self):
+    def test_const2(self):
         inst = JOBS[CONSTANT]
-        con_in = Dummy(site_count=1)
+        con_in = Dummy(site_shape=(1,))
         con_in.exposure_att = {'a_test': 5, 'b_test': 20}
         test_kwargs = {'var': 'c_test', 'value': 'yeah'}
         inst(con_in, **test_kwargs)
         self.assertEqual(con_in.exposure_att['c_test'], 'yeah')
 
-    def test_constIII(self):
+    def test_const3(self):
         inst = JOBS[CONSTANT]
-        con_in = Dummy(site_count=2)
+        con_in = Dummy(site_shape=(2,))
         con_in.exposure_att = {'a_test': numpy.array([25, 20]),
                                'b_test': numpy.array([2, 40])}
         test_kwargs = {'var': 'c_test', 'value': 35}
@@ -125,10 +125,10 @@ class TestJobs(unittest.TestCase):
         self.assertTrue(allclose(con_in.exposure_att['c_test'],
                                  asarray([35, 35])))
 
-    def test_constIV(self):
+    def test_const4(self):
         # Just make sure it does the adding right.
         inst = JOBS[CONSTANT]
-        con_in = Dummy(site_count=2)
+        con_in = Dummy(site_shape=(2,))
         con_in.exposure_att = {'a_test': numpy.array([25, 20]),
                                'b_test': numpy.array([2, 40])}
         test_kwargs = {'var': 'c_test', 'value': 'yeah'}
@@ -138,10 +138,59 @@ class TestJobs(unittest.TestCase):
         self.assertEqual(con_in.exposure_att['c_test'].tolist(),
                          ['yeah', 'yeah'])
 
+    def test_rand_const(self):
+        inst = JOBS[RANDOM_CONSTANT]
+        con_in = Dummy(site_shape=(5,))
+        values = {1: 0.2, 2: 0.5, 3: 0.3}
+        forced_random = numpy.array([0.19, 0.21, 0.69, 0.71, 0.99])
+        test_kwargs = {'var': 'test', 'values': values,
+                       'forced_random': forced_random}
+        inst(con_in, **test_kwargs)
+        actual = [1, 2, 2, 3, 3]
+        self.assertEqual(con_in.exposure_att['test'].tolist(),
+                         actual)
+
+    def test_rand_const2(self):
+        inst = JOBS[RANDOM_CONSTANT]
+        con_in = Dummy(site_shape=(5,))
+        values = {'a': 0.2, 'b': 0.5, 'c': 0.3}
+        forced_random = numpy.array([0.19, 0.21, 0.69, 0.71, 0.99])
+        test_kwargs = {'var': 'test', 'values': values,
+                       'forced_random': forced_random}
+        inst(con_in, **test_kwargs)
+        actual = ['a', 'b', 'b', 'c', 'c']
+        self.assertEqual(con_in.exposure_att['test'].tolist(),
+                         actual)
+
+    def test_rand_const3(self):
+        inst = JOBS[RANDOM_CONSTANT]
+        con_in = Dummy(site_shape=(5,))
+        values = {'c': 0.2, 'b': 0.5, 'a': 0.3}
+        forced_random = numpy.array([0.29, 0.31, 0.79, 0.81, 0.99])
+        test_kwargs = {'var': 'test', 'values': values,
+                       'forced_random': forced_random}
+        inst(con_in, **test_kwargs)
+        actual = ['a', 'b', 'b', 'c', 'c']
+        self.assertEqual(con_in.exposure_att['test'].tolist(),
+                         actual)
+
+    def test_rand_const4(self):
+        inst = JOBS[RANDOM_CONSTANT]
+        con_in = Dummy(site_shape=(5,))
+        values = {'c': 0.2, 'b': 0.5, 'a': 0.3}
+        forced_random = numpy.array([0.29, 0.31, 0.79, 0.81, 0.99])
+        forced_random = numpy.array([0.99, 0.81, 0.79, 0.31, 0.29])
+        test_kwargs = {'var': 'test', 'values': values,
+                       'forced_random': forced_random}
+        inst(con_in, **test_kwargs)
+        actual = ['c', 'c', 'b', 'b', 'a']
+        self.assertEqual(con_in.exposure_att['test'].tolist(),
+                         actual)
+
     def test_add(self):
         inst_const = JOBS[CONSTANT]
         inst_add = JOBS[ADD]
-        con_in = Dummy(site_count=2)
+        con_in = Dummy(site_shape=(2,))
         con_in.exposure_att = {'b_test': numpy.array([2, 40])}
         test_kwargs = {'var': 'a_test', 'value': 20}
         inst_const(con_in, **test_kwargs)
@@ -153,7 +202,7 @@ class TestJobs(unittest.TestCase):
     def test_addII(self):
         inst_const = JOBS[CONSTANT]
         inst_add = JOBS[ADD]
-        con_in = Dummy(site_count=2)
+        con_in = Dummy(site_shape=(2,))
         con_in.exposure_att = {'b_test': numpy.array(['_time', '_drinks'])}
         test_kwargs = {'var': 'a_test', 'value': 'summer'}
         inst_const(con_in, **test_kwargs)

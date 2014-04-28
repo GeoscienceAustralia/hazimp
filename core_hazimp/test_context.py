@@ -81,7 +81,7 @@ class TestContext(unittest.TestCase):
         con.exposure_lat = lat
         lon = array([10., 20.])
         con.exposure_long = lon
-        self.assertEqual(con.get_site_count(), 2)
+        self.assertEqual(con.get_site_shape(), (2,))
 
     def test_save_exposure_attsII(self):
 

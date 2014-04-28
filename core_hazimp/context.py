@@ -91,17 +91,18 @@ class Context(object):
         # function ID's.
         self.vul_function_titles = {}
 
-    def get_site_count(self):
+    def get_site_shape(self):
         """
-        Get the number of sites the context is storing.
+        Get the numpy shape of sites the context is storing.
+        It is based on the shape of exposure_long.
 
-        :return: The number of sites the context is storing or None if
-                 there are no sites.
+        :return: The numpy shape of sites the context is storing.
         """
         if self.exposure_long is None:
-            return None
+            shape = (0)
         else:
-            return len(self.exposure_long)
+            shape = self.exposure_long.shape
+        return shape
 
     def clip_exposure(self, min_long, min_lat, max_long, max_lat):
         """ min_long, min_lat, max_long, max_lat
