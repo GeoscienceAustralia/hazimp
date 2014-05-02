@@ -16,6 +16,7 @@ from __future__ import print_function  # can now use print()
 import unittest
 import os
 import tempfile
+import numpy
 from scipy import allclose
 
 from core_hazimp import misc
@@ -65,6 +66,51 @@ class TestFlood(unittest.TestCase):
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
         os.remove(f.name)
+
+    def test_flood_yaml_list(self):
+        # Test running an end to end cyclone test based
+        # on a flood config template.
+
+        flood_dir = os.path.join(misc.EXAMPLE_DIR, 'flood')
+        exp_filename = os.path.join(flood_dir,
+                                    'small_exposure.csv')
+        flood_filename = os.path.join(flood_dir, 'depth_small_synthetic.txt')
+
+        # The output file
+        f_out = tempfile.NamedTemporaryFile(
+            suffix='.npz',
+            prefix='HAZIMPt_flood_scenarios_test_const',
+            delete=False)
+
+        # The config file
+        f = tempfile.NamedTemporaryFile(
+            suffix='.yaml',
+            prefix='HAZIMP_flood_scenarios_test_const',
+            delete=False)
+
+        print(' - ' + TEMPLATE + ': ' + FLOODFABRICV2, file=f)
+        print(' - ' + LOADCSVEXPOSURE + ': ', file=f)
+        print('      file_name: ' + exp_filename, file=f)
+        print('      exposure_latitude: LATITUDE', file=f)
+        print('      exposure_longitude: LONGITUDE', file=f)
+        print(' - ' + FLOOR_HEIGHT + ': .3', file=f)
+        a_str = ' - ' + LOADFLOODASCII + ': [' + flood_filename + ']'
+        print(a_str, file=f)
+        print(' - ' + SAVE + ': ' + f_out.name, file=f)
+        f.close()
+
+        context = hazimp.start(config_file=f.name)
+        self.assertTrue(allclose(
+            context.exposure_att['structural_loss'],
+            context.exposure_att['calced-loss']))
+
+        # Only the head node writes a file
+        if parallel.STATE.rank == 0:
+            exp_dict = numpy.load(f_out.name)
+            self.assertTrue(allclose(exp_dict['structural_loss'],
+                                     exp_dict['calced-loss']))
+        os.remove(f.name)
+        os.remove(f_out.name)
 
 # -------------------------------------------------------------
 if __name__ == "__main__":

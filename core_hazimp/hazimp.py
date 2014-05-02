@@ -37,6 +37,11 @@ def start(config_list=None, config_file=None, cont_in=None):
     if config_file:
         config_list = config.read_config_file(config_file)
 
+    if isinstance(config_list, dict):
+        msg = "Bad configuration file. \n"
+        msg += "Add a dash ( - ) before each variable. e.g. - template: flood"
+        raise RuntimeError(msg)
+
     if config_list is None:
         raise RuntimeError('No configuration information.')
 

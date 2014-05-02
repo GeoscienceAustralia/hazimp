@@ -89,6 +89,7 @@ def instance_builder(config_list):
     :returns: A list of job instances to process over.
     """
     # print "config_list", config_list
+    assert isinstance(config_list, list)
 
     # Check that each element in the list is a single key dictionary.
     for jobcalc_dic in config_list:
