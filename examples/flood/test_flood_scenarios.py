@@ -70,6 +70,7 @@ class TestFlood(unittest.TestCase):
     def test_flood_yaml_list(self):
         # Test running an end to end cyclone test based
         # on a flood config template.
+        # IF YOU CHANGE THIS CHANGE list_flood_v2.yaml as well
 
         flood_dir = os.path.join(misc.EXAMPLE_DIR, 'flood')
         exp_filename = os.path.join(flood_dir,
