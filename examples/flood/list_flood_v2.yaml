@@ -1,6 +1,7 @@
 #  python ../../core_hazimp/hazimp.py -c list_flood_v2.yaml
-# Don't have a scenario test automatically run this,
-# since the file location is not absolute
+# Don't have a scenario test automatically run this.
+# Since the file location is not absolute
+# The tests fail when ./all_tests is executed
 - template: flood_fabric_v2
 - floor_height_(m): .3
 - load_exposure:
