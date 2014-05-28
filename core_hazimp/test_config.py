@@ -33,6 +33,9 @@ import os
 
 from core_hazimp import config
 from core_hazimp.calcs import calcs
+from core_hazimp.config_build import (find_atts, _get_job_or_calc,
+                                      check_1st_level_keys, file_can_open,
+                                      check_files_to_load, check_attributes)
 from core_hazimp.jobs import jobs
 
 
@@ -45,11 +48,11 @@ class TestConfig(unittest.TestCase):
     def test_get_job_or_calc(self):
         # messy test.  Relies on calcs.py and jobs.py
         name = 'add_test'
-        job = config._get_job_or_calc(name)  # pylint: disable=W0212
+        job = _get_job_or_calc(name)  # pylint: disable=W0212
         self.assertIsInstance(job, calcs.Add)
 
         name = 'const_test'
-        job = config._get_job_or_calc(name)  # pylint: disable=W0212
+        job = _get_job_or_calc(name)  # pylint: disable=W0212
         self.assertIsInstance(job, jobs.ConstTest)
 
     def test_job_reader(self):
@@ -66,11 +69,11 @@ class TestConfig(unittest.TestCase):
         f.write('yeah\n')
         f.close()
 
-        self.assertTrue(config.file_can_open(f.name))
+        self.assertTrue(file_can_open(f.name))
         os.remove(f.name)
 
     def test_file_can_openII(self):
-        self.assertFalse(config.file_can_open("/there/should/be/no/file.txt"))
+        self.assertFalse(file_can_open("/there/should/be/no/file.txt"))
 
     def test_check_files_to_load(self):
         junk_files = []
@@ -85,16 +88,16 @@ class TestConfig(unittest.TestCase):
             junk_files.append(f)
 
         atts = {'file_name': junk_files[0].name}
-        self.assertTrue(config.check_files_to_load(atts))
+        self.assertTrue(check_files_to_load(atts))
 
         atts = {'file_list': [junk_files[1].name, junk_files[2].name]}
-        self.assertTrue(config.check_files_to_load(atts))
+        self.assertTrue(check_files_to_load(atts))
 
         atts = {'file_name': 'not_here'}
-        self.assertTrue(config.check_files_to_load(atts))
+        self.assertTrue(check_files_to_load(atts))
 
         atts = {'file_list': ['still_not_here']}
-        self.assertTrue(config.check_files_to_load(atts))
+        self.assertTrue(check_files_to_load(atts))
 
         for handle in junk_files:
             os.remove(handle.name)
@@ -102,7 +105,7 @@ class TestConfig(unittest.TestCase):
     def test_check_1st_level_keys(self):
 
         # Hard to do a good test for this function.
-        self.assertRaises(RuntimeError, config.check_1st_level_keys,
+        self.assertRaises(RuntimeError, check_1st_level_keys,
                           'yeah')
 
     def test_check_attributes(self):
@@ -110,41 +113,41 @@ class TestConfig(unittest.TestCase):
                 'exposure_latitude': 'latitude',
                 'exposure_longitude': 'longitude'}
         inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
-        self.assertTrue(config.check_attributes(inst, atts))
+        self.assertTrue(check_attributes(inst, atts))
 
     def test_check_attributesII(self):
         atts = {'file_name': 'yeah', 'yeahe': 'latitude'}
         inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
-        self.assertRaises(RuntimeError, config.check_attributes, inst, atts)
+        self.assertRaises(RuntimeError, check_attributes, inst, atts)
 
     def test_check_attributesIII(self):
         atts = {'file_names': 'yeah', 'yeahe': 'latitude'}
         inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
-        self.assertRaises(RuntimeError, config.check_attributes, inst, atts)
+        self.assertRaises(RuntimeError, check_attributes, inst, atts)
 
     def test_check_attributesIV(self):
         atts = {'file_name': 'yeah'}
         inst = jobs.JOBS[jobs.LOADCSVEXPOSURE]
-        self.assertTrue(config.check_attributes(inst, atts))
+        self.assertTrue(check_attributes(inst, atts))
 
     def test_check_attributesV(self):
         atts = {'variability_method': {'domestic_wind_2012': 'mean'}}
         inst = jobs.JOBS[jobs.SELECTVULNFUNCTION]
-        self.assertTrue(config.check_attributes(inst, atts))
+        self.assertTrue(check_attributes(inst, atts))
 
     def test_find_atts(self):
         config_list = [{jobs.LOADCSVEXPOSURE: {
             'file_name': 'yeah',
             'yeahe': 'latitude',
             'expode': 'longitude'}}]
-        self.assertRaises(RuntimeError, config.find_atts, config_list, 'foo')
+        self.assertRaises(RuntimeError, find_atts, config_list, 'foo')
 
     def test_find_attsII(self):
         actual_atts = {'file_name': 'yeah',
                        'yeahe': 'latitude',
                        'expode': 'longitude'}
         config_list = [{jobs.LOADCSVEXPOSURE: actual_atts}]
-        atts = config.find_atts(config_list, jobs.LOADCSVEXPOSURE)
+        atts = find_atts(config_list, jobs.LOADCSVEXPOSURE)
         self.assertEqual(atts, actual_atts)
 
 # -------------------------------------------------------------

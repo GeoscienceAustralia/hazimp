@@ -30,6 +30,9 @@ from core_hazimp.calcs import calcs
 from core_hazimp import parallel
 from core_hazimp import config
 
+from core_hazimp.config import (TEMPLATE)
+from core_hazimp.templates import (SAVE, LOADWINDTCRM)
+
 
 class TestWind(unittest.TestCase):
 
@@ -56,7 +59,7 @@ class TestWind(unittest.TestCase):
         sim_at = {'domestic_wind_2012': 'WIND_VULNERABILITY_FUNCTION_ID'}
         slv_at = {'domestic_wind_2012': 'mean'}
         a_config = [
-            {config.TEMPLATE: config.DEFAULT},
+            {TEMPLATE: config.DEFAULT},
             {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                'exposure_latitude': 'LATITUDE',
                                'exposure_longitude': 'LONGITUDE'}},
@@ -97,12 +100,12 @@ class TestWind(unittest.TestCase):
         exp_filename = os.path.join(wind_dir,
                                     'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
-        a_config = [{config.TEMPLATE: config.WINDV3},
+        a_config = [{TEMPLATE: config.WINDV3},
                     {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                        'exposure_latitude': 'LATITUDE',
                                        'exposure_longitude': 'LONGITUDE'}},
-                    {config.LOADWINDTCRM: [wind_filename]},
-                    {config.SAVE: f.name}]
+                    {LOADWINDTCRM: [wind_filename]},
+                    {SAVE: f.name}]
 
         context = hazimp.start(config_list=a_config)
 
@@ -138,19 +141,19 @@ class TestWind(unittest.TestCase):
             prefix='HAZIMP_wind_scenarios_test_const',
             delete=False)
 
-        print(' - ' + config.TEMPLATE + ': ' + config.WINDV3, file=f)
-        print(' - ' + config.LOADCSVEXPOSURE + ': ', file=f)
+        print(' - ' + TEMPLATE + ': ' + config.WINDV3, file=f)
+        print(' - ' + LOADCSVEXPOSURE + ': ', file=f)
         print('      file_name: ' + exp_filename, file=f)
         print('      exposure_latitude: LATITUDE', file=f)
         print('      exposure_longitude: LONGITUDE', file=f)
         print(
             ' - ' +
-            config.LOADWINDTCRM +
+            LOADWINDTCRM +
             ': [' +
             wind_filename +
             ']',
             file=f)
-        print(' - ' + config.SAVE + ': ' + f_out.name, file=f)
+        print(' - ' + SAVE + ': ' + f_out.name, file=f)
         f.close()
 
         context = hazimp.start(config_file=f.name)
@@ -180,13 +183,13 @@ class TestWind(unittest.TestCase):
         exp_filename = os.path.join(wind_dir,
                                     'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
-        a_config = [{config.TEMPLATE: config.WINDV3},
-                    {config.LOADCSVEXPOSURE:
+        a_config = [{TEMPLATE: config.WINDV3},
+                    {LOADCSVEXPOSURE:
                      {'file_name': exp_filename,
                       'exposure_latitude': 'LATITUDE',
                       'exposure_longitude': 'LONGITUDE'}},
-                    {config.LOADWINDTCRM: [wind_filename]},
-                    {config.SAVE: f.name}]
+                    {LOADWINDTCRM: [wind_filename]},
+                    {SAVE: f.name}]
 
         context = hazimp.start(config_list=a_config)
         self.assertTrue(allclose(
