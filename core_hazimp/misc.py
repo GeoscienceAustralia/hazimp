@@ -190,6 +190,5 @@ def sorted_dict_values(adict):
     :return: The sorted keys and the corresponding values
         as two lists.
     """
-    keys = sorted(adict.keys())
-    keys.sort()
+    keys = sorted(sorted(adict.keys()))
     return keys, [adict[key] for key in keys]
