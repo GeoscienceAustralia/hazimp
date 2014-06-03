@@ -29,9 +29,8 @@ from core_hazimp.jobs.jobs import (LOADRASTER, LOADCSVEXPOSURE,
 from core_hazimp.calcs import calcs
 from core_hazimp import parallel
 from core_hazimp import config
-
-from core_hazimp.config import (TEMPLATE)
-from core_hazimp.templates import (SAVE, LOADWINDTCRM)
+from core_hazimp.templates import (SAVE, LOADWINDTCRM, WINDV3,
+                                   TEMPLATE, DEFAULT)
 
 
 class TestWind(unittest.TestCase):
@@ -59,7 +58,7 @@ class TestWind(unittest.TestCase):
         sim_at = {'domestic_wind_2012': 'WIND_VULNERABILITY_FUNCTION_ID'}
         slv_at = {'domestic_wind_2012': 'mean'}
         a_config = [
-            {TEMPLATE: config.DEFAULT},
+            {TEMPLATE: DEFAULT},
             {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                'exposure_latitude': 'LATITUDE',
                                'exposure_longitude': 'LONGITUDE'}},
@@ -100,7 +99,7 @@ class TestWind(unittest.TestCase):
         exp_filename = os.path.join(wind_dir,
                                     'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
-        a_config = [{TEMPLATE: config.WINDV3},
+        a_config = [{TEMPLATE: WINDV3},
                     {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                        'exposure_latitude': 'LATITUDE',
                                        'exposure_longitude': 'LONGITUDE'}},
@@ -141,7 +140,7 @@ class TestWind(unittest.TestCase):
             prefix='HAZIMP_wind_scenarios_test_const',
             delete=False)
 
-        print(' - ' + TEMPLATE + ': ' + config.WINDV3, file=f)
+        print(' - ' + TEMPLATE + ': ' + WINDV3, file=f)
         print(' - ' + LOADCSVEXPOSURE + ': ', file=f)
         print('      file_name: ' + exp_filename, file=f)
         print('      exposure_latitude: LATITUDE', file=f)
@@ -183,7 +182,7 @@ class TestWind(unittest.TestCase):
         exp_filename = os.path.join(wind_dir,
                                     'syn_small_exposure_tcrm.csv')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
-        a_config = [{TEMPLATE: config.WINDV3},
+        a_config = [{TEMPLATE: WINDV3},
                     {LOADCSVEXPOSURE:
                      {'file_name': exp_filename,
                       'exposure_latitude': 'LATITUDE',

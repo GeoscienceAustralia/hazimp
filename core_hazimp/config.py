@@ -20,17 +20,7 @@ Functions concerning the yaml configuration file.
 """
 
 import yaml
-from core_hazimp.templates import (_wind_v3_reader, _flood_fabric_v2_reader,
-                                   _reader2)
-
-
-DEFAULT = 'default'
-#LOADWINDTCRM = 'load_wind_ascii'
-#LOADFLOODASCII = 'load_flood_ascii'
-TEMPLATE = 'template'
-WINDV3 = 'wind_v3'
-FLOODFABRICV2 = 'flood_fabric_v2'
-SAVE = 'save'
+from core_hazimp.templates import READERS, TEMPLATE, DEFAULT
 
 
 def read_file(file_name):
@@ -123,7 +113,3 @@ def template_builder(config_dic):
 
     jobs = reader_function(config_dic)
     return jobs
-
-READERS = {DEFAULT: _reader2,
-           WINDV3: _wind_v3_reader,
-           FLOODFABRICV2: _flood_fabric_v2_reader}
