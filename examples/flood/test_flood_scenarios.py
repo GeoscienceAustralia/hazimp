@@ -23,8 +23,8 @@ from core_hazimp import misc
 from core_hazimp import hazimp
 from core_hazimp.calcs.calcs import FLOOR_HEIGHT
 from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE)
-from core_hazimp.config import (TEMPLATE, FLOODFABRICV2)
-from core_hazimp.templates import (SAVE, LOADFLOODASCII)
+from core_hazimp.templates import (SAVE, LOADFLOODASCII,
+                                   FLOODFABRICV2, TEMPLATE)
 from core_hazimp import parallel
 
 

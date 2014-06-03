@@ -37,7 +37,8 @@ import scipy
 
 from core_hazimp import context
 from core_hazimp import hazimp
-from core_hazimp import config
+
+from core_hazimp import templates
 
 
 class TestHazimp(unittest.TestCase):
@@ -47,7 +48,7 @@ class TestHazimp(unittest.TestCase):
     """
 
     def test_start(self):
-        config_list = [{config.TEMPLATE: config.DEFAULT},
+        config_list = [{templates.TEMPLATE: templates.DEFAULT},
                        {'constant': {'var': 'c_test', 'value': 7}},
                        {'add_test': None},
                        {'multiply_test': None}]
@@ -69,7 +70,7 @@ class TestHazimp(unittest.TestCase):
             prefix='HAZIMPt_test_hazimp',
             delete=False)
 
-        print(' - ' + config.TEMPLATE + ': ' + config.DEFAULT, file=f)
+        print(' - ' + templates.TEMPLATE + ': ' + templates.DEFAULT, file=f)
         print(' - constant : ', file=f)
         print('    var : c_test', file=f)
         print('    value : 7  ', file=f)
