@@ -23,8 +23,9 @@ from core_hazimp import misc
 from core_hazimp import hazimp
 from core_hazimp.calcs.calcs import FLOOR_HEIGHT
 from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE)
-from core_hazimp.templates import (SAVE, LOADFLOODASCII,
-                                   FLOODFABRICV2, TEMPLATE)
+from core_hazimp.templates import (SAVE, LOADFLOODASCII, FLOODFABRICV2,
+                                   TEMPLATE, FLOODCONTENTSV2)
+from core_hazimp import templates as flood_conts
 from core_hazimp import parallel
 
 
@@ -34,9 +35,9 @@ class TestFlood(unittest.TestCase):
     Do a large system based test.
     """
 
-    def test_flood_v1_template_list(self):
-        # Test running an end to end wind test based
-        # on a wind config template.
+    def test_flood_fabric_v2_template_list(self):
+        # Test running an end to end  test based
+        # on a config template.
 
         # The output file
         f = tempfile.NamedTemporaryFile(
@@ -113,6 +114,43 @@ class TestFlood(unittest.TestCase):
         os.remove(f.name)
         os.remove(f_out.name)
 
+    def test_flood_contents_v2_template_list(self):
+        # Test running an end to end  test based
+        # on a config template.
+
+        # The output file
+        f = tempfile.NamedTemporaryFile(
+            suffix='.csv',
+            prefix='HAZIMP_flood_scenarios_test_const',
+            delete=False)
+        resource_dir = os.path.join(misc.EXAMPLE_DIR, 'flood')
+        exp_filename = os.path.join(resource_dir,
+                                    'small_exposure.csv')
+        haz_filename = os.path.join(resource_dir, 'depth_small_synthetic.txt')
+        config = [{TEMPLATE: FLOODCONTENTSV2},
+                  {LOADCSVEXPOSURE: {'file_name': exp_filename,
+                                     'exposure_latitude': 'LATITUDE',
+                                     'exposure_longitude': 'LONGITUDE'}},
+                  {FLOOR_HEIGHT: .3},
+                  {LOADFLOODASCII: [haz_filename]},
+                  {flood_conts.INSURE_PROB:{flood_conts.INSURED: 0.3,
+                                            flood_conts.UNINSURED: 0.7}},
+                  {flood_conts.CONT_ACTIONS:{flood_conts.SAVE_CONT: 0.5,
+                                             flood_conts.NO_ACTION_CONT: 0.4,
+                                             flood_conts.EXPOSE_CONT: 0.1}},
+                  {SAVE: f.name}]
+
+        context = hazimp.start(config_list=config)
+        self.assertTrue(allclose(
+            context.exposure_att['structural_loss'],
+            context.exposure_att['calced-loss']))
+
+        # Only the head node writes a file
+        if parallel.STATE.rank == 0:
+            exp_dict = misc.csv2dict(f.name)
+            self.assertTrue(allclose(exp_dict['structural_loss'],
+                                     exp_dict['calced-loss']))
+        os.remove(f.name)
 # -------------------------------------------------------------
 if __name__ == "__main__":
 

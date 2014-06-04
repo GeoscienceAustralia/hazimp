@@ -27,18 +27,31 @@ from core_hazimp.calcs.calcs import (STRUCT_LOSS, WATER_DEPTH, FLOOR_HEIGHT,
 from core_hazimp.config_build import find_atts, add_job
 from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
-                                   SELECTVULNFUNCTION,
+                                   SELECTVULNFUNCTION, RANDOM_CONSTANT,
                                    LOOKUP, SAVEALL, CONSTANT)
 
 __author__ = 'u54709'
 
+TEMPLATE = 'template'
+DEFAULT = 'default'
+SAVE = 'save'
 LOADWINDTCRM = 'load_wind_ascii'
 LOADFLOODASCII = 'load_flood_ascii'
-SAVE = 'save'
-DEFAULT = 'default'
 WINDV3 = 'wind_v3'
 FLOODFABRICV2 = 'flood_fabric_v2'
-TEMPLATE = 'template'
+
+FLOODCONTENTSV2 = 'flood_contents_v2'
+INSURE_PROB = 'insurance_probability'
+INSURED = 'insured'
+UNINSURED = 'uninsured'
+CONT_ACTIONS = 'contents actions'
+SAVE_CONT = 'save'
+NO_ACTION_CONT = 'no_action'
+EXPOSE_CONT = 'expose'
+
+CONT_MAP = {SAVE_CONT: "SAVE", NO_ACTION_CONT: "NOACTION",
+            EXPOSE_CONT: "EXPOSE"}
+INSURE_MAP = {INSURED: "Insured", UNINSURED: "Uninsured"}
 
 
 def _wind_v3_reader(config_list):
@@ -133,7 +146,7 @@ def _flood_fabric_v2_reader(config_list):
 def _flood_contents_v2_reader(config_list):
     """
     This function does two things;
-       * From a flood fabric template v1 configuration dictionary
+       * From a flood contents template v2 configuration dictionary
        build the job list.
        * Set up the attributes of the jobs and calc's specifically
        for a flood study.
@@ -157,6 +170,17 @@ def _flood_contents_v2_reader(config_list):
     add_job(job_insts, CONSTANT, atts)
 
     add_job(job_insts, FLOOR_HEIGHT_CALC)
+
+    atts = find_atts(config_list, CONT_ACTIONS)
+    probs = {}
+    for key in CONT_MAP:
+        if not key in atts:
+            msg = '\nMandatory key not found in config file; %s\n' % key
+            msg += 'Section; %s\n' % INSURE_PROB
+            raise RuntimeError(msg)
+        probs[CONT_MAP[key]] = atts[key]
+    attributes = {'var': 'insurance_regime', 'values': probs}
+    add_job(job_insts, RANDOM_CONSTANT, attributes)
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
@@ -202,4 +226,5 @@ def _reader2(config_list):
 
 READERS = {DEFAULT: _reader2,
            WINDV3: _wind_v3_reader,
-           FLOODFABRICV2: _flood_fabric_v2_reader}
+           FLOODFABRICV2: _flood_fabric_v2_reader,
+           FLOODCONTENTSV2: _flood_contents_v2_reader}
