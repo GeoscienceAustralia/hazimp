@@ -28,7 +28,7 @@ from core_hazimp.config_build import find_atts, add_job
 from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION, RANDOM_CONSTANT,
-                                   LOOKUP, SAVEALL, CONSTANT)
+                                   LOOKUP, SAVEALL, CONSTANT, ADD)
 
 __author__ = 'u54709'
 
@@ -44,14 +44,18 @@ FLOODCONTENTSV2 = 'flood_contents_v2'
 INSURE_PROB = 'insurance_probability'
 INSURED = 'insured'
 UNINSURED = 'uninsured'
+
 CONT_ACTIONS = 'contents actions'
 SAVE_CONT = 'save'
 NO_ACTION_CONT = 'no_action'
 EXPOSE_CONT = 'expose'
+CONT_ACTION_COL = 'contents_action'
+CONT_INSURANCE_COL = 'insurance_regime'
+CONT_TEMP = 'regime_action'
 
-CONT_MAP = {SAVE_CONT: "SAVE", NO_ACTION_CONT: "NOACTION",
-            EXPOSE_CONT: "EXPOSE"}
-INSURE_MAP = {INSURED: "Insured", UNINSURED: "Uninsured"}
+CONT_MAP = {SAVE_CONT: "_SAVE", NO_ACTION_CONT: "_NOACTION",
+            EXPOSE_CONT: "_EXPOSE"}
+INSURE_MAP = {INSURED: "_INSURED", UNINSURED: "_UNINSURED"}
 
 
 def _wind_v3_reader(config_list):
@@ -171,16 +175,37 @@ def _flood_contents_v2_reader(config_list):
 
     add_job(job_insts, FLOOR_HEIGHT_CALC)
 
+    # select save, nosave or expose
     atts = find_atts(config_list, CONT_ACTIONS)
     probs = {}
     for key in CONT_MAP:
         if not key in atts:
             msg = '\nMandatory key not found in config file; %s\n' % key
-            msg += 'Section; %s\n' % INSURE_PROB
+            msg += 'Section; %s\n' % CONT_ACTIONS
             raise RuntimeError(msg)
         probs[CONT_MAP[key]] = atts[key]
-    attributes = {'var': 'insurance_regime', 'values': probs}
+    attributes = {'var': CONT_ACTION_COL, 'values': probs}
     add_job(job_insts, RANDOM_CONSTANT, attributes)
+
+    # select insured or uninsured
+    atts = find_atts(config_list, INSURE_PROB)
+    probs = {}
+    for key in INSURE_MAP:
+        if not key in atts:
+            msg = '\nMandatory key not found in config file; %s\n' % key
+            msg += 'Section; %s\n' % INSURE_PROB
+            raise RuntimeError(msg)
+        probs[INSURE_MAP[key]] = atts[key]
+    attributes = {'var': CONT_INSURANCE_COL, 'values': probs}
+    add_job(job_insts, RANDOM_CONSTANT, attributes)
+
+    # combine columns to give constant_function_id
+    attributes = {'var1': CONT_INSURANCE_COL, 'var2': CONT_ACTION_COL,
+                  'var_out': CONT_TEMP}
+    attributes = {'var1': 'FABRIC_FLOOD_FUNCTION_ID', 'var2': CONT_TEMP,
+                  'var_out': 'CONTENTS_FLOOD_FUNCTION_ID'}
+
+    add_job(job_insts, ADD, attributes)
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'

@@ -146,6 +146,8 @@ class Add(Calculator):
 
     """
     Simple test class, adding args together.
+
+    Note, jobs has a general adding method.
     """
 
     def __init__(self):
