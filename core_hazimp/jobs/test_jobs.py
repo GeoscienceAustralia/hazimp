@@ -211,6 +211,21 @@ class TestJobs(unittest.TestCase):
         self.assertEqual(con_in.exposure_att['c_test'].tolist(),
                          ['summer_time', 'summer_drinks'])
 
+    def test_addIII(self):
+        inst_const = JOBS[CONSTANT]
+        inst_add = JOBS[ADD]
+        con_in = Dummy(site_shape=(2,))
+        con_in.exposure_att = {'b_col': numpy.array(['_summer', '_winter']),
+                               'c_col': numpy.array(['_time', '_meals'])}
+        test_kwargs = {'var': 'a_col', 'value': 'more'}
+        inst_const(con_in, **test_kwargs)
+        test_kwargs = {'var1': 'b_col', 'var2': 'c_col', 'var_out': 'd_col'}
+        inst_add(con_in, **test_kwargs)
+        test_kwargs = {'var1': 'a_col', 'var2': 'd_col', 'var_out': 'answer'}
+        inst_add(con_in, **test_kwargs)
+        self.assertEqual(con_in.exposure_att['answer'].tolist(),
+                         ['more_summer_time', 'more_winter_meals'])
+
     def test_load_csv_exposure(self):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(

@@ -133,11 +133,11 @@ class TestFlood(unittest.TestCase):
                                      'exposure_longitude': 'LONGITUDE'}},
                   {FLOOR_HEIGHT: .3},
                   {LOADFLOODASCII: [haz_filename]},
-                  {flood_conts.INSURE_PROB:{flood_conts.INSURED: 0.3,
-                                            flood_conts.UNINSURED: 0.7}},
-                  {flood_conts.CONT_ACTIONS:{flood_conts.SAVE_CONT: 0.5,
-                                             flood_conts.NO_ACTION_CONT: 0.4,
-                                             flood_conts.EXPOSE_CONT: 0.1}},
+                  {flood_conts.INSURE_PROB: {flood_conts.INSURED: 0.3,
+                                             flood_conts.UNINSURED: 0.7}},
+                  {flood_conts.CONT_ACTIONS: {flood_conts.SAVE_CONT: 0.5,
+                                              flood_conts.NO_ACTION_CONT: 0.4,
+                                              flood_conts.EXPOSE_CONT: 0.1}},
                   {SAVE: f.name}]
 
         context = hazimp.start(config_list=config)
