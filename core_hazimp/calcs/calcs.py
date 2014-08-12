@@ -65,6 +65,7 @@ class Calculator(Job):
         args_in = []
         for job_arg in self.context_args_in:
             # A calc with no input is ok.
+            #print (job_arg)
             if job_arg not in context.exposure_att:
                 raise RuntimeError(
                     'No correct variables, %s .' % job_arg)

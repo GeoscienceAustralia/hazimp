@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 
 # Copyright (C) 2012-2013  Duncan Gray
 
@@ -166,7 +166,7 @@ def _flood_contents_v2_reader(config_list):
     atts = {'file_list': file_list, 'attribute_label': WATER_DEPTH}
     add_job(job_insts, LOADRASTER, atts)
     vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'fabric_flood_avg_curve.xml')
+                                'content_flood_avg_curve.xml')
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     floor_height_value = find_atts(config_list, FLOOR_HEIGHT)
@@ -200,9 +200,11 @@ def _flood_contents_v2_reader(config_list):
     add_job(job_insts, RANDOM_CONSTANT, attributes)
 
     # combine columns to give constant_function_id
-    attributes = {'var1': CONT_INSURANCE_COL, 'var2': CONT_ACTION_COL,
-                  'var_out': CONT_TEMP}
-    attributes = {'var1': 'FABRIC_FLOOD_FUNCTION_ID', 'var2': CONT_TEMP,
+    #attributes = {'var1': CONT_INSURANCE_COL, 'var2': CONT_ACTION_COL,
+    #              'var_out': CONT_TEMP}
+    #add_job(job_insts, ADD, attributes)
+
+    attributes = {'var1': 'FABRIC_FLOOD_FUNCTION_ID', 'var2': CONT_ACTION_COL,
                   'var_out': 'CONTENTS_FLOOD_FUNCTION_ID'}
 
     add_job(job_insts, ADD, attributes)
@@ -210,16 +212,18 @@ def _flood_contents_v2_reader(config_list):
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     atts = {'vul_functions_in_exposure': {
-            'structural_domestic_flood_2012':
-            'FABRIC_FLOOD_FUNCTION_ID'}}
+            'contents_domestic_flood_2012':
+            'CONTENTS_FLOOD_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
-            'structural_domestic_flood_2012': 'mean'}}
+            'contents_domestic_flood_2012': 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
-    add_job(job_insts, STRUCT_LOSS)
+    # the cont_loss calc has to be coded
+    # or the way this done needs to be modified
+    #add_job(job_insts, CONT_LOSS)
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
