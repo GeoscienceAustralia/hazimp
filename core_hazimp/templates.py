@@ -200,7 +200,7 @@ def _flood_contents_v2_reader(config_list):
     add_job(job_insts, RANDOM_CONSTANT, attributes)
 
     # combine columns to give constant_function_id
-    #attributes = {'var1': CONT_INSURANCE_COL, 'var2': CONT_ACTION_COL,
+    # attributes = {'var1': CONT_INSURANCE_COL, 'var2': CONT_ACTION_COL,
     #              'var_out': CONT_TEMP}
     #add_job(job_insts, ADD, attributes)
 
