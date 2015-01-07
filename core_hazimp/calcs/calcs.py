@@ -192,30 +192,6 @@ class CalcLoss(Calculator):
         """
         return [structural_loss_ratio * structural_value]
 
-class CalcContentsLoss(Calculator):
-
-    """
-    Multiply the structural_loss_ratio and the structural_value to calc
-    the structural_loss.
-    """
-
-    def __init__(self):
-        super(CalcLoss, self).__init__()
-        self.context_args_in = ['contents_loss_ratio', 'CONTENTS_VALUE']
-        self.args_out = ['contents_loss']
-        self.call_funct = STRUCT_LOSS
-
-    def calc(self, structural_loss_ratio, structural_value):
-        """
-        Calculate the structural loss, given the structural value and
-            the loss ratio.
-        :param structural_loss_ratio:
-        :param structural_value:
-        :return: The structural loss
-        """
-        return [structural_loss_ratio * structural_value]
-
-
 class CalcFloorInundation(Calculator):
 
     """
