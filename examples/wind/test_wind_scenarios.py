@@ -30,7 +30,8 @@ from core_hazimp.calcs import calcs
 from core_hazimp import parallel
 from core_hazimp import config
 from core_hazimp.templates import (SAVE, LOADWINDTCRM, WINDV3,
-                                   TEMPLATE, DEFAULT)
+                                  TEMPLATE, DEFAULT, CALCSTRUCTLOSS,
+                                    REP_VAL_NAME)
 
 
 class TestWind(unittest.TestCase):
@@ -104,6 +105,7 @@ class TestWind(unittest.TestCase):
                                        'exposure_latitude': 'LATITUDE',
                                        'exposure_longitude': 'LONGITUDE'}},
                     {LOADWINDTCRM: [wind_filename]},
+                    {CALCSTRUCTLOSS:{REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                     {SAVE: f.name}]
 
         context = hazimp.start(config_list=a_config)
@@ -119,7 +121,7 @@ class TestWind(unittest.TestCase):
                                      exp_dict['calced-loss']))
         os.remove(f.name)
 
-    def test_wind_yaml_list(self):
+    def test_wind_yaml_v3_list(self):
         # Test running an end to end cyclone test based
         # on a wind config template.
 
@@ -152,6 +154,8 @@ class TestWind(unittest.TestCase):
             wind_filename +
             ']',
             file=f)
+        print(' - ' + CALCSTRUCTLOSS + ': ', file=f)
+        print('      ' + REP_VAL_NAME + ': ' + 'REPLACEMENT_VALUE', file=f)
         print(' - ' + SAVE + ': ' + f_out.name, file=f)
         f.close()
 
@@ -168,7 +172,7 @@ class TestWind(unittest.TestCase):
         os.remove(f.name)
         os.remove(f_out.name)
 
-    def test_wind_v2_template_list_csv(self):
+    def test_wind_v3_template_list_csv(self):
         # Test running an end to end cyclone test based
         # on a wind config template.
 
@@ -188,6 +192,7 @@ class TestWind(unittest.TestCase):
                       'exposure_latitude': 'LATITUDE',
                       'exposure_longitude': 'LONGITUDE'}},
                     {LOADWINDTCRM: [wind_filename]},
+                    {CALCSTRUCTLOSS:{REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                     {SAVE: f.name}]
 
         context = hazimp.start(config_list=a_config)
@@ -204,6 +209,6 @@ class TestWind(unittest.TestCase):
 # -------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestWind, 'test')
-    # SUITE = unittest.makeSuite(TestWind, 'test_const_testII')
+    # SUITE = unittest.makeSuite(TestWind, 'test_wind_v3_template')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)

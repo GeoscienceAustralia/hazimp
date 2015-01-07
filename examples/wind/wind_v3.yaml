@@ -1,0 +1,10 @@
+#  python ../../core_hazimp/hazimp.py -c wind_v3.yaml
+ - template: wind_v3
+ - load_exposure: 
+     file_name:  WA_subset.csv
+     exposure_latitude: LATITUDE
+     exposure_longitude: LONGITUDE 
+ - load_wind_ascii:  gust-0363.asc
+ - calc_struct_loss:
+    replacement_value_label: REPLACEMENT_VALUE
+ - save: wind_impact.csv

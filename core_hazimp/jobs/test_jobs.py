@@ -388,6 +388,7 @@ class TestJobs(unittest.TestCase):
             str(con_in.exposure_att['haz_actual'])
         self.assertTrue(allclose(con_in.exposure_att[haz_v],
                                  con_in.exposure_att['haz_actual']), msg)
+        os.remove(f.name)
 
     def test_load_raster_clipping(self):
         # Write a file to test
@@ -442,6 +443,7 @@ class TestJobs(unittest.TestCase):
         msg += str(len(con_in.exposure_att['ID']))
         msg += "\n Expected " + str(expected)
         self.assertTrue(len(con_in.exposure_att['ID']) == expected, msg)
+        os.remove(f.name)
 
     def test_load_raster_clippingII(self):
         # Write a file to test
@@ -487,6 +489,7 @@ class TestJobs(unittest.TestCase):
         msg += str(len(con_in.exposure_att['ID']))
         msg += "\n Expected " + str(expected)
         self.assertTrue(len(con_in.exposure_att['ID']) == expected, msg)
+        os.remove(f.name)
 
     def test_load_raster_clippingIII(self):
         # Write a file to test
