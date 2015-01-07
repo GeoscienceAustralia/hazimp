@@ -118,6 +118,19 @@ class TestFlood(unittest.TestCase):
         # Test running an end to end  test based
         # on a config template.
 
+        """
+        Failing with this error.
+
+        FIXME
+
+        Traceback (most recent call last):
+  File "/nas/mnh/georisk_models/hazard_impact/sandpits/duncan/github_hazimp/examples/flood/test_flood_scenarios.py", line 145, in test_flood_contents_v2_template_list
+    context.exposure_att['structural_loss'],
+KeyError: 'structural_loss'
+
+        Part of fixing this is knowing what the answer should be...
+        """
+
         # The output file
         f = tempfile.NamedTemporaryFile(
             suffix='.csv',
@@ -142,7 +155,7 @@ class TestFlood(unittest.TestCase):
 
         context = hazimp.start(config_list=config)
         self.assertTrue(allclose(
-            context.exposure_att['structural_loss'],
+            context.exposure_att['contents_loss'],
             context.exposure_att['calced-loss']))
 
         # Only the head node writes a file
@@ -155,6 +168,6 @@ class TestFlood(unittest.TestCase):
 if __name__ == "__main__":
 
     SUITE = unittest.makeSuite(TestFlood, 'test')
-    # SUITE = unittest.makeSuite(TestFlood, '')
+    SUITE = unittest.makeSuite(TestFlood, 'test_flood_contents_v2_template_list')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)

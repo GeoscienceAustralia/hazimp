@@ -130,6 +130,7 @@ def squash_narray(ary):
 def add(var, var2):
     """
     Add the values of two numpy arrays together.
+    If the values are strings concatenate them.
 
     :param var: The values in this array are added.
     :param var2: The values in this array are added.
@@ -192,3 +193,70 @@ def sorted_dict_values(adict):
     """
     keys = sorted(sorted(adict.keys()))
     return keys, [adict[key] for key in keys]
+
+
+def multiple_replace(text, dictionary):
+    """Multiple replace of words in text
+
+    text:       String to be modified
+    dictionary: Mapping of words that are to be substituted
+
+    Python Cookbook 3.14 page 88 and page 90
+    http://code.activestate.com/recipes/81330/
+    """
+
+    import re
+
+    #Create a regular expression from all of the dictionary keys
+    #matching only entire words
+    regex = re.compile(r'\b'+ \
+                       r'\b|\b'.join(map(re.escape, dictionary.keys()))+ \
+                       r'\b' )
+
+    #For each match, lookup the corresponding value in the dictionary
+    return regex.sub(lambda match: dictionary[match.group(0)], text)
+
+
+def apply_expression_to_dictionary(expression, dictionary):
+    """Apply arbitrary expression to values of dictionary
+
+    Given an expression in terms of the keys, replace key by the
+    corresponding values and evaluate.
+
+    expression: Arbitrary, e.g. arithmetric, expression relating keys
+                from dictionary.
+
+    dictionary: Mapping between symbols in expression and objects that
+                will be evaluated by expression.
+                Values in dictionary must support operators given in
+                expression e.g. by overloading
+
+    Due to a limitation with numeric, this can not evaluate 0/0
+    In general, the user can fix by adding 1e-30 to the numerator.
+    SciPy core can handle this situation.
+    """
+
+    import types
+    import re
+
+    assert isinstance(expression, basestring)
+    assert type(dictionary) == types.DictType
+
+    #Convert dictionary values to textual representations suitable for eval
+    D = {}
+    for key in dictionary:
+        D[key] = 'dictionary["%s"]' % key
+
+    #Perform substitution of variables
+    expression = multiple_replace(expression, D)
+
+    #Evaluate and return
+    try:
+        return eval(expression)
+    except NameError, e:
+        msg = 'Expression "%s" could not be evaluated: %s' % (expression, e)
+        raise NameError(msg)
+    except ValueError, e:
+        msg = 'Expression "%s" could not be evaluated: %s' % (expression, e)
+        raise ValueError(msg)
+
