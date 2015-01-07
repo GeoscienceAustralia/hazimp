@@ -30,14 +30,14 @@ passing the configuration infomation in as a dictionary.
 For example, to run a wind example do;::
 
      cd examples/wind
-     python ../../core_hazimp/hazimp.py  -c wind_v1.yaml
+     python ../../core_hazimp/hazimp.py  -c wind_v3.yaml
 
 
 The -c specifies the configuration file.
 
 HazImp can also be ran in parallel, using mpirun.  For example;::
 
-     mpirun -np 4 python ../../core_hazimp/hazimp.py  -c wind_v1.yaml
+     mpirun -np 4 python ../../core_hazimp/hazimp.py  -c wind_v3.yaml
  
 
 There are a suite of HazImp tests to test the install and code during
@@ -68,23 +68,25 @@ HazImp. They are defined in the GA internal report
 Here is the example wind configuration file (from examples/wind),
 which uses the wind template.::
 
-     #  python hazimp.py -c wind_v1.yaml
-     template: windv1
-     load_exposure: 
+     #  python hazimp.py -c wind_v3.yaml
+      - template: windv3
+      - load_exposure:
          file_name: WA_Wind_Exposure_2013_Test_only.csv
          exposure_latitude: LATITUDE
          exposure_longitude: LONGITUDE
-     load_wind_ascii: [gust01.txt, gust02.tx]
-     save: wind_impact.csv 
+      - load_wind_ascii: [gust01.txt, gust02.tx]
+      - calc_struct_loss:
+         replacement_value_label: REPLACEMENT_VALUE
+      - save: wind_impact.csv
 
 The first line is a comment, so this is ignored.
 The rest of the file can be understood by the following key value pairs; 
 
 *template*
-    The type of template to use.  This example describes the *windv1* template.
+    The type of template to use.  This example describes the *windv3* template.
 
 *load_exposure*
-    This section describes how to load the exposure data. It has 3 sub-sections;
+    This loads the exposure data. It has 3 sub-sections;
 
     *file_name*
         The name of the csv exposure file to load. The first row of the csv file is the title row.

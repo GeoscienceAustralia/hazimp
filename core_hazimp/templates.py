@@ -28,7 +28,7 @@ from core_hazimp.config_build import find_atts, add_job
 from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION, RANDOM_CONSTANT,
-                                   LOOKUP, SAVEALL, CONSTANT, ADD)
+                                   LOOKUP, SAVEALL, CONSTANT, ADD, MULT)
 
 __author__ = 'u54709'
 
@@ -37,8 +37,12 @@ DEFAULT = 'default'
 SAVE = 'save'
 LOADWINDTCRM = 'load_wind_ascii'
 LOADFLOODASCII = 'load_flood_ascii'
+CALCSTRUCTLOSS = 'calc_struct_loss'
 WINDV3 = 'wind_v3'
+WINDV4 = 'wind_v4'
 FLOODFABRICV2 = 'flood_fabric_v2'
+
+REP_VAL_NAME = 'replacement_value_label'
 
 FLOODCONTENTSV2 = 'flood_contents_v2'
 INSURE_PROB = 'insurance_probability'
@@ -91,13 +95,24 @@ def _wind_v3_reader(config_list):
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
-    add_job(job_insts, STRUCT_LOSS)
+
+    #################################################################
+    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+    if not REP_VAL_NAME in atts_dict:
+        msg = '\nMandatory key not found in config file; %s\n' % job
+        raise RuntimeError(msg)
+
+    attributes = {'var1': atts_dict[REP_VAL_NAME], 'var2': 'structural_loss_ratio',
+                  'var_out': 'structural_loss'}
+    add_job(job_insts, MULT, attributes)
+    ####################################################################
+
+    #add_job(job_insts, STRUCT_LOSS)
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
     return job_insts
-
 
 def _flood_fabric_v2_reader(config_list):
     """
@@ -139,6 +154,7 @@ def _flood_fabric_v2_reader(config_list):
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
+
     add_job(job_insts, STRUCT_LOSS)
 
     file_name = find_atts(config_list, SAVE)
