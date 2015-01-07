@@ -39,7 +39,8 @@ import numpy
 from scipy import allclose
 
 from core_hazimp.misc import (csv2dict, get_required_args, sorted_dict_values,
-                              squash_narray, weighted_values)
+                              squash_narray, weighted_values, multiple_replace,
+                               apply_expression_to_dictionary)
 
 
 class TestMisc(unittest.TestCase):
@@ -179,6 +180,69 @@ class TestMisc(unittest.TestCase):
         r_keys, r_values = sorted_dict_values(adict)
         self.assertEqual(r_keys, ['boots', 'feet', 'socks'])
         self.assertEqual(r_values, [1, 2, 3])
+
+
+    def test_apply_expression_to_dictionary(self):
+
+        #FIXME: Division is not expected to work for integers.
+        #This must be caught.
+        foo = numpy.array([[1,2,3], [4,5,6]], numpy.float)
+
+        bar = numpy.array([[-1,0,5], [6,1,1]], numpy.float)
+
+        D = {'X': foo, 'Y': bar}
+
+        Z = apply_expression_to_dictionary('X+Y', D)
+        assert numpy.allclose(Z, foo+bar)
+
+        Z = apply_expression_to_dictionary('X*Y', D)
+        assert numpy.allclose(Z, foo*bar)
+
+        Z = apply_expression_to_dictionary('4*X+Y', D)
+        assert numpy.allclose(Z, 4*foo+bar)
+
+        # test zero division is OK
+        with numpy.errstate(divide='ignore'):
+            Z = apply_expression_to_dictionary('X/Y', D)
+            assert numpy.allclose(1/Z, 1/(foo/bar)) # can't compare inf to inf
+
+        # make an error for zero on zero
+        # this is really an error in numeric, SciPy core can handle it
+        # Z = apply_expression_to_dictionary('0/Y', D)
+
+        #Check exceptions
+        try:
+            #Wrong name
+            Z = apply_expression_to_dictionary('4*X+A', D)
+        except NameError:
+            pass
+        else:
+            msg = 'Should have raised a NameError Exception'
+            raise Exception(msg)
+
+
+        try:
+            #Wrong order
+            Z = apply_expression_to_dictionary(D, '4*X+A')
+        except AssertionError:
+            pass
+        else:
+            msg = 'Should have raised a AssertionError Exception'
+            raise Exception(msg)
+
+
+    def test_multiple_replace(self):
+        """Hard test that checks a true word-by-word simultaneous replace
+        """
+
+        D = {'x': 'xi', 'y': 'eta', 'xi':'lam'}
+        exp = '3*x+y + xi'
+
+        new = multiple_replace(exp, D)
+
+        assert new == '3*xi+eta + lam'
+
+
 #  -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestMisc, 'test')

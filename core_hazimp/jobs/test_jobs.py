@@ -37,7 +37,8 @@ import numpy
 from scipy import allclose, asarray, isnan, array, rollaxis
 
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
-                                   SAVEALL, CONSTANT, ADD, RANDOM_CONSTANT)
+                                   SAVEALL, CONSTANT, ADD, RANDOM_CONSTANT,
+                                    MULT)
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 from core_hazimp import context
@@ -225,6 +226,27 @@ class TestJobs(unittest.TestCase):
         inst_add(con_in, **test_kwargs)
         self.assertEqual(con_in.exposure_att['answer'].tolist(),
                          ['more_summer_time', 'more_winter_meals'])
+
+    def test_Mult(self):
+        inst_const = JOBS[CONSTANT]
+        inst_add = JOBS[MULT]
+        con_in = Dummy(site_shape=(2,))
+        con_in.exposure_att = {'b_test': numpy.array([2, 40])}
+        test_kwargs = {'var': 'a_test', 'value': 20}
+        inst_const(con_in, **test_kwargs)
+        test_kwargs = {'var1': 'a_test', 'var2': 'b_test', 'var_out': 'c_test'}
+        inst_add(con_in, **test_kwargs)
+        self.assertTrue(allclose(con_in.exposure_att['c_test'],
+                                 asarray([40, 800])))
+
+    def test_MultII(self):
+        inst_add = JOBS[MULT]
+        con_in = Dummy(site_shape=(2,))
+        con_in.exposure_att = {'a_test': numpy.array([2, 4]), 'b_test': numpy.array([3, 8])}
+        test_kwargs = {'var1': 'a_test', 'var2': 'b_test', 'var_out': 'c_test'}
+        inst_add(con_in, **test_kwargs)
+        self.assertTrue(allclose(con_in.exposure_att['c_test'],
+                                 asarray([6, 32])))
 
     def test_load_csv_exposure(self):
         # Write a file to test

@@ -46,6 +46,7 @@ from core_hazimp.context import EX_LAT, EX_LONG
 from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 ADD = 'add'
+MULT = 'mult'
 CONSTANT = 'constant'
 LOADCSVEXPOSURE = 'load_exposure'
 LOADRASTER = 'load_raster'
@@ -179,7 +180,7 @@ class RandomConst(Job):
 class Add(Job):
 
     """
-    Given a key and a constant value, insert a vector of the value.
+    Add two columns together, put the answer in a new column.
     """
 
     def __init__(self):
@@ -188,15 +189,38 @@ class Add(Job):
 
     def __call__(self, context, var1, var2, var_out):
         """
-        Add two columns together, put the answer in a second column.
+        Add two columns together, put the answer in a new column.
 
         :param context: The context instance, used to move data around.
         :param var1: The values in this column are added.
         :param var2: The values in this column are added.
-        :param var_out: The new column name, with the values of Var1 + var2.
+        :param var_out: The new column name, with the values of var1 + var2.
         """
         context.exposure_att[var_out] = misc.add(context.exposure_att[var1],
                                                  context.exposure_att[var2])
+
+
+class Mult(Job):
+
+    """
+    Multiply two columns together, put the answer in a new column.
+    """
+
+    def __init__(self):
+        super(Mult, self).__init__()
+        self.call_funct = MULT
+
+    def __call__(self, context, var1, var2, var_out):
+        """
+        Multiply two columns together, put the answer in a new column.
+
+        :param context: The context instance, used to move data around.
+        :param var1: The values in this column are Multiplied.
+        :param var2: The values in this column are Multiplied.
+        :param var_out: The new column name, with the values of var1 * var2.
+        """
+        context.exposure_att[var_out] = (context.exposure_att[var1] *
+                                        context.exposure_att[var2])
 
 
 class LoadCsvExposure(Job):
