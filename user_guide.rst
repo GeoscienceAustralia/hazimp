@@ -99,8 +99,16 @@ The rest of the file can be understood by the following key value pairs;
 
 *load_wind_ascii*
     A list of ascii grid wind hazard files to load or a single file.  The file
-    format is grid ascii.  The values in the file must be *0.2s gust at 10m
-    height m/s*, since that is the axis of the HazImp wind vulnerability curves.
+    format is grid ascii.  The values in the file must be
+     ``0.2s gust at 10m height m/s``, since that is the axis of the HazImp wind
+     vulnerability curves.
+
+*calc_struct_loss*
+    This will multiply the replacement value and the ``structural_loss_ratio`` to get
+    the ``structural_loss``.
+
+    *replacement_value_label*
+        The title of the exposure data column that has the replacement values.
 
 *save*
     The file where the results will be saved.  All the results to calculate the
@@ -109,7 +117,14 @@ The rest of the file can be understood by the following key value pairs;
     of averaging data from multiple wind hazards.  The information can also be
     saved as numpy arrays.  This can be done by using the *.npz* extension.
     This data can be accessed using Python scripts and is not averaged.
-    
+
+    There are some pre-requisites for the exposure data. It must have a column
+    called ``WIND_VULNERABILITY_FUNCTION_ID`` which describe the vulnerability
+     functions to be used. The vulnerability set used is hard coded. This
+     is used to calculate the ``structural_loss_ratio`` given the
+     ``0.2s gust at 10m height m/s``.
+
+
     
 Without Templates
 ----------------- 

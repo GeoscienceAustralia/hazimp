@@ -1,4 +1,4 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 # Copyright (C) 2012-2013  Duncan Gray
 
@@ -96,23 +96,21 @@ def _wind_v3_reader(config_list):
 
     add_job(job_insts, LOOKUP)
 
-    #################################################################
     atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
-    if not REP_VAL_NAME in atts_dict:
-        msg = '\nMandatory key not found in config file; %s\n' % job
+    if REP_VAL_NAME not in atts_dict:
+        msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
 
-    attributes = {'var1': atts_dict[REP_VAL_NAME], 'var2': 'structural_loss_ratio',
-                  'var_out': 'structural_loss'}
+    attributes = {
+        'var1': atts_dict[REP_VAL_NAME], 'var2': 'structural_loss_ratio',
+        'var_out': 'structural_loss'}
     add_job(job_insts, MULT, attributes)
-    ####################################################################
-
-    #add_job(job_insts, STRUCT_LOSS)
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
     return job_insts
+
 
 def _flood_fabric_v2_reader(config_list):
     """
@@ -195,7 +193,7 @@ def _flood_contents_v2_reader(config_list):
     atts = find_atts(config_list, CONT_ACTIONS)
     probs = {}
     for key in CONT_MAP:
-        if not key in atts:
+        if key not in atts:
             msg = '\nMandatory key not found in config file; %s\n' % key
             msg += 'Section; %s\n' % CONT_ACTIONS
             raise RuntimeError(msg)
@@ -207,7 +205,7 @@ def _flood_contents_v2_reader(config_list):
     atts = find_atts(config_list, INSURE_PROB)
     probs = {}
     for key in INSURE_MAP:
-        if not key in atts:
+        if key not in atts:
             msg = '\nMandatory key not found in config file; %s\n' % key
             msg += 'Section; %s\n' % INSURE_PROB
             raise RuntimeError(msg)
@@ -218,7 +216,7 @@ def _flood_contents_v2_reader(config_list):
     # combine columns to give constant_function_id
     # attributes = {'var1': CONT_INSURANCE_COL, 'var2': CONT_ACTION_COL,
     #              'var_out': CONT_TEMP}
-    #add_job(job_insts, ADD, attributes)
+    # add_job(job_insts, ADD, attributes)
 
     attributes = {'var1': 'FABRIC_FLOOD_FUNCTION_ID', 'var2': CONT_ACTION_COL,
                   'var_out': 'CONTENTS_FLOOD_FUNCTION_ID'}
@@ -239,7 +237,7 @@ def _flood_contents_v2_reader(config_list):
     add_job(job_insts, LOOKUP)
     # the cont_loss calc has to be coded
     # or the way this done needs to be modified
-    #add_job(job_insts, CONT_LOSS)
+    # add_job(job_insts, CONT_LOSS)
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})

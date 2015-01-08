@@ -89,7 +89,7 @@ class TestHazimp(unittest.TestCase):
         os.remove(f.name)
         self.assertEqual(cont_in.exposure_att['d_test'], 35)  # 7 * 5
         self.assertEqual(cont_in.exposure_att['c_test'], 7)  # 5 + 2
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestHazimp, 'test')
     Runner = unittest.TextTestRunner()

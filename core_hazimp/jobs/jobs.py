@@ -220,7 +220,7 @@ class Mult(Job):
         :param var_out: The new column name, with the values of var1 * var2.
         """
         context.exposure_att[var_out] = (context.exposure_att[var1] *
-                                        context.exposure_att[var2])
+                                         context.exposure_att[var2])
 
 
 class LoadCsvExposure(Job):
