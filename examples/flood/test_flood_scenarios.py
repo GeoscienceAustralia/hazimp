@@ -24,7 +24,8 @@ from core_hazimp import hazimp
 from core_hazimp.calcs.calcs import FLOOR_HEIGHT
 from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE)
 from core_hazimp.templates import (SAVE, LOADFLOODASCII, FLOODFABRICV2,
-                                   TEMPLATE, FLOODCONTENTSV2)
+                                   TEMPLATE, FLOODCONTENTSV2, CALCCONTLOSS,
+                                   CALCSTRUCTLOSS, REP_VAL_NAME)
 from core_hazimp import templates as flood_conts
 from core_hazimp import parallel
 
@@ -54,6 +55,7 @@ class TestFlood(unittest.TestCase):
                                      'exposure_longitude': 'LONGITUDE'}},
                   {FLOOR_HEIGHT: .3},
                   {LOADFLOODASCII: [haz_filename]},
+                  {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                   {SAVE: f.name}]
 
         context = hazimp.start(config_list=config)
@@ -68,8 +70,8 @@ class TestFlood(unittest.TestCase):
                                      exp_dict['calced-loss']))
         os.remove(f.name)
 
-    def test_flood_yaml_list(self):
-        # Test running an end to end cyclone test based
+    def test_flood_struct_yaml_list(self):
+        # Test running an end to end flood test based
         # on a flood config template.
         # IF YOU CHANGE THIS CHANGE list_flood_v2.yaml as well
 
@@ -98,6 +100,8 @@ class TestFlood(unittest.TestCase):
         print(' - ' + FLOOR_HEIGHT + ': .3', file=f)
         a_str = ' - ' + LOADFLOODASCII + ': [' + flood_filename + ']'
         print(a_str, file=f)
+        print(' - ' + CALCSTRUCTLOSS + ': ', file=f)
+        print('      ' + REP_VAL_NAME + ': ' + 'REPLACEMENT_VALUE', file=f)
         print(' - ' + SAVE + ': ' + f_out.name, file=f)
         f.close()
 
@@ -152,6 +156,7 @@ KeyError: 'structural_loss'
                   {flood_conts.CONT_ACTIONS: {flood_conts.SAVE_CONT: 0.5,
                                               flood_conts.NO_ACTION_CONT: 0.4,
                                               flood_conts.EXPOSE_CONT: 0.1}},
+                  {CALCCONTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                   {SAVE: f.name}]
 
         context = hazimp.start(config_list=config)
@@ -169,8 +174,6 @@ KeyError: 'structural_loss'
 if __name__ == "__main__":
 
     SUITE = unittest.makeSuite(TestFlood, 'test')
-    SUITE = unittest.makeSuite(
-        TestFlood,
-        'test_flood_contents_v2_template_list')
+    # SUITE = unittest.makeSuite(TestFlood, '')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)

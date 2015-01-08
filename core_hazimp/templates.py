@@ -38,6 +38,7 @@ SAVE = 'save'
 LOADWINDTCRM = 'load_wind_ascii'
 LOADFLOODASCII = 'load_flood_ascii'
 CALCSTRUCTLOSS = 'calc_struct_loss'
+CALCCONTLOSS = 'calc_cont_loss'
 WINDV3 = 'wind_v3'
 WINDV4 = 'wind_v4'
 FLOODFABRICV2 = 'flood_fabric_v2'
@@ -100,7 +101,6 @@ def _wind_v3_reader(config_list):
     if REP_VAL_NAME not in atts_dict:
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
-
     attributes = {
         'var1': atts_dict[REP_VAL_NAME], 'var2': 'structural_loss_ratio',
         'var_out': 'structural_loss'}
@@ -153,7 +153,14 @@ def _flood_fabric_v2_reader(config_list):
 
     add_job(job_insts, LOOKUP)
 
-    add_job(job_insts, STRUCT_LOSS)
+    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+    if REP_VAL_NAME not in atts_dict:
+        msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
+        raise RuntimeError(msg)
+    attributes = {
+        'var1': atts_dict[REP_VAL_NAME], 'var2': 'structural_loss_ratio',
+        'var_out': 'structural_loss'}
+    add_job(job_insts, MULT, attributes)
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
@@ -235,10 +242,17 @@ def _flood_contents_v2_reader(config_list):
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
-    # the cont_loss calc has to be coded
-    # or the way this done needs to be modified
-    # add_job(job_insts, CONT_LOSS)
 
+
+    atts_dict = find_atts(config_list, CALCCONTLOSS)
+    if REP_VAL_NAME not in atts_dict:
+        msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
+        raise RuntimeError(msg)
+    attributes = {
+        'var1': atts_dict[REP_VAL_NAME], 'var2': 'contents_loss_ratio',
+        'var_out': 'contents_loss'}
+    add_job(job_insts, MULT, attributes)
+    
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
