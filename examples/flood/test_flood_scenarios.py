@@ -121,20 +121,7 @@ class TestFlood(unittest.TestCase):
     def test_flood_contents_v2_template_list(self):
         # Test running an end to end  test based
         # on a config template.
-        """
-        Failing with this error.
-
-        FIXME
-
-        Traceback (most recent call last):
-  File "/nas/mnh/georisk_models/hazard_impact/sandpits/duncan/
-  github_hazimp/examples/flood/test_flood_scenarios.py",
-  line 145, in test_flood_contents_v2_template_list
-    context.exposure_att['structural_loss'],
-KeyError: 'structural_loss'
-
-        Part of fixing this is knowing what the answer should be...
-        """
+        # Note, removing randomness for testing purposes
 
         # The output file
         f = tempfile.NamedTemporaryFile(
@@ -151,24 +138,43 @@ KeyError: 'structural_loss'
                                      'exposure_longitude': 'LONGITUDE'}},
                   {FLOOR_HEIGHT: .3},
                   {LOADFLOODASCII: [haz_filename]},
-                  {flood_conts.INSURE_PROB: {flood_conts.INSURED: 0.3,
-                                             flood_conts.UNINSURED: 0.7}},
-                  {flood_conts.CONT_ACTIONS: {flood_conts.SAVE_CONT: 0.5,
-                                              flood_conts.NO_ACTION_CONT: 0.4,
-                                              flood_conts.EXPOSE_CONT: 0.1}},
+                  {flood_conts.INSURE_PROB: {flood_conts.INSURED: 1.0,
+                                             flood_conts.UNINSURED: 0.0}},
+                  {flood_conts.CONT_ACTIONS: {flood_conts.SAVE_CONT: 0.0,
+                                              flood_conts.NO_ACTION_CONT: 0.0,
+                                              flood_conts.EXPOSE_CONT: 1.0}},
                   {CALCCONTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                   {SAVE: f.name}]
 
         context = hazimp.start(config_list=config)
+
+        # These don't work on parallelised tests
+        # if they are wrong the error will flow
+        # on and be caught in the contents_loss
+        # self.assertTrue(allclose(
+        #     context.exposure_att['calced_haz'][[0, 1, 3]],
+        #     context.exposure_att['water_depth'][[0, 1, 3]]))
+        #
+        # index = 'water depth above ground floor (m)'
+        # self.assertTrue(allclose(
+        #     context.exposure_att['calced_floor_depth'][[0, 1, 3]],
+        #     context.exposure_att[index][[0, 1, 3]]))
+
+        # print ('file name', f.name)
+
+        # self.assertTrue(numpy.array_equal(
+        #    context.exposure_att['calced_CONTENTS_FLOOD_FUNCTION_ID'],
+        #    context.exposure_att['CONTENTS_FLOOD_FUNCTION_ID']))
+
         self.assertTrue(allclose(
-            context.exposure_att['contents_loss'],
-            context.exposure_att['calced-loss']))
+            context.exposure_att['calced_contents_loss_ratio'],
+            context.exposure_att['contents_loss_ratio']))
 
         # Only the head node writes a file
         if parallel.STATE.rank == 0:
             exp_dict = misc.csv2dict(f.name)
-            self.assertTrue(allclose(exp_dict['structural_loss'],
-                                     exp_dict['calced-loss']))
+            self.assertTrue(allclose(exp_dict['contents_loss'],
+                                     exp_dict['calced_contents_loss']))
         os.remove(f.name)
 # -------------------------------------------------------------
 if __name__ == "__main__":

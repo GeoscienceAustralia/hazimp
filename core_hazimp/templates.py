@@ -22,7 +22,7 @@ to jobs and calcs.
 
 import os
 from core_hazimp import misc
-from core_hazimp.calcs.calcs import (STRUCT_LOSS, WATER_DEPTH, FLOOR_HEIGHT,
+from core_hazimp.calcs.calcs import (WATER_DEPTH, FLOOR_HEIGHT,
                                      FLOOR_HEIGHT_CALC)
 from core_hazimp.config_build import find_atts, add_job
 from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
@@ -221,17 +221,17 @@ def _flood_contents_v2_reader(config_list):
     add_job(job_insts, RANDOM_CONSTANT, attributes)
 
     # combine columns to give constant_function_id
-    # attributes = {'var1': CONT_INSURANCE_COL, 'var2': CONT_ACTION_COL,
-    #              'var_out': CONT_TEMP}
-    # add_job(job_insts, ADD, attributes)
+    attributes = {'var1': 'BUILDING_TYPE', 'var2': CONT_INSURANCE_COL,
+                  'var_out': CONT_TEMP}
+    add_job(job_insts, ADD, attributes)
 
-    attributes = {'var1': 'FABRIC_FLOOD_FUNCTION_ID', 'var2': CONT_ACTION_COL,
+    attributes = {'var1': CONT_TEMP, 'var2': CONT_ACTION_COL,
                   'var_out': 'CONTENTS_FLOOD_FUNCTION_ID'}
 
     add_job(job_insts, ADD, attributes)
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
-    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    # The column title in the exposure file = 'CONTENTS_FLOOD_FUNCTION_ID'
     atts = {'vul_functions_in_exposure': {
             'contents_domestic_flood_2012':
             'CONTENTS_FLOOD_FUNCTION_ID'}}
@@ -243,7 +243,6 @@ def _flood_contents_v2_reader(config_list):
 
     add_job(job_insts, LOOKUP)
 
-
     atts_dict = find_atts(config_list, CALCCONTLOSS)
     if REP_VAL_NAME not in atts_dict:
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
@@ -252,7 +251,7 @@ def _flood_contents_v2_reader(config_list):
         'var1': atts_dict[REP_VAL_NAME], 'var2': 'contents_loss_ratio',
         'var_out': 'contents_loss'}
     add_job(job_insts, MULT, attributes)
-    
+
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
