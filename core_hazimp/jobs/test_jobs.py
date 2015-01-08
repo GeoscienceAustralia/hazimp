@@ -38,7 +38,7 @@ from scipy import allclose, asarray, isnan, array, rollaxis
 
 from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                                    SAVEALL, CONSTANT, ADD, RANDOM_CONSTANT,
-                                    MULT)
+                                   MULT)
 from core_hazimp.jobs.test_vulnerability_model import build_example
 from core_hazimp.jobs import jobs
 from core_hazimp import context
@@ -242,7 +242,9 @@ class TestJobs(unittest.TestCase):
     def test_MultII(self):
         inst_add = JOBS[MULT]
         con_in = Dummy(site_shape=(2,))
-        con_in.exposure_att = {'a_test': numpy.array([2, 4]), 'b_test': numpy.array([3, 8])}
+        con_in.exposure_att = {'a_test':
+                               numpy.array([2, 4]),
+                               'b_test': numpy.array([3, 8])}
         test_kwargs = {'var1': 'a_test', 'var2': 'b_test', 'var_out': 'c_test'}
         inst_add(con_in, **test_kwargs)
         self.assertTrue(allclose(con_in.exposure_att['c_test'],

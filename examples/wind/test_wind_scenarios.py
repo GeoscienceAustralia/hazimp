@@ -30,8 +30,8 @@ from core_hazimp.calcs import calcs
 from core_hazimp import parallel
 from core_hazimp import config
 from core_hazimp.templates import (SAVE, LOADWINDTCRM, WINDV3,
-                                  TEMPLATE, DEFAULT, CALCSTRUCTLOSS,
-                                    REP_VAL_NAME)
+                                   TEMPLATE, DEFAULT, CALCSTRUCTLOSS,
+                                   REP_VAL_NAME)
 
 
 class TestWind(unittest.TestCase):
@@ -105,7 +105,7 @@ class TestWind(unittest.TestCase):
                                        'exposure_latitude': 'LATITUDE',
                                        'exposure_longitude': 'LONGITUDE'}},
                     {LOADWINDTCRM: [wind_filename]},
-                    {CALCSTRUCTLOSS:{REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
+                    {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                     {SAVE: f.name}]
 
         context = hazimp.start(config_list=a_config)
@@ -192,7 +192,7 @@ class TestWind(unittest.TestCase):
                       'exposure_latitude': 'LATITUDE',
                       'exposure_longitude': 'LONGITUDE'}},
                     {LOADWINDTCRM: [wind_filename]},
-                    {CALCSTRUCTLOSS:{REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
+                    {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                     {SAVE: f.name}]
 
         context = hazimp.start(config_list=a_config)

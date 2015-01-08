@@ -117,14 +117,15 @@ class TestFlood(unittest.TestCase):
     def test_flood_contents_v2_template_list(self):
         # Test running an end to end  test based
         # on a config template.
-
         """
         Failing with this error.
 
         FIXME
 
         Traceback (most recent call last):
-  File "/nas/mnh/georisk_models/hazard_impact/sandpits/duncan/github_hazimp/examples/flood/test_flood_scenarios.py", line 145, in test_flood_contents_v2_template_list
+  File "/nas/mnh/georisk_models/hazard_impact/sandpits/duncan/
+  github_hazimp/examples/flood/test_flood_scenarios.py",
+  line 145, in test_flood_contents_v2_template_list
     context.exposure_att['structural_loss'],
 KeyError: 'structural_loss'
 
@@ -168,6 +169,8 @@ KeyError: 'structural_loss'
 if __name__ == "__main__":
 
     SUITE = unittest.makeSuite(TestFlood, 'test')
-    SUITE = unittest.makeSuite(TestFlood, 'test_flood_contents_v2_template_list')
+    SUITE = unittest.makeSuite(
+        TestFlood,
+        'test_flood_contents_v2_template_list')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)
