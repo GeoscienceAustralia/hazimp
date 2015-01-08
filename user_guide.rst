@@ -89,7 +89,8 @@ The rest of the file can be understood by the following key value pairs;
     This loads the exposure data. It has 3 sub-sections;
 
     *file_name*
-        The name of the csv exposure file to load. The first row of the csv file is the title row.
+        The name of the csv exposure file to load. The first row of the csv
+        file is the title row.
     
     *exposure_latitude*
         The title of the csv column with latitude values.
@@ -104,8 +105,9 @@ The rest of the file can be understood by the following key value pairs;
      vulnerability curves.
 
 *calc_struct_loss*
-    This will multiply the replacement value and the ``structural_loss_ratio`` to get
-    the ``structural_loss``.
+
+    This will multiply the replacement value and the ``structural_loss_ratio``
+    to get the ``structural_loss``.
 
     *replacement_value_label*
         The title of the exposure data column that has the replacement values.
@@ -124,8 +126,40 @@ The rest of the file can be understood by the following key value pairs;
      is used to calculate the ``structural_loss_ratio`` given the
      ``0.2s gust at 10m height m/s``.
 
+Flood Template - Structural Damage
+--------------
 
-    
+The structural damage flood template is very similar to the the wind template.
+This is an example structural damage flood template;
+
+    #  python ../../core_hazimp/hazimp.py -c list_flood_v2.yaml
+    # Don't have a scenario test automatically run this.
+    # Since the file location is not absolute,
+    # the tests fail when ./all_tests is executed.
+    - template: flood_fabric_v2
+    - floor_height_(m): .3
+    - load_exposure:
+        file_name:  small_exposure.csv
+        exposure_latitude: LATITUDE
+        exposure_longitude: LONGITUDE
+    - load_flood_ascii:  depth_small_synthetic.txt
+    - calc_struct_loss:
+        replacement_value_label: REPLACEMENT_VALUE
+    - save: flood_impact.csv
+
+The first 4 lines are comments, so they are ignored. The new key value
+pairs are;
+
+*floor_height_(m)*
+    This is used to calculate the water depth above ground floor;
+    water depth(m) - floor height(m) = water depth above ground floor(m)
+
+*load_flood_ascii*
+    A list of ascii grid hazard files to load or a single file.  The file
+    format is grid ascii.  The values in the file must be
+     ``water depth(m)``, since that is the axis of the
+     vulnerability curves.
+
 Without Templates
 ----------------- 
 
