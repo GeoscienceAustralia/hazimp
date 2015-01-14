@@ -50,7 +50,7 @@ INSURE_PROB = 'insurance_probability'
 INSURED = 'insured'
 UNINSURED = 'uninsured'
 
-CONT_ACTIONS = 'contents actions'
+CONT_ACTIONS = 'contents_actions'
 SAVE_CONT = 'save'
 NO_ACTION_CONT = 'no_action'
 EXPOSE_CONT = 'expose'
@@ -204,7 +204,11 @@ def _flood_contents_v2_reader(config_list):
             msg = '\nMandatory key not found in config file; %s\n' % key
             msg += 'Section; %s\n' % CONT_ACTIONS
             raise RuntimeError(msg)
-        probs[CONT_MAP[key]] = atts[key]
+        try:
+            probs[CONT_MAP[key]] = atts[key]
+        except TypeError:
+            msg = "\nError: May be due to no spaces after ':' in YAML file\n"
+            raise RuntimeError(msg)
     attributes = {'var': CONT_ACTION_COL, 'values': probs}
     add_job(job_insts, RANDOM_CONSTANT, attributes)
 
@@ -216,7 +220,12 @@ def _flood_contents_v2_reader(config_list):
             msg = '\nMandatory key not found in config file; %s\n' % key
             msg += 'Section; %s\n' % INSURE_PROB
             raise RuntimeError(msg)
-        probs[INSURE_MAP[key]] = atts[key]
+        try:
+            probs[INSURE_MAP[key]] = atts[key]
+        except TypeError:
+            msg = "\nError: May be due to no spaces after ':' in YAML file\n"
+            raise RuntimeError(msg)
+
     attributes = {'var': CONT_INSURANCE_COL, 'values': probs}
     add_job(job_insts, RANDOM_CONSTANT, attributes)
 
