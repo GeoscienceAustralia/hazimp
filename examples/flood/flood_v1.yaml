@@ -1,8 +1,0 @@
-#  python ../../core_hazimp/hazimp.py -c flood_v1.yaml
-template: flood_fabric_v1
-load_exposure: 
-  file_name:  small_exposure.csv
-  exposure_latitude: LATITUDE
-  exposure_longitude: LONGITUDE 
-load_flood_ascii:  depth_synthetic.asc
-save: flood_impact.csv  
