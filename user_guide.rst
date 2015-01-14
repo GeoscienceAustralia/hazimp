@@ -130,12 +130,11 @@ Flood Template - Structural Damage
 --------------
 
 The structural damage flood template is very similar to the the wind template.
-This is an example structural damage flood template;
+This is an example structural damage flood template;::
 
     #  python ../../core_hazimp/hazimp.py -c list_flood_v2.yaml
     # Don't have a scenario test automatically run this.
     # Since the file location is not absolute,
-    # the tests fail when ./all_tests is executed.
     - template: flood_fabric_v2
     - floor_height_(m): .3
     - load_exposure:
