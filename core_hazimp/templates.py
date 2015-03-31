@@ -167,8 +167,10 @@ def _flood_fabric_v2_reader(config_list):
 
     return job_insts
 
+# this is disabling R:171, 0: Too many statements
 
-def _flood_contents_v2_reader(config_list):
+
+def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
     """
     This function does two things;
        * From a flood contents template v2 configuration dictionary
