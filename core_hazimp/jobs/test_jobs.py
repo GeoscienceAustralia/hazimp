@@ -250,6 +250,28 @@ class TestJobs(unittest.TestCase):
         self.assertTrue(allclose(con_in.exposure_att['c_test'],
                                  asarray([6, 32])))
 
+    def test_MultIII(self):
+        inst_add = JOBS[MULT]
+        con_in = Dummy(site_shape=(2, 2))
+        con_in.exposure_att = {'a_test':
+                               numpy.array([[2, 4], [1, 2]]),
+                               'b_test': numpy.array([3, 10])}
+        test_kwargs = {'var1': 'a_test', 'var2': 'b_test', 'var_out': 'c_test'}
+        inst_add(con_in, **test_kwargs)
+        self.assertTrue(allclose(con_in.exposure_att['c_test'],
+                                 asarray([[6, 40], [3, 20]])))
+
+    def test_MultIV(self):
+        inst_add = JOBS[MULT]
+        con_in = Dummy(site_shape=(2, 2))
+        con_in.exposure_att = {'a_test':
+                               numpy.array([3, 10]),
+                               'b_test': numpy.array([[2, 4], [1, 2], [1, 2]])}
+        test_kwargs = {'var1': 'a_test', 'var2': 'b_test', 'var_out': 'c_test'}
+        inst_add(con_in, **test_kwargs)
+        self.assertTrue(allclose(con_in.exposure_att['c_test'],
+                                 asarray([[6, 40], [3, 20], [3, 20]])))
+
     def test_load_csv_exposure(self):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(

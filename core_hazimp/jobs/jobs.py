@@ -219,6 +219,8 @@ class Mult(Job):
         :param var2: The values in this column are Multiplied.
         :param var_out: The new column name, with the values of var1 * var2.
         """
+        #print "context.exposure_att[var1].shape", context.exposure_att[var1].shape
+        #print "context.exposure_att[var2].shape", context.exposure_att[var2].shape
         context.exposure_att[var_out] = (context.exposure_att[var1] *
                                          context.exposure_att[var2])
 
