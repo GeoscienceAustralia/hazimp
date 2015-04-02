@@ -55,7 +55,7 @@ class Context(object):
         # Warning;
         # If new data is added with a site dimension the
         # clip exposure function may need to be updated
-        # so the site data stays consistant.
+        # so the site data stays consistent.
 
         # --------------  These variables are saved ----
         #  If new variables are added the save functions
