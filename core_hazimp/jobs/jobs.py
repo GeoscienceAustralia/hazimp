@@ -47,6 +47,7 @@ from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 ADD = 'add'
 MULT = 'mult'
+MDMULT = 'MultibleDimensionMult'
 CONSTANT = 'constant'
 LOADCSVEXPOSURE = 'load_exposure'
 LOADRASTER = 'load_raster'
@@ -212,17 +213,58 @@ class Mult(Job):
 
     def __call__(self, context, var1, var2, var_out):
         """
-        Multiply two columns together, put the answer in a new column.
+        Multiply two arrays together, put the answer in a new array.
 
         :param context: The context instance, used to move data around.
         :param var1: The values in this column are Multiplied.
         :param var2: The values in this column are Multiplied.
         :param var_out: The new column name, with the values of var1 * var2.
         """
-        #print "context.exposure_att[var1].shape", context.exposure_att[var1].shape
-        #print "context.exposure_att[var2].shape", context.exposure_att[var2].shape
         context.exposure_att[var_out] = (context.exposure_att[var1] *
                                          context.exposure_att[var2])
+
+
+class MultibleDimensionMult(Job):
+
+    """
+    Multiply two arrays together, put the answer in a new array.
+
+    Var1 has assets in the 0 dimension, and can have other dimensions.
+    Var2 has the asserts in the 0 dimension and has only this dimension.
+    """
+
+    def __init__(self):
+        super(MultibleDimensionMult, self).__init__()
+        self.call_funct = MDMULT
+
+    def __call__(self, context, var1, var2, var_out):
+        """
+        Multiply two columns together, put the answer in a new column.
+
+        :param context: The context instance, used to move data around.
+        :param var1: Variable name of data.  Usually intensity.
+            Assets is the 0 dimension, and can have other dimensions.
+        :param var2: The values in this column are Multiplied.
+            Asserts is the 0 dimension and has only this dimension.
+        :param var_out: The new variable name, with the values of
+            var1 * var2.
+        """
+        # print "var1 ", context.exposure_att[var1].shape
+
+        rolled = context.exposure_att[var1]
+        context.exposure_att[var1] = scipy.rollaxis(rolled, 0,
+                                                    rolled.ndim)
+        # print "var1 rolled", context.exposure_att[var1].shape
+        # print "var2", context.exposure_att[var2].shape
+        # print "rolled", rolled.shape
+        context.exposure_att[var_out] = (context.exposure_att[var1] *
+                                         context.exposure_att[var2])
+        rolled = context.exposure_att[var1]
+        context.exposure_att[var1] = scipy.rollaxis(rolled,
+                                                    rolled.ndim - 1, 0)
+        # print "var1 unrolled", context.exposure_att[var1].shape
+        # print "var2", context.exposure_att[var2].shape
+        # print "var_out]", context.exposure_att[var_out]
 
 
 class LoadCsvExposure(Job):

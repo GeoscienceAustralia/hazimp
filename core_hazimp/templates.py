@@ -28,7 +28,8 @@ from core_hazimp.config_build import find_atts, add_job
 from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION, RANDOM_CONSTANT,
-                                   LOOKUP, SAVEALL, CONSTANT, ADD, MULT)
+                                   LOOKUP, SAVEALL, CONSTANT, ADD,
+                                   MDMULT)
 
 __author__ = 'u54709'
 
@@ -102,9 +103,9 @@ def _wind_v3_reader(config_list):
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
     attributes = {
-        'var1': atts_dict[REP_VAL_NAME], 'var2': 'structural_loss_ratio',
+        'var1': 'structural_loss_ratio', 'var2': atts_dict[REP_VAL_NAME],
         'var_out': 'structural_loss'}
-    add_job(job_insts, MULT, attributes)
+    add_job(job_insts, MDMULT, attributes)
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
@@ -158,9 +159,9 @@ def _flood_fabric_v2_reader(config_list):
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
     attributes = {
-        'var1': atts_dict[REP_VAL_NAME], 'var2': 'structural_loss_ratio',
+        'var1': 'structural_loss_ratio', 'var2': atts_dict[REP_VAL_NAME],
         'var_out': 'structural_loss'}
-    add_job(job_insts, MULT, attributes)
+    add_job(job_insts, MDMULT, attributes)
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
@@ -259,9 +260,9 @@ def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
     attributes = {
-        'var1': atts_dict[REP_VAL_NAME], 'var2': 'contents_loss_ratio',
+        'var1': 'contents_loss_ratio', 'var2': atts_dict[REP_VAL_NAME],
         'var_out': 'contents_loss'}
-    add_job(job_insts, MULT, attributes)
+    add_job(job_insts, MDMULT, attributes)
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
