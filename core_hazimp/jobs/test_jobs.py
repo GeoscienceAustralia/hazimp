@@ -282,7 +282,7 @@ class TestJobs(unittest.TestCase):
         test_kwargs = {'var1': 'var1', 'var2': 'var2', 'var_out': 'c_test'}
         inst_add(con_in, **test_kwargs)
         self.assertTrue(allclose(con_in.exposure_att['c_test'],
-                                 asarray([[6, 10, 1], [12, 20, 2]])))
+                                 asarray([[6, 12], [10, 20], [1, 2]])))
 
     def test_load_csv_exposure(self):
         # Write a file to test

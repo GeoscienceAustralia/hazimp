@@ -260,11 +260,18 @@ class MultibleDimensionMult(Job):
         context.exposure_att[var_out] = (context.exposure_att[var1] *
                                          context.exposure_att[var2])
         rolled = context.exposure_att[var1]
+
+        # print "var_out]", context.exposure_att[var_out].shape
+        # Roll var1 back
         context.exposure_att[var1] = scipy.rollaxis(rolled,
                                                     rolled.ndim - 1, 0)
+        # Roll the output so the asset dimension is 0.
+        result = context.exposure_att[var_out]
+        context.exposure_att[var_out] = scipy.rollaxis(result,
+                                                       rolled.ndim - 1, 0)
         # print "var1 unrolled", context.exposure_att[var1].shape
         # print "var2", context.exposure_att[var2].shape
-        # print "var_out]", context.exposure_att[var_out]
+        # print "var_out]", context.exposure_att[var_out].shape
 
 
 class LoadCsvExposure(Job):
