@@ -47,7 +47,7 @@ from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 ADD = 'add'
 MULT = 'mult'
-MDMULT = 'MultibleDimensionMult'
+MDMULT = 'MultipleDimensionMult'
 CONSTANT = 'constant'
 LOADCSVEXPOSURE = 'load_exposure'
 LOADRASTER = 'load_raster'
@@ -224,7 +224,7 @@ class Mult(Job):
                                          context.exposure_att[var2])
 
 
-class MultibleDimensionMult(Job):
+class MultipleDimensionMult(Job):
 
     """
     Multiply two arrays together, put the answer in a new array.
@@ -234,7 +234,7 @@ class MultibleDimensionMult(Job):
     """
 
     def __init__(self):
-        super(MultibleDimensionMult, self).__init__()
+        super(MultipleDimensionMult, self).__init__()
         self.call_funct = MDMULT
 
     def __call__(self, context, var1, var2, var_out):
