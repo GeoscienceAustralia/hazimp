@@ -284,8 +284,13 @@ class LoadCsvExposure(Job):
         super(LoadCsvExposure, self).__init__()
         self.call_funct = LOADCSVEXPOSURE
 
-    def __call__(self, context, file_name, exposure_latitude=None,
-                 exposure_longitude=None, use_parallel=True):
+    def __call__(
+            self,
+            context,
+            file_name,
+            exposure_latitude=None,
+            exposure_longitude=None,
+            use_parallel=True):
         """
         Read a csv exposure file into the context object.
 
@@ -541,10 +546,11 @@ class LoadRaster(Job):
             assert upper_left_y is not None
             assert cell_size is not None
             assert no_data_value is not None
-            a_raster = raster_module.Raster.from_array(raster, upper_left_x,
-                                                       upper_left_y,
-                                                       cell_size,
-                                                       no_data_value)
+            a_raster = raster_module.Raster.from_array(
+                raster, upper_left_x,
+                upper_left_y,
+                cell_size,
+                no_data_value)
 
             if clip_exposure2all_hazards:
                 # Reduce the context to the hazard area
