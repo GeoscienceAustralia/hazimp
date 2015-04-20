@@ -31,9 +31,9 @@ large_files << "hazimp_preprocessing/Documentation/hazimp.EAP"
 large_files << "examples/anuga_flood/big_sydney.asc" 
 
 
-#large_files << "examples/anuga_flood/" 
-#large_files << "examples/flood/results.csv" 
-#large_files << "examples/wind/wind_impact.csv"
+large_files << "examples/anuga_flood/" 
+large_files << "examples/flood/results.csv" 
+large_files << "examples/wind/wind_impact.csv"
 
 # Let's have all the curves in there
 #large_files << "hazimp_preprocessing/curve_data/content_flood_vul_curves.xml" 
