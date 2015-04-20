@@ -31,7 +31,7 @@ large_files << "hazimp_preprocessing/Documentation/hazimp.EAP"
 large_files << "examples/anuga_flood/big_sydney.asc" 
 
 
-large_files << "examples/anuga_flood/" 
+large_files << "examples/anuga_flood/*" 
 large_files << "examples/flood/results.csv" 
 large_files << "examples/wind/wind_impact.csv"
 
