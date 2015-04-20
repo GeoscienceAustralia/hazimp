@@ -1,0 +1,1028 @@
+<?xml version='1.0' encoding='utf-8'?>
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.4"
+      xmlns:gml="http://www.opengis.net/gml">
+
+    <vulnerabilityModel>
+        <config/>
+
+        <discreteVulnerabilitySet vulnerabilitySetID="domestic_wind_2012" 
+assetCategory="" lossCategory="structural_loss_ratio" >
+ <IML IMT="0.2s gust at 10m height m/s" >17.0 20.0 22.0 24.0 26.0 28.0 30.0 32.0 34.0 36.0 38.0 40.0 42.0 44.0 46.0 48.0 50.0 52.0 54.0 56.0 58.0 60.0 62.0 64.0 66.0 68.0 70.0 72.0 74.0 76.0 78.0 80.0 82.0 84.0 86.0 88.0 90.0 100.0 </IML>
+<discreteVulnerability vulnerabilityFunctionID="dw1" Alpha="0.1258" Beta="4.2271" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw2" Alpha="0.1235" Beta="4.2879" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw4" Alpha="0.1309" Beta="4.254" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw7" Alpha="0.1086" Beta="4.2112" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw8" Alpha="0.1077" Beta="4.2191" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw10" Alpha="0.1086" Beta="4.2112" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw13" Alpha="0.1129" Beta="4.3397" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw14" Alpha="0.0967" Beta="4.3817" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw16" Alpha="0.1129" Beta="4.3397" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw19" Alpha="0.1057" Beta="4.2734" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw20" Alpha="0.0929" Beta="4.3101" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw22" Alpha="0.1057" Beta="4.2734" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw25" Alpha="0.1088" Beta="4.4671" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw26" Alpha="0.1182" Beta="4.5435" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw28" Alpha="0.1083" Beta="4.5005" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw31" Alpha="0.1131" Beta="4.4332" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw32" Alpha="0.1074" Beta="4.4699" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw34" Alpha="0.1058" Beta="4.4377" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw37" Alpha="0.1015" Beta="4.5192" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw38" Alpha="0.0962" Beta="4.563" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw40" Alpha="0.0941" Beta="4.5276" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw43" Alpha="0.0885" Beta="4.4156" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw44" Alpha="0.0965" Beta="4.4487" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw46" Alpha="0.0885" Beta="4.4156" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw49" Alpha="0.1468" Beta="4.0672" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw50" Alpha="0.1331" Beta="4.0881" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw51" Alpha="0.1537" Beta="4.038" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw52" Alpha="0.1452" Beta="4.0307" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw53" Alpha="0.1457" Beta="3.9844" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw55" Alpha="0.1543" Beta="4.0704" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw56" Alpha="0.1367" Beta="4.0705" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw57" Alpha="0.154" Beta="4.0151" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw58" Alpha="0.1516" Beta="4.0336" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw59" Alpha="0.1519" Beta="4.0024" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw61" Alpha="0.1582" Beta="4.0626" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw62" Alpha="0.1425" Beta="4.0686" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw63" Alpha="0.1572" Beta="4.0121" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw64" Alpha="0.1542" Beta="4.0312" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw65" Alpha="0.1545" Beta="3.9968" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw67" Alpha="0.1413" Beta="4.0853" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw69" Alpha="0.1496" Beta="4.0047" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw70" Alpha="0.1437" Beta="4.0742" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw71" Alpha="0.1561" Beta="4.024" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw73" Alpha="0.1401" Beta="4.0541" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw75" Alpha="0.1527" Beta="4.009" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw76" Alpha="0.1547" Beta="4.0542" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw77" Alpha="0.1501" Beta="3.9929" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw79" Alpha="0.1501" Beta="4.0457" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw81" Alpha="0.1527" Beta="4.009" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw82" Alpha="0.1514" Beta="4.04" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw83" Alpha="0.1539" Beta="3.9893" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw87" Alpha="0.1414" Beta="3.9712" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw88" Alpha="0.1439" Beta="4.0476" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw89" Alpha="0.1476" Beta="3.9768" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw93" Alpha="0.1451" Beta="3.9456" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw94" Alpha="0.1539" Beta="4.0242" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw95" Alpha="0.148" Beta="3.9564" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw99" Alpha="0.1454" Beta="3.9297" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw100" Alpha="0.1539" Beta="4.0242" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw101" Alpha="0.1456" Beta="3.9461" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw106" Alpha="0.1414" Beta="3.9721" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw108" Alpha="0.1421" Beta="3.9371" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw112" Alpha="0.1469" Beta="3.9036" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw114" Alpha="0.1469" Beta="3.9036" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw118" Alpha="0.1445" Beta="3.9689" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw120" Alpha="0.1462" Beta="3.9328" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw124" Alpha="0.1469" Beta="3.9036" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw126" Alpha="0.1469" Beta="3.9036" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw127" Alpha="0.1423" Beta="4.0254" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw128" Alpha="0.1314" Beta="4.0515" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw129" Alpha="0.1499" Beta="4.0164" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw130" Alpha="0.1458" Beta="4.0466" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw131" Alpha="0.1458" Beta="4.0466" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw133" Alpha="0.1481" Beta="4.0126" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw134" Alpha="0.1463" Beta="4.0517" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw135" Alpha="0.1518" Beta="4.0029" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw136" Alpha="0.1516" Beta="4.0341" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw137" Alpha="0.1516" Beta="4.0341" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw139" Alpha="0.1239" Beta="4.1361" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw140" Alpha="0.1174" Beta="4.1702" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw141" Alpha="0.1325" Beta="4.1279" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw142" Alpha="0.1295" Beta="4.1654" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw143" Alpha="0.1256" Beta="4.1449" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw145" Alpha="0.1296" Beta="4.1245" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw146" Alpha="0.1219" Beta="4.1757" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw147" Alpha="0.1385" Beta="4.1164" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw148" Alpha="0.1341" Beta="4.1494" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw149" Alpha="0.1341" Beta="4.1494" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw151" Alpha="0.0994" Beta="4.2962" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw152" Alpha="0.1024" Beta="4.355" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw153" Alpha="0.1085" Beta="4.2837" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw154" Alpha="0.1044" Beta="4.3208" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw155" Alpha="0.1044" Beta="4.3208" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw157" Alpha="0.1233" Beta="4.2253" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw158" Alpha="0.1145" Beta="4.2938" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw159" Alpha="0.1315" Beta="4.2149" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw160" Alpha="0.1285" Beta="4.2522" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw161" Alpha="0.1285" Beta="4.2522" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw163" Alpha="0.1083" Beta="4.5011" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw164" Alpha="0.1006" Beta="4.5096" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw165" Alpha="0.116" Beta="4.4545" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw166" Alpha="0.1083" Beta="4.5011" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw167" Alpha="0.1129" Beta="4.4962" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw169" Alpha="0.1075" Beta="4.3654" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw170" Alpha="0.0984" Beta="4.3712" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw171" Alpha="0.1189" Beta="4.3223" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw172" Alpha="0.1075" Beta="4.3654" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw173" Alpha="0.1075" Beta="4.3654" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw175" Alpha="0.1434" Beta="4.0574" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw176" Alpha="0.1311" Beta="4.0981" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw177" Alpha="0.1446" Beta="4.0518" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw178" Alpha="0.1468" Beta="4.078" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw179" Alpha="0.1529" Beta="4.0763" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw181" Alpha="0.144" Beta="4.036" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw182" Alpha="0.1331" Beta="4.0618" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw183" Alpha="0.1453" Beta="4.0302" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw184" Alpha="0.1475" Beta="4.057" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw185" Alpha="0.1491" Beta="4.0181" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw187" Alpha="0.1512" Beta="3.8714" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw188" Alpha="0.1599" Beta="3.9099" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw189" Alpha="0.151" Beta="3.8675" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw190" Alpha="0.1548" Beta="3.8873" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw191" Alpha="0.1595" Beta="3.8966" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw193" Alpha="0.1585" Beta="3.8909" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw194" Alpha="0.1577" Beta="3.8967" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw195" Alpha="0.1585" Beta="3.8909" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw196" Alpha="0.1555" Beta="3.8913" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw197" Alpha="0.1596" Beta="3.8772" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw199" Alpha="0.1555" Beta="3.9795" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw200" Alpha="0.1594" Beta="4.0174" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw201" Alpha="0.1556" Beta="3.9732" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw202" Alpha="0.1591" Beta="4.0018" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw203" Alpha="0.1632" Beta="3.9834" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw205" Alpha="0.153" Beta="3.97" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw206" Alpha="0.1627" Beta="4.0145" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw207" Alpha="0.153" Beta="3.97" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw208" Alpha="0.1565" Beta="3.9924" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw209" Alpha="0.1603" Beta="3.9643" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw211" Alpha="0.1347" Beta="4.0802" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw212" Alpha="0.1349" Beta="4.1071" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw213" Alpha="0.1358" Beta="4.0747" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw214" Alpha="0.1381" Beta="4.1003" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw215" Alpha="0.1448" Beta="4.06" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw217" Alpha="0.1411" Beta="4.0682" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw218" Alpha="0.1539" Beta="4.1014" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw219" Alpha="0.1411" Beta="4.0682" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw220" Alpha="0.1445" Beta="4.0885" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw221" Alpha="0.1557" Beta="4.0561" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw223" Alpha="0.1105" Beta="4.2168" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw224" Alpha="0.1053" Beta="4.2949" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw225" Alpha="0.1077" Beta="4.2413" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw226" Alpha="0.0983" Beta="4.2543" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw227" Alpha="0.1018" Beta="4.2195" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw229" Alpha="0.1267" Beta="4.2154" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw230" Alpha="0.1306" Beta="4.2466" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw231" Alpha="0.1267" Beta="4.2154" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw232" Alpha="0.1267" Beta="4.2154" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw233" Alpha="0.1338" Beta="4.1665" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw235" Alpha="0.1572" Beta="3.9562" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw236" Alpha="0.1636" Beta="3.9676" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw237" Alpha="0.1573" Beta="3.9517" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw238" Alpha="0.1544" Beta="3.9224" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw239" Alpha="0.1578" Beta="3.8967" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw241" Alpha="0.1621" Beta="3.9197" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw242" Alpha="0.1667" Beta="3.9457" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw243" Alpha="0.162" Beta="3.916" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw244" Alpha="0.1617" Beta="3.9041" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw245" Alpha="0.159" Beta="3.8855" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw247" Alpha="0.1539" Beta="3.8638" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw248" Alpha="0.1657" Beta="3.9107" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw249" Alpha="0.1535" Beta="3.8518" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw250" Alpha="0.1539" Beta="3.8638" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw251" Alpha="0.1542" Beta="3.8368" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw253" Alpha="0.1541" Beta="3.8685" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw254" Alpha="0.1619" Beta="3.8941" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw255" Alpha="0.1539" Beta="3.8638" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw256" Alpha="0.1533" Beta="3.8486" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw257" Alpha="0.1531" Beta="3.8438" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw259" Alpha="0.1558" Beta="3.8436" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw260" Alpha="0.1589" Beta="3.8445" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw261" Alpha="0.1569" Beta="3.8366" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw262" Alpha="0.1558" Beta="3.8436" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw263" Alpha="0.1569" Beta="3.8366" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw265" Alpha="0.1561" Beta="3.8517" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw267" Alpha="0.1556" Beta="3.8396" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw268" Alpha="0.1599" Beta="3.8515" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw269" Alpha="0.1595" Beta="3.8393" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw271" Alpha="0.1603" Beta="3.8634" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw273" Alpha="0.1599" Beta="3.8515" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw274" Alpha="0.1558" Beta="3.8436" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw275" Alpha="0.16" Beta="3.8292" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw277" Alpha="0.1595" Beta="3.8241" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw279" Alpha="0.1614" Beta="3.8197" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw280" Alpha="0.1602" Beta="3.8314" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw281" Alpha="0.1621" Beta="3.8269" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw286" Alpha="0.1534" Beta="3.826" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw288" Alpha="0.1527" Beta="3.8188" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw292" Alpha="0.1534" Beta="3.826" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw294" Alpha="0.1527" Beta="3.8188" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw298" Alpha="0.1537" Beta="3.8242" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw300" Alpha="0.1537" Beta="3.8242" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw304" Alpha="0.1537" Beta="3.8242" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+<discreteVulnerability vulnerabilityFunctionID="dw306" Alpha="0.1537" Beta="3.8242" probabilisticDistribution="LN">
+<lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985 0.99 0.993 0.995 1 </lossRatio>
+<coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </coefficientsVariation>
+</discreteVulnerability>
+
+</discreteVulnerabilitySet>
+</vulnerabilityModel>
+</nrml>

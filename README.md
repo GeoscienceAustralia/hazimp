@@ -14,3 +14,9 @@ pip install --user pep8
 pip install --user coverage
 pip install --user pyyaml
 pip install --user pylint
+
+
+Environment variables
+=====================
+Add the location of the root HazImp directory to PYTHONPATH. e.g. (in .bashrc)
+export HAZIMPPATH=${HOME}/sandpits/hazimp
