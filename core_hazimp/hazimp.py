@@ -24,6 +24,17 @@ from core_hazimp import context
 from core_hazimp import config
 from core_hazimp import pipeline
 
+import numpy
+
+# This;
+#  numpy.column_stack((body, only_1d))
+# loses significant figures in numpy1.6
+# numpy1.7 and 1.8 not checked
+NUMVER = numpy.__version__
+NUMVER = NUMVER.split('.')
+if NUMVER[0] == '1' and int(NUMVER[1]) < 7:
+    raise RuntimeError("Must use numpy 1.7 or greater")
+
 
 def start(config_list=None, config_file=None, cont_in=None):
     """

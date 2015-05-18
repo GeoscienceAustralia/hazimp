@@ -161,6 +161,7 @@ def _wind_v4_reader(config_list):
 
     return job_insts
 
+
 def _flood_fabric_v2_reader(config_list):
     """
     This function does two things;

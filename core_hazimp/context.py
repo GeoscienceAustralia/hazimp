@@ -204,8 +204,8 @@ def save_csv(write_dict, filename):
         if body is None:
             body = only_1d
         else:
+            # NUMPY1.6 loses significant figures
             body = numpy.column_stack((body, only_1d))
-
     # Need numpy 1.7 > to do headers
     # numpy.savetxt(filename, body, delimiter=',', header='yeah')
     hnd = open(filename, 'wb')
