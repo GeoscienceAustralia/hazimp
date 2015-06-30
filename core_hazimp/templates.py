@@ -113,6 +113,55 @@ def _wind_v3_reader(config_list):
     return job_insts
 
 
+def _wind_v4_reader(config_list):
+    """
+    From a wind configuration list build the job list.
+
+    :param config_list: A list describing the simulation.
+    :returns: A list of jobs to process over.
+    """
+    job_insts = []
+
+    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    add_job(job_insts, LOADCSVEXPOSURE, atts)
+
+    file_list = find_atts(config_list, LOADWINDTCRM)
+    atts = {'file_list': file_list,
+            'attribute_label': '0.2s gust at 10m height m/s'}
+    add_job(job_insts, LOADRASTER, atts)
+
+    vul_filename = os.path.join(misc.RESOURCE_DIR,
+                                'domestic_wind_vul_curves.xml')
+    add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
+
+    # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
+    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    atts = {'vul_functions_in_exposure': {
+            'domestic_wind_2012':
+            'WIND_VULNERABILITY_FUNCTION_ID'}}
+    add_job(job_insts, SIMPLELINKER, atts)
+
+    atts = {'variability_method': {
+            'domestic_wind_2012': 'mean'}}
+    add_job(job_insts, SELECTVULNFUNCTION, atts)
+
+    add_job(job_insts, LOOKUP)
+
+    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+    if REP_VAL_NAME not in atts_dict:
+        msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
+        raise RuntimeError(msg)
+    attributes = {
+        'var1': 'structural_loss_ratio', 'var2': atts_dict[REP_VAL_NAME],
+        'var_out': 'structural_loss'}
+    add_job(job_insts, MDMULT, attributes)
+
+    file_name = find_atts(config_list, SAVE)
+    add_job(job_insts, SAVEALL, {'file_name': file_name})
+
+    return job_insts
+
+
 def _flood_fabric_v2_reader(config_list):
     """
     This function does two things;
@@ -294,5 +343,6 @@ def _reader2(config_list):
 
 READERS = {DEFAULT: _reader2,
            WINDV3: _wind_v3_reader,
+           WINDV4: _wind_v4_reader,
            FLOODFABRICV2: _flood_fabric_v2_reader,
            FLOODCONTENTSV2: _flood_contents_v2_reader}

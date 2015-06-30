@@ -21,6 +21,7 @@ value of the x-axis and the loss associated with that hazard on the y-axis;
 
 Quick how-to
 ------------
+Follow the install notes in the README.md file.
 
 A configuration file can be used to define a HazImp simulation.  The
 configuration file is described using yaml, a data serialisation
@@ -101,8 +102,8 @@ The rest of the file can be understood by the following key value pairs;
 *load_wind_ascii*
     A list of ascii grid wind hazard files to load or a single file.  The file
     format is grid ascii.  The values in the file must be
-     ``0.2s gust at 10m height m/s``, since that is the axis of the HazImp wind
-     vulnerability curves.
+    ``0.2s gust at 10m height m/s``, since that is the axis of the HazImp wind
+    vulnerability curves.
 
 *calc_struct_loss*
 
@@ -122,12 +123,12 @@ The rest of the file can be understood by the following key value pairs;
 
     There are some pre-requisites for the exposure data. It must have a column
     called ``WIND_VULNERABILITY_FUNCTION_ID`` which describe the vulnerability
-     functions to be used. The vulnerability set used is hard coded. This
-     is used to calculate the ``structural_loss_ratio`` given the
-     ``0.2s gust at 10m height m/s``.
+    functions to be used. The vulnerability set used is hard coded. This
+    is used to calculate the ``structural_loss_ratio`` given the
+    ``0.2s gust at 10m height m/s``.
 
 Flood Template - Structural Damage
---------------
+----------------------------------
 
 The structural damage flood template is very similar to the the wind template.
 This is an example structural damage flood template;::
@@ -156,8 +157,8 @@ pairs are;
 *load_flood_ascii*
     A list of ascii grid hazard files to load or a single file.  The file
     format is grid ascii.  The values in the file must be
-     ``water depth(m)``, since that is the axis of the
-     vulnerability curves.
+    ``water depth(m)``, since that is the axis of the
+    vulnerability curves.
 
 Without Templates
 ----------------- 

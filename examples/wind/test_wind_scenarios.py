@@ -78,12 +78,13 @@ class TestWind(unittest.TestCase):
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
-
         # Only the head node writes a file
         if parallel.STATE.rank == 0:
             exp_dict = numpy.load(f.name)
+
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
+
         os.remove(f.name)
 
     def test_wind_v3_template(self):
@@ -205,6 +206,10 @@ class TestWind(unittest.TestCase):
             exp_dict = misc.csv2dict(f.name)
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
+            # Failing this shows how 3rd party packages reduce the
+            # number of significant figures in the output
+            self.assertTrue(allclose(exp_dict['exposure_latitude'],
+                                     [-22.99, -23.01, -22.99, -23.99, -23]))
         os.remove(f.name)
 # -------------------------------------------------------------
 if __name__ == "__main__":
