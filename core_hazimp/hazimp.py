@@ -32,8 +32,8 @@ import numpy
 # numpy1.7 and 1.8 not checked
 NUMVER = numpy.__version__
 NUMVER = NUMVER.split('.')
-if NUMVER[0] == '1' and int(NUMVER[1]) < 7:
-    raise RuntimeError("Must use numpy 1.7 or greater")
+if NUMVER[0] == '1' and int(NUMVER[1]) < 9:
+    raise RuntimeError("Must use numpy 1.9 or greater")
 
 
 def start(config_list=None, config_file=None, cont_in=None):
