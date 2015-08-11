@@ -206,7 +206,8 @@ class TestWind(unittest.TestCase):
             exp_dict = misc.csv2dict(f.name)
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
-            # Failing this shows how 3rd party packages reduce the
+            # Failing this shows how versions of numpy
+            # less than 1.8 reduce the
             # number of significant figures in the output
             self.assertTrue(allclose(exp_dict['exposure_latitude'],
                                      [-22.99, -23.01, -22.99, -23.99, -23]))
