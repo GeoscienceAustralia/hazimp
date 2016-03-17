@@ -18,8 +18,7 @@
 """
 A collection of jobs to put into the pipeline.
 Jobs know about the context instance.
-The
-initial jobs will be for setting up the calculations, such as loading
+The initial jobs will be for setting up the calculations, such as loading
 the exposure data.
 
 And key, value pairs that are in the config file are passed to the
@@ -59,7 +58,7 @@ SAVEALL = 'save_all'
 VALIDATECONFIG = 'validate_config'
 CELLJOIN = 'cell_join'
 RANDOM_CONSTANT = 'random_constant'
-
+PERMUTATE_EXPOSURE = 'permutate_exposure'
 
 class Job(object):
 
@@ -437,6 +436,7 @@ class SelectVulnFunction(Job):
         """
         exposure_vuln_curves = {}
         for vuln_set_key in variability_method:
+            
             # Get the vulnerability set
             vuln_set = context.vulnerability_sets[vuln_set_key]
             # Get the column of function ID's
@@ -489,6 +489,7 @@ class LookUp(Job):
                 msg = 'Invalid intensity measure, %s. \n' % int_measure
                 msg += 'vulnerability_set_id is %s. \n' % vulnerability_set_id
                 raise RuntimeError(msg)
+
             losses = vuln_curve.look_up(intensities)
             context.exposure_att[loss_category_type] = losses
 
@@ -594,6 +595,20 @@ class SaveExposure(Job):
         :params file_name: The file where the expsoure data will go.
         """
         context.save_exposure_atts(file_name, use_parallel=use_parallel)
+
+class PermutateExposure(Job):
+    """
+    Repeatedly process an exposure dataset, each time
+    permutating the given field
+    """
+    def __init__(self):
+        super(PermutateExposure, self).__init__()
+        self.call_funct = PERMUTATE_EXPOSURE
+        
+    def __call__(self, context, var1, var2):
+        adict = context.exposure_att
+        context.exposure_att = misc.permutate_dict_values(adict, var1, var2)
+        
 
 
 # ____________________________________________________
