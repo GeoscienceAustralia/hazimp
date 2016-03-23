@@ -37,6 +37,8 @@ is not present Error out.
 
 import sys
 import scipy
+import pandas as pd
+import numpy as np
 
 from core_hazimp import parallel
 from core_hazimp import misc
@@ -55,10 +57,12 @@ SIMPLELINKER = 'simple_linker'
 SELECTVULNFUNCTION = 'select_vulnerability_functions'
 LOOKUP = 'look_up'
 SAVEALL = 'save_all'
+SAVEAGG = 'save_agg'
 VALIDATECONFIG = 'validate_config'
 CELLJOIN = 'cell_join'
 RANDOM_CONSTANT = 'random_constant'
 PERMUTATE_EXPOSURE = 'permutate_exposure'
+AGGREGATE_LOSS = 'aggregate_loss'
 
 class Job(object):
 
@@ -303,8 +307,7 @@ class LoadCsvExposure(Job):
             key: column titles
             value: column values, except the title
         """
-        file_dict = parallel.csv2dict(file_name, use_parallel=use_parallel)
-
+        data_frame = parallel.csv2dict(file_name, use_parallel=use_parallel)
         # FIXME Need to do better error handling
         # FIXME this function can only be called once.
         # Multiple calls will corrupt the context data.
@@ -315,26 +318,27 @@ class LoadCsvExposure(Job):
             lat_key = exposure_latitude
 
         try:
-            context.exposure_lat = scipy.asarray(file_dict[lat_key])
-            del file_dict[lat_key]
+            context.exposure_lat = data_frame[lat_key].values
+            del data_frame[lat_key]
         except KeyError:
             msg = "No Exposure latitude column labelled '%s'." % lat_key
             raise RuntimeError(msg)
 
-        if exposure_latitude is None:
+        if exposure_longitude is None:
             long_key = EX_LONG
         else:
             long_key = exposure_longitude
 
         try:
-            context.exposure_long = scipy.asarray(file_dict[long_key])
-            del file_dict[long_key]
+            context.exposure_long = data_frame[long_key].values
+            del data_frame[long_key]
         except KeyError:
             msg = "No Exposure longitude column labelled '%s'." % long_key
             raise RuntimeError(msg)
 
-        for key in file_dict:
-            context.exposure_att[key] = scipy.asarray(file_dict[key])
+        context.exposure_att = data_frame
+        #for key in data_frame:
+        #    context.exposure_att[key] = data_frame[key].values
 
 
 class LoadXmlVulnerability(Job):
@@ -493,6 +497,68 @@ class LookUp(Job):
             losses = vuln_curve.look_up(intensities)
             context.exposure_att[loss_category_type] = losses
 
+class PermutateExposure(Job):
+    """
+    Iterate through the exposure attributes, randomly permutating
+    fields each time.
+    """
+
+    def __init__(self):
+        super(PermutateExposure, self).__init__()
+        self.call_funct = PERMUTATE_EXPOSURE
+
+    def __call__(self, context, groupby=None, iterations=1000):
+        """
+        Calculates the loss for the given vulnerability set, randomly 
+        permutating the exposure attributes to arrive at a 
+        distribution of loss outcomes.
+
+        :param context: The context instance, used to move data around.
+        :param groupby: The name of the exposure attribute to group 
+                        exposure assets by before randomly permutating
+                        the corresponding vulnerability curves.
+        :param iterations: Number of iterations to perform
+        
+        Content return:
+           exposure_vuln_curves: A :class:`pandas.DataFrame` of realised
+               vulnerability curves, associated with the exposure
+               data.
+                key - intensity measure
+                value - realised vulnerability curve instance per asset
+        """
+        field = context.vul_function_titles['domestic_wind_2012']
+        losses = np.zeros((iterations, len(context.exposure_att)))
+        for n in range(iterations):
+            context.exposure_att = \
+                misc.permutate_att_values(context.exposure_att, 
+                                          field, groupby=groupby)
+            for intensity_key in context.exposure_vuln_curves:
+                vuln_curve = context.exposure_vuln_curves[intensity_key]
+                int_measure = vuln_curve.intensity_measure_type
+                loss_category_type = vuln_curve.loss_category_type
+                try:
+                    intensities = context.exposure_att[int_measure]
+                except KeyError:
+                    vulnerability_set_id = vuln_curve.vulnerability_set_id
+                    msg = 'Invalid intensity measure, %s. \n' % int_measure
+                    msg += 'vulnerability_set_id is %s. \n' % vulnerability_set_id
+                    raise RuntimeError(msg)
+
+                losses[n, :] = vuln_curve.look_up(intensities)
+                # By adding in a new attribute for each iteration, we can 
+                # capture all the possible permutations of loss outcomes. 
+                # This leads to a rather substantial output data volume, 
+                # especially when considering the larger exposure datasets
+                # that will be used in real applications, and the number of 
+                # iterations that should be used to achieve convergence.
+                loss_iteration = loss_category_type + "_{0:06d}".format(n)
+                context.exposure_att[loss_iteration] = losses[n, :]
+            mean_loss = np.mean(losses, axis=0)
+            loss_sd = np.std(losses, axis=0)
+
+            loss_category_type_sd = loss_category_type + "_sd"
+            context.exposure_att[loss_category_type] = mean_loss
+            context.exposure_att[loss_category_type_sd] = loss_sd
 
 class LoadRaster(Job):
 
@@ -576,6 +642,26 @@ class LoadRaster(Job):
                 # Not optimised for speed, but easy to implement.
                 context.clip_exposure(*extent)
 
+class AggregateLoss(Job):
+    """
+    Aggregate loss attributes based on the ``groupby`` attribute 
+    used in the permutation of the vulnerability curves.
+    """
+    def __init__(self):
+        super(AggregateLoss, self).__init__()
+        self.call_funct = AGGREGATE_LOSS
+
+    def __call__(self, context, groupby=None, kwargs=None):
+        """
+        Aggregate using `pandas.GroupBy` objects
+        
+        :param context: The context instance, used to move data around.
+        :param groupby: The name of the exposure attribute to group 
+                        exposure assets by before performing aggregations 
+                        (sum, mean, etc.).
+        """
+        context.exposure_agg = misc.aggregate_loss_atts(context.exposure_att,
+                                                        groupby, kwargs)
 
 class SaveExposure(Job):
 
@@ -596,21 +682,20 @@ class SaveExposure(Job):
         """
         context.save_exposure_atts(file_name, use_parallel=use_parallel)
 
-class PermutateExposure(Job):
-    """
-    Repeatedly process an exposure dataset, each time
-    permutating the given field
-    """
+class SaveAggregation(Job):
+
     def __init__(self):
-        super(PermutateExposure, self).__init__()
-        self.call_funct = PERMUTATE_EXPOSURE
-        
-    def __call__(self, context, var1, var2):
-        adict = context.exposure_att
-        context.exposure_att = misc.permutate_dict_values(adict, var1, var2)
-        
+        super(SaveAggregation, self).__init__()
+        self.call_funct = SAVEAGG
 
+    def __call__(self, context, file_name=None, use_parallel=True):
+        """
+        Save all of the aggregated exposure information in the context.
 
+        :param context: The context instance, used to move data around.
+        :params file_name: The file where the expsoure data will go.
+        """
+        context.save_exposure_agg(file_name, use_parallel=use_parallel)
 # ____________________________________________________
 # ----------------------------------------------------
 #                KEEP THIS AT THE END

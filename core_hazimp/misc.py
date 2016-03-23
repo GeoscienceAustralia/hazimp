@@ -25,8 +25,9 @@ from collections import defaultdict
 import inspect
 
 import numpy
-from numpy.random import random_sample
+from numpy.random import random_sample, permutation
 
+import pandas as pd
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
@@ -41,6 +42,7 @@ def csv2dict(filename, add_ids=False):
 
     :param add_ids: If True add a key, value of ids, from 0 to n
     :param filename: The csv file path string.
+    """
     """
     csvfile = open(filename, 'rb')
     reader = csv.DictReader(csvfile)
@@ -65,6 +67,9 @@ def csv2dict(filename, add_ids=False):
         file_dict[key] = numpy.asarray(file_dict[key])
     # Get a normal dict now, so KeyErrors are thrown.
     plain_dic = dict(file_dict)
+    """
+    plain_dic = pd.read_csv(filename, skipinitialspace=True, index_col=False)
+    
     if add_ids:
         # Add internal id info
         array_len = len(plain_dic[plain_dic.keys()[0]])
@@ -193,3 +198,43 @@ def sorted_dict_values(adict):
     """
     keys = sorted(sorted(adict.keys()))
     return keys, [adict[key] for key in keys]
+
+def permutate_att_values(dframe, fields, groupby=None):
+    """
+    Given a dataframe, return the dataframe with the values in 
+    ``fields`` permutated. If the ``groupby`` arg is given,
+    then permutate the values of ``fields`` within each grouping of 
+    ``groupby``.
+
+    :param dframe: A dataframe. 
+    :type dframe: ``pandas.DataFrame``
+    :param fields: Name of a field to permutate, or a list of fields.
+    :type fields: str or list.
+    :param str groupby: Name of the field to group values by.
+
+    :return: The same ``pandas.DataFrame``, with the values of ``fields``
+             permutated.
+
+    """
+    newdf = dframe.copy()
+    if isinstance(fields, str):
+        fields = [fields]
+
+    if groupby:
+        for field in fields:
+            newdf[field] = \
+                newdf.groupby(groupby)[field].transform(permutation)
+    else:
+        for field in fields:
+            newdf[field] = newdf[field].transform(permutation)
+
+    return newdf
+
+def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
+
+    grouped = dframe.groupby(groupby, as_index=False)
+    
+    outdf = grouped.agg(kwargs)
+        
+    return outdf
+        

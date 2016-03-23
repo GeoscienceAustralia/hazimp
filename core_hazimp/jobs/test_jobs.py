@@ -299,7 +299,7 @@ class TestJobs(unittest.TestCase):
         con_in = Dummy()
         con_in.exposure_lat = None
         con_in.exposure_long = None
-        con_in.exposure_att = {}
+        con_in.exposure_att = None
         test_kwargs = {'file_name': f.name}
         inst(con_in, **test_kwargs)
 
@@ -418,7 +418,7 @@ class TestJobs(unittest.TestCase):
         test_kwargs = {'file_list': [f.name], 'attribute_label': haz_v}
         inst(con_in, **test_kwargs)
         the_nans = isnan(con_in.exposure_att[haz_v])
-        con_in.exposure_att[haz_v][the_nans] = -9999
+        con_in.exposure_att.iloc[the_nans, (haz_v,)] = -9999
         msg = "con_in.exposure_att[haz_v] " + str(con_in.exposure_att[haz_v])
         msg += "\n not = con_in.exposure_att['haz_actual'] " + \
             str(con_in.exposure_att['haz_actual'])
@@ -457,7 +457,7 @@ class TestJobs(unittest.TestCase):
         f.write('xllcorner +0.    \r\n')
         f.write('yllcorner +8. \r\n')
         f.write('cellsize 1    \r\n')
-        f.write('NODATA_value -9999 \r\n')
+        f.write('NODATA_value -9999\r\n')
         f.write('1 2 -9999    \r\n')
         f.write('4 5 6 ')
         f.close()
@@ -467,9 +467,10 @@ class TestJobs(unittest.TestCase):
                        'clip_exposure2all_hazards': True}
         inst(con_in, **test_kwargs)
         the_nans = isnan(con_in.exposure_att[haz_v])
-        con_in.exposure_att[haz_v][the_nans] = -9999
-        msg = "con_in.exposure_att[haz_v] " + str(con_in.exposure_att[haz_v])
-        msg += "\n not = con_in.exposure_att['haz_actual'] " + \
+        
+        con_in.exposure_att.iloc[the_nans, (haz_v,)] = numpy.NAN#-9999
+        msg = "con_in.exposure_att[haz_v] \n" + str(con_in.exposure_att[haz_v])
+        msg += "\n not = con_in.exposure_att['haz_actual'] \n" + \
             str(con_in.exposure_att['haz_actual'])
         self.assertTrue(allclose(con_in.exposure_att[haz_v],
                                  con_in.exposure_att['haz_actual']), msg)
@@ -588,8 +589,9 @@ class TestJobs(unittest.TestCase):
 
         inst = JOBS[LOADCSVEXPOSURE]
         con_in = context.Context()
-        con_in.exposure_lat = con_in.exposure_long = None
-        con_in.exposure_att = {}
+        con_in.exposure_lat = None
+        con_in.exposure_long = None
+        con_in.exposure_att = None
         test_kwargs = {'file_name': f.name}
         inst(con_in, **test_kwargs)
 

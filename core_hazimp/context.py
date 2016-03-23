@@ -70,7 +70,10 @@ class Context(object):
         # key - data name
         # value - A numpy array. First dimension is site. (0 axis)
         # Has a site dimension
-        self.exposure_att = {}
+        self.exposure_att = None
+
+        # Data for aggregation across sites
+        self.exposure_agg = None
 
         #
         # --------------  The above variables are saved ----
@@ -131,14 +134,14 @@ class Context(object):
             self.exposure_lat = numpy.array([])
             self.exposure_long = numpy.array([])
         else:
-            self.exposure_lat = self.exposure_lat[good_indexes, ...]
-            self.exposure_long = self.exposure_long[good_indexes, ...]
+            self.exposure_lat = self.exposure_lat[good_indexes]
+            self.exposure_long = self.exposure_long[good_indexes]
 
         for key in self.exposure_att:
             if good_indexes.shape[0] is 0:
                 exp_att = numpy.array([])
             else:
-                exp_att = self.exposure_att[key][good_indexes, ...]
+                exp_att = self.exposure_att[key][good_indexes]
             self.exposure_att[key] = exp_att
 
     def save_exposure_atts(self, filename, use_parallel=True):
@@ -173,6 +176,35 @@ class Context(object):
             # of the context info
             return write_dict
 
+    def save_exposure_agg(self, filename, use_parallel=True):
+        """
+        Save the aggregated exposure attributes. 
+        The file type saved is based on the filename extension.
+        Options
+           '.npz': Save the arrays into a single file in uncompressed .npz
+                   format.
+
+        :param use_parallel: Set to True for parallel behaviour which 
+        is only node 0 writing to file.
+        :param filename: The file to be written.
+        :return write_dict: The whole dictionary, returned for testing.       
+        """
+        write_dict = self.exposure_agg.copy()
+
+        #if use_parallel:
+            #assert misc.INTID in write_dict
+        #    write_dict = parallel.gather_dict(write_dict,
+        #                                      write_dict[misc.INTID])
+
+        if parallel.STATE.rank == 0 or not use_parallel:
+            if filename[-4:] == '.csv':
+                save_csv_agg(write_dict, filename)
+            else:
+                numpy.savez(filename, **write_dict)
+            # The write_dict is returned for testing
+            # When running in paralled this is a way of getting all
+            # of the context info
+            return write_dict
 
 def save_csv(write_dict, filename):
     """
@@ -213,3 +245,42 @@ def save_csv(write_dict, filename):
     writer.writerow(header)
     for i in range(body.shape[0]):
         writer.writerow(list(body[i, :]))
+
+
+def save_csv_agg(write_dict, filename):
+    """
+    Save a `pandas.DataFrame` as a csv file.
+    the first dimension in the arrays is assumed to have the save length
+    for all arrays.
+    In the csv file the keys become titles and the arrays become values.
+
+    If the array is higher than 1d the other dimensions are averaged to get a
+    1d array.
+
+    :param  write_dict: Write as a csv file.
+    :type write_dict: Dictionary.
+    :param filename: The csv file will be written here.
+    """
+    write_dict.to_csv(filename)
+    """
+    keys = write_dict.keys()
+    header = list(keys)
+
+    body = None
+    for key in header:
+        #  Only one dimension can be saved.
+        #  Average the results to the Site (first) dimension.
+        only_1d = misc.squash_narray(write_dict[key])
+        if body is None:
+            body = only_1d
+        else:
+            # NUMPY1.6 loses significant figures
+            body = numpy.column_stack((body, only_1d))
+    # Need numpy 1.7 > to do headers
+    # numpy.savetxt(filename, body, delimiter=',', header='yeah')
+    hnd = open(filename, 'wb')
+    writer = csv.writer(hnd, delimiter=',')
+    writer.writerow(header)
+    for i in range(body.shape[0]):
+        writer.writerow(list(body[i, :]))
+    """

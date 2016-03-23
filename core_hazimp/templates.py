@@ -28,20 +28,24 @@ from core_hazimp.config_build import find_atts, add_job
 from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION, RANDOM_CONSTANT,
-                                   LOOKUP, SAVEALL, CONSTANT, ADD,
-                                   MDMULT)
+                                   LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
+                                   MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS)
 
 __author__ = 'u54709'
 
 TEMPLATE = 'template'
 DEFAULT = 'default'
 SAVE = 'save'
+SAVEAGG = 'save_agg'
 LOADWINDTCRM = 'load_wind_ascii'
 LOADFLOODASCII = 'load_flood_ascii'
 CALCSTRUCTLOSS = 'calc_struct_loss'
 CALCCONTLOSS = 'calc_cont_loss'
+PERMUTATION = 'exposure_permutation'
 WINDV3 = 'wind_v3'
 WINDV4 = 'wind_v4'
+WINDV5 = 'wind_v5'
+
 FLOODFABRICV2 = 'flood_fabric_v2'
 
 REP_VAL_NAME = 'replacement_value_label'
@@ -53,14 +57,17 @@ UNINSURED = 'uninsured'
 
 CONT_ACTIONS = 'contents_actions'
 SAVE_CONT = 'save'
+SAVEAGG_CONT = 'save_agg'
 NO_ACTION_CONT = 'no_action'
 EXPOSE_CONT = 'expose'
 CONT_ACTION_COL = 'contents_action'
 CONT_INSURANCE_COL = 'insurance_regime'
 CONT_TEMP = 'regime_action'
 
+AGGREGATION = 'aggregation'
+
 CONT_MAP = {SAVE_CONT: "_SAVE", NO_ACTION_CONT: "_NOACTION",
-            EXPOSE_CONT: "_EXPOSE"}
+            EXPOSE_CONT: "_EXPOSE", SAVEAGG_CONT: "_SAVEAGG"}
 INSURE_MAP = {INSURED: "_INSURED", UNINSURED: "_UNINSURED"}
 
 
@@ -161,6 +168,59 @@ def _wind_v4_reader(config_list):
 
     return job_insts
 
+def _wind_v5_reader(config_list):
+    """
+    Build a job list from a wind configuration list.
+    
+    :param config_list: A list describing the simulation
+    :returns: A list of jobs to process over
+    """
+    job_insts = []
+    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    add_job(job_insts, LOADCSVEXPOSURE, atts)
+
+    file_list = find_atts(config_list, LOADWINDTCRM)
+    atts = {'file_list': file_list,
+            'attribute_label': '0.2s gust at 10m height m/s'}
+    add_job(job_insts, LOADRASTER, atts)
+
+    vul_filename = os.path.join(misc.RESOURCE_DIR,
+                                'domestic_wind_vul_curves.xml')
+    add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
+
+    # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
+    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    atts = {'vul_functions_in_exposure': {
+            'domestic_wind_2012':
+            'WIND_VULNERABILITY_FUNCTION_ID'}}
+    add_job(job_insts, SIMPLELINKER, atts)
+
+    atts = {'variability_method': {
+            'domestic_wind_2012': 'mean'}}
+    add_job(job_insts, SELECTVULNFUNCTION, atts)
+
+    atts = find_atts(config_list, PERMUTATION)
+    add_job(job_insts, PERMUTATE_EXPOSURE, atts)
+
+    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+    if REP_VAL_NAME not in atts_dict:
+        msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
+        raise RuntimeError(msg)
+    attributes = {
+        'var1': 'structural_loss_ratio', 'var2': atts_dict[REP_VAL_NAME],
+        'var_out': 'structural_loss'}
+    add_job(job_insts, MDMULT, attributes)
+
+    attributes = find_atts(config_list, AGGREGATION)
+    add_job(job_insts, AGGREGATE_LOSS, attributes)
+
+    file_name = find_atts(config_list, SAVE)
+    add_job(job_insts, SAVEALL, {'file_name': file_name})
+    
+    file_name = find_atts(config_list, SAVEAGG)
+    add_job(job_insts, SAVEAGG, {'file_name': file_name})
+
+    return job_insts    
 
 def _flood_fabric_v2_reader(config_list):
     """
@@ -344,5 +404,6 @@ def _reader2(config_list):
 READERS = {DEFAULT: _reader2,
            WINDV3: _wind_v3_reader,
            WINDV4: _wind_v4_reader,
+           WINDV5: _wind_v5_reader,
            FLOODFABRICV2: _flood_fabric_v2_reader,
            FLOODCONTENTSV2: _flood_contents_v2_reader}
