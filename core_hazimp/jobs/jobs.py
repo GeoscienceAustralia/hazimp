@@ -532,7 +532,10 @@ class PermutateExposure(Job):
             context.exposure_att = \
                 misc.permutate_att_values(context.exposure_att, 
                                           field, groupby=groupby)
+
             for intensity_key in context.exposure_vuln_curves:
+                SelectVulnFunction().__call__(context, variability_method={
+                                                    intensity_key: 'mean'})
                 vuln_curve = context.exposure_vuln_curves[intensity_key]
                 int_measure = vuln_curve.intensity_measure_type
                 loss_category_type = vuln_curve.loss_category_type
@@ -552,7 +555,9 @@ class PermutateExposure(Job):
                 # that will be used in real applications, and the number of 
                 # iterations that should be used to achieve convergence.
                 loss_iteration = loss_category_type + "_{0:06d}".format(n)
+                field_iteration = field + "_{0:06d}".format(n)
                 context.exposure_att[loss_iteration] = losses[n, :]
+                context.exposure_att[field_iteration] = context.exposure_att[field]
             mean_loss = np.mean(losses, axis=0)
             loss_sd = np.std(losses, axis=0)
 
@@ -695,7 +700,8 @@ class SaveAggregation(Job):
         :param context: The context instance, used to move data around.
         :params file_name: The file where the expsoure data will go.
         """
-        context.save_exposure_agg(file_name, use_parallel=use_parallel)
+        context.save_exposure_aggregation(file_name, 
+                                          use_parallel=use_parallel)
 # ____________________________________________________
 # ----------------------------------------------------
 #                KEEP THIS AT THE END

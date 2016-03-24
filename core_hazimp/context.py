@@ -176,7 +176,7 @@ class Context(object):
             # of the context info
             return write_dict
 
-    def save_exposure_agg(self, filename, use_parallel=True):
+    def save_exposure_aggregation(self, filename, use_parallel=True):
         """
         Save the aggregated exposure attributes. 
         The file type saved is based on the filename extension.
