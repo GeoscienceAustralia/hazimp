@@ -42,6 +42,7 @@ LOADFLOODASCII = 'load_flood_ascii'
 CALCSTRUCTLOSS = 'calc_struct_loss'
 CALCCONTLOSS = 'calc_cont_loss'
 PERMUTATION = 'exposure_permutation'
+VULNFILE = 'vulnerability_filename'
 WINDV3 = 'wind_v3'
 WINDV4 = 'wind_v4'
 WINDV5 = 'wind_v5'
@@ -137,8 +138,8 @@ def _wind_v4_reader(config_list):
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
 
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'domestic_wind_vul_curves.xml')
+    vul_filename = os.path.join(misc.RESOURCE_DIR, 
+                                find_atts(config_list, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
@@ -184,11 +185,10 @@ def _wind_v5_reader(config_list):
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
 
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'domestic_wind_vul_curves.xml')
+    vul_filename = os.path.join(misc.RESOURCE_DIR, 
+                                find_atts(config_list, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
-    # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     atts = {'vul_functions_in_exposure': {
             'domestic_wind_2012':
