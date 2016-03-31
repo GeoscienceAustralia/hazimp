@@ -18,7 +18,8 @@
 """
 The main entry point for the hazard impact tool.
 """
-
+import warnings
+warnings.simplefilter(action = "ignore", category = FutureWarning)
 from core_hazimp import console
 from core_hazimp import context
 from core_hazimp import config
