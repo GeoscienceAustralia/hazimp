@@ -633,6 +633,8 @@ class LoadRaster(Job):
             file_data = a_raster.raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat)
+            file_data = np.where(file_data == no_data_value, np.NAN,
+                                 file_data)
             context.exposure_att[attribute_label] = file_data
         else:
             if isinstance(file_list, basestring):
@@ -640,6 +642,8 @@ class LoadRaster(Job):
             file_data, extent = raster_module.files_raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat, file_list)
+            file_data = np.where(file_data == no_data_value, np.NAN,
+                                 file_data)
             context.exposure_att[attribute_label] = file_data
 
             if clip_exposure2all_hazards:

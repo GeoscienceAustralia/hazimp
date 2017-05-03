@@ -418,7 +418,7 @@ class TestJobs(unittest.TestCase):
         test_kwargs = {'file_list': [f.name], 'attribute_label': haz_v}
         inst(con_in, **test_kwargs)
         the_nans = isnan(con_in.exposure_att[haz_v])
-        con_in.exposure_att.iloc[the_nans, (haz_v,)] = -9999
+        con_in.exposure_att.loc[the_nans, (haz_v,)] = -9999
         msg = "con_in.exposure_att[haz_v] " + str(con_in.exposure_att[haz_v])
         msg += "\n not = con_in.exposure_att['haz_actual'] " + \
             str(con_in.exposure_att['haz_actual'])
@@ -468,7 +468,7 @@ class TestJobs(unittest.TestCase):
         inst(con_in, **test_kwargs)
         the_nans = isnan(con_in.exposure_att[haz_v])
         
-        con_in.exposure_att.iloc[the_nans, (haz_v,)] = numpy.NAN#-9999
+        con_in.exposure_att.loc[the_nans, (haz_v,)] = numpy.NAN#-9999
         msg = "con_in.exposure_att[haz_v] \n" + str(con_in.exposure_att[haz_v])
         msg += "\n not = con_in.exposure_att['haz_actual'] \n" + \
             str(con_in.exposure_att['haz_actual'])
