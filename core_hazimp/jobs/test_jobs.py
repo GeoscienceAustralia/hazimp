@@ -730,13 +730,12 @@ class TestJobs(unittest.TestCase):
         test_kwargs = {'file_name': f.name, 'use_parallel': False}
         inst(con, **test_kwargs)
 
-        exp_dict = numpy.load(f.name)
-
-        actual[context.EX_LONG] = lon
-        actual[context.EX_LAT] = lat
-        for the_key in exp_dict.files:
-            self.assertTrue(allclose(exp_dict[the_key],
-                                     actual[the_key]))
+        with numpy.load(f.name) as exp_dict:
+            actual[context.EX_LONG] = lon
+            actual[context.EX_LAT] = lat
+            for the_key in exp_dict.files:
+                self.assertTrue(allclose(exp_dict[the_key],
+                                         actual[the_key]))
         os.remove(f.name)
 
 # -------------------------------------------------------------

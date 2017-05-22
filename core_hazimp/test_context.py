@@ -62,13 +62,13 @@ class TestContext(unittest.TestCase):
         lon = array([10., 20.])
         con.exposure_long = lon
         con.save_exposure_atts(f.name, use_parallel=False)
-        exp_dict = numpy.load(f.name)
 
-        actual[context.EX_LONG] = lon
-        actual[context.EX_LAT] = lat
-        for keyish in exp_dict.files:
-            self.assertTrue(allclose(exp_dict[keyish],
-                                     actual[keyish]))
+        with numpy.load(f.name) as exp_dict:
+            actual[context.EX_LONG] = lon
+            actual[context.EX_LAT] = lat
+            for keyish in exp_dict.files:
+                self.assertTrue(allclose(exp_dict[keyish],
+                                         actual[keyish]))
         os.remove(f.name)
 
     def test_get_site_count(self):
