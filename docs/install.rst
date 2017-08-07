@@ -31,13 +31,15 @@ On Ubuntu sytems::
 Using pip
 ---------
 
-pip install --user pep8
-pip install --user coverage
-pip install --user pyyaml
-pip install --user pylint
-pip install --user pandas
-pip install --user nose
-pip install --user coverage
+Windows users can use `pip` to install and/or update libraries::
+
+  pip install --user pep8
+  pip install --user coverage
+  pip install --user pyyaml
+  pip install --user pylint
+  pip install --user pandas
+  pip install --user nose
+  pip install --user coverage
 
 
 Environment variables
