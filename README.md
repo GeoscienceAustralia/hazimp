@@ -35,9 +35,9 @@ make the fix, then submit teh fix as a pull request. Once the pull request has b
 the temporary branch can be deleted.
 
 The preferred way to contribute to HazImp is to fork the 
-`main repository <http://github.com/GeoscienceAustralia/hazimp>`_ on GitHub:
+[main repository](http://github.com/GeoscienceAustralia/hazimp) on GitHub:
 
-1. Fork the `project repository <http://github.com/GeoscienceAustralia/hazimp>`_:
+1. Fork the [project repository](http://github.com/GeoscienceAustralia/hazimp):
    click on the 'Fork' button near the top of the page. This creates
    a copy of the code under your account on the GitHub server.
 
@@ -67,7 +67,7 @@ and click 'Pull request' to send your changes to the maintainers for
 review. request. This will send an email to the committers.
 
 (If any of the above seems like magic to you, then look up the 
-`Git documentation <http://git-scm.com/documentation>`_ on the web.)
+[Git documentation](http://git-scm.com/documentation) on the web.)
 
 It is recommended to check that your contribution complies with the
 following rules before submitting a pull request:
@@ -111,7 +111,7 @@ Issues
 ------
 
 A great way to start contributing to HazImp is to pick an item
-from the list of `Issues <https://github.com/GeoscienceAustralia/hazimp/issues>`_
+from the list of [Issues](https://github.com/GeoscienceAustralia/hazimp/issues)
 in the issue tracker. (Well there are none there yet, but we will be 
 putting some up soon!) Resolving these issues allow you to start
 contributing to the project without much prior knowledge. Your
