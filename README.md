@@ -14,11 +14,12 @@ sudo apt-get install python-gdal, python-yaml, python-coverage, pep8, pylint, pa
 
 Local install on rhe-compute1
 =============================
-pip install --user pep8
-pip install --user coverage
-pip install --user pyyaml
-pip install --user pylint
-pip install --user pandas
+
+  pip install --user pep8
+  pip install --user coverage
+  pip install --user pyyaml
+  pip install --user pylint
+  pip install --user pandas
 
 
 Environment variables

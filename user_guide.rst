@@ -164,3 +164,8 @@ Without Templates
 ----------------- 
 
 
+Vulnerability functions
+-----------------------
+
+See the :ref:`Preparing vulnerability curves` section for guidance on
+preparing vulnerability functions for use in HazImp.
