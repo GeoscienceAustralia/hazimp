@@ -127,6 +127,45 @@ The rest of the file can be understood by the following key value pairs;
     is used to calculate the ``structural_loss_ratio`` given the
     ``0.2s gust at 10m height m/s``.
 
+Using permutation to understand uncertainty in vulnerability
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In many regions (in Australia), the attributes of individual buildings are unknown, but are recorded for some statistical area (e.g. suburb, local government area). In this case, the vulnerability curve assigned to a building may not be precisely determined, which can lead to uncertainty in the impact for a region.
+
+To overcome this, users can run the impact calculation multiple times, while permuting the vulnerability curves for each region (suburb, local government area, etc.). This requires some additional entries in the template file.
+
+*exposure_permutation*
+    This describes the exposure attribute that will constrain the permutation, and the number of permuations.
+    
+    *groupby*
+    The field name in the exposure data by which the assets will be grouped. 
+
+    *iterations* 
+    The number of iterations to perform
+
+*aggregation* 
+    This determines the way HazImp will aggregate results
+
+    *groupby* 
+    The exposure attribute that will be used to aggregate
+    results. It is strongly recommended to use the same attribute as
+    used for the exposure permutation.
+
+    *kwargs* 
+    A list of fields that will be aggregated to the level
+    identified above. Each entry under this section must match an
+    output field (``structural_loss_ratio``, ``structural_loss``,
+    ``REPLACEMENT_VALUE``), followed by a Python-style list of
+    statisticts to calculate: e.g. ``mean``, ``std`` or ``sum``.::
+
+      kwargs: 
+        structural_loss_ratio: [mean, std]
+        structural_loss: [mean, sum]
+        REPLACEMENT_VALUE: [mean, sum]
+
+
+
+
 Flood Template - Structural Damage
 ----------------------------------
 
