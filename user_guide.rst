@@ -164,6 +164,8 @@ To overcome this, users can run the impact calculation multiple times, while per
         REPLACEMENT_VALUE: [mean, sum]
 
 
+*save_agg*
+    The file where the aggregated results will be saved. 
 
 
 Flood Template - Structural Damage
