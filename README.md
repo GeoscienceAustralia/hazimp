@@ -1,7 +1,7 @@
 HazImp
 ======
 
-A Hazard impact assessment tool.
+A natural hazard impact assessment tool.
 
 Install
 =======
