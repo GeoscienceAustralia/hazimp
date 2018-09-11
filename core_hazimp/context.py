@@ -128,7 +128,7 @@ class Context(object):
         bad_indexes = bad_indexes.union(numpy.where(
             self.exposure_lat > max_lat)[0])
         good_indexes = numpy.array(list(set(
-            range(self.exposure_lat.size)).difference(bad_indexes)))
+            range(self.exposure_lat.size)).difference(bad_indexes)), dtype=int)
 
         if good_indexes.shape[0] is 0:
             self.exposure_lat = numpy.array([])
