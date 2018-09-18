@@ -25,7 +25,7 @@ Local install on rhe-compute1
 Environment variables
 =====================
 Add the location of the root HazImp directory to PYTHONPATH. e.g. (in .bashrc)
-export PYTHONPATH=${HOME}/sandpits/hazimp
+export PYTHONPATH=${HOME}/hazimp
 
 Data
 ====
@@ -95,7 +95,7 @@ tools:
 
 -  Code with good unittest coverage, check with::
 
-          $ pip install nose coverage
+          $ pip install nose coverage --user
           $ nosetests --with-coverage path/to/tests_for_package
 
 -  No pyflakes warnings, check with::
@@ -128,10 +128,10 @@ other issues.
 Documentation
 -------------
 
-We are in the process of creating sphinx based documentation for TCRM. 
+We are in the process of creating sphinx based documentation for HazImp. 
 Any help in setting this up will be gratefully accepted!
 
-At present you will find the user_manual in the doc folder. 
+At present you will find the user_manual in the docs folder. 
 
 We are glad to accept any sort of documentation: function docstrings,
 reStructuredText documents (like this one), tutorials, etc.
