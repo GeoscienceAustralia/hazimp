@@ -1,7 +1,3 @@
-.. HazImp documentation master file, created by
-   sphinx-quickstart on Mon May 27 14:57:12 2013.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 Introduction
 ============
@@ -14,6 +10,8 @@ hazard information. It is command line based and can be executed in parallel.
    :maxdepth: 2
    
    user_guide
+   install
+   vulnerability
   
 .. code
    

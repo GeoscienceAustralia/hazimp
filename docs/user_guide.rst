@@ -10,9 +10,9 @@ a wind speed raster and exposure. The exposure information is currently
 supplied as a csv file, with structure locations given in latitude and
 longitude. This is combined with vulnerability curve information, described in
 an xml file. Figure 1.1 is an example of a vulnerability curve, showing a hazard
-value of the x-axis and the loss associated with that hazard on the y-axis;
+value of the x-axis and the loss associated with that hazard on the y-axis:
 
-.. figure:: ./examples/diagrams/example_vuln_curve.png
+.. figure:: ../examples/diagrams/example_vuln_curve.png
    :align: center
 
    *An example vulnerability curve.*
