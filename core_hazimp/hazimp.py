@@ -26,6 +26,7 @@ from core_hazimp import config
 from core_hazimp import pipeline
 
 import numpy
+import logging
 
 # This;
 #  numpy.column_stack((body, only_1d))
@@ -66,6 +67,8 @@ def start(config_list=None, config_file=None, cont_in=None):
 
 ############################################################################
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
         # main(config_file=CMD_LINE_ARGS.config_file[0])

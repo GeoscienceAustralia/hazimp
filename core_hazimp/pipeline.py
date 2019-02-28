@@ -24,6 +24,8 @@ to process a series of jobs in a sequential
 order. The order is determined by the queue of jobs.
 """
 
+import logging
+log = logging.getLogger(__name__)
 
 class PipeLine(object):
 
@@ -66,4 +68,5 @@ class PipeLine(object):
         :param context: Context object holding the i/o data for the pipelines.
         """
         for job in self.jobs:
+            log.debug('Executing job ' + type(job).__name__)
             job(context)
