@@ -47,7 +47,7 @@ Environment variables
 
 Add the location of the root HazImp directory to PYTHONPATH. e.g. (in .bashrc)::
   
-  export HAZIMPPATH=${HOME}/hazimp
+  export PYTHONPATH=$PYTHONPATH:${HOME}/hazimp
 
 Testing the installation
 ------------------------
