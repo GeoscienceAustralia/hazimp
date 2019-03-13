@@ -68,5 +68,5 @@ class PipeLine(object):
         :param context: Context object holding the i/o data for the pipelines.
         """
         for job in self.jobs:
-            log.debug('Executing job ' + type(job).__name__)
+            log.info('Executing ' + type(getattr(job, 'job_instance', job)).__name__)
             job(context)
