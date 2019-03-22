@@ -35,8 +35,8 @@ Test the data in resources.  Can it be loaded?
 import unittest
 import os
 
-from core_hazimp.misc import RESOURCE_DIR
-from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
+from hazimp.misc import RESOURCE_DIR
+from hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 
 class TestResources(unittest.TestCase):

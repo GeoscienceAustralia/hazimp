@@ -31,7 +31,7 @@ Test the spell_check module.
 
 import unittest
 
-from core_hazimp import spell_check
+from hazimp import spell_check
 
 
 class TestSpellCheck(unittest.TestCase):

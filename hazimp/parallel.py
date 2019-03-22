@@ -23,7 +23,7 @@ import atexit
 import socket
 import numpy
 
-from core_hazimp import misc
+from hazimp import misc
 
 
 class Parallel(object):

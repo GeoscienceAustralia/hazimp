@@ -20,10 +20,10 @@ The main entry point for the hazard impact tool.
 """
 import warnings
 warnings.simplefilter(action = "ignore", category = FutureWarning)
-from core_hazimp import console
-from core_hazimp import context
-from core_hazimp import config
-from core_hazimp import pipeline
+from hazimp import console
+from hazimp import context
+from hazimp import config
+from hazimp import pipeline
 
 import numpy
 import logging
@@ -65,11 +65,14 @@ def start(config_list=None, config_file=None, cont_in=None):
     the_pipeline.run(cont_in)
     return cont_in
 
-############################################################################
-if __name__ == "__main__":
+def cli():
+    "Command-line interface to hazimp package"
     logging.basicConfig(level=logging.DEBUG)
 
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
         # main(config_file=CMD_LINE_ARGS.config_file[0])
         start(config_file=CMD_LINE_ARGS.config_file[0])
+
+if __name__ == "__main__":
+    cli()

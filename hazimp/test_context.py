@@ -34,8 +34,8 @@ import os
 
 from scipy import allclose, array, arange
 
-from core_hazimp import context
-from core_hazimp import misc
+from hazimp import context
+from hazimp import misc
 
 
 class TestContext(unittest.TestCase):

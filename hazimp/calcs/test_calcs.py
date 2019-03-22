@@ -30,8 +30,8 @@ Test the calcs module.
 import unittest
 import numpy
 
-from core_hazimp.calcs.calcs import CALCS
-from core_hazimp.calcs import calcs
+from hazimp.calcs.calcs import CALCS
+from hazimp.calcs import calcs
 
 
 class Dummy(object):

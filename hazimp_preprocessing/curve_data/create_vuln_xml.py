@@ -10,7 +10,7 @@ import csv
 import numpy
 
 import xlrd
-from core_hazimp.misc import csv2dict
+from hazimp.misc import csv2dict
 
 
 FLOOD_HOUSE_FABRIC = 'structural_domestic_flood_2012'

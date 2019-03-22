@@ -38,7 +38,7 @@ import os
 import numpy
 from scipy import allclose
 
-from core_hazimp.misc import (csv2dict, get_required_args, sorted_dict_values,
+from hazimp.misc import (csv2dict, get_required_args, sorted_dict_values,
                               squash_narray, weighted_values)
 
 

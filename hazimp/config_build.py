@@ -22,10 +22,10 @@ to jobs and calcs.
 """
 
 import copy
-from core_hazimp import workflow
-from core_hazimp.calcs.calcs import CALCS
-from core_hazimp.jobs.jobs import JOBS
-from core_hazimp import spell_check
+from hazimp import workflow
+from hazimp.calcs.calcs import CALCS
+from hazimp.jobs.jobs import JOBS
+from hazimp import spell_check
 
 
 # The complete list of first level key names in the post template config dic

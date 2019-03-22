@@ -38,7 +38,7 @@ import os
 import numpy
 from scipy import asarray, allclose, nan
 
-from core_hazimp.raster import Raster, recalc_max, files_raster_data_at_points
+from hazimp.raster import Raster, recalc_max, files_raster_data_at_points
 
 
 class TestRaster(unittest.TestCase):

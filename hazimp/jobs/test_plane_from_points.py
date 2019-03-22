@@ -32,7 +32,7 @@ Test the calcs module.
 import unittest
 import numpy
 
-from core_hazimp.jobs import plane_from_points
+from hazimp.jobs import plane_from_points
 
 
 class TestPfP(unittest.TestCase):

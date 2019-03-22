@@ -20,7 +20,7 @@ Functions concerning the yaml configuration file.
 """
 
 import yaml
-from core_hazimp.templates import READERS, TEMPLATE, DEFAULT
+from hazimp.templates import READERS, TEMPLATE, DEFAULT
 
 
 def read_file(file_name):

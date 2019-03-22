@@ -4,5 +4,5 @@
 
 find . -name "*.pyc" -delete
 
-nosetests examples/ --with-doctest `find examples/ -name 'test_*.py'` --with-coverage --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+nosetests examples/ --with-doctest `find examples/ -name 'test_*.py'` --with-coverage --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
 # --nocapture let standard out go to standard out

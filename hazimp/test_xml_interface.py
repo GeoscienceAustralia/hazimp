@@ -28,7 +28,7 @@ import unittest
 
 from scipy import allclose, asarray
 
-from core_hazimp.xml_interface import XmlLayer
+from hazimp.xml_interface import XmlLayer
 
 
 class TestXmlLayer(unittest.TestCase):

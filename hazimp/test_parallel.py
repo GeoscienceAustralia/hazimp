@@ -29,7 +29,7 @@ Test the parallel module.
 import numpy
 import unittest
 
-from core_hazimp.parallel import STATE, scatter_dict, gather_dict
+from hazimp.parallel import STATE, scatter_dict, gather_dict
 
 
 class TestParallel(unittest.TestCase):

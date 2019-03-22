@@ -36,14 +36,14 @@ import numpy
 
 from scipy import allclose, asarray, isnan, array, rollaxis
 
-from core_hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
+from hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                                    SAVEALL, CONSTANT, ADD, RANDOM_CONSTANT,
                                    MULT, MDMULT)
-from core_hazimp.jobs.test_vulnerability_model import build_example
-from core_hazimp.jobs import jobs
-from core_hazimp import context
-from core_hazimp import misc
-from core_hazimp import parallel
+from hazimp.jobs.test_vulnerability_model import build_example
+from hazimp.jobs import jobs
+from hazimp import context
+from hazimp import misc
+from hazimp import parallel
 
 
 class Dummy(object):

@@ -26,8 +26,8 @@ Calculations
 
 import sys
 
-from core_hazimp.jobs.jobs import Job
-from core_hazimp import misc
+from hazimp.jobs.jobs import Job
+from hazimp import misc
 
 STRUCT_LOSS = 'structural_loss'
 FLOOR_HEIGHT_CALC = 'floor_height'

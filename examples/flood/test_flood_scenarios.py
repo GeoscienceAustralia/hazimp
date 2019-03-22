@@ -19,15 +19,15 @@ import tempfile
 import numpy
 from scipy import allclose
 
-from core_hazimp import misc
-from core_hazimp import hazimp
-from core_hazimp.calcs.calcs import FLOOR_HEIGHT
-from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE)
-from core_hazimp.templates import (SAVE, LOADFLOODASCII, FLOODFABRICV2,
+from hazimp import misc
+from hazimp import main
+from hazimp.calcs.calcs import FLOOR_HEIGHT
+from hazimp.jobs.jobs import (LOADCSVEXPOSURE)
+from hazimp.templates import (SAVE, LOADFLOODASCII, FLOODFABRICV2,
                                    TEMPLATE, FLOODCONTENTSV2, CALCCONTLOSS,
                                    CALCSTRUCTLOSS, REP_VAL_NAME)
-from core_hazimp import templates as flood_conts
-from core_hazimp import parallel
+from hazimp import templates as flood_conts
+from hazimp import parallel
 
 
 class TestFlood(unittest.TestCase):
@@ -58,7 +58,7 @@ class TestFlood(unittest.TestCase):
                   {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                   {SAVE: f.name}]
 
-        context = hazimp.start(config_list=config)
+        context = main.start(config_list=config)
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
@@ -105,7 +105,7 @@ class TestFlood(unittest.TestCase):
         print(' - ' + SAVE + ': ' + f_out.name, file=f)
         f.close()
 
-        context = hazimp.start(config_file=f.name)
+        context = main.start(config_file=f.name)
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
@@ -146,7 +146,7 @@ class TestFlood(unittest.TestCase):
                   {CALCCONTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                   {SAVE: f.name}]
 
-        context = hazimp.start(config_list=config)
+        context = main.start(config_list=config)
 
         # These don't work on parallelised tests
         # if they are wrong the error will flow

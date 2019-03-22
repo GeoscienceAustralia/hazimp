@@ -33,12 +33,12 @@ import os
 
 from scipy import allclose, asarray
 
-from core_hazimp import workflow
-from core_hazimp import context
-from core_hazimp.calcs.calcs import CALCS
-from core_hazimp.jobs.jobs import JOBS, LOADCSVEXPOSURE, CONSTANT
-from core_hazimp import parallel
-from core_hazimp import pipeline
+from hazimp import workflow
+from hazimp import context
+from hazimp.calcs.calcs import CALCS
+from hazimp.jobs.jobs import JOBS, LOADCSVEXPOSURE, CONSTANT
+from hazimp import parallel
+from hazimp import pipeline
 
 
 class TestWorkFlow(unittest.TestCase):
