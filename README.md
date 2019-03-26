@@ -3,7 +3,7 @@ HazImp
 
 A natural hazard impact assessment tool.
 
-For the latest documentation and user guide, see https://hazimp.readthedocs.io
+For the latest documentation, installation guide and user guide, see https://hazimp.readthedocs.io
 [![Documentation Status](https://readthedocs.org/projects/hazimp/badge/?version=latest)](https://hazimp.readthedocs.io/en/latest/?badge=latest)
 
 This branch enables users to permute attributes in the exposure
@@ -13,27 +13,6 @@ grouping (such as suburb) to develop a distribution of impact
 outcomes.
 
 Requires pandas (provides methods for manipulation of the exposure file).
-
-Install
-=======
-sudo apt-get install python-numpy, python-scipy
-sudo apt-get install python-gdal, python-yaml, python-coverage, pep8, pylint, pandas
-
-Local install on rhe-compute1
-=============================
-
-  pip install --user pep8
-  pip install --user coverage
-  pip install --user pyyaml
-  pip install --user pylint
-  pip install --user pandas
-
-
-Environment variables
-=====================
-
-Add the location of the root HazImp directory to PYTHONPATH. e.g. (in .bashrc)
-export PYTHONPATH=${HOME}/hazimp
 
 Data
 ==== 
@@ -61,7 +40,6 @@ The preferred way to contribute to HazImp is to fork the
    a copy of the code under your account on the GitHub server.
 
 2. Clone this copy to your local disk::
-
           $ git clone git@github.com:YourLogin/hazimp.git
           $ cd hazimp
 

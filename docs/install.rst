@@ -1,12 +1,50 @@
 Installing HazImp
 =================
 
+Dependencies
+------------
+
+HazImp relies on python and additional libraries.
+
+There are several alternatives for suitable python environments.
+
+Conda
+^^^^^
+Using conda helps to avoid version conflicts between different python packages
+and other dependencies. Download (wget) and install miniconda. 
+Create a new environment with a command such as::
+
+  conda create -n haz python=2.7 numpy scipy pandas gdal shapely matplotlib basemap basemap-data-hires pyyaml netcdf4 statsmodels seaborn coverage pep8 pylint nose jupyter ipython geopandas jupyter ipython geopandas cartopy
+
+Before each session, remember to activate the corresponding environment, 
+e.g. `conda activate haz`.
+
+User install using system python
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On some systems (e.g. rhe-compute1) the existing system python installation may be made suitable.::
+
+  for x in pep8 coverage pyyaml pylint pandas ; do pip install --user $x ; done
+
+On MS-Windows::
+
+  for %x in (pep8, coverage, pyyaml, pylint, pandas) do pip install --user %x
+
+System python install
+^^^^^^^^^^^^^^^^^^^^^
+
+On Ubuntu systems, the following requires system administrator privileges.::
+
+  sudo apt-get install python-numpy, python-scipy
+  sudo apt-get install python-gdal, python-yaml, python-coverage, pep8, pylint, pandas, nose
 
 Getting the code
 ----------------
 
-First download the code. You can either download a zip file containing
-the `HazImp` code, or clone the repository (if you have `git`
+Download the HazImp source from GitHub.
+
+You can either download a zip file containing
+the HazImp code, or clone the repository (if you have `git`
 installed) as follows:
 
 Using ssh:: 
@@ -17,37 +55,22 @@ Using HTTPS::
   
   git clone https://github.com/GeoscienceAustralia/hazimp
 
-Dependencies
-------------
+Install HazImp
+--------------
 
-`HazImp` relies on several additional Python libraries. 
+Install HazImp into your python environment::
 
-On Ubuntu sytems::
+  python setup.py install
 
-  sudo apt-get install python-numpy, python-scipy
-  sudo apt-get install python-gdal, python-yaml, python-coverage, pep8, pylint, pandas, nose
+Or, if you are interested in modifying HazImp, the following alternative
+install command will instead provide your python environment with links to
+the location where you have downloaded the HazImp source::
+ 
+  python setup.py develop
 
+To use HazImp, run `hazimp --help` from the command line.
+You can also verify the code using `./run_tests`.
 
-Using pip
----------
-
-Windows users can use `pip` to install and/or update libraries::
-
-  pip install --user pep8
-  pip install --user coverage
-  pip install --user pyyaml
-  pip install --user pylint
-  pip install --user pandas
-  pip install --user nose
-  pip install --user coverage
-
-
-Environment variables
----------------------
-
-Add the location of the root HazImp directory to PYTHONPATH. e.g. (in .bashrc)::
-  
-  export PYTHONPATH=$PYTHONPATH:${HOME}/hazimp
 
 Testing the installation
 ------------------------
@@ -59,6 +82,6 @@ be executed in a shell (e.g. `bash`, `sh` or `csh`).
 
 On a Windows command line::
   
-  :command:`nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture` 
+  nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
 
 
