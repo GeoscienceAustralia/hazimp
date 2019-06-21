@@ -63,11 +63,18 @@ def start(config_list=None, config_file=None, cont_in=None):
     calc_jobs = config.instance_builder(config_list)
     the_pipeline = pipeline.PipeLine(calc_jobs)
     the_pipeline.run(cont_in)
+
+    config_dict = {k:v for item in config_list for k,v in item.items()}
+    agg = config_dict.get('aggregate')
+    if agg:
+        import aggregate
+        aggregate.chloropleth(config_dict['save'], agg['boundaries'], agg['save'])
+
     return cont_in
 
 def cli():
     "Command-line interface to hazimp package"
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
