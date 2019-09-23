@@ -637,7 +637,7 @@ class LoadRaster(Job):
                                  file_data)
             context.exposure_att[attribute_label] = file_data
         else:
-            if isinstance(file_list, basestring):
+            if isinstance(file_list, str):
                 file_list = [file_list]
             file_data, extent = raster_module.files_raster_data_at_points(
                 context.exposure_long,

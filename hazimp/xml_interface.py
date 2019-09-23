@@ -98,7 +98,7 @@ class XmlLayer(object):
         get_item = self.xml_node.attributes.getNamedItem
         # get_item is now a shortcut for xml_node.attributes.getNamedItem
         attributes_dictionary = {}
-        for key in self.xml_node.attributes.keys():
+        for key in list(self.xml_node.attributes.keys()):
             attributes_dictionary[str(key)] = str(get_item(key).value)
         return attributes_dictionary
 

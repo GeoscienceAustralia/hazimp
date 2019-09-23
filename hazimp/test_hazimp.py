@@ -27,7 +27,7 @@
 Test hazimp.
 """
 
-from __future__ import print_function  # can now use print()
+  # can now use print()
 
 import unittest
 import tempfile
@@ -68,7 +68,8 @@ class TestHazimp(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(
             suffix='.yaml',
             prefix='HAZIMPt_test_hazimp',
-            delete=False)
+            delete=False,
+            mode='w+t')
 
         print(' - ' + templates.TEMPLATE + ': ' + templates.DEFAULT, file=f)
         print(' - constant : ', file=f)

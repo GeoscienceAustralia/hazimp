@@ -109,7 +109,7 @@ class TestXmlLayer(unittest.TestCase):
 
         top_tag = self.xml.xml_node.documentElement.nodeName
         msg = "Expected top-level tag of 'Event', got '%s'" % top_tag
-        self.failUnlessEqual(top_tag, 'Event', msg)
+        self.assertEqual(top_tag, 'Event', msg)
 
 # -------------------------------------------------------------
 if __name__ == "__main__":

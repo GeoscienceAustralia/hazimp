@@ -52,7 +52,8 @@ class TestMisc(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.txt',
                                         prefix='test_misc',
-                                        delete=False)
+                                        delete=False,
+                                        mode='w+t')
         f.write('X, Y, Z, A\n')
         f.write('1., 2., 3., yeah\n')
         f.write('4., 5., 6.,me \n')

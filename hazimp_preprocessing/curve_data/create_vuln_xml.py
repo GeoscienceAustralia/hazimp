@@ -152,7 +152,7 @@ def csv_curve2nrml(csv_filename, xml_filename):
 
     # Loop over the csv file info
     for row in reader:
-        row = {k.strip(): v.strip() for k, v in row.iteritems()}
+        row = {k.strip(): v.strip() for k, v in list(row.items())}
         if row['Alpha'] == 'N/A':
             # This row has no model
             continue
@@ -208,10 +208,10 @@ def validate_excel_curve_data(excel_file):
         valid = False
     else:
         # Check that all sheets have the same title info
-        for title in titles.values():
+        for title in list(titles.values()):
             if not title == default:
-                print "title", title
-                print "default", default
+                print(("title", title))
+                print(("default", default))
                 valid = False
                 break
 
@@ -242,10 +242,10 @@ def check_identical_depths(wb):
         valid = False
     else:
         # Check that all sheets have the same title info
-        for depth in depths.values():
+        for depth in list(depths.values()):
             if not depth == default:
-                print "depth", depth
-                print "default", default
+                print(("depth", depth))
+                print(("default", default))
                 valid = False
                 break
 

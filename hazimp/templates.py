@@ -389,16 +389,16 @@ def _reader2(config_list):
     job_insts = []
 
     for jobcalc_dic in config_list:
-        new_string = jobcalc_dic.keys()[0]
+        new_string = list(jobcalc_dic.keys())[0]
         atts = jobcalc_dic[new_string]
         add_job(job_insts, new_string, atts=atts)
 
     # For testing
     if False:
         for job in job_insts:
-            print "*******************************************"
-            print "job.job_instance", job.job_instance
-            print "job.atts_to_add", job.atts_to_add
+            print("*******************************************")
+            print(("job.job_instance", job.job_instance))
+            print(("job.atts_to_add", job.atts_to_add))
     return job_insts
 
 READERS = {DEFAULT: _reader2,

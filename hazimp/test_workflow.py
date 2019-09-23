@@ -50,7 +50,8 @@ class TestWorkFlow(unittest.TestCase):
     def test_PipeLine_actually(self):
 
         # Write a file to test
-        f = tempfile.NamedTemporaryFile(suffix='.csv',
+        f = tempfile.NamedTemporaryFile(mode='w+t',
+                                        suffix='.csv',
                                         prefix='test_Job_title_fix_Co',
                                         delete=False)
         f.write('LAT, LONG, a_test, b_test,BUILDING\n')

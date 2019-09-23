@@ -86,17 +86,17 @@ def scatter_dict(whole):
     :returns: (chunk of dictionary of 1d arrays, indexes of whole array)
     """
     if not STATE.is_parallel:
-        array_len = len(whole[whole.keys()[0]])
-        return whole, numpy.array(range(0, array_len))
+        array_len = len(whole[list(whole.keys())[0]])
+        return whole, numpy.array(list(range(0, array_len)))
     else:
         import pypar     # pylint: disable=W0404
 
     if STATE.rank == 0:
-        array_len = len(whole[whole.keys()[0]])
+        array_len = len(whole[list(whole.keys())[0]])
         for pro in range(0, STATE.size):
-            temp_indexes = numpy.array(range(pro, array_len, STATE.size))
+            temp_indexes = numpy.array(list(range(pro, array_len, STATE.size)))
             temp_subdict = {}
-            for key in whole.keys():
+            for key in list(whole.keys()):
                 temp_subdict[key] = whole[key][temp_indexes]
             if pro is 0:
                 indexes = temp_indexes
@@ -135,7 +135,7 @@ def gather_dict(subdict, indexes):
             if temp_indexes[-1] > array_len:
                 array_len = temp_indexes[-1]
         # Create the whole dictionary, filled with rank 0 info
-        for key in subdict.keys():
+        for key in list(subdict.keys()):
             # Work-out the shape of arrays
             array_shape = list(subdict[key].shape)
             array_shape[0] = array_len + 1
@@ -143,7 +143,7 @@ def gather_dict(subdict, indexes):
             whole[key][indexes, ...] = subdict[key]
         for pro in range(1, STATE.size):
             subdict = pypar.receive(pro)
-            for key in whole.keys():
+            for key in list(whole.keys()):
                 whole[key][all_indexes[pro], ...] = subdict[key]
         return whole
     else:

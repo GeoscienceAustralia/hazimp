@@ -63,13 +63,13 @@ class TestParallel(unittest.TestCase):
             if STATE.rank == 0:
                 act = {"foo": numpy.array([0, 2]),
                        "woo": numpy.array([0, 20])}
-                for key in act.keys():
+                for key in list(act.keys()):
                     self.assertSequenceEqual(list(act[key]),
                                              list(subset[key]))
             else:
                 act = {"foo": numpy.array([1, 3]),
                        "woo": numpy.array([10, 30])}
-                for key in act.keys():
+                for key in list(act.keys()):
                     self.assertSequenceEqual(list(act[key]),
                                              list(subset[key]))
         else:
@@ -101,13 +101,13 @@ class TestParallel(unittest.TestCase):
         elif STATE.size == 2 and STATE.rank == 0:
             act = {"foo": numpy.array([0, 0, 2, 2]),
                    "woo": numpy.array([0, 0, 20, 20])}
-            for key in act.keys():
+            for key in list(act.keys()):
                 self.assertSequenceEqual(list(act[key]),
                                          list(whole[key]))
         elif STATE.size == 3 and STATE.rank == 0:
             act = {"foo": numpy.array([0, 0, 0, 2, 2, 2]),
                    "woo": numpy.array([0, 0, 0, 20, 20, 20])}
-            for key in act.keys():
+            for key in list(act.keys()):
                 self.assertSequenceEqual(list(act[key]),
                                          list(whole[key]))
         else:
@@ -141,14 +141,14 @@ class TestParallel(unittest.TestCase):
             act = {"foo": numpy.array([0, 0, 2, 2]),
                    "woo": numpy.array([[1, 3, 4], [1, 3, 4],
                                        [2, 4, 5], [2, 4, 5]])}
-            for key in act.keys():
+            for key in list(act.keys()):
                 self.assertTrue(numpy.allclose(act[key],
                                                whole[key]))
         elif STATE.size == 3 and STATE.rank == 0:
             act = {"foo": numpy.array([0, 0, 0, 2, 2, 2]),
                    "woo": numpy.array([[1, 3, 4], [1, 3, 4], [1, 3, 4],
                                        [2, 4, 5], [2, 4, 5], [2, 4, 5]])}
-            for key in act.keys():
+            for key in list(act.keys()):
                 self.assertTrue(numpy.allclose(act[key],
                                                whole[key]))
         else:

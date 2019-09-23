@@ -224,7 +224,7 @@ def save_csv(write_dict, filename):
     :type write_dict: Dictionary.
     :param filename: The csv file will be written here.
     """
-    keys = write_dict.keys()
+    keys = list(write_dict.keys())
     header = list(keys)
 
     #  Lat, long ordering for the header
@@ -244,7 +244,7 @@ def save_csv(write_dict, filename):
             body = numpy.column_stack((body, only_1d))
     # Need numpy 1.7 > to do headers
     # numpy.savetxt(filename, body, delimiter=',', header='yeah')
-    hnd = open(filename, 'wb')
+    hnd = open(filename, 'wt')
     writer = csv.writer(hnd, delimiter=',')
     writer.writerow(header)
     for i in range(body.shape[0]):

@@ -52,7 +52,8 @@ class TestRaster(unittest.TestCase):
         # pylint: disable=R0801
         f = tempfile.NamedTemporaryFile(suffix='.aai',
                                         prefix='test_misc',
-                                        delete=False)
+                                        delete=False,
+                                        mode='w+t')
         f.write('ncols 3  \r\n')
         f.write('nrows 2  \r\n')
         f.write('xllcorner +0.  \r\n')
@@ -92,7 +93,8 @@ class TestRaster(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.aai',
                                         prefix='test_misc',
-                                        delete=False)
+                                        delete=False,
+                                        mode='w+t')
         f.write('ncols 3   \r\n')
         f.write('nrows 2 \r\n')
         f.write('xllcorner +0.   \r\n')
@@ -128,7 +130,8 @@ class TestRaster(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.aai',
                                         prefix='test_misc',
-                                        delete=False)
+                                        delete=False,
+                                        mode='w+t')
         f.write('ncols 2   \r\n')
         f.write('nrows 2 \r\n')
         f.write('xllcorner 0.0   \r\n')
@@ -144,7 +147,8 @@ class TestRaster(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(suffix='.aai',
                                         prefix='test_misc',
-                                        delete=False)
+                                        delete=False,
+                                        mode='w+t')
         f.write('ncols 2   \r\n')
         f.write('nrows 1 \r\n')
         f.write('xllcorner 1.0   \r\n')
