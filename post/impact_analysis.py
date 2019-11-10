@@ -70,7 +70,7 @@ WALL_TYPE_ORDER = ['Double Brick', 'Fibro/asbestos cement sheeting',
 # directory, and are stored as csv files.
 
 data_path = "X:/georisk/HaRIA_B_Wind/projects/dfes_swha/data/processed/HazImp/20181008/"
-data_path = "X:/georisk/HaRIA_B_Wind/projects/qfes_swha/data/derived/impact/"
+#data_path = "X:/georisk/HaRIA_B_Wind/projects/qfes_swha/data/derived/impact/"
 
 events = ['000-06481',
           '000-01322',
@@ -90,32 +90,35 @@ events = ['000-06481',
           '001-08611',
           '007-05186']
           
-events = ['001-00406', '006-05866']
+#events = ['001-00406', '006-05866']
           
+events = ['001-08611']
 
 res = 600
 context='talk'
 fmt = "jpg"
 
-# To review an event, change the event number in the following
-# line. This will load the different output file for inspection.
-for event_num in events:
-    print(("Processing event {0}".format(event_num)))
 
-    output_path = pjoin(data_path, event_num)
+def main(input_file, res, fmt, output_path=None):
+    data_path, fname = os.path.split(input_file)
+    
+    if output_path is None:
+        output_path = data_path
+        print("Output will be stored in {0}".format(output_path))
+        
+    event_num = os.path.splitext(fname)[0]
+    print(("Processing event file {0}".format(fname)))
+    
     try:
-        os.makedirs(output_path)
-    except:
-        pass
-
-    event_file = pjoin(data_path, "QFES_{0}.csv".format(event_num))
-
-    df = pd.read_csv(event_file)
-
-
+        df = pd.read_csv(input_file)
+    except FileNotFoundError:
+        print("Can't locate input file: {0}".format(input_file))
+        sys.exit()
+        
     # Start with plotting the structural loss ratio against 10m wind
     # speed. This should intuitively follow the vulnerability functions
     # used in _HazImp_. Points are coloured by the construction age.
+    
     fig, ax = plt.subplots(figsize=(16,9))
     sns.set_context(context,font_scale=1.)
     g = sns.lmplot(x='0.2s gust at 10m height m/s',
@@ -185,7 +188,9 @@ for event_num in events:
                                 right=False, labels=labels)
 
     # Save a table of number of buildings in each damage state per LGA:
-    df.pivot_table(index='LGA_NAME', columns='Damage state', aggfunc='size', fill_value=0).to_excel(pjoin(output_path, "{0}_damage_state_lga.xlsx".format(event_num)))
+    df.pivot_table(index='LGA_NAME', 
+                   columns='Damage state', 
+                   aggfunc='size', fill_value=0).to_excel(pjoin(output_path, "{0}_damage_state_lga.xlsx".format(event_num)))
 
     # Save a table of number of buildings in each damage state, broken
     # down by construction era, roof type and wall type:
@@ -239,8 +244,8 @@ for event_num in events:
     plt.savefig(pjoin(output_path, "building_age_profile.{0}".format(fmt)),
                 dpi=res, bbox_inches="tight")
     plt.close(fig)
-
-"""
+    
+    
 if __name__ == '__main__':
     import argparse
     
@@ -248,6 +253,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--dpi', help='Imamge resolution')
     parser.add_argument('-f', '--format', help='Image format')
     parser.add_argument('-i', '--input_file', help='Input file')
+    parser.add_argument('-o', '--output_path', help='Optional output path')
     
     parser.add_argument('-v', '--verbose', help='Verbose output',
                         action='store_true')
@@ -269,4 +275,9 @@ if __name__ == '__main__':
     else:
         dpi = 300
         
-"""
+    if args.output_path:
+        output_path = args.output_path
+    else:
+        output_path = None
+    
+    main(input_file, res, fmt, output_path)
