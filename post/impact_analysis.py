@@ -133,7 +133,7 @@ def main(input_file, res, fmt, output_path=None):
     g.ax.set_ylim((0, 1))
     g.ax.set_xlim((20, 90))
     g.ax.legend(title="Construction era", frameon=True)
-    plt.savefig(pjoin(output_path, "SLR_Windspeed_by_age.{0}".format(fmt)), dpi=res)
+    plt.savefig(pjoin(output_path, "{0}_SLR_Windspeed_by_age.{1}".format(event_num, fmt)), dpi=res)
     plt.close(fig)
 
     # Examine the distribution of structural loss ratio within each
@@ -154,7 +154,7 @@ def main(input_file, res, fmt, output_path=None):
 
     ax.set_ylabel("Structural loss ratio", fontsize='large')
     ax.legend(title="Roof material", frameon=True)
-    fig.savefig(pjoin(output_path, "SLR_by_age.{0}".format(fmt)), dpi=res,
+    fig.savefig(pjoin(output_path, "{0}_SLR_by_age.{1}".format(event_num, fmt)), dpi=res,
                 bbox_inches="tight")
     plt.close(fig)
 
@@ -178,7 +178,7 @@ def main(input_file, res, fmt, output_path=None):
     g.ax.set_ylabel("Structural loss ($)")
     g.ax.set_xlim((20, 90))
     g.ax.legend(title="Construction era", frameon=True)
-    plt.savefig(pjoin(output_path, "SLC_Windspeed_by_age.{0}".format(fmt)), dpi=res,
+    plt.savefig(pjoin(output_path, "{0}_SLC_Windspeed_by_age.{1}".format(event_num, fmt)), dpi=res,
                 bbox_inches="tight")
     plt.close(fig)
 
@@ -209,7 +209,7 @@ def main(input_file, res, fmt, output_path=None):
 
     sns.countplot(x='Damage state', data=df, order=labels, palette=dmgpal)
     ax.set_ylabel("Number")
-    plt.savefig(pjoin(output_path, "damage_state.{0}".format(fmt)), 
+    plt.savefig(pjoin(output_path, "{0}_damage_state.{1}".format(event_num, fmt)), 
                 dpi=res, bbox_inches="tight")
     plt.close(fig)
 
@@ -219,7 +219,7 @@ def main(input_file, res, fmt, output_path=None):
     ax = sns.countplot(x='Damage state', data=df, order=labels, hue='YEAR_BUILT', hue_order=YEAR_ORDER)
     ax.legend(title="Construction era", frameon=True, loc=1)
     ax.set_ylabel("Number")
-    plt.savefig(pjoin(output_path, "damage_state_by_age.{0}".format(fmt)),
+    plt.savefig(pjoin(output_path, "{0}_damage_state_by_age.{1}".format(event_num, fmt)),
                 dpi=res, bbox_inches="tight")
     plt.close(fig)
 
@@ -231,7 +231,7 @@ def main(input_file, res, fmt, output_path=None):
     ax.set_ylabel("Structural loss ratio")
     ax.set_ylim((0, 1))
     ax.legend(title="Construction era", frameon=True)
-    plt.savefig(pjoin(output_path, "SLR_by_damage_state.{0}".format(fmt)), 
+    plt.savefig(pjoin(output_path, "{0}_SLR_by_damage_state.{1}".format(event_num, fmt)), 
                 dpi=res, bbox_inches="tight")
     plt.close(fig)
 
@@ -241,7 +241,7 @@ def main(input_file, res, fmt, output_path=None):
     sns.countplot(x='YEAR_BUILT', order=YEAR_ORDER, data=df, ax=ax)
     ax.set_xlabel("Construction era")
     ax.set_ylabel("Number")
-    plt.savefig(pjoin(output_path, "building_age_profile.{0}".format(fmt)),
+    plt.savefig(pjoin(output_path, "{0}_building_age_profile.{1}".format(event_num, fmt)),
                 dpi=res, bbox_inches="tight")
     plt.close(fig)
     
