@@ -191,7 +191,16 @@ def main(input_file, res, fmt, output_path=None):
     df.pivot_table(index='LGA_NAME', 
                    columns='Damage state', 
                    aggfunc='size', fill_value=0).to_excel(pjoin(output_path, "{0}_damage_state_lga.xlsx".format(event_num)))
-
+                   
+    fig, ax = plt.subplots(figsize=(16,9))
+    sns.set_context(context,font_scale=1.5)
+    df.pivot_table(index='LGA_NAME', 
+                   columns='Damage state', 
+                   aggfunc='size', fill_value=0).plot(kind='bar', stacked=True)
+    plt.savefig(pjoin(output_path, "{0}_damage_state_lga.{1}".format(event_num, fmt)), 
+                dpi=res, bbox_inches="tight")
+    plt.close(fig)
+    
     # Save a table of number of buildings in each damage state, broken
     # down by construction era, roof type and wall type:
     df.pivot_table(index=['Damage state', 'YEAR_BUILT'], 
