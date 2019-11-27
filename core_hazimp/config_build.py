@@ -159,7 +159,10 @@ def check_files_to_load(atts):
     :raises: True for testing or RuntimeError
     """
     bad_file = []
-    for key, value in atts.iteritems():
+#     print (atts)
+#     for key, value in list(atts.items()):
+#         print (key,value)
+    for key, value in list(atts.items()):
         if isinstance(value, dict) and 'save' not in key:
             if 'file_name' in value:
                 file2load = value['file_name']

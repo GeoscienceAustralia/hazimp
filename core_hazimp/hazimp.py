@@ -26,7 +26,6 @@ from core_hazimp import config
 from core_hazimp import pipeline
 
 import numpy
-
 # This;
 #  numpy.column_stack((body, only_1d))
 # loses significant figures in numpy1.6

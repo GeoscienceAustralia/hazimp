@@ -61,7 +61,7 @@ def cmd_line():
     else:
         args = parser.parse_args()
         if not os.path.exists(args.config_file[0]):
-            print 'Error: non existent config file\n'
+            print ('Error: non existent config file\n')
             parser.print_help()
 
     return args
