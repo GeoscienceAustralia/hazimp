@@ -6,7 +6,9 @@ A natural hazard impact assessment tool.
 For the latest documentation, installation guide and user guide, see https://hazimp.readthedocs.io
 [![Documentation Status](https://readthedocs.org/projects/hazimp/badge/?version=latest)](https://hazimp.readthedocs.io/en/latest/?badge=latest)
 
-This branch enables users to permute attributes in the exposure
+This branch enables users to develop new functions for HazImp.
+
+permute attributes in the exposure
 database for randomised evaluation of impacts. e.g. one can permute
 the vulnerability curves assigned to each exposure element in a
 grouping (such as suburb) to develop a distribution of impact
