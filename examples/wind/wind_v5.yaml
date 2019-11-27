@@ -16,6 +16,6 @@
       REPLACEMENT_VALUE: [mean, sum]
  - calc_struct_loss:
     replacement_value_label: REPLACEMENT_VALUE
- - save: /g/data1/w85/sfm547/HazImp_Outputs/wind_impact_v5.npz
- - save_agg: /g/data1/w85/sfm547/HazImp_Outputs/wind_impact_agg.csv
+ - save: wind_impact_v5.npz
+ - save_agg: wind_impact_agg.csv
  - vulnerability_filename: domestic_wind_vul_curves_wJCU.xml
