@@ -50,7 +50,8 @@ def read_config_file(file_name):
     :returns: A list of the configuration file
     """
     config_file_handle = open(file_name, 'r')
-    the_conf = yaml.load(config_file_handle)
+#     the_conf = yaml.load(config_file_handle)
+    the_conf = yaml.load(config_file_handle, yaml.SafeLoader)
     # print "the_conf", the_conf
     return the_conf
 

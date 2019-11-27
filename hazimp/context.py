@@ -226,12 +226,14 @@ def save_csv(write_dict, filename):
     """
     keys = list(write_dict.keys())
     header = list(keys)
-
+#     print (type(write_dict), write_dict.keys(), write_dict)
+#     print (type(header), header)
     #  Lat, long ordering for the header
     header.remove(EX_LAT)
     header.remove(EX_LONG)
     header.insert(0, EX_LAT)
     header.insert(1, EX_LONG)
+#     print (type(header), header)
     body = None
     for key in header:
         #  Only one dimension can be saved.
@@ -244,7 +246,7 @@ def save_csv(write_dict, filename):
             body = numpy.column_stack((body, only_1d))
     # Need numpy 1.7 > to do headers
     # numpy.savetxt(filename, body, delimiter=',', header='yeah')
-    hnd = open(filename, 'wt')
+    hnd = open(filename, 'w')
     writer = csv.writer(hnd, delimiter=',')
     writer.writerow(header)
     for i in range(body.shape[0]):

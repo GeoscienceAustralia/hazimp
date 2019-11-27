@@ -184,7 +184,7 @@ def _wind_v5_reader(config_list):
     atts = {'file_list': file_list,
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
-
+    
     vul_filename = os.path.join(misc.RESOURCE_DIR, 
                                 find_atts(config_list, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
@@ -387,7 +387,9 @@ def _reader2(config_list):
     :returns: A list of jobs to process over.
     """
     job_insts = []
-
+#     print (type(config_list[0]))
+#     print (config_list[0].keys())
+#     print (config_list)
     for jobcalc_dic in config_list:
         new_string = list(jobcalc_dic.keys())[0]
         atts = jobcalc_dic[new_string]
@@ -396,9 +398,9 @@ def _reader2(config_list):
     # For testing
     if False:
         for job in job_insts:
-            print("*******************************************")
-            print(("job.job_instance", job.job_instance))
-            print(("job.atts_to_add", job.atts_to_add))
+            print ("*******************************************")
+            print ("job.job_instance", job.job_instance)
+            print ("job.atts_to_add", job.atts_to_add)
     return job_insts
 
 READERS = {DEFAULT: _reader2,
