@@ -11,7 +11,7 @@
 """
 Test wind scenarios.
 """
-from __future__ import print_function  # can now use print()
+  # can now use print()
 
 import unittest
 import os
@@ -72,8 +72,6 @@ class TestWind(unittest.TestCase):
             {LOOKUP: None},
             {calcs.STRUCT_LOSS: None},
             {SAVEALL: {'file_name': f.name}}]
-        
-        # print (a_config.type())
         
         context = hazimp.start(config_list=a_config)
         self.assertTrue(allclose(

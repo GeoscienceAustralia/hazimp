@@ -1,0 +1,16 @@
+name: hazimp
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.6
+  - nose
+  - coverage
+  - pytz
+  - gdal
+  - libgdal
+  - pyyaml
+  - geopandas
+  - pandas
+prefix: ./envs/hazimp
+

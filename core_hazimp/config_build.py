@@ -170,7 +170,7 @@ def check_files_to_load(atts):
                     bad_file.append(file2load)
             elif 'file_list' in value:
                 files2load = value['file_list']
-                if isinstance(files2load, basestring):
+                if isinstance(files2load, str):
                     files2load = [files2load]
                 for file2load in files2load:
                     if not file_can_open(file2load):

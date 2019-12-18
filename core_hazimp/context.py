@@ -224,7 +224,7 @@ def save_csv(write_dict, filename):
     :type write_dict: Dictionary.
     :param filename: The csv file will be written here.
     """
-    keys = write_dict.keys()
+    keys = list(write_dict.keys())
     header = list(keys)
 #     print (type(write_dict), write_dict.keys(), write_dict)
 #     print (type(header), header)

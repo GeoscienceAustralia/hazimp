@@ -72,7 +72,7 @@ def csv2dict(filename, add_ids=False):
     
     if add_ids:
         # Add internal id info
-        array_len = len(plain_dic[plain_dic.keys()[0]])
+        array_len = len(plain_dic[list(plain_dic.keys())[0]])
         plain_dic[INTID] = numpy.arange(array_len)
     return plain_dic
 

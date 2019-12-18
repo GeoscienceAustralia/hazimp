@@ -11,7 +11,7 @@
 """
 Test wind scenarios.
 """
-from __future__ import print_function  # can now use print()
+  # can now use print()
 
 import unittest
 import os

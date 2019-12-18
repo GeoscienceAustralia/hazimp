@@ -65,7 +65,8 @@ class TestConfig(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(
             suffix='.txt',
             prefix='HAZIMPtest_config',
-            delete=False)
+            delete=False,
+            mode='w+t')
         f.write('yeah\n')
         f.close()
 
@@ -82,7 +83,8 @@ class TestConfig(unittest.TestCase):
             f = tempfile.NamedTemporaryFile(
                 suffix='.txt',
                 prefix='HAZIMPtest_config',
-                delete=False)
+                delete=False,
+                mode='w+t')
             f.write('yeah\n')
             f.close()
             junk_files.append(f)

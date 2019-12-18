@@ -94,7 +94,8 @@ def build_example_vuln():
     # Write a file to test
     f = tempfile.NamedTemporaryFile(suffix='.xml',
                                     prefix='test_integration',
-                                    delete=False)
+                                    delete=False,
+                                    mode='w+t')
     f.write(str2)
     f.close()
     return f.name
@@ -109,7 +110,8 @@ def build_example_exposure():
     """
     f = tempfile.NamedTemporaryFile(suffix='.txt',
                                     prefix='test_integration',
-                                    delete=False)
+                                    delete=False,
+                                    mode='w+t')
     f.write('lat, long, building, contents, m2,' +
             'building_costperm2, contents_costperm2, MMI\n')
     f.write('-36., 144., SW1, RICH, 100, 30, 20, 4\n')

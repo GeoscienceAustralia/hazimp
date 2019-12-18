@@ -1,4 +1,5 @@
 *.pyc
+*.bak
 nosetest*
 .coverage
 .idea/

@@ -289,7 +289,8 @@ class TestJobs(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(
             suffix='.txt',
             prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False,
+            mode='w+t')
         f.write('exposure_latitude, exposure_longitude, Z\n')
         f.write('1., 2., 3.\n')
         f.write('4., 5., 6.\n')
@@ -382,7 +383,8 @@ class TestJobs(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False,
+            mode='w+t')
         f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
         f.write('8.1, 0.1, 1, 4\n')
         f.write('7.9, 1.5, 2, -9999\n')
@@ -403,7 +405,8 @@ class TestJobs(unittest.TestCase):
         # Write a hazard file
         f = tempfile.NamedTemporaryFile(
             suffix='.aai', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False,
+            mode='w+t')
         f.write('ncols 3    \r\n')
         f.write('nrows 2 \r\n')
         f.write('xllcorner +0.    \r\n')
@@ -430,7 +433,8 @@ class TestJobs(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False,
+            mode='w+t')
         f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
         f.write('8.1, 0.1, 1, 4\n')
         f.write('7.9, 1.5, 2, -9999\n')  # Out of Haz area
@@ -486,7 +490,8 @@ class TestJobs(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False,
+            mode='w+t')
         f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
         f.write('7.9, 1.5, 2, -9999\n')  # Out of Haz area
         f.write('8.9, 3.1, 4, -9999\n')  # Out of Haz area
@@ -504,7 +509,8 @@ class TestJobs(unittest.TestCase):
         # Write a hazard file
         f = tempfile.NamedTemporaryFile(
             suffix='.aai', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False,
+            mode='w+t')
         f.write('ncols 3    \r\n')
         f.write('nrows 2 \r\n')
         f.write('xllcorner +0.    \r\n')
@@ -532,7 +538,8 @@ class TestJobs(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False,
+            mode='w+t')
         f.write('exposure_latitude, exposure_longitude, ID, haz_actual\n')
         f.write('7.9, 1.5, 2, -9999\n')  # Out of Haz area
         f.write('8.9, 3.1, 4, -9999\n')  # Out of Haz area
@@ -578,7 +585,8 @@ class TestJobs(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False,
+            mode='w+t')
         f.write('exposure_latitude, exposure_longitude, ID, haz_0, haz_1\n')
         f.write('8.1, 0.1, 1, 4, 40\n')
         f.write('7.9, 1.5, 2, -9999, -9999\n')
@@ -623,7 +631,8 @@ class TestJobs(unittest.TestCase):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False,
+            mode='w+t')
         f.write('latitude, longitude, ID, haz_0, haz_1\n')
         f.write('8.1, 0.1, 1, 4, 40\n')
         f.write('7.9, 1.5, 2, -9999, -9999\n')
