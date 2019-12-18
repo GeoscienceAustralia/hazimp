@@ -1,9 +1,0 @@
-*.pyc
-nosetest*
-.coverage
-.idea/
-_build/
-
-debug.log
-*.~*~
-#*#
