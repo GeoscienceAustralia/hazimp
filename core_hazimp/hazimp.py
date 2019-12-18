@@ -18,6 +18,7 @@
 """
 The main entry point for the hazard impact tool.
 """
+import numpy
 import warnings
 warnings.simplefilter(action = "ignore", category = FutureWarning)
 from core_hazimp import console
@@ -25,7 +26,7 @@ from core_hazimp import context
 from core_hazimp import config
 from core_hazimp import pipeline
 
-import numpy
+
 # This;
 #  numpy.column_stack((body, only_1d))
 # loses significant figures in numpy1.6
