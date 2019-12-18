@@ -1,0 +1,1 @@
+/opt/gdal/bin/gdal_translate -of AAIGrid -scale 0 100 0 10 gust-0363.asc depth_synthetic.asc

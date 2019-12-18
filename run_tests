@@ -1,0 +1,11 @@
+#!/bin/bash
+# First, purge all .pyc files to clean the source tree,
+# in case some modules were deleted or removed.
+
+find . -name "*.pyc" -delete
+
+nosetests core_hazimp/ --with-doctest `find core_hazimp/ -name 'test_*.py'` --with-coverage  --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+# --nocapture let standard out go to standard out
+
+# This works on my PC
+#nosetests core_hazimp/ --with-doctest --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture

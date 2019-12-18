@@ -1,0 +1,14 @@
+#!/bin/bash
+# First, purge all .pyc files to clean the source tree,
+# in case some modules were deleted or removed.
+
+find . -name "*.pyc" -delete
+
+pylint core_hazimp  --disable=RP0401 --disable=RP0001 --disable=RP0002 --disable=RP0003 --disable=RP0101 --disable=RP0101 --disable=RP0701
+
+mpirun -n 2 python /usr/local/bin/nosetests examples/ --with-doctest `find examples/ -name 'test_*.py'` --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+# --nocapture let standard out go to standard out
+
+mpirun -n 2  python /usr/local/bin/nosetests core_hazimp/ --with-doctest `find core_hazimp/ -name 'test_*.py'` --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+
+pep8 .

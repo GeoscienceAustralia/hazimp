@@ -1,0 +1,8 @@
+#!/bin/bash
+# First, purge all .pyc files to clean the source tree,
+# in case some modules were deleted or removed.
+
+find . -name "*.pyc" -delete
+
+nosetests examples/ --with-doctest `find examples/ -name 'test_*.py'` --with-coverage --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+# --nocapture let standard out go to standard out
