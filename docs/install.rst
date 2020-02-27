@@ -43,10 +43,8 @@ On Ubuntu systems, the following requires system administrator privileges.::
 Getting the code
 ----------------
 
-Download the HazImp source from GitHub.
-
-You can either download a zip file containing
-the HazImp code, or clone the repository (if you have `git`
+First download the code. You can either download a zip file containing
+the `HazImp` code, or clone the repository (if you have `git`
 installed) as follows:
 
 Using ssh:: 
@@ -61,10 +59,12 @@ Using HTTPS::
 
   git clone https://github.com/GeoscienceAustralia/hazimp
 
-Install HazImp
---------------
+Dependencies
+------------
 
-Install HazImp into your python environment::
+`HazImp` relies on several additional Python libraries. 
+
+On Ubuntu sytems::
 
 .. code-block:: bash
   python setup.py install
@@ -76,9 +76,27 @@ the location where you have downloaded the HazImp source::
 .. code-block:: bash
   python setup.py develop
 
-To use HazImp, run `hazimp --help` from the command line.
-You can also verify the code using `./run_tests`.
 
+Using pip
+---------
+
+Windows users can use `pip` to install and/or update libraries::
+
+  pip install --user pep8
+  pip install --user coverage
+  pip install --user pyyaml
+  pip install --user pylint
+  pip install --user pandas
+  pip install --user nose
+  pip install --user coverage
+
+
+Environment variables
+---------------------
+
+Add the location of the root HazImp directory to PYTHONPATH. e.g. (in .bashrc)::
+  
+  export HAZIMPPATH=${HOME}/hazimp
 
 Testing the installation
 ------------------------
@@ -90,6 +108,6 @@ be executed in a shell (e.g. `bash`, `sh` or `csh`).
 
 On a Windows command line::
   
-  nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+  :command:`nosetests core_hazimp/ --with-doctest --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture` 
 
 

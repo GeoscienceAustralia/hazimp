@@ -10,8 +10,7 @@ import csv
 import numpy
 
 import xlrd
-from hazimp.misc import csv2dict
-
+from core_hazimp.misc import csv2dict
 
 FLOOD_HOUSE_FABRIC = 'structural_domestic_flood_2012'
 FLOOD_HOUSE_CONTENTS = 'contents_domestic_flood_2012'
@@ -145,7 +144,7 @@ def csv_curve2nrml(csv_filename, xml_filename):
     imls = [v for v in csv_dict['IML'] if not v == '']
 
     # open the csv file to read the rows
-    reader = csv.DictReader(open(csv_filename, 'rb'))
+    reader = csv.DictReader(open(csv_filename, 'r'))
     xml_h = open(xml_filename, 'w')
     write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category,
                    csv_dict['IMT'][0], imls)
@@ -153,6 +152,14 @@ def csv_curve2nrml(csv_filename, xml_filename):
     # Loop over the csv file info
     for row in reader:
         row = {k.strip(): v.strip() for k, v in list(row.items())}
+<<<<<<< HEAD
+#         print(row)
+=======
+<<<<<<< HEAD
+=======
+#         print(row)
+>>>>>>> MyDev
+>>>>>>> ba182e7b77533fedd45144a643b0d4f91c654fcc
         if row['Alpha'] == 'N/A':
             # This row has no model
             continue
@@ -210,8 +217,8 @@ def validate_excel_curve_data(excel_file):
         # Check that all sheets have the same title info
         for title in list(titles.values()):
             if not title == default:
-                print(("title", title))
-                print(("default", default))
+                print ("title", title)
+                print ("default", default)
                 valid = False
                 break
 
@@ -244,8 +251,8 @@ def check_identical_depths(wb):
         # Check that all sheets have the same title info
         for depth in list(depths.values()):
             if not depth == default:
-                print(("depth", depth))
-                print(("default", default))
+                print ("depth", depth)
+                print ("default", default)
                 valid = False
                 break
 
@@ -353,17 +360,20 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
 
 # -----------------------------------------------------------
 if __name__ == "__main__":
-    if False:
-        csv_curve2nrml('domestic_wind_vul_curves.csv',
-                       'domestic_wind_vul_curves.xml')
-    if False:
-        csv_curve2nrml('synthetic_domestic_wind_vul_curves.csv',
-                       'synthetic_domestic_wind_vul_curves.xml')
+#     if True:
+#         csv_curve2nrml('domestic_wind_vul_curves.csv',
+#                        'domestic_wind_vul_curves.xml')
+#     if False:
+#         csv_curve2nrml('synthetic_domestic_wind_vul_curves.csv',
+#                        'synthetic_domestic_wind_vul_curves.xml')
+#     if True:
+#         excel_curve2nrml('content_flood_vul_curves.xml',
+#                          'fabric_flood_vul_curves.xml',
+#                          'Flood_2012_actual_cleaned.xls')
+#     if True:
+#         excel_curve2nrml('content_flood_avg_curve.xml',
+#                          'fabric_flood_avg_curve.xml',
+#                          'Flood_2012_averaged.xls')
     if True:
-        excel_curve2nrml('content_flood_vul_curves.xml',
-                         'fabric_flood_vul_curves.xml',
-                         'Flood_2012_actual_cleaned.xls')
-    if True:
-        excel_curve2nrml('content_flood_avg_curve.xml',
-                         'fabric_flood_avg_curve.xml',
-                         'Flood_2012_averaged.xls')
+        csv_curve2nrml('domestic_wind_vul_curves_wJCU.csv',
+                         'domestic_wind_vul_curves_wJCU.xml')

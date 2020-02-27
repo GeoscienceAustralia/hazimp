@@ -1,4 +1,4 @@
-#  python ../../hazimp/hazimp.py -c wind_v3.yaml
+#  python ../../core_hazimp/hazimp.py -c wind_v3.yaml
  - template: wind_v3
  - load_exposure: 
      file_name:  WA_subset.csv

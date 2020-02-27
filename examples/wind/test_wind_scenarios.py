@@ -20,19 +20,18 @@ import numpy
 
 from scipy import allclose
 
-from hazimp import misc
-from hazimp import main
-from hazimp.jobs.jobs import (LOADRASTER, LOADCSVEXPOSURE,
+from core_hazimp import misc
+from core_hazimp import hazimp
+from core_hazimp.jobs.jobs import (LOADRASTER, LOADCSVEXPOSURE,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION,
                                    LOOKUP, SAVEALL)
-from hazimp.calcs import calcs
-from hazimp import parallel
-from hazimp import config
-from hazimp.templates import (SAVE, LOADWINDTCRM, WINDV3,
+from core_hazimp.calcs import calcs
+from core_hazimp import parallel
+from core_hazimp import config
+from core_hazimp.templates import (SAVE, LOADWINDTCRM, WINDV3,
                                    TEMPLATE, DEFAULT, CALCSTRUCTLOSS,
                                    REP_VAL_NAME)
-
 
 class TestWind(unittest.TestCase):
 
@@ -73,8 +72,8 @@ class TestWind(unittest.TestCase):
             {LOOKUP: None},
             {calcs.STRUCT_LOSS: None},
             {SAVEALL: {'file_name': f.name}}]
-
-        context = main.start(config_list=a_config)
+        
+        context = hazimp.start(config_list=a_config)
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
@@ -109,7 +108,7 @@ class TestWind(unittest.TestCase):
                     {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                     {SAVE: f.name}]
 
-        context = main.start(config_list=a_config)
+        context = hazimp.start(config_list=a_config)
 
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
@@ -141,26 +140,26 @@ class TestWind(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(
             suffix='.yaml',
             prefix='HAZIMP_wind_scenarios_test_const',
+            mode="w",
             delete=False)
-
+        
+        print(type(f), f, f.name)
+        print(type(str.encode(' - ' + TEMPLATE + ': ' + WINDV3)), str.encode(' - ' + TEMPLATE + ': ' + WINDV3))
+        print(type(' - ' + TEMPLATE + ': ' + WINDV3),' - ' + TEMPLATE + ': ' + WINDV3)
+        
         print(' - ' + TEMPLATE + ': ' + WINDV3, file=f)
         print(' - ' + LOADCSVEXPOSURE + ': ', file=f)
         print('      file_name: ' + exp_filename, file=f)
         print('      exposure_latitude: LATITUDE', file=f)
         print('      exposure_longitude: LONGITUDE', file=f)
-        print(
-            ' - ' +
-            LOADWINDTCRM +
-            ': [' +
-            wind_filename +
-            ']',
-            file=f)
+        print(' - ' + LOADWINDTCRM + ': [' + wind_filename + ']', file=f)
         print(' - ' + CALCSTRUCTLOSS + ': ', file=f)
         print('      ' + REP_VAL_NAME + ': ' + 'REPLACEMENT_VALUE', file=f)
         print(' - ' + SAVE + ': ' + f_out.name, file=f)
+          
         f.close()
 
-        context = main.start(config_file=f.name)
+        context = hazimp.start(config_file=f.name)
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
@@ -196,7 +195,7 @@ class TestWind(unittest.TestCase):
                     {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                     {SAVE: f.name}]
 
-        context = main.start(config_list=a_config)
+        context = hazimp.start(config_list=a_config)
         self.assertTrue(allclose(
             context.exposure_att['structural_loss'],
             context.exposure_att['calced-loss']))
