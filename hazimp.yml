@@ -12,5 +12,7 @@ dependencies:
   - pyyaml
   - geopandas
   - pandas
+  - scipy
+  - xlrd
 prefix: ./envs/hazimp
 

@@ -8,13 +8,7 @@ For the latest documentation, installation guide and user guide, see https://haz
 
 This branch enables users to develop new functions for HazImp.
 
-permute attributes in the exposure
-database for randomised evaluation of impacts. e.g. one can permute
-the vulnerability curves assigned to each exposure element in a
-grouping (such as suburb) to develop a distribution of impact
-outcomes.
-
-Requires pandas (provides methods for manipulation of the exposure file).
+Requires `pandas` (provides methods for manipulation of the exposure file).
 
 Data
 ==== 

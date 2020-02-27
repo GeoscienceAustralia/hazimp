@@ -14,10 +14,10 @@ Using conda helps to avoid version conflicts between different python packages
 and other dependencies. Download (wget) and install miniconda. 
 Create a new environment with a command such as::
 
-  conda create -n haz python=2.7 numpy scipy pandas gdal shapely matplotlib basemap basemap-data-hires pyyaml netcdf4 statsmodels seaborn coverage pep8 pylint nose jupyter ipython geopandas jupyter ipython geopandas cartopy
+  conda create -f hazimp.yml 
 
 Before each session, remember to activate the corresponding environment, 
-e.g. `conda activate haz`.
+e.g. `conda activate hazimp`.
 
 User install using system python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -35,6 +35,8 @@ System python install
 
 On Ubuntu systems, the following requires system administrator privileges.::
 
+.. code-block:: bash
+
   sudo apt-get install python-numpy, python-scipy
   sudo apt-get install python-gdal, python-yaml, python-coverage, pep8, pylint, pandas, nose
 
@@ -48,11 +50,15 @@ the HazImp code, or clone the repository (if you have `git`
 installed) as follows:
 
 Using ssh:: 
-  
+
+.. code-block:: bash
+
   git clone git@github.com:GeoscienceAustralia/hazimp.git
 
 Using HTTPS::
-  
+
+.. code-block:: bash
+
   git clone https://github.com/GeoscienceAustralia/hazimp
 
 Install HazImp
@@ -60,12 +66,14 @@ Install HazImp
 
 Install HazImp into your python environment::
 
+.. code-block:: bash
   python setup.py install
 
 Or, if you are interested in modifying HazImp, the following alternative
 install command will instead provide your python environment with links to
 the location where you have downloaded the HazImp source::
- 
+
+.. code-block:: bash
   python setup.py develop
 
 To use HazImp, run `hazimp --help` from the command line.
