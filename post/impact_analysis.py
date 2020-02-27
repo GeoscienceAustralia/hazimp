@@ -185,7 +185,7 @@ def main(input_file, res, fmt, output_path=None):
     bins=[0.0, 0.02, 0.1, 0.2, 0.5, 1.0]
     labels=['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
     df['Damage state'] = pd.cut(df['structural_loss_ratio'], bins,
-                                right=False, labels=labels)
+                                right=True, labels=labels)
 
     # Save a table of number of buildings in each damage state per LGA:
     df.pivot_table(index='LGA_NAME', 
