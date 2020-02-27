@@ -21,15 +21,15 @@ to jobs and calcs.
 """
 
 import os
-from core_hazimp import misc
-from core_hazimp.calcs.calcs import (WATER_DEPTH, FLOOR_HEIGHT,
-                                     FLOOR_HEIGHT_CALC)
-from core_hazimp.config_build import find_atts, add_job
-from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
-                                   LOADXMLVULNERABILITY, SIMPLELINKER,
-                                   SELECTVULNFUNCTION, RANDOM_CONSTANT,
-                                   LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
-                                   MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS)
+from hazimp import misc
+from hazimp.calcs.calcs import (WATER_DEPTH, FLOOR_HEIGHT,
+                                FLOOR_HEIGHT_CALC)
+from hazimp.config_build import find_atts, add_job
+from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
+                              LOADXMLVULNERABILITY, SIMPLELINKER,
+                              SELECTVULNFUNCTION, RANDOM_CONSTANT,
+                              LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
+                              MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS)
 
 __author__ = 'u54709'
 

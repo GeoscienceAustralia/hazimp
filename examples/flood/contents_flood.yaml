@@ -1,4 +1,4 @@
-#  python ../../core_hazimp/hazimp.py -c contents_flood.yaml
+#  python ../../hazimp/hazimp.py -c contents_flood.yaml
 # Don't have a scenario test automatically run this.
 # Since the file location is not absolute,
 - template: flood_contents_v2

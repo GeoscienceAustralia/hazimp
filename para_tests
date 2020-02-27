@@ -4,10 +4,10 @@
 
 find . -name "*.pyc" -delete
 
-nosetests core_hazimp/ --with-doctest `find core_hazimp/ -name 'test_*.py'` --with-xunit --xunit-file='nosetests.xml' --nocapture
+nosetests hazimp/ --with-doctest `find hazimp/ -name 'test_*.py'` --with-xunit --xunit-file='nosetests.xml' --nocapture
 # --nocapture let standard out go to standard out
 
-mpirun -n 2 nosetests core_hazimp/ --with-doctest `find core_hazimp/ -name 'test_*.py'` --with-xunit --xunit-file='nosetests.xml' --nocapture
+mpirun -n 2 nosetests hazimp/ --with-doctest `find hazimp/ -name 'test_*.py'` --with-xunit --xunit-file='nosetests.xml' --nocapture
 
 # The scenario tests
 nosetests examples/ --with-doctest `find examples/ -name 'test_*.py'` --with-xunit --xunit-file='nosetests.xml' --nocapture
@@ -16,4 +16,4 @@ mpirun -n 2 nosetests examples/ --with-doctest `find examples/ -name 'test_*.py'
 # --nocapture let standard out go to standard out
 
 # This works on my PC
-#nosetests core_hazimp/ --with-doctest --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+#nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture

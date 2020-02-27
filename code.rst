@@ -4,5 +4,5 @@ Auto Generated Documentation
 
 Pipeline
 ========
-.. automodule:: core_hazimp.pipeline
+.. automodule:: hazimp.pipeline
    :members:

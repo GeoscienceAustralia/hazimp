@@ -30,8 +30,8 @@ order. The order is determined by the queue of jobs.
 import numpy
 import csv
 
-from core_hazimp import misc
-from core_hazimp import parallel
+from hazimp import misc
+from hazimp import parallel
 
 # The standard string names in the context instance
 EX_LAT = 'exposure_latitude'
