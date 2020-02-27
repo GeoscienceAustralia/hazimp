@@ -526,7 +526,9 @@ class PermutateExposure(Job):
                 key - intensity measure
                 value - realised vulnerability curve instance per asset
         """
-        field = context.vul_function_titles['domestic_wind_2012']
+        vulnerability_set_id = list(context.exposure_vuln_curves)[0]
+        field = context.vul_function_titles[vulnerability_set_id]
+
         losses = np.zeros((iterations, len(context.exposure_att)))
         for n in range(iterations):
             context.exposure_att = \

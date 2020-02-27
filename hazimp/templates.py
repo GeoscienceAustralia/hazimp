@@ -43,6 +43,7 @@ CALCSTRUCTLOSS = 'calc_struct_loss'
 CALCCONTLOSS = 'calc_cont_loss'
 PERMUTATION = 'exposure_permutation'
 VULNFILE = 'vulnerability_filename'
+VULNSET = 'vulnerability_set'
 WINDV3 = 'wind_v3'
 WINDV4 = 'wind_v4'
 WINDV5 = 'wind_v5'
@@ -95,13 +96,14 @@ def _wind_v3_reader(config_list):
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    vulnerability_set_id = find_atts(config_list, VULNSET)
     atts = {'vul_functions_in_exposure': {
-            'domestic_wind_2012':
+            vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
-            'domestic_wind_2012': 'mean'}}
+            vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
@@ -144,13 +146,14 @@ def _wind_v4_reader(config_list):
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    vulnerability_set_id = find_atts(config_list, VULNSET)
     atts = {'vul_functions_in_exposure': {
-            'domestic_wind_2012':
+            vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
-            'domestic_wind_2012': 'mean'}}
+            vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
@@ -190,13 +193,14 @@ def _wind_v5_reader(config_list):
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    vulnerability_set_id = find_atts(config_list, VULNSET)
     atts = {'vul_functions_in_exposure': {
-            'domestic_wind_2012':
+            vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
-            'domestic_wind_2012': 'mean'}}
+            vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     atts = find_atts(config_list, PERMUTATION)
