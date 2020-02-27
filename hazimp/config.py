@@ -31,7 +31,7 @@ def read_file(file_name):
     :returns: A dictionary of the configuration file
     """
     config_file_handle = open(file_name, 'r')
-    config_inf = yaml.load(config_file_handle)
+    config_inf = yaml.load(config_file_handle, Loader=yaml.FullLoader)
     if isinstance(config_inf, dict):
         config_dic = config_inf
     else:
@@ -50,7 +50,7 @@ def read_config_file(file_name):
     :returns: A list of the configuration file
     """
     config_file_handle = open(file_name, 'r')
-    the_conf = yaml.load(config_file_handle)
+    the_conf = yaml.load(config_file_handle, Loader=yaml.FullLoader)
     # print "the_conf", the_conf
     return the_conf
 
