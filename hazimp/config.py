@@ -20,7 +20,7 @@ Functions concerning the yaml configuration file.
 """
 
 import yaml
-from core_hazimp.templates import READERS, TEMPLATE, DEFAULT
+from hazimp.templates import READERS, TEMPLATE, DEFAULT
 
 
 def read_file(file_name):
@@ -50,8 +50,7 @@ def read_config_file(file_name):
     :returns: A list of the configuration file
     """
     config_file_handle = open(file_name, 'r')
-#     the_conf = yaml.load(config_file_handle)
-    the_conf = yaml.load(config_file_handle, yaml.SafeLoader)
+    the_conf = yaml.load(config_file_handle, Loader=yaml.FullLoader)
     # print "the_conf", the_conf
     return the_conf
 

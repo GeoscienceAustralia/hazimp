@@ -40,11 +40,11 @@ import scipy
 import pandas as pd
 import numpy as np
 
-from core_hazimp import parallel
-from core_hazimp import misc
-from core_hazimp import raster as raster_module
-from core_hazimp.context import EX_LAT, EX_LONG
-from core_hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
+from hazimp import parallel
+from hazimp import misc
+from hazimp import raster as raster_module
+from hazimp.context import EX_LAT, EX_LONG
+from hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 ADD = 'add'
 MULT = 'mult'

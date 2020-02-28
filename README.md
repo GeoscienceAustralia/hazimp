@@ -10,37 +10,22 @@ This branch enables users to develop new functions for HazImp.
 
 Requires `pandas` (provides methods for manipulation of the exposure file).
 
-Install
-=======
-sudo apt-get install python-numpy, python-scipy
-sudo apt-get install python-gdal, python-yaml, python-coverage, pep8, pylint, pandas
-
-Local install on rhe-compute1
-=============================
-
-  pip install --user pep8
-  pip install --user coverage
-  pip install --user pyyaml
-  pip install --user pylint
-  pip install --user pandas
-
-
-Environment variables
-=====================
-Add the location of the root HazImp directory to PYTHONPATH. e.g. (in .bashrc)
-export PYTHONPATH=${HOME}/hazimp
-
 Data
-====
-All exposure and hazard data under version control is for testing purposes only and should not be considered as realistic.  The provenance for this data is unknown.
+==== 
+
+All exposure and hazard data under version control is for
+testing purposes only and should not be considered as realistic.  The
+provenance for this data is unknown.
 
 Contributing code
 =================
 
-Generally, development of new functionality and bug fixes happens in the `develop` branch in HazImp. 
-The `master` branch is only for significant releases, and maintenance. Even then, any bug-fixes 
-should follow the procedure outlined below to contribute fixes - that is, create a new (temporary) branch, 
-make the fix, then submit teh fix as a pull request. Once the pull request has been approved and merged, 
+Generally, development of new functionality and bug fixes happens in
+the `develop` branch in HazImp.  The `master` branch is only for
+significant releases, and maintenance. Even then, any bug-fixes should
+follow the procedure outlined below to contribute fixes - that is,
+create a new (temporary) branch, make the fix, then submit teh fix as
+a pull request. Once the pull request has been approved and merged,
 the temporary branch can be deleted.
 
 The preferred way to contribute to HazImp is to fork the 
@@ -51,7 +36,6 @@ The preferred way to contribute to HazImp is to fork the
    a copy of the code under your account on the GitHub server.
 
 2. Clone this copy to your local disk::
-
           $ git clone git@github.com:YourLogin/hazimp.git
           $ cd hazimp
 

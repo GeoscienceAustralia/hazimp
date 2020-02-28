@@ -30,8 +30,8 @@ order. The order is determined by the queue of jobs.
 import numpy
 import csv
 
-from core_hazimp import misc
-from core_hazimp import parallel
+from hazimp import misc
+from hazimp import parallel
 
 # The standard string names in the context instance
 EX_LAT = 'exposure_latitude'
@@ -226,14 +226,12 @@ def save_csv(write_dict, filename):
     """
     keys = list(write_dict.keys())
     header = list(keys)
-#     print (type(write_dict), write_dict.keys(), write_dict)
-#     print (type(header), header)
+
     #  Lat, long ordering for the header
     header.remove(EX_LAT)
     header.remove(EX_LONG)
     header.insert(0, EX_LAT)
     header.insert(1, EX_LONG)
-#     print (type(header), header)
     body = None
     for key in header:
         #  Only one dimension can be saved.

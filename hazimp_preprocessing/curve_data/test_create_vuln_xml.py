@@ -38,7 +38,7 @@ from scipy import asarray, allclose, array
 
 # W0403: 37: Relative import 'create_vuln_xml', should be 'curve_data.yadda'
 # pylint: disable=w0403
-import create_vuln_xml
+from . import create_vuln_xml
 from hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 
 

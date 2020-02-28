@@ -21,11 +21,11 @@ to jobs and calcs.
 """
 
 import os
-from core_hazimp import misc
-from core_hazimp.calcs.calcs import (WATER_DEPTH, FLOOR_HEIGHT,
+from hazimp import misc
+from hazimp.calcs.calcs import (WATER_DEPTH, FLOOR_HEIGHT,
                                      FLOOR_HEIGHT_CALC)
-from core_hazimp.config_build import find_atts, add_job
-from core_hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
+from hazimp.config_build import find_atts, add_job
+from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION, RANDOM_CONSTANT,
                                    LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
@@ -187,7 +187,7 @@ def _wind_v5_reader(config_list):
     atts = {'file_list': file_list,
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
-    
+
     vul_filename = os.path.join(misc.RESOURCE_DIR, 
                                 find_atts(config_list, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
@@ -391,14 +391,8 @@ def _reader2(config_list):
     :returns: A list of jobs to process over.
     """
     job_insts = []
-#     print (type(config_list[0]))
-#     print (config_list[0].keys())
-#     print (config_list)
+
     for jobcalc_dic in config_list:
-#         print ("jobcalc_dic", jobcalc_dic)
-#         print ("jobcalc_dic keys type", type(jobcalc_dic.keys()))
-#         print ("jobcalc_dic keys", list(jobcalc_dic.keys())[0])
-#         print ("jobcalc_dic items", list(jobcalc_dic.items())[0][0])
         new_string = list(jobcalc_dic.keys())[0]
         atts = jobcalc_dic[new_string]
         add_job(job_insts, new_string, atts=atts)
@@ -406,9 +400,9 @@ def _reader2(config_list):
     # For testing
     if False:
         for job in job_insts:
-            print ("*******************************************")
-            print ("job.job_instance", job.job_instance)
-            print ("job.atts_to_add", job.atts_to_add)
+            print("*******************************************")
+            print(("job.job_instance", job.job_instance))
+            print(("job.atts_to_add", job.atts_to_add))
     return job_insts
 
 READERS = {DEFAULT: _reader2,

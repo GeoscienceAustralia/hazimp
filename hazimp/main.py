@@ -18,7 +18,6 @@
 """
 The main entry point for the hazard impact tool.
 """
-import numpy
 import warnings
 warnings.simplefilter(action = "ignore", category = FutureWarning)
 from hazimp import console
@@ -26,6 +25,8 @@ from hazimp import context
 from hazimp import config
 from hazimp import pipeline
 
+import numpy
+import logging
 
 # This;
 #  numpy.column_stack((body, only_1d))
@@ -71,9 +72,14 @@ def start(config_list=None, config_file=None, cont_in=None):
 
     return cont_in
 
-############################################################################
-if __name__ == "__main__":
+def cli():
+    "Command-line interface to hazimp package"
+    logging.basicConfig(level=logging.INFO)
+
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
         # main(config_file=CMD_LINE_ARGS.config_file[0])
         start(config_file=CMD_LINE_ARGS.config_file[0])
+
+if __name__ == "__main__":
+    cli()
