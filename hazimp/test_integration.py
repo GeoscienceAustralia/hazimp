@@ -33,7 +33,7 @@ import os
 
 from scipy import allclose
 
-from hazimp import main
+from hazimp import hazimp
 from hazimp.jobs import jobs
 from hazimp import parallel
 
@@ -146,7 +146,7 @@ class TestIntegration(unittest.TestCase):
                                                  {"EQ_building": 'mean',
                                                   "EQ_contents": 'mean'}}},
                       {jobs.LOOKUP: None}]
-        context = main.start(config_list=the_config)
+        context = hazimp.start(config_list=the_config)
 
         # SW1 loss ratio
         #  SW1 4 MMI - 0.4 building_loss , 0.004 contents_loss

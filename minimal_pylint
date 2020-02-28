@@ -4,4 +4,4 @@
 
 find . -name "*.pyc" -delete
 
-pylint hazimp  --disable=RP0401 --disable=RP0001 --disable=RP0002 --disable=RP0003 --disable=RP0101 --disable=RP0101 --disable=RP0701
+pylint core_hazimp  --disable=RP0401 --disable=RP0001 --disable=RP0002 --disable=RP0003 --disable=RP0101 --disable=RP0101 --disable=RP0701

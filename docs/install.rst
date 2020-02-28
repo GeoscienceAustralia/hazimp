@@ -108,6 +108,6 @@ be executed in a shell (e.g. `bash`, `sh` or `csh`).
 
 On a Windows command line::
   
-  :command:`nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture` 
+  :command:`nosetests core_hazimp/ --with-doctest --cover-package=core_hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture` 
 
 
