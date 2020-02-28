@@ -31,14 +31,14 @@ passing the configuration infomation in as a dictionary.
 For example, to run a wind example do;::
 
      cd examples/wind
-     python ../../core_hazimp/hazimp.py  -c wind_v3.yaml
+     python ../../hazimp/main.py  -c wind_v3.yaml
 
 
 The -c specifies the configuration file.
 
 HazImp can also be ran in parallel, using mpirun.  For example;::
 
-     mpirun -np 4 python ../../core_hazimp/hazimp.py  -c wind_v3.yaml
+     mpirun -np 4 python ../../hazimp/main.py  -c wind_v3.yaml
  
 
 There are a suite of HazImp tests to test the install and code during
@@ -174,7 +174,7 @@ Flood Template - Structural Damage
 The structural damage flood template is very similar to the the wind template.
 This is an example structural damage flood template;::
 
-    #  python ../../core_hazimp/hazimp.py -c list_flood_v2.yaml
+    #  python ../../hazimp/main.py -c list_flood_v2.yaml
     # Don't have a scenario test automatically run this.
     # Since the file location is not absolute,
     - template: flood_fabric_v2

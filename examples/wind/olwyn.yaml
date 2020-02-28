@@ -1,4 +1,4 @@
-#  python ../hazimp/core_hazimp/hazimp.py -c olwyn_hazimp.yaml 
+#  python ../hazimp/hazimp/main.py -c olwyn_hazimp.yaml 
 - template: wind_v3
 - load_exposure:
    file_name: WA_Wind_Exposure_2013_Test_only.csv
