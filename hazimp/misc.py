@@ -235,6 +235,8 @@ def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
     grouped = dframe.groupby(groupby, as_index=False)
     
     outdf = grouped.agg(kwargs)
-        
+    outdf.columns = ['_'.join(col).strip() for col in outdf.columns.values]
+    outdf.reset_index(col_level=1)
+    outdf.columns = outdf.columns.get_level_values(0)
     return outdf
         

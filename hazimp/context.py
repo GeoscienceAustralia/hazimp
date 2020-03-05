@@ -265,7 +265,7 @@ def save_csv_agg(write_dict, filename):
     :type write_dict: Dictionary.
     :param filename: The csv file will be written here.
     """
-    write_dict.to_csv(filename)
+    write_dict.to_csv(filename, index_label='FID')
     """
     keys = write_dict.keys()
     header = list(keys)
