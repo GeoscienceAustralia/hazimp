@@ -37,7 +37,7 @@ from hazimp import parallel
 
 import logging
 
-LOGGER=logging.getLogger(__name__)
+LOGGER=logging.getLogger()
 
 # The standard string names in the context instance
 EX_LAT = 'exposure_latitude'
