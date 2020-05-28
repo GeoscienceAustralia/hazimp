@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2012-2013  Geoscience Australia
+# Copyright (C) 2020  Geoscience Australia
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -66,9 +66,16 @@ def start(config_list=None, config_file=None, cont_in=None):
 
     config_dict = {k:v for item in config_list for k,v in list(item.items())}
     agg = config_dict.get('aggregate')
+    
+    # TODO: Connect the aggregation field code with the attribute
+    # in the destination file. Currently the destination file is hard-coded
+    # as 'SA1_MAIN16', and the aggregation field 'SA1_CODE'
+    #
+    # TODO: Move this to a `job` instance
     if agg:
-        from . import aggregate
-        aggregate.chloropleth(config_dict['save'], agg['boundaries'], agg['save'])
+        from hazimp import aggregate
+        aggregate.chloropleth(config_dict['save'], agg['boundaries'],
+                              'SA1_CODE', 'SA1_MAIN16', agg['save'])
 
     return cont_in
 
@@ -78,7 +85,6 @@ def cli():
 
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
-        # main(config_file=CMD_LINE_ARGS.config_file[0])
         start(config_file=CMD_LINE_ARGS.config_file[0])
 
 if __name__ == "__main__":
