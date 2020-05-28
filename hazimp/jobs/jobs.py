@@ -584,7 +584,7 @@ class LoadRaster(Job):
     # pylint: disable=R0913
     def __call__(self, context, attribute_label,
                  clip_exposure2all_hazards=False,
-                 file_list=None,
+                 file_list=None, file_format=None, variable=None,
                  raster=None, upper_left_x=None, upper_left_y=None,
                  cell_size=None, no_data_value=None):
         """

@@ -27,11 +27,17 @@ to process a series of jobs in a sequential
 order. The order is determined by the queue of jobs.
 """
 
+import os
+import sys
 import numpy
 import csv
 
 from hazimp import misc
 from hazimp import parallel
+
+import logging
+
+LOGGER=logging.getLogger()
 
 # The standard string names in the context instance
 EX_LAT = 'exposure_latitude'
@@ -245,6 +251,7 @@ def save_csv(write_dict, filename):
     # Need numpy 1.7 > to do headers
     # numpy.savetxt(filename, body, delimiter=',', header='yeah')
     hnd = open(filename, 'w', newline='')
+        
     writer = csv.writer(hnd, delimiter=',')
     writer.writerow(header)
     for i in range(body.shape[0]):
@@ -265,7 +272,17 @@ def save_csv_agg(write_dict, filename):
     :type write_dict: Dictionary.
     :param filename: The csv file will be written here.
     """
-    write_dict.to_csv(filename, index_label='FID')
+
+    dirname = os.path.dirname(filename)
+    if not os.path.isdir(dirname):
+        LOGGER.warn(f"{dirname} does not exist - trying to create it")
+        os.makedirs(dirname)
+        
+    try:
+        write_dict.to_csv(filename, index_label='FID')
+    except FileNotFoundError:
+        LOGGER.error(f"Cannot write to {filename}")
+        sys.exit(1)
     """
     keys = write_dict.keys()
     header = list(keys)

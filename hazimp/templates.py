@@ -37,7 +37,7 @@ TEMPLATE = 'template'
 DEFAULT = 'default'
 SAVE = 'save'
 SAVEAGG = 'save_agg'
-LOADWINDTCRM = 'load_wind_ascii'
+LOADWINDTCRM = 'load_wind'
 LOADFLOODASCII = 'load_flood_ascii'
 CALCSTRUCTLOSS = 'calc_struct_loss'
 CALCCONTLOSS = 'calc_cont_loss'
@@ -47,6 +47,7 @@ VULNSET = 'vulnerability_set'
 WINDV3 = 'wind_v3'
 WINDV4 = 'wind_v4'
 WINDV5 = 'wind_v5'
+WINDNC = 'wind_nc'
 
 FLOODFABRICV2 = 'flood_fabric_v2'
 
@@ -169,6 +170,89 @@ def _wind_v4_reader(config_list):
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
+
+    return job_insts
+
+def _mod_file_list(file_list, variable):
+    """
+    Modify the filename list for working with netcdf format files.
+
+    For netcdf files, GDAL expects the filename to be of the form
+    'NETCDF:"<filename>":<variable>', where variable is a valid
+    variable in the netcdf file.
+
+    :param file_list: List of files or a single file to be processed
+    :param str variable: Variable name
+
+    :returns: list of filenames, modified to the above format
+
+    """
+
+    if isinstance(file_list, str):
+        file_list = [file_list]
+    flist = []
+    for f in file_list:
+        flist.append('NETCDF:"'+f+'":'+variable)
+    return flist
+
+def _wind_nc_reader(config_list):
+    """
+    Build a job list from a wind configuration list for netcdf files.
+
+    :param config_list: A list describing the simulation
+    :returns: A list of jobs to process over
+    """
+    job_insts = []
+    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    add_job(job_insts, LOADCSVEXPOSURE, atts)
+
+    file_list = find_atts(config_list, LOADWINDTCRM)
+    atts = find_atts(config_list, LOADWINDTCRM)
+    if 'file_format' in atts:
+        if atts['file_format'] == 'nc' and 'variable' in atts:
+            atts['file_list'] = _mod_file_list(atts['file_list'],
+                                               atts['variable'])
+        else:
+            atts['file_list']
+
+    atts['attribute_label'] = '0.2s gust at 10m height m/s'
+    add_job(job_insts, LOADRASTER, atts)
+
+    vul_filename = os.path.join(misc.RESOURCE_DIR,
+                                find_atts(config_list, VULNFILE))
+    add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
+    
+    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    vulnerability_set_id = find_atts(config_list, VULNSET)
+    atts = {'vul_functions_in_exposure': {
+            vulnerability_set_id:
+            'WIND_VULNERABILITY_FUNCTION_ID'}}
+    add_job(job_insts, SIMPLELINKER, atts)
+
+    atts = {'variability_method': {
+            vulnerability_set_id: 'mean'}}
+    add_job(job_insts, SELECTVULNFUNCTION, atts)
+
+    atts = find_atts(config_list, PERMUTATION)
+    add_job(job_insts, PERMUTATE_EXPOSURE, atts)
+
+    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+    if REP_VAL_NAME not in atts_dict:
+        msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
+        raise RuntimeError(msg)
+    attributes = {
+        'var1': 'structural_loss_ratio', 'var2': atts_dict[REP_VAL_NAME],
+        'var_out': 'structural_loss'}
+    add_job(job_insts, MDMULT, attributes)
+
+    attributes = find_atts(config_list, AGGREGATION)
+    add_job(job_insts, AGGREGATE_LOSS, attributes)
+
+    file_name = find_atts(config_list, SAVE)
+    add_job(job_insts, SAVEALL, {'file_name': file_name})
+    
+    file_name = find_atts(config_list, SAVEAGG)
+    add_job(job_insts, SAVEAGG, {'file_name': file_name})
 
     return job_insts
 
@@ -409,5 +493,6 @@ READERS = {DEFAULT: _reader2,
            WINDV3: _wind_v3_reader,
            WINDV4: _wind_v4_reader,
            WINDV5: _wind_v5_reader,
+           WINDNC: _wind_nc_reader,
            FLOODFABRICV2: _flood_fabric_v2_reader,
            FLOODCONTENTSV2: _flood_contents_v2_reader}
