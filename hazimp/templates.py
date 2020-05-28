@@ -21,6 +21,7 @@ to jobs and calcs.
 """
 
 import os
+import logging
 from hazimp import misc
 from hazimp.calcs.calcs import (WATER_DEPTH, FLOOR_HEIGHT,
                                      FLOOR_HEIGHT_CALC)
@@ -30,6 +31,8 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    SELECTVULNFUNCTION, RANDOM_CONSTANT,
                                    LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
                                    MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS)
+
+LOGGER = logging.getLogger(__name__)
 
 __author__ = 'u54709'
 
@@ -202,6 +205,7 @@ def _wind_nc_reader(config_list):
     :param config_list: A list describing the simulation
     :returns: A list of jobs to process over
     """
+    LOGGER.info("Using the wind_nc template")
     job_insts = []
     atts = find_atts(config_list, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
@@ -233,8 +237,13 @@ def _wind_nc_reader(config_list):
             vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
-    atts = find_atts(config_list, PERMUTATION)
-    add_job(job_insts, PERMUTATE_EXPOSURE, atts)
+    if PERMUTATION in config_list:
+        LOGGER.info("Permuting exposure across spatial regions")
+        atts = find_atts(config_list, PERMUTATION)
+        add_job(job_insts, PERMUTATE_EXPOSURE, atts)
+    else:
+        LOGGER.info("No permutation will be done")
+        add_job(job_insts, LOOKUP)
 
     atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
     if REP_VAL_NAME not in atts_dict:
