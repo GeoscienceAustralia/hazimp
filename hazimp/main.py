@@ -27,6 +27,26 @@ from hazimp import pipeline
 
 import numpy
 import logging
+from functools import wraps, reduce
+import time
+
+
+
+def timer(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        t1 = time.time()
+        res = f(*args, **kwargs)
+
+        tottime = time.time() - t1
+        msg = "%02d:%02d:%02d " % \
+          reduce(lambda ll, b : divmod(ll[0], b) + ll[1:],
+                        [(tottime,), 60, 60])
+
+        logging.info("Time for {0}: {1}".format(f.__name__, msg) )
+        return res
+
+    return wrap
 
 # This;
 #  numpy.column_stack((body, only_1d))
@@ -37,7 +57,7 @@ NUMVER = NUMVER.split('.')
 if NUMVER[0] == '1' and int(NUMVER[1]) < 9:
     raise RuntimeError("Must use numpy 1.9 or greater")
 
-
+@timer
 def start(config_list=None, config_file=None, cont_in=None):
     """
     Run the HazImp tool, based on the config info.
