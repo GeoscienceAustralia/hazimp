@@ -31,6 +31,7 @@ import os
 import sys
 import numpy
 import csv
+import geopandas as gpd
 
 from hazimp import misc
 from hazimp import parallel
@@ -216,6 +217,23 @@ class Context(object):
             # of the context info
             return write_dict
 
+    def save_aggregation(self, filename, boundaries, impactcode, boundarycode, use_parallel=True):
+        """
+        Save data aggregated to geospatial regions
+        
+        :param str filename: Destination filename
+        :param bool use_parallel: True for parallel behaviout, which 
+                                  is only node 0 writing to file
+
+        """
+        LOGGER.info("Saving aggregated data")
+        write_dict = self.exposure_att.copy()
+
+        if parallel.STATE.rank == 0 or not use_parallel:
+            choropleth(write_dict, boundaries, impactcode, boundarycode, filename)
+        else:
+            pass
+
 def save_csv(write_dict, filename):
     """
     Save a dictionary of arrays as a csv file.
@@ -250,6 +268,12 @@ def save_csv(write_dict, filename):
             body = numpy.column_stack((body, only_1d))
     # Need numpy 1.7 > to do headers
     # numpy.savetxt(filename, body, delimiter=',', header='yeah')
+    
+    dirname = os.path.dirname(filename)
+    if not os.path.isdir(dirname):
+        LOGGER.warn(f"{dirname} does not exist - trying to create it")
+        os.makedirs(dirname)
+        
     hnd = open(filename, 'w', newline='')
         
     writer = csv.writer(hnd, delimiter=',')
@@ -305,3 +329,49 @@ def save_csv_agg(write_dict, filename):
     for i in range(body.shape[0]):
         writer.writerow(list(body[i, :]))
     """
+    
+def choropleth(dframe, boundaries, impactcode, bcode, filename):
+    """
+    Aggregate to geospatial boundaries and save to file
+
+    :param dframe: `pandas.DataFrame` containing point data to be aggregated
+    :param str boundaries: File name of a geospatial dataset that contains boundaries 
+                   to serve as aggregation boundaries
+    :param str impactcode: Field name in the `dframe` to aggregate by
+    :param str bcode: Corresponding field name in the geospatial dataset.
+    :param str filename: Destination filename. Must have a valid extension from 
+                   `shp`, `json` or `gpkg`.
+    """
+    # List of possible drivers for output:
+    # See `import fiona; fiona.supported_drivers for a complete list of
+    # options, but we've only implemented a few to start with. 
+    DRIVERS = {'shp': 'ESRI Shapefile',
+               'json': 'GeoJSON',
+               'gpkg': 'GPKG'}
+    left, right = mergefield = impactcode, bcode
+
+    report = {'REPLACEMENT_VALUE': 'sum', 
+              'structural_loss_ratio': 'mean', 
+              '0.2s gust at 10m height m/s': 'max'}
+    aggregate = dframe.groupby(left).agg(report)
+    shapes = gpd.read_file(boundaries)
+
+    try:
+        shapes['key'] = shapes[right].astype(int)
+    except KeyError:
+        LOGGER.error(f"{boundaries} does not contain an attribute {right}")
+        sys.exit(1)
+
+    result = shapes.merge(aggregate, left_on='key', right_index=True)
+    driver = DRIVERS[os.path.splitext(filename)[1].replace('.', '')]
+    if driver == 'ESRI Shapefile':
+        LOGGER.debug("Changing field names for ESRI Shapefile")
+        # Need to modify the field names, as ESRI truncates them
+        result = result.rename(columns={'REPLACEMENT_VALUE':'REPVAL',
+                                        'structural_loss_ratio':'slr_mean',
+                                        '0.2s gust at 10m height m/s':'maxwind'})
+    dirname = os.path.dirname(filename)
+    if not os.path.isdir(dirname):
+        LOGGER.warn(f"{dirname} does not exist - trying to create it")
+        os.makedirs(dirname)
+    result.to_file(filename, driver=driver)

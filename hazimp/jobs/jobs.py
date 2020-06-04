@@ -63,6 +63,7 @@ CELLJOIN = 'cell_join'
 RANDOM_CONSTANT = 'random_constant'
 PERMUTATE_EXPOSURE = 'permutate_exposure'
 AGGREGATE_LOSS = 'aggregate_loss'
+AGGREGATE = 'aggregate'
 
 class Job(object):
 
@@ -699,15 +700,29 @@ class SaveAggregation(Job):
         super(SaveAggregation, self).__init__()
         self.call_funct = SAVEAGG
 
-    def __call__(self, context, file_name=None, use_parallel=True):
+    def __call__(self, context, file_name=None,  use_parallel=True):
         """
         Save all of the aggregated exposure information in the context.
 
         :param context: The context instance, used to move data around.
         :params file_name: The file where the expsoure data will go.
         """
-        context.save_exposure_aggregation(file_name, 
+        context.save_exposure_aggregation(file_name,
                                           use_parallel=use_parallel)
+
+class Aggregate(Job):
+
+    def __init__(self):
+        super(Aggregate, self).__init__()
+        self.call_funct = AGGREGATE
+
+    def __call__(self, context, file_name=None, boundaries=None,
+                 impactcode=None, boundarycode=None, use_parallel=True):
+        context.save_aggregation(file_name,
+                                 boundaries,
+                                 impactcode,
+                                 boundarycode,
+                                 use_parallel=use_parallel)
 # ____________________________________________________
 # ----------------------------------------------------
 #                KEEP THIS AT THE END

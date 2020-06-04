@@ -71,6 +71,7 @@ CONT_INSURANCE_COL = 'insurance_regime'
 CONT_TEMP = 'regime_action'
 
 AGGREGATION = 'aggregation'
+AGGREGATE = 'aggregate'
 
 CONT_MAP = {SAVE_CONT: "_SAVE", NO_ACTION_CONT: "_NOACTION",
             EXPOSE_CONT: "_EXPOSE", SAVEAGG_CONT: "_SAVEAGG"}
@@ -229,9 +230,11 @@ def _wind_nc_reader(config_list):
     
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     vulnerability_set_id = find_atts(config_list, VULNSET)
+    
     atts = {'vul_functions_in_exposure': {
             vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
+    
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
@@ -254,14 +257,19 @@ def _wind_nc_reader(config_list):
         'var_out': 'structural_loss'}
     add_job(job_insts, MDMULT, attributes)
 
-    attributes = find_atts(config_list, AGGREGATION)
-    add_job(job_insts, AGGREGATE_LOSS, attributes)
+    if config_dict.get(AGGREGATION):
+        attributes = find_atts(config_list, AGGREGATION)
+        add_job(job_insts, AGGREGATE_LOSS, attributes)
+        file_name = find_atts(config_list, SAVEAGG)
+        add_job(job_insts, SAVEAGG, {'file_name': file_name})
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
     
-    file_name = find_atts(config_list, SAVEAGG)
-    add_job(job_insts, SAVEAGG, {'file_name': file_name})
+
+    if config_dict.get(AGGREGATE):
+        attributes = find_atts(config_list, AGGREGATE)
+        add_job(job_insts, AGGREGATE, attributes)
 
     return job_insts
 

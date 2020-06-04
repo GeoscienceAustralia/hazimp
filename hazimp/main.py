@@ -84,18 +84,18 @@ def start(config_list=None, config_file=None, cont_in=None):
     the_pipeline = pipeline.PipeLine(calc_jobs)
     the_pipeline.run(cont_in)
 
-    config_dict = {k:v for item in config_list for k,v in list(item.items())}
-    agg = config_dict.get('aggregate')
+    #config_dict = {k:v for item in config_list for k,v in list(item.items())}
+    #agg = config_dict.get('aggregate')
     
     # TODO: Connect the aggregation field code with the attribute
     # in the destination file. Currently the destination file is hard-coded
     # as 'SA1_MAIN16', and the aggregation field 'SA1_CODE'
     #
     # TODO: Move this to a `job` instance
-    if agg:
-        from hazimp import aggregate
-        aggregate.chloropleth(config_dict['save'], agg['boundaries'],
-                              'SA1_CODE', 'SA1_MAIN16', agg['save'])
+    #if agg:
+    #    from hazimp import aggregate
+    #    aggregate.chloropleth(config_dict['save'], agg['boundaries'],
+    #                          'SA1_CODE', 'SA1_MAIN16', agg['save'])
 
     return cont_in
 

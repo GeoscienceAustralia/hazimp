@@ -53,6 +53,13 @@ def chloropleth(impactfile, shapefile, impactcode, shapecode, outputfile):
 
     result = shapes.merge(aggregate, left_on='key', right_index=True)
     driver = DRIVERS[os.path.splitext(outputfile)[1].replace('.', '')]
+    if driver == 'ESRI Shapefile':
+        LOGGER.info("Changing field names")
+        # Need to modify the field names, as ESRI truncates them
+        result = result.rename(columns={'REPLACEMENT_VALUE':'REPVAL',
+                                        'structural_loss_ratio':'slr_mean',
+                                        '0.2s gust at 10m height m/s':'maxwind'})
+        
     result.to_file(outputfile, driver=driver)
 
 #if __name__ == '__main__':
