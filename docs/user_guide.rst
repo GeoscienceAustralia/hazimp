@@ -62,29 +62,35 @@ Wind Template
 -------------
 
 Given gust information from TCRM and point exposure data the loss
-associated with each site is calculated using the wind template.  The
-wind vulnerability functions That are used are built-in to
-HazImp. They are defined in the GA internal report
+associated with each site is calculated using the wind template.  
 
 Here is the example wind configuration file (from examples/wind),
 which uses the wind template.::
 
-     #  python hazimp.py -c wind_v3.yaml
-      - template: windv3
+     #  python hazimp.py -c wind_nc.yaml
+      - template: wind_nc
+      - vulnerability_filename: domestic_wind_vuln_curves.xml
+      - vulnerability_set: domestic_wind_2012
       - load_exposure:
          file_name: WA_Wind_Exposure_2013_Test_only.csv
          exposure_latitude: LATITUDE
          exposure_longitude: LONGITUDE
-      - load_wind_ascii: [gust01.txt, gust02.tx]
+      - load_wind: 
+         file_list: gust01.nc 
+         file_format: nc
+         variable: wndgust10m
       - calc_struct_loss:
          replacement_value_label: REPLACEMENT_VALUE
       - save: wind_impact.csv
+      - aggregate:
+         boundaries: SA1_2016_AUST.shp
+         save: gust01_impact.shp
 
 The first line is a comment, so this is ignored.
 The rest of the file can be understood by the following key value pairs; 
 
 *template*
-    The type of template to use.  This example describes the *windv3* template.
+    The type of template to use.  This example describes the *wind_nc* template.
 
 *load_exposure*
     This loads the exposure data. It has 3 sub-sections;
@@ -99,11 +105,40 @@ The rest of the file can be understood by the following key value pairs;
     *exposure_longitude*
         The title of the csv column with longitude values.
 
-*load_wind_ascii*
-    A list of ascii grid wind hazard files to load or a single file.  The file
-    format is grid ascii.  The values in the file must be
+There are some pre-requisites for the exposure data. It must have a column
+called ``WIND_VULNERABILITY_FUNCTION_ID`` which describe the vulnerability
+functions to be used. 
+
+*load_wind*
+    This loads the hazard data. It can have up to three subsections;
+
+    *file_list*
+        A list of raster wind hazard files (one or more). The file format can be
+        ascii grid, geotiff or netcdf (or potentially any raster format
+        recognised by GDAL, but these are all that have ben tested to date).
+
+    *file_format* 
+        This specifies the data format - specifically used for netcdf, where the
+        string 'nc' should be used.
+
+    *variable_name*
+        For use when the file format is 'nc'. This specifies the name of the
+        variable in the netcdf file that contains the hazard data. 
+
+    The values in the file must represent
     ``0.2s gust at 10m height m/s``, since that is the axis of the HazImp wind
     vulnerability curves.
+
+*vulnerability_filename*
+    The path to a correctly formatted vulnerability curve file. This is an xml
+    file produced using `hazimp_preprocessing/curve_data/create_vuln_xml.py`
+
+*vulnerability_set*
+    This defines the suite of vulnerability curves to use. A vulnerability file
+    may contain a large number of different vulnerability functions that can be
+    applied to the same exposure assets. This option defines which set to use
+    from that vulnearbility file. The vulnerability set is used to calculate the
+    ``structural_loss_ratio`` given the ``0.2s gust at 10m height m/s``.
 
 *calc_struct_loss*
 
@@ -121,21 +156,26 @@ The rest of the file can be understood by the following key value pairs;
     saved as numpy arrays.  This can be done by using the *.npz* extension.
     This data can be accessed using Python scripts and is not averaged.
 
-    There are some pre-requisites for the exposure data. It must have a column
-    called ``WIND_VULNERABILITY_FUNCTION_ID`` which describe the vulnerability
-    functions to be used. The vulnerability set used is hard coded. This
-    is used to calculate the ``structural_loss_ratio`` given the
-    ``0.2s gust at 10m height m/s``.
+
+    
 
 Using permutation to understand uncertainty in vulnerability
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In many regions (in Australia), the attributes of individual buildings are unknown, but are recorded for some statistical area (e.g. suburb, local government area). In this case, the vulnerability curve assigned to a building may not be precisely determined, which can lead to uncertainty in the impact for a region.
+In many regions (in Australia), the attributes of individual buildings are 
+unknown, but are recorded for some statistical area (e.g. suburb, local 
+government area). In this case, the vulnerability curve assigned to a 
+building may not be precisely determined, which can lead to uncertainty 
+in the impact for a region.
 
-To overcome this, users can run the impact calculation multiple times, while permuting the vulnerability curves for each region (suburb, local government area, etc.). This requires some additional entries in the template file.
+To overcome this, users can run the impact calculation multiple times, 
+while permuting the vulnerability curves for each region (suburb, local 
+government area, etc.). This requires some additional entries in the 
+template file.
 
 *exposure_permutation*
-    This describes the exposure attribute that will constrain the permutation, and the number of permuations.
+    This describes the exposure attribute that will constrain the 
+    permutation, and the number of permuations.
     
     *groupby*
     The field name in the exposure data by which the assets will be grouped. 
@@ -167,6 +207,34 @@ To overcome this, users can run the impact calculation multiple times, while per
 *save_agg*
     The file where the aggregated results will be saved. 
 
+This option has only been implemented in the ``wind_nc`` and ``wind_v5``
+templates at this time (June 2020).
+
+Saving to geospatial formats
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Data can optionally be saved to a geospatial format that aggregates the impact
+data to spatial regions (for example suburbs, post codes).
+
+*aggregate*
+    This will activate the option to save to a geospatial format.
+
+    *boundaries* 
+        The path to a geospatial file that contains polygons to aggregate by
+    *file_name* 
+        The path to the output geospatial file. THis can be either an ESRI shape
+        file (extension `shp`), a GeoJSON file (`json`) or a GeoPackage
+        (`gpkg`). 
+    *impactcode*
+        The attribute in the exposure file that contains a unique code for each
+        geographic region to aggregate by.
+    *boundarycode*
+        The attribute in the `boundaries` file that contains the same unique
+        code for each geographic region. Preferably the `impactcode` and
+        `boundarycode` will be of the same type (e.g. `int` or `str`)
+
+This option has only been implemented in the ``wind_nc`` and ``wind_v5``
+templates at this time (June 2020).
 
 Flood Template - Structural Damage
 ----------------------------------
