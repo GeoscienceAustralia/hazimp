@@ -28,6 +28,7 @@ import numpy
 from numpy.random import random_sample, permutation
 
 import pandas as pd
+from datetime import datetime
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
@@ -240,3 +241,6 @@ def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
     outdf.columns = outdf.columns.get_level_values(0)
     return outdf
         
+def get_file_mtime(file):
+    dt = datetime.fromtimestamp(os.path.getmtime(file))
+    return dt.isoformat()

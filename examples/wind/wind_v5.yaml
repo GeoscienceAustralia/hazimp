@@ -4,7 +4,9 @@
      file_name:  WA_subset.csv
      exposure_latitude: LATITUDE
      exposure_longitude: LONGITUDE 
- - load_wind_ascii:  gust-0363.asc
+ - vulnerability_filename: synthetic_domestic_wind_vul_curves.xml
+ - vulnerability_set: domestic_wind_2012
+ - load_wind:  gust-0363.asc
  - exposure_permutation:
     groupby: MB_CAT_2011
     iterations: 1000

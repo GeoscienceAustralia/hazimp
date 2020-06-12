@@ -33,10 +33,14 @@ import numpy
 import csv
 import geopandas as gpd
 
+from prov.model import ProvDocument
+
 from hazimp import misc
 from hazimp import parallel
 
 import logging
+
+from datetime import datetime
 
 LOGGER=logging.getLogger(__name__)
 
@@ -100,6 +104,26 @@ class Context(object):
         # value being the exposure attribute who's values are vulnerability
         # function ID's.
         self.vul_function_titles = {}
+
+        # A `prov.ProvDocument` to manage provenance information, including
+        # adding required namespaces
+        self.prov = ProvDocument()
+        self.prov.add_namespace('prov', 'http://www.w3.org/ns/prov#')
+        self.prov.add_namespace('xsd',  'http://www.w3.org/2001/XMLSchema#')
+        self.prov.add_namespace('foaf', 'http://xmlns.com/foaf/0.1/')
+        self.prov.add_namespace('void', 'http://vocab.deri.ie/void#')
+        self.prov.add_namespace('dcterms', 'http://purl.org/dc/terms/')
+        self.provlabel = ''
+
+    def set_prov_label(self, label, title="HazImp analysis"):
+        """
+        Set the qualified label for the provenance data
+        """
+
+        self.provlabel = f"prov:{label}"
+        self.prov.activity(f"prov:{label}", datetime.now(), None,
+                           {f"dcterms:title":title,
+                           f"prov:type":"void:Analysis"})
 
     def get_site_shape(self):
         """
@@ -168,6 +192,12 @@ class Context(object):
         :param filename: The file to be written.
         :return write_dict: The whole dictionary, returned for testing.
         """
+        s1 = self.prov.entity(f"prov:{os.path.basename(filename)}",
+                              {f"prov:label":"Full HazImp output file",
+                              f"prov:type":"void:Dataset"})
+        a1 = self.prov.activity("prov:SaveImpactData", datetime.now(), None)
+        self.prov.wasGeneratedBy(s1, a1)
+        self.prov.wasGeneratedBy(self.provlabel, s1)
         write_dict = self.exposure_att.copy()
         write_dict[EX_LAT] = self.exposure_lat
         write_dict[EX_LONG] = self.exposure_long
@@ -228,7 +258,15 @@ class Context(object):
         """
         LOGGER.info("Saving aggregated data")
         write_dict = self.exposure_att.copy()
-
+        aggent = self.prov.entity(f"prov:{os.path.basename(boundaries)}", 
+                                 {"prov:label":"Aggregation boundaries",
+                                  "prov:type":"void:Dataset",
+                                  "void:path": boundaries,
+                                  "void:boundary_code":boundarycode})
+        aggact = self.prov.activity("prov:AggregationByRegions", datetime.now(), None, 
+                                    {'prov:type':"Spatial aggregation"})
+        self.prov.used(aggact, aggent)
+        self.prov.used(self.provlabel, aggent)
         if parallel.STATE.rank == 0 or not use_parallel:
             choropleth(write_dict, boundaries, impactcode, boundarycode, filename)
         else:
@@ -298,7 +336,9 @@ def save_csv_agg(write_dict, filename):
     """
 
     dirname = os.path.dirname(filename)
-    if not os.path.isdir(dirname):
+    if dirname == '':
+        pass
+    elif not os.path.isdir(dirname):
         LOGGER.warn(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
         

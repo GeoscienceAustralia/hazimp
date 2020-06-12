@@ -35,10 +35,13 @@ is not present Error out.
 
 """
 
+import os
 import sys
 import scipy
 import pandas as pd
 import numpy as np
+
+from prov.dot import prov_to_dot
 
 from hazimp import parallel
 from hazimp import misc
@@ -64,6 +67,7 @@ RANDOM_CONSTANT = 'random_constant'
 PERMUTATE_EXPOSURE = 'permutate_exposure'
 AGGREGATE_LOSS = 'aggregate_loss'
 AGGREGATE = 'aggregate'
+SAVEPROVENANCE = 'saveprovenance'
 
 class Job(object):
 
@@ -308,6 +312,12 @@ class LoadCsvExposure(Job):
             key: column titles
             value: column values, except the title
         """
+        dt = misc.get_file_mtime(file_name)
+        expent = context.prov.entity(f'prov:{file_name}', 
+                            {'prov:label': 'Exposure data',
+                             'prov:type': 'void:Dataset',
+                             'prov:generatedAtTime':dt})
+        context.prov.used(context.provlabel, expent)
         data_frame = parallel.csv2dict(file_name, use_parallel=use_parallel)
         # FIXME Need to do better error handling
         # FIXME this function can only be called once.
@@ -362,6 +372,12 @@ class LoadXmlVulnerability(Job):
         if file_name is not None:
             vuln_sets = vuln_sets_from_xml_file(file_name)
             context.vulnerability_sets.update(vuln_sets)
+            dt = misc.get_file_mtime(file_name)
+            vulent = context.prov.entity(f"prov:{os.path.basename(file_name)}",
+                                         {'prov:type': 'void:Dataset',
+                                          'prov:generatedAtTime':dt})
+            context.prov.used(context.provlabel, vulent)
+            
 
 
 class SimpleLinker(Job):
@@ -390,6 +406,10 @@ class SimpleLinker(Job):
         Content return:
            vul_function_titles: Add's the exposure_titles
         """
+        for k, v in vul_functions_in_exposure.items():
+            context.prov.entity(f"prov:{k}", {f"prov:label":v})
+            context.prov.wasDerivedFrom(context.provlabel, f'prov:{k}')
+            
         context.vul_function_titles.update(vul_functions_in_exposure)
 
 
@@ -440,6 +460,7 @@ class SelectVulnFunction(Job):
            value - realised vulnerability curve instance per asset
         """
         exposure_vuln_curves = {}
+
         for vuln_set_key in variability_method:
             
             # Get the vulnerability set
@@ -641,6 +662,13 @@ class LoadRaster(Job):
             context.exposure_att[attribute_label] = file_data
         else:
             if isinstance(file_list, str):
+                dt = misc.get_file_mtime(file_list)
+                atts = {"dcterms:title":"Source hazard data",
+                        "prov:type":"prov:Dataset",
+                        "prov:format":os.path.splitext(file_list)[1].replace('.',''),
+                        "prov:generatedAtTime":dt}
+                hazent = context.prov.entity(f"prov:{os.path.basename(file_list)}", atts)
+                context.prov.used(context.provlabel, hazent)
                 file_list = [file_list]
             file_data, extent = raster_module.files_raster_data_at_points(
                 context.exposure_long,
@@ -723,6 +751,23 @@ class Aggregate(Job):
                                  impactcode,
                                  boundarycode,
                                  use_parallel=use_parallel)
+
+class SaveProvenance(Job):
+
+    def __init__(self):
+        super(SaveProvenance, self).__init__()
+        self.call_funct = SAVEPROVENANCE
+    
+    def __call__(self, context, file_name=None):
+        """
+        Save provenance information. 
+
+        By default we save to xml format.
+        """
+        context.prov.serialize(file_name, format='rdf', rdf_format='ttl')
+
+        dot = prov_to_dot(context.prov)
+        dot.write_png(file_name.replace('.ttl', '.png'))
 # ____________________________________________________
 # ----------------------------------------------------
 #                KEEP THIS AT THE END

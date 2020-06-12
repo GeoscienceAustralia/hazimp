@@ -80,6 +80,7 @@ def start(config_list=None, config_file=None, cont_in=None):
 
     if cont_in is None:
         cont_in = context.Context()
+    cont_in.set_prov_label("HazImp_analysis")
     calc_jobs = config.instance_builder(config_list)
     the_pipeline = pipeline.PipeLine(calc_jobs)
     the_pipeline.run(cont_in)
