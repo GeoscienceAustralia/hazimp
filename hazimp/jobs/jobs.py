@@ -764,10 +764,10 @@ class SaveProvenance(Job):
 
         By default we save to xml format.
         """
-        context.prov.serialize(file_name, format='rdf', rdf_format='ttl')
+        context.prov.serialize(file_name, format='xml')
 
         dot = prov_to_dot(context.prov)
-        dot.write_png(file_name.replace('.ttl', '.png'))
+        dot.write_png(file_name.replace('.xml', '.png'))
 # ____________________________________________________
 # ----------------------------------------------------
 #                KEEP THIS AT THE END
