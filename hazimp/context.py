@@ -33,10 +33,15 @@ import numpy
 import csv
 import geopandas as gpd
 
+from prov.model import ProvDocument
+
 from hazimp import misc
 from hazimp import parallel
 
 import logging
+
+from datetime import datetime
+import getpass
 
 LOGGER=logging.getLogger(__name__)
 
@@ -100,6 +105,39 @@ class Context(object):
         # value being the exposure attribute who's values are vulnerability
         # function ID's.
         self.vul_function_titles = {}
+
+        # A `prov.ProvDocument` to manage provenance information, including
+        # adding required namespaces
+        self.prov = ProvDocument()
+        self.prov.set_default_namespace("")
+        self.prov.add_namespace('prov', 'http://www.w3.org/ns/prov#')
+        self.prov.add_namespace('xsd',  'http://www.w3.org/2001/XMLSchema#')
+        self.prov.add_namespace('foaf', 'http://xmlns.com/foaf/0.1/')
+        self.prov.add_namespace('void', 'http://vocab.deri.ie/void#')
+        self.prov.add_namespace('dcterms', 'http://purl.org/dc/terms/')
+        #self.prov.add_namespace("", 'http://example.com')
+        commit, branch, dt = misc.getGitCommit()
+        # Create the fundamental software agent that is this code:
+        self.prov.agent(":hazimp",
+                        {"prov:type":"prov:SoftwareAgent",
+                         "prov:commit":commit,
+                         "prov:branch":branch,
+                         "prov:date":dt})
+        self.prov.agent(f":{getpass.getuser()}",
+                        {"prov:type":"foaf:Person"})
+        self.prov.actedOnBehalfOf(":hazimp", f":{getpass.getuser()}")
+        self.provlabel = ''
+
+    def set_prov_label(self, label, title="HazImp analysis"):
+        """
+        Set the qualified label for the provenance data
+        """
+
+        self.provlabel = f":{label}"
+        self.prov.activity(f":{label}", datetime.now(), None,
+                           {f"dcterms:title":title,
+                           f"prov:type":"void:Analysis"})
+        self.prov.wasAttributedTo(self.provlabel, ":hazimp")
 
     def get_site_shape(self):
         """
@@ -168,6 +206,14 @@ class Context(object):
         :param filename: The file to be written.
         :return write_dict: The whole dictionary, returned for testing.
         """
+        s1 = self.prov.entity(f":HazImp output file",
+                              {f"prov:label":"Full HazImp output file",
+                              f"prov:type":"void:Dataset",
+                              "prov:atLocation":os.path.basename(filename)})
+        a1 = self.prov.activity(":SaveImpactData", datetime.now(), None)
+        self.prov.wasGeneratedBy(s1, a1)
+        self.prov.wasInformedBy(a1, self.provlabel)
+        self.prov.wasAttributedTo(s1, ":hazimp")
         write_dict = self.exposure_att.copy()
         write_dict[EX_LAT] = self.exposure_lat
         write_dict[EX_LONG] = self.exposure_long
@@ -228,9 +274,16 @@ class Context(object):
         """
         LOGGER.info("Saving aggregated data")
         write_dict = self.exposure_att.copy()
-
+        aggent = self.prov.entity(":Aggregation boundaries", 
+                                 {"prov:type":"void:Dataset",
+                                  "prov:atLocation":os.path.basename(boundaries),
+                                  "void:boundary_code":boundarycode})
+        aggact = self.prov.activity(":AggregationByRegions", datetime.now(), None, 
+                                    {'prov:type':"Spatial aggregation"})
+        self.prov.used(aggact, aggent)
+        self.prov.used(self.provlabel, aggent)
         if parallel.STATE.rank == 0 or not use_parallel:
-            choropleth(write_dict, boundaries, impactcode, boundarycode, filename)
+            misc.choropleth(write_dict, boundaries, impactcode, boundarycode, filename)
         else:
             pass
 
@@ -298,7 +351,9 @@ def save_csv_agg(write_dict, filename):
     """
 
     dirname = os.path.dirname(filename)
-    if not os.path.isdir(dirname):
+    if dirname == '':
+        pass
+    elif not os.path.isdir(dirname):
         LOGGER.warn(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
         
@@ -330,48 +385,4 @@ def save_csv_agg(write_dict, filename):
         writer.writerow(list(body[i, :]))
     """
     
-def choropleth(dframe, boundaries, impactcode, bcode, filename):
-    """
-    Aggregate to geospatial boundaries and save to file
 
-    :param dframe: `pandas.DataFrame` containing point data to be aggregated
-    :param str boundaries: File name of a geospatial dataset that contains boundaries 
-                   to serve as aggregation boundaries
-    :param str impactcode: Field name in the `dframe` to aggregate by
-    :param str bcode: Corresponding field name in the geospatial dataset.
-    :param str filename: Destination filename. Must have a valid extension from 
-                   `shp`, `json` or `gpkg`.
-    """
-    # List of possible drivers for output:
-    # See `import fiona; fiona.supported_drivers for a complete list of
-    # options, but we've only implemented a few to start with. 
-    DRIVERS = {'shp': 'ESRI Shapefile',
-               'json': 'GeoJSON',
-               'gpkg': 'GPKG'}
-    left, right = mergefield = impactcode, bcode
-
-    report = {'REPLACEMENT_VALUE': 'sum', 
-              'structural_loss_ratio': 'mean', 
-              '0.2s gust at 10m height m/s': 'max'}
-    aggregate = dframe.groupby(left).agg(report)
-    shapes = gpd.read_file(boundaries)
-
-    try:
-        shapes['key'] = shapes[right].astype(int)
-    except KeyError:
-        LOGGER.error(f"{boundaries} does not contain an attribute {right}")
-        sys.exit(1)
-
-    result = shapes.merge(aggregate, left_on='key', right_index=True)
-    driver = DRIVERS[os.path.splitext(filename)[1].replace('.', '')]
-    if driver == 'ESRI Shapefile':
-        LOGGER.debug("Changing field names for ESRI Shapefile")
-        # Need to modify the field names, as ESRI truncates them
-        result = result.rename(columns={'REPLACEMENT_VALUE':'REPVAL',
-                                        'structural_loss_ratio':'slr_mean',
-                                        '0.2s gust at 10m height m/s':'maxwind'})
-    dirname = os.path.dirname(filename)
-    if not os.path.isdir(dirname):
-        LOGGER.warn(f"{dirname} does not exist - trying to create it")
-        os.makedirs(dirname)
-    result.to_file(filename, driver=driver)

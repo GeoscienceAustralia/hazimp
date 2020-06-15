@@ -278,3 +278,13 @@ Vulnerability functions
 
 See the :ref:`Preparing vulnerability curves` section for guidance on
 preparing vulnerability functions for use in HazImp.
+
+
+Provenance tracking
+-------------------
+
+The provenance of information used in generating an impact analysis is tracked
+using the :ref:`prov` module. 
+
+Contributions to the code base should incorporate appropriate provenance
+statements to ensure consistency.

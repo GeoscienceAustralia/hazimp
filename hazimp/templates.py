@@ -30,7 +30,8 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION, RANDOM_CONSTANT,
                                    LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
-                                   MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS)
+                                   MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS,
+                                   SAVEPROVENANCE)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -125,6 +126,11 @@ def _wind_v3_reader(config_list):
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
+    
     return job_insts
 
 
@@ -174,6 +180,11 @@ def _wind_v4_reader(config_list):
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
+        
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
 
     return job_insts
 
@@ -271,6 +282,13 @@ def _wind_nc_reader(config_list):
         attributes = find_atts(config_list, AGGREGATE)
         add_job(job_insts, AGGREGATE, attributes)
 
+    # Eventually, this needs to be included in pipeline.Pipeline and
+    # automatically added to the list of jobs
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
+
     return job_insts
 
 def _wind_v5_reader(config_list):
@@ -327,6 +345,13 @@ def _wind_v5_reader(config_list):
     file_name = find_atts(config_list, SAVEAGG)
     add_job(job_insts, SAVEAGG, {'file_name': file_name})
 
+    # Eventually, this needs to be included in pipeline.Pipeline and
+    # automatically added to the list of jobs
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
+
     return job_insts    
 
 def _flood_fabric_v2_reader(config_list):
@@ -382,6 +407,10 @@ def _flood_fabric_v2_reader(config_list):
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
     return job_insts
 
 # this is disabling R:171, 0: Too many statements
@@ -483,6 +512,10 @@ def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
     return job_insts
 
 

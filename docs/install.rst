@@ -28,7 +28,7 @@ On some systems (e.g. rhe-compute1) the existing system python installation may 
 
 On MS-Windows::
 
-  for %x in (pep8, coverage, pyyaml, pylint, pandas) do pip install --user %x
+  for %x in (pep8, coverage, pyyaml, pylint, pandas, prov, pydot) do pip install --user %x
 
 System python install
 ^^^^^^^^^^^^^^^^^^^^^
@@ -38,7 +38,7 @@ On Ubuntu systems, the following requires system administrator privileges.::
 .. code-block:: bash
 
   sudo apt-get install python-numpy, python-scipy
-  sudo apt-get install python-gdal, python-yaml, python-coverage, pep8, pylint, pandas, nose
+  sudo apt-get install python-gdal, python-yaml, python-coverage, pep8, pylint, pandas, nose, prov, pydot
 
 Getting the code
 ----------------

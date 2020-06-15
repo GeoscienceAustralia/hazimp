@@ -24,17 +24,30 @@ import csv
 from collections import defaultdict
 import inspect
 
+import logging
+
+LOGGER = logging.getLogger(__name__)
+
 import numpy
 from numpy.random import random_sample, permutation
 
 import pandas as pd
+import geopandas as gpd
+from datetime import datetime
+
+from git import Repo, InvalidGitRepositoryError
+
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
 EXAMPLE_DIR = os.path.join(ROOT_DIR, 'examples')
 INTID = 'internal_id'
 
+DRIVERS = {'shp': 'ESRI Shapefile',
+           'json': 'GeoJSON',
+           'gpkg': 'GPKG'}
 
+DATEFMT = '%Y-%m-%d %H:%M:%S'
 def csv2dict(filename, add_ids=False):
     """
     Read a csv file in and return the information as a dictionary
@@ -231,7 +244,28 @@ def permutate_att_values(dframe, fields, groupby=None):
     return newdf
 
 def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
+    """
+    Aggregate the impact data contained in a `pandas.DataFrame`
 
+    :param dframe: `pandas.DataFrame` that contains impact data
+    :param str groupby: A column in the `DataFrame` that corresponds to
+    regions by which to aggregate data
+    :param dict kwargs: A `dict` with keys of valid column names (from the
+    `DataFrame`) and values being lists of aggregation functions to apply to the
+    columns. 
+
+    For example::
+
+    kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
+              'structural_loss_ratio': ['mean', 'std']}
+    
+    See
+    https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
+    for more guidance on using aggregation with `DataFrames`
+
+    :returns: A `pandas.GroupBy` object.
+    
+    """
     grouped = dframe.groupby(groupby, as_index=False)
     
     outdf = grouped.agg(kwargs)
@@ -240,3 +274,83 @@ def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
     outdf.columns = outdf.columns.get_level_values(0)
     return outdf
         
+def get_file_mtime(file):
+    """
+    Retrieve the modified time of a file
+
+    :param str file: Full path to a valid file
+
+    :returns: ISO-format of the modification time of the file
+    """
+    dt = datetime.fromtimestamp(os.path.getmtime(file))
+    return dt.strftime(DATEFMT)
+
+def choropleth(dframe, boundaries, impactcode, bcode, filename):
+    """
+    Aggregate to geospatial boundaries and save to file
+
+    :param dframe: `pandas.DataFrame` containing point data to be aggregated
+    :param str boundaries: File name of a geospatial dataset that contains boundaries 
+                   to serve as aggregation boundaries
+    :param str impactcode: Field name in the `dframe` to aggregate by
+    :param str bcode: Corresponding field name in the geospatial dataset.
+    :param str filename: Destination filename. Must have a valid extension from 
+                   `shp`, `json` or `gpkg`.
+    """
+    # List of possible drivers for output:
+    # See `import fiona; fiona.supported_drivers` for a complete list of
+    # options, but we've only implemented a few to start with. 
+    
+    left, right = mergefield = impactcode, bcode
+
+    # TODO: Change to a function argument and configuration option
+    report = {'REPLACEMENT_VALUE': 'sum', 
+              'structural_loss_ratio': 'mean', 
+              '0.2s gust at 10m height m/s': 'max'}
+
+    aggregate = dframe.groupby(left).agg(report)
+    shapes = gpd.read_file(boundaries)
+
+    try:
+        shapes['key'] = shapes[right].astype(int)
+    except KeyError:
+        LOGGER.error(f"{boundaries} does not contain an attribute {right}")
+        sys.exit(1)
+
+    result = shapes.merge(aggregate, left_on='key', right_index=True)
+    driver = DRIVERS[os.path.splitext(filename)[1].replace('.', '')]
+    if driver == 'ESRI Shapefile':
+        LOGGER.debug("Changing field names for ESRI Shapefile")
+        # Need to modify the field names, as ESRI truncates them
+        result = result.rename(columns={'REPLACEMENT_VALUE':'REPVAL',
+                                        'structural_loss_ratio':'slr_mean',
+                                        '0.2s gust at 10m height m/s':'maxwind'})
+    dirname = os.path.dirname(filename)
+    if not os.path.isdir(dirname):
+        LOGGER.warn(f"{dirname} does not exist - trying to create it")
+        os.makedirs(dirname)
+    result.to_file(filename, driver=driver)
+
+def getGitCommit():
+    """
+    Return the git commit hash, branch and datetime of the commit
+
+    :returns: the commit hash and current branch if the code is maintained in a
+    git repo. If not, the commit is "unknown", branch is empty and the datetime
+    is set to be the modified time of the called python script (usually hazimp/main.py)
+
+    """
+    try:
+        r = Repo(ROOT_DIR)
+        commit = str(r.commit('HEAD'))
+        branch = str(r.active_branch)
+        dt = r.commit('HEAD').committed_datetime.strftime(DATEFMT)
+    except InvalidGitRepositoryError:
+        # We're not using a git repo
+        commit = 'unknown'
+        branch = ''
+        f = os.path.realpath(__file__)
+        mtime = os.path.getmtime(f)
+        dt = datetime.fromtimestamp(mtime).strftime(DATEFMT)
+
+    return commit, branch, dt
