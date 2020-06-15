@@ -313,10 +313,11 @@ class LoadCsvExposure(Job):
             value: column values, except the title
         """
         dt = misc.get_file_mtime(file_name)
-        expent = context.prov.entity(f'prov:{file_name}', 
-                            {'prov:label': 'Exposure data',
+        expent = context.prov.entity("prov:Exposure data", 
+                            {'dcterms:title': 'Exposure data',
                              'prov:type': 'void:Dataset',
-                             'prov:generatedAtTime':dt})
+                             'prov:generatedAtTime':dt,
+                             'prov:atLocation':os.path.basename(file_name)})
         context.prov.used(context.provlabel, expent)
         data_frame = parallel.csv2dict(file_name, use_parallel=use_parallel)
         # FIXME Need to do better error handling
@@ -373,11 +374,11 @@ class LoadXmlVulnerability(Job):
             vuln_sets = vuln_sets_from_xml_file(file_name)
             context.vulnerability_sets.update(vuln_sets)
             dt = misc.get_file_mtime(file_name)
-            vulent = context.prov.entity(f"prov:{os.path.basename(file_name)}",
-                                         {'prov:type': 'void:Dataset',
-                                          'prov:generatedAtTime':dt})
+            vulent = context.prov.entity("prov:vulnerability file",
+                                         {'prov:type': 'prov:Collection',
+                                          'prov:generatedAtTime':dt,
+                                          'prov:atLocation':os.path.basename(file_name)})
             context.prov.used(context.provlabel, vulent)
-            
 
 
 class SimpleLinker(Job):
@@ -407,9 +408,11 @@ class SimpleLinker(Job):
            vul_function_titles: Add's the exposure_titles
         """
         for k, v in vul_functions_in_exposure.items():
-            context.prov.entity(f"prov:{k}", {f"prov:label":v})
-            context.prov.wasDerivedFrom(context.provlabel, f'prov:{k}')
-            
+            k1 = context.prov.entity("prov:vulnerability set",
+                                     {"dcterms:title":k,
+                                      "prov:value":v})
+            context.prov.wasDerivedFrom(context.provlabel, k1)
+            context.prov.specializationOf(k1, "prov:vulnerability file")
         context.vul_function_titles.update(vul_functions_in_exposure)
 
 
@@ -665,9 +668,10 @@ class LoadRaster(Job):
                 dt = misc.get_file_mtime(file_list)
                 atts = {"dcterms:title":"Source hazard data",
                         "prov:type":"prov:Dataset",
+                        "prov:atLocation":os.path.basename(file_list),
                         "prov:format":os.path.splitext(file_list)[1].replace('.',''),
                         "prov:generatedAtTime":dt}
-                hazent = context.prov.entity(f"prov:{os.path.basename(file_list)}", atts)
+                hazent = context.prov.entity("prov:Hazard data", atts)
                 context.prov.used(context.provlabel, hazent)
                 file_list = [file_list]
             file_data, extent = raster_module.files_raster_data_at_points(

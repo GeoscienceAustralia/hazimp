@@ -31,6 +31,9 @@ import pandas as pd
 import geopandas as gpd
 from datetime import datetime
 
+from git import Repo, InvalidGitRepositoryError
+
+
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
 EXAMPLE_DIR = os.path.join(ROOT_DIR, 'examples')
@@ -40,7 +43,7 @@ DRIVERS = {'shp': 'ESRI Shapefile',
            'json': 'GeoJSON',
            'gpkg': 'GPKG'}
 
-
+DATEFMT = '%Y-%m-%d %H:%M:%S'
 def csv2dict(filename, add_ids=False):
     """
     Read a csv file in and return the information as a dictionary
@@ -276,7 +279,7 @@ def get_file_mtime(file):
     :returns: ISO-format of the modification time of the file
     """
     dt = datetime.fromtimestamp(os.path.getmtime(file))
-    return dt.isoformat()
+    return dt.strftime(DATEFMT)
 
 def choropleth(dframe, boundaries, impactcode, bcode, filename):
     """
@@ -323,3 +326,27 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename):
         LOGGER.warn(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
     result.to_file(filename, driver=driver)
+
+def getGitCommit():
+    """
+    Return the git commit hash, branch and datetime of the commit
+
+    :returns: the commit hash and current branch if the code is maintained in a
+    git repo. If not, the commit is "unknown", branch is empty and the datetime
+    is set to be the modified time of the called python script (usually hazimp/main.py)
+
+    """
+    try:
+        r = Repo(ROOT_DIR)
+        commit = str(r.commit('HEAD'))
+        branch = str(r.active_branch)
+        dt = r.commit('HEAD').committed_datetime.strftime(DATEFMT)
+    except InvalidGitRepositoryError:
+        # We're not using a git repo
+        commit = 'unknown'
+        branch = ''
+        f = os.path.realpath(__file__)
+        mtime = os.path.getmtime(f)
+        dt = datetime.fromtimestamp(mtime).strftime(DATEFMT)
+
+    return commit, branch, dt
