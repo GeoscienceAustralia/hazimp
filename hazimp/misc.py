@@ -24,6 +24,10 @@ import csv
 from collections import defaultdict
 import inspect
 
+import logging
+
+LOGGER = logging.getLogger()
+
 import numpy
 from numpy.random import random_sample, permutation
 

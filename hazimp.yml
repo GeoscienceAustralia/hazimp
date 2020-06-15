@@ -8,6 +8,7 @@ dependencies:
   - coverage
   - pytz
   - prov
+  - pydot
   - gdal
   - libgdal
   - pyyaml

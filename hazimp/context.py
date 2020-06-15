@@ -109,21 +109,23 @@ class Context(object):
         # A `prov.ProvDocument` to manage provenance information, including
         # adding required namespaces
         self.prov = ProvDocument()
+        self.prov.set_default_namespace("")
         self.prov.add_namespace('prov', 'http://www.w3.org/ns/prov#')
         self.prov.add_namespace('xsd',  'http://www.w3.org/2001/XMLSchema#')
         self.prov.add_namespace('foaf', 'http://xmlns.com/foaf/0.1/')
         self.prov.add_namespace('void', 'http://vocab.deri.ie/void#')
         self.prov.add_namespace('dcterms', 'http://purl.org/dc/terms/')
+        #self.prov.add_namespace("", 'http://example.com')
         commit, branch, dt = misc.getGitCommit()
         # Create the fundamental software agent that is this code:
-        self.prov.agent("prov:hazimp",
+        self.prov.agent(":hazimp",
                         {"prov:type":"prov:SoftwareAgent",
                          "prov:commit":commit,
                          "prov:branch":branch,
                          "prov:date":dt})
-        self.prov.agent(f"prov:{getpass.getuser()}",
+        self.prov.agent(f":{getpass.getuser()}",
                         {"prov:type":"foaf:Person"})
-        self.prov.actedOnBehalfOf("prov:hazimp", f"prov:{getpass.getuser()}")
+        self.prov.actedOnBehalfOf(":hazimp", f":{getpass.getuser()}")
         self.provlabel = ''
 
     def set_prov_label(self, label, title="HazImp analysis"):
@@ -131,11 +133,11 @@ class Context(object):
         Set the qualified label for the provenance data
         """
 
-        self.provlabel = f"prov:{label}"
-        self.prov.activity(f"prov:{label}", datetime.now(), None,
+        self.provlabel = f":{label}"
+        self.prov.activity(f":{label}", datetime.now(), None,
                            {f"dcterms:title":title,
                            f"prov:type":"void:Analysis"})
-        self.prov.wasAttributedTo(self.provlabel, "prov:hazimp")
+        self.prov.wasAttributedTo(self.provlabel, ":hazimp")
 
     def get_site_shape(self):
         """
@@ -204,14 +206,14 @@ class Context(object):
         :param filename: The file to be written.
         :return write_dict: The whole dictionary, returned for testing.
         """
-        s1 = self.prov.entity(f"prov:HazImp output file",
+        s1 = self.prov.entity(f":HazImp output file",
                               {f"prov:label":"Full HazImp output file",
                               f"prov:type":"void:Dataset",
                               "prov:atLocation":os.path.basename(filename)})
-        a1 = self.prov.activity("prov:SaveImpactData", datetime.now(), None)
+        a1 = self.prov.activity(":SaveImpactData", datetime.now(), None)
         self.prov.wasGeneratedBy(s1, a1)
         self.prov.wasInformedBy(a1, self.provlabel)
-        self.prov.wasAttributedTo(s1, "prov:hazimp")
+        self.prov.wasAttributedTo(s1, ":hazimp")
         write_dict = self.exposure_att.copy()
         write_dict[EX_LAT] = self.exposure_lat
         write_dict[EX_LONG] = self.exposure_long
@@ -272,11 +274,11 @@ class Context(object):
         """
         LOGGER.info("Saving aggregated data")
         write_dict = self.exposure_att.copy()
-        aggent = self.prov.entity("prov:Aggregation boundaries", 
+        aggent = self.prov.entity(":Aggregation boundaries", 
                                  {"prov:type":"void:Dataset",
                                   "prov:atLocation":os.path.basename(boundaries),
                                   "void:boundary_code":boundarycode})
-        aggact = self.prov.activity("prov:AggregationByRegions", datetime.now(), None, 
+        aggact = self.prov.activity(":AggregationByRegions", datetime.now(), None, 
                                     {'prov:type':"Spatial aggregation"})
         self.prov.used(aggact, aggent)
         self.prov.used(self.provlabel, aggent)
