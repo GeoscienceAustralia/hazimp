@@ -47,7 +47,7 @@ DRIVERS = {'shp': 'ESRI Shapefile',
            'json': 'GeoJSON',
            'gpkg': 'GPKG'}
 
-DATEFMT = '%Y-%m-%d %H:%M:%S'
+DATEFMT = '%Y-%m-%d %H:%M:%S %Z'
 def csv2dict(filename, add_ids=False):
     """
     Read a csv file in and return the information as a dictionary
