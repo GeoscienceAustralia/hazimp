@@ -44,6 +44,7 @@ from datetime import datetime
 import getpass
 
 LOGGER=logging.getLogger(__name__)
+DATEFMT = "%Y-%m-%d %H:%M:%S %Z"
 
 # The standard string names in the context instance
 EX_LAT = 'exposure_latitude'
@@ -134,9 +135,9 @@ class Context(object):
         """
 
         self.provlabel = f":{label}"
-        self.prov.activity(f":{label}", datetime.now(), None,
+        self.prov.activity(f":{label}", datetime.now().strftime(DATEFMT), None,
                            {f"dcterms:title":title,
-                           f"prov:type":"void:Analysis"})
+                            f"prov:type":"void:Analysis"})
         self.prov.wasAttributedTo(self.provlabel, ":hazimp")
 
     def get_site_shape(self):
@@ -208,9 +209,11 @@ class Context(object):
         """
         s1 = self.prov.entity(f":HazImp output file",
                               {f"prov:label":"Full HazImp output file",
-                              f"prov:type":"void:Dataset",
-                              "prov:atLocation":os.path.basename(filename)})
-        a1 = self.prov.activity(":SaveImpactData", datetime.now(), None)
+                               f"prov:type":"void:Dataset",
+                               "prov:atLocation":os.path.basename(filename)})
+        a1 = self.prov.activity(":SaveImpactData", 
+                                datetime.now().strftime(DATEFMT), 
+                                None)
         self.prov.wasGeneratedBy(s1, a1)
         self.prov.wasInformedBy(a1, self.provlabel)
         self.prov.wasAttributedTo(s1, ":hazimp")
@@ -274,14 +277,21 @@ class Context(object):
         """
         LOGGER.info("Saving aggregated data")
         write_dict = self.exposure_att.copy()
-        aggent = self.prov.entity(":Aggregation boundaries", 
+        dt = datetime.now().strftime(DATEFMT)
+        bdyent = self.prov.entity(":Aggregation boundaries", 
                                  {"prov:type":"void:Dataset",
                                   "prov:atLocation":os.path.basename(boundaries),
+                                  "prov:generatedAtTime":misc.get_file_mtime(boundaries),
                                   "void:boundary_code":boundarycode})
-        aggact = self.prov.activity(":AggregationByRegions", datetime.now(), None, 
+        aggact = self.prov.activity(":AggregationByRegions", dt, None, 
                                     {'prov:type':"Spatial aggregation"})
-        self.prov.used(aggact, aggent)
-        self.prov.used(self.provlabel, aggent)
+        aggfileent = self.prov.entity(":AggregationFile",
+                                     {"prov:type":"void:Dataset",
+                                      "prov:atLocation":os.path.basename(filename),
+                                      "prov:generatedAtTime":dt})
+        self.prov.used(aggact, bdyent)
+        self.prov.wasInformedBy(self.provlabel, aggact)
+        self.prov.generated(aggact, aggfileent)
         if parallel.STATE.rank == 0 or not use_parallel:
             misc.choropleth(write_dict, boundaries, impactcode, boundarycode, filename)
         else:
