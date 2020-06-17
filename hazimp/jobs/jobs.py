@@ -68,6 +68,7 @@ RANDOM_CONSTANT = 'random_constant'
 PERMUTATE_EXPOSURE = 'permutate_exposure'
 AGGREGATE_LOSS = 'aggregate_loss'
 AGGREGATE = 'aggregate'
+TABULATE = 'tabulate'
 SAVEPROVENANCE = 'saveprovenance'
 
 class Job(object):
@@ -763,6 +764,17 @@ class Aggregate(Job):
                                  impactcode,
                                  boundarycode,
                                  use_parallel=use_parallel)
+
+class Tabulate(Job):
+
+    def __init__(self):
+        super(Tabulate, self).__init__()
+        self.call_funct = TABULATE
+    
+    def __call__(self, context, file_name=None, index=None,
+                 columns=None, aggfunc=None, use_parallel=True):
+        context.tabulate(file_name, index, columns, 
+                         aggfunc, use_parallel=use_parallel)
 
 class SaveProvenance(Job):
 

@@ -31,6 +31,7 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    SELECTVULNFUNCTION, RANDOM_CONSTANT,
                                    LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
                                    MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS,
+                                   TABULATE,
                                    SAVEPROVENANCE)
 
 LOGGER = logging.getLogger(__name__)
@@ -73,7 +74,7 @@ CONT_TEMP = 'regime_action'
 
 AGGREGATION = 'aggregation'
 AGGREGATE = 'aggregate'
-
+TABULATE = 'tabulate'
 CONT_MAP = {SAVE_CONT: "_SAVE", NO_ACTION_CONT: "_NOACTION",
             EXPOSE_CONT: "_EXPOSE", SAVEAGG_CONT: "_SAVEAGG"}
 INSURE_MAP = {INSURED: "_INSURED", UNINSURED: "_UNINSURED"}
@@ -276,6 +277,10 @@ def _wind_nc_reader(config_list):
     if config_dict.get(AGGREGATE):
         attributes = find_atts(config_list, AGGREGATE)
         add_job(job_insts, AGGREGATE, attributes)
+
+    if config_dict.get(TABULATE):
+        attributes = find_atts(config_list, TABULATE)
+        add_job(job_insts, TABULATE, attributes)
 
     # Eventually, this needs to be included in pipeline.Pipeline and
     # automatically added to the list of jobs

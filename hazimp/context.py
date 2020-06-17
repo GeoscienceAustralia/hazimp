@@ -337,6 +337,42 @@ class Context(object):
         outdf.columns = outdf.columns.get_level_values(0)
         self.exposure_agg = outdf
 
+    def tabulate(self, file_name, index=None, columns=None, aggfunc=None, use_parallel=True):
+        """
+        Essentially perform a pivot table on the `exposure_atts` `DataFrame`
+
+
+        """
+
+        if index not in self.exposure_att.columns:
+            LOGGER.error(f"Cannot tabulate data using {index}")
+            return
+
+        if columns not in self.exposure_att.columns:
+            LOGGER.error(f"{columns} not in the exposure data")
+            return
+
+        a1 = self.prov.activity(":Tabulate",
+                                datetime.now().strftime(DATEFMT), 
+                                None,
+                                {"prov:type":"Tabulation", 
+                                 "void:aggregator":repr(index),
+                                 "void:attributes":repr(columns),
+                                 "void:aggregation":repr(aggfunc)})
+
+        tblfileent = self.prov.entity(":TabulationFile",
+                                     {"prov:type":"void:Dataset",
+                                      "prov:atLocation":os.path.basename(filename),
+                                      "prov:generatedAtTime":dt})
+
+        self.prov.wasGeneratedBy(tblfileent, a1)
+        self.prov.wasInformedBy(a1, self.provlabel)
+        self.pivot = self.exposure_att.pivot_table(index=index, 
+                                                   columns=columns,
+                                                   aggfunc=aggfunc,
+                                                   fill_value=0)
+        self.pivot.to_excel(file_name)
+
 def save_csv(write_dict, filename):
     """
     Save a dictionary of arrays as a csv file.
@@ -373,7 +409,7 @@ def save_csv(write_dict, filename):
     # numpy.savetxt(filename, body, delimiter=',', header='yeah')
     
     dirname = os.path.dirname(filename)
-    if not os.path.isdir(dirname):
+    if dirname and not os.path.isdir(dirname):
         LOGGER.warn(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
         
