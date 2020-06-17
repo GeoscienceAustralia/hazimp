@@ -40,7 +40,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-sns.set_context('talk',font_scale=1.5)
+#sns.set_context('talk',font_scale=1.5)
                 #rc={"xtick.labelsize":"large", 
                 #    "ytick.labelsize":"large"})
                 
@@ -53,6 +53,7 @@ dmgpal = sns.blend_palette([(0.000, 0.627, 0.235), (0.412, 0.627, 0.235),
                             (0.925, 0.643, 0.016), (0.835, 0.314, 0.118),
                             (0.780, 0.086, 0.118)], 5)
 sns.set_palette(palette)
+figsize = (6.3, 3.75)
 
 
 # These categories are based on Geoscience Australia's NEXIS building attribute values
@@ -95,7 +96,7 @@ events = ['000-06481',
 events = ['001-08611']
 
 res = 600
-context='talk'
+context='paper'
 fmt = "jpg"
 
 
@@ -119,7 +120,7 @@ def main(input_file, res, fmt, output_path=None):
     # speed. This should intuitively follow the vulnerability functions
     # used in _HazImp_. Points are coloured by the construction age.
     
-    fig, ax = plt.subplots(figsize=(16,9))
+    fig, ax = plt.subplots(figsize=figsize)
     sns.set_context(context,font_scale=1.)
     g = sns.lmplot(x='0.2s gust at 10m height m/s',
                    y='structural_loss_ratio', 
@@ -143,8 +144,8 @@ def main(input_file, res, fmt, output_path=None):
     # these events will generate wind speeds that are well below the
     # design wind speeds for the region.
 
-    fig, ax = plt.subplots(figsize=(16,9))
-    sns.set_context(context,font_scale=1.5)
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.set_context(context,font_scale=1.)
 
     sns.stripplot(x='YEAR_BUILT', y='structural_loss_ratio', 
                   hue='ROOF_TYPE', order=YEAR_ORDER, 
@@ -162,7 +163,7 @@ def main(input_file, res, fmt, output_path=None):
     # important for an EM perspective, but serves as a cursory check that
     # the outputs are sensible. Replacement costs are based on quantity
     # surveyor data and represent 2017 values.
-    fig, ax = plt.subplots(figsize=(16,9))
+    fig, ax = plt.subplots(figsize=figsize)
     sns.set_context(context,font_scale=1.)
 
     g = sns.lmplot(x='0.2s gust at 10m height m/s',
@@ -192,8 +193,8 @@ def main(input_file, res, fmt, output_path=None):
                    columns='Damage state', 
                    aggfunc='size', fill_value=0).to_excel(pjoin(output_path, "{0}_damage_state_lga.xlsx".format(event_num)))
                    
-    fig, ax = plt.subplots(figsize=(16,9))
-    sns.set_context(context,font_scale=1.5)
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.set_context(context,font_scale=1.)
     df.pivot_table(index='LGA_NAME', 
                    columns='Damage state', 
                    aggfunc='size', fill_value=0).plot(kind='bar', stacked=True)
@@ -213,8 +214,8 @@ def main(input_file, res, fmt, output_path=None):
                    columns='Damage state',
                    aggfunc='size', 
                    fill_value=0).to_excel(pjoin(output_path, "{0}_dmgstate.xlsx".format(event_num)))
-    fig, ax = plt.subplots(figsize=(16,9))
-    sns.set_context(context,font_scale=1.5)
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.set_context(context,font_scale=1.)
 
     sns.countplot(x='Damage state', data=df, order=labels, palette=dmgpal)
     ax.set_ylabel("Number")
@@ -223,30 +224,30 @@ def main(input_file, res, fmt, output_path=None):
     plt.close(fig)
 
 
-    fig, ax = plt.subplots(figsize=(16,9))
-    sns.set_context(context,font_scale=1.5)
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.set_context(context,font_scale=1.)
     ax = sns.countplot(x='Damage state', data=df, order=labels, hue='YEAR_BUILT', hue_order=YEAR_ORDER)
-    ax.legend(title="Construction era", frameon=True, loc=1)
+    ax.legend(title="Construction era", frameon=True, loc=0)
     ax.set_ylabel("Number")
     plt.savefig(pjoin(output_path, "{0}_damage_state_by_age.{1}".format(event_num, fmt)),
                 dpi=res, bbox_inches="tight")
     plt.close(fig)
 
-    fig, ax = plt.subplots(figsize=(16,9))
-    sns.set_context(context,font_scale=1.5)
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.set_context(context,font_scale=1.)
     ax = sns.pointplot(x='Damage state', y='structural_loss_ratio',
                        data=df, order=labels,
                        hue='YEAR_BUILT', hue_order=YEAR_ORDER)
     ax.set_ylabel("Structural loss ratio")
     ax.set_ylim((0, 1))
-    ax.legend(title="Construction era", frameon=True)
+    ax.legend(title="Construction era", frameon=True, loc=0)
     plt.savefig(pjoin(output_path, "{0}_SLR_by_damage_state.{1}".format(event_num, fmt)), 
                 dpi=res, bbox_inches="tight")
     plt.close(fig)
 
     # Building age profile for the community. 
-    fig, ax = plt.subplots(figsize=(16,9))
-    sns.set_context(context,font_scale=1.5)
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.set_context(context,font_scale=1.)
     sns.countplot(x='YEAR_BUILT', order=YEAR_ORDER, data=df, ax=ax)
     ax.set_xlabel("Construction era")
     ax.set_ylabel("Number")
