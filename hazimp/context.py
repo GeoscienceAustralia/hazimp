@@ -290,7 +290,7 @@ class Context(object):
                                       "prov:atLocation":os.path.basename(filename),
                                       "prov:generatedAtTime":dt})
         self.prov.used(aggact, bdyent)
-        self.prov.wasInformedBy(self.provlabel, aggact)
+        self.prov.wasInformedBy(aggact, self.provlabel)
         self.prov.wasGeneratedBy(aggfileent, aggact)
         if parallel.STATE.rank == 0 or not use_parallel:
             misc.choropleth(write_dict, boundaries, impactcode, boundarycode, filename)
