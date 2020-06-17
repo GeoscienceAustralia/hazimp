@@ -36,6 +36,7 @@ is not present Error out.
 """
 
 import os
+import re
 import sys
 import scipy
 import pandas as pd
@@ -665,15 +666,21 @@ class LoadRaster(Job):
             context.exposure_att[attribute_label] = file_data
         else:
             if isinstance(file_list, str):
-                dt = misc.get_file_mtime(file_list)
+                file_list = [file_list]
+            for f in file_list:
+                if f.startswith("NETCDF"):
+                    # NetCDF files take a different format to be consumed by
+                    # GDAL, so we need to strip that out to get the actual
+                    # filename. 
+                    f = f.split(":")[1].strip('"')
+                dt = misc.get_file_mtime(f)
                 atts = {"dcterms:title":"Source hazard data",
                         "prov:type":"prov:Dataset",
-                        "prov:atLocation":os.path.basename(file_list),
-                        "prov:format":os.path.splitext(file_list)[1].replace('.',''),
+                        "prov:atLocation":os.path.basename(f),
+                        "prov:format":os.path.splitext(f)[1].replace('.',''),
                         "prov:generatedAtTime":dt}
                 hazent = context.prov.entity(":Hazard data", atts)
                 context.prov.used(context.provlabel, hazent)
-                file_list = [file_list]
             file_data, extent = raster_module.files_raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat, file_list)
