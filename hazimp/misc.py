@@ -104,6 +104,27 @@ def instanciate_classes(module):
                 callable_instances[instance.call_funct] = instance
     return callable_instances
 
+def mod_file_list(file_list, variable):
+    """
+    Modify the filename list for working with netcdf format files.
+
+    For netcdf files, GDAL expects the filename to be of the form
+    'NETCDF:"<filename>":<variable>', where variable is a valid
+    variable in the netcdf file.
+
+    :param file_list: List of files or a single file to be processed
+    :param str variable: Variable name
+
+    :returns: list of filenames, modified to the above format
+
+    """
+
+    if isinstance(file_list, str):
+        file_list = [file_list]
+    flist = []
+    for f in file_list:
+        flist.append(f'NETCDF:"{f}":{variable}')
+    return flist
 
 def get_required_args(func):
     """

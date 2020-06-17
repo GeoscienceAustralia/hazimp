@@ -667,20 +667,22 @@ class LoadRaster(Job):
         else:
             if isinstance(file_list, str):
                 file_list = [file_list]
-            for f in file_list:
-                if f.startswith("NETCDF"):
-                    # NetCDF files take a different format to be consumed by
-                    # GDAL, so we need to strip that out to get the actual
-                    # filename. 
-                    f = f.split(":")[1].strip('"')
+
+            for f in file_list:                    
                 dt = misc.get_file_mtime(f)
                 atts = {"dcterms:title":"Source hazard data",
                         "prov:type":"prov:Dataset",
                         "prov:atLocation":os.path.basename(f),
                         "prov:format":os.path.splitext(f)[1].replace('.',''),
-                        "prov:generatedAtTime":dt}
+                        "prov:generatedAtTime":dt,}
+                if file_format == 'nc' and variable:
+                    atts['prov:variable'] = variable
                 hazent = context.prov.entity(":Hazard data", atts)
                 context.prov.used(context.provlabel, hazent)
+
+            if file_format == 'nc' and variable:
+                file_list = misc.mod_file_list(file_list, variable)
+
             file_data, extent = raster_module.files_raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat, file_list)
@@ -711,8 +713,7 @@ class AggregateLoss(Job):
                         exposure assets by before performing aggregations 
                         (sum, mean, etc.).
         """
-        context.exposure_agg = misc.aggregate_loss_atts(context.exposure_att,
-                                                        groupby, kwargs)
+        context.aggregate_loss(groupby, kwargs)
 
 class SaveExposure(Job):
 
