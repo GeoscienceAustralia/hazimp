@@ -225,12 +225,7 @@ def _wind_nc_reader(config_list):
 
     file_list = find_atts(config_list, LOADWINDTCRM)
     atts = find_atts(config_list, LOADWINDTCRM)
-    if 'file_format' in atts:
-        if atts['file_format'] == 'nc' and 'variable' in atts:
-            atts['file_list'] = _mod_file_list(atts['file_list'],
-                                               atts['variable'])
-        else:
-            atts['file_list']
+    
 
     atts['attribute_label'] = '0.2s gust at 10m height m/s'
     add_job(job_insts, LOADRASTER, atts)
@@ -263,9 +258,9 @@ def _wind_nc_reader(config_list):
     if REP_VAL_NAME not in atts_dict:
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
-    attributes = {
-        'var1': 'structural_loss_ratio', 'var2': atts_dict[REP_VAL_NAME],
-        'var_out': 'structural_loss'}
+    attributes = {'var1': 'structural_loss_ratio',
+                  'var2': atts_dict[REP_VAL_NAME],
+                  'var_out': 'structural_loss'}
     add_job(job_insts, MDMULT, attributes)
 
     if config_dict.get(AGGREGATION):

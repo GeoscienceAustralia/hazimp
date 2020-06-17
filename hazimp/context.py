@@ -216,7 +216,6 @@ class Context(object):
                                 None)
         self.prov.wasGeneratedBy(s1, a1)
         self.prov.wasInformedBy(a1, self.provlabel)
-        self.prov.wasAttributedTo(s1, ":hazimp")
         write_dict = self.exposure_att.copy()
         write_dict[EX_LAT] = self.exposure_lat
         write_dict[EX_LONG] = self.exposure_long
@@ -251,10 +250,16 @@ class Context(object):
         """
         write_dict = self.exposure_agg.copy()
 
-        #if use_parallel:
-            #assert misc.INTID in write_dict
-        #    write_dict = parallel.gather_dict(write_dict,
-        #                                      write_dict[misc.INTID])
+        s1 = self.prov.entity(f":Aggregated HazImp output file",
+                              {f"prov:label":"Aggregated HazImp output file",
+                               f"prov:type":"void:Dataset",
+                               "prov:atLocation":os.path.basename(filename)})
+        a1 = self.prov.activity(":SaveAggregatedImpactData", 
+                                datetime.now().strftime(DATEFMT), 
+                                None)
+        self.prov.wasGeneratedBy(s1, a1)
+        self.prov.wasInformedBy(a1, self.prov.activity(":AggregateLoss"))
+        #self.prov.wasInformedBy(a1, self.provlabel)
 
         if parallel.STATE.rank == 0 or not use_parallel:
             if filename[-4:] == '.csv':
@@ -296,6 +301,41 @@ class Context(object):
             misc.choropleth(write_dict, boundaries, impactcode, boundarycode, filename)
         else:
             pass
+
+    def aggregate_loss(self, groupby=None, kwargs=None):
+        """
+        Aggregate data by the `groupby` attribute, using the `kwargs` to perform
+        any arithmetic aggregation on fields (e.g. summation, mean, etc.)
+
+        :param str groupby: A column in the `DataFrame` that corresponds to
+        regions by which to aggregate data
+        :param dict kwargs: A `dict` with keys of valid column names (from the
+        `DataFrame`) and values being lists of aggregation functions to apply to the
+        columns. 
+
+        For example::
+
+        kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
+                'structural_loss_ratio': ['mean', 'std']}
+        
+        See
+        https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
+        for more guidance on using aggregation with `DataFrames`
+
+        """
+        a1 = self.prov.activity(":AggregateLoss", 
+                                datetime.now().strftime(DATEFMT), 
+                                None,
+                                {"prov:type":"Aggregation", 
+                                 "void:aggregator":repr(groupby)})
+        self.prov.wasInformedBy(a1, self.provlabel)
+        grouped = self.exposure_att.groupby(groupby, as_index=False)
+    
+        outdf = grouped.agg(kwargs)
+        outdf.columns = ['_'.join(col).strip() for col in outdf.columns.values]
+        outdf.reset_index(col_level=1)
+        outdf.columns = outdf.columns.get_level_values(0)
+        self.exposure_agg = outdf
 
 def save_csv(write_dict, filename):
     """
@@ -372,27 +412,6 @@ def save_csv_agg(write_dict, filename):
     except FileNotFoundError:
         LOGGER.error(f"Cannot write to {filename}")
         sys.exit(1)
-    """
-    keys = write_dict.keys()
-    header = list(keys)
 
-    body = None
-    for key in header:
-        #  Only one dimension can be saved.
-        #  Average the results to the Site (first) dimension.
-        only_1d = misc.squash_narray(write_dict[key])
-        if body is None:
-            body = only_1d
-        else:
-            # NUMPY1.6 loses significant figures
-            body = numpy.column_stack((body, only_1d))
-    # Need numpy 1.7 > to do headers
-    # numpy.savetxt(filename, body, delimiter=',', header='yeah')
-    hnd = open(filename, 'wb')
-    writer = csv.writer(hnd, delimiter=',')
-    writer.writerow(header)
-    for i in range(body.shape[0]):
-        writer.writerow(list(body[i, :]))
-    """
     
 
