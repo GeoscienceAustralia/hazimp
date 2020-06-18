@@ -118,7 +118,7 @@ class Context(object):
         self.prov.add_namespace('void', 'http://vocab.deri.ie/void#')
         self.prov.add_namespace('dcterms', 'http://purl.org/dc/terms/')
         #self.prov.add_namespace("", 'http://example.com')
-        commit, branch, dt = misc.getGitCommit()
+        commit, branch, dt = misc.get_git_commit()
         # Create the fundamental software agent that is this code:
         self.prov.agent(":hazimp",
                         {"prov:type":"prov:SoftwareAgent",
@@ -395,6 +395,7 @@ class Context(object):
             LOGGER.error(f"Required attribute(s) {columns} not in the exposure data")
             LOGGER.error(f"Maybe you need to run a categorise job before this one?")
             return
+
         dt = datetime.now().strftime(DATEFMT)
         a1 = self.prov.activity(":Tabulate", dt, None,
                                 {"prov:type":"Tabulation", 

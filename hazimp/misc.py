@@ -357,7 +357,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename):
         os.makedirs(dirname)
     result.to_file(filename, driver=driver)
 
-def getGitCommit():
+def get_git_commit():
     """
     Return the git commit hash, branch and datetime of the commit
 
