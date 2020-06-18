@@ -20,6 +20,7 @@
 Functions that haven't found a proper module.
 """
 import os
+import sys
 import csv
 from collections import defaultdict
 import inspect
@@ -254,10 +255,14 @@ def permutate_att_values(dframe, fields, groupby=None):
     if isinstance(fields, str):
         fields = [fields]
 
-    if groupby:
+    if groupby and groupby in dframe.columns:
         for field in fields:
             newdf[field] = \
                 newdf.groupby(groupby)[field].transform(permutation)
+    elif groupby and groupby not in dframe.columns:
+        LOGGER.error(f"Cannot use {groupby} for permuting exposure attributes")
+        LOGGER.error(f"The input expsoure data does not include that field")
+        sys.exit()
     else:
         for field in fields:
             newdf[field] = newdf[field].transform(permutation)

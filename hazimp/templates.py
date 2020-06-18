@@ -31,7 +31,7 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    SELECTVULNFUNCTION, RANDOM_CONSTANT,
                                    LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
                                    MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS,
-                                   TABULATE,
+                                   TABULATE, CATEGORISE,
                                    SAVEPROVENANCE)
 
 LOGGER = logging.getLogger(__name__)
@@ -255,14 +255,16 @@ def _wind_nc_reader(config_list):
     else:
         add_job(job_insts, LOOKUP)
         
-    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
-    if REP_VAL_NAME not in atts_dict:
-        msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
-        raise RuntimeError(msg)
-    attributes = {'var1': 'structural_loss_ratio',
-                  'var2': atts_dict[REP_VAL_NAME],
-                  'var_out': 'structural_loss'}
-    add_job(job_insts, MDMULT, attributes)
+    calcloss = config_dict.get(CALCSTRUCTLOSS)
+    if calcloss:
+        atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+        if REP_VAL_NAME not in atts_dict:
+            msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
+            raise RuntimeError(msg)
+        attributes = {'var1': 'structural_loss_ratio',
+                      'var2': atts_dict[REP_VAL_NAME],
+                      'var_out': 'structural_loss'}
+        add_job(job_insts, MDMULT, attributes)
 
     if config_dict.get(AGGREGATION):
         attributes = find_atts(config_list, AGGREGATION)
@@ -278,9 +280,15 @@ def _wind_nc_reader(config_list):
         attributes = find_atts(config_list, AGGREGATE)
         add_job(job_insts, AGGREGATE, attributes)
 
+    if config_dict.get(CATEGORISE):
+        attributes = find_atts(config_list, CATEGORISE)
+        add_job(job_insts, CATEGORISE, attributes)
+
     if config_dict.get(TABULATE):
         attributes = find_atts(config_list, TABULATE)
         add_job(job_insts, TABULATE, attributes)
+
+
 
     # Eventually, this needs to be included in pipeline.Pipeline and
     # automatically added to the list of jobs
@@ -300,6 +308,7 @@ def _wind_v5_reader(config_list):
     """
 
     LOGGER.info("Using wind_v5 template")
+    config_dict = {k:v for item in config_list for k, v in list(item.items())}
     job_insts = []
     atts = find_atts(config_list, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
@@ -338,6 +347,14 @@ def _wind_v5_reader(config_list):
 
     attributes = find_atts(config_list, AGGREGATION)
     add_job(job_insts, AGGREGATE_LOSS, attributes)
+
+    if config_dict.get(CATEGORISE):
+        attributes = find_atts(config_list, CATEGORISE)
+        add_job(job_insts, CATEGORISE, attributes)
+
+    if config_dict.get(TABULATE):
+        attributes = find_atts(config_list, TABULATE)
+        add_job(job_insts, TABULATE, attributes)
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})

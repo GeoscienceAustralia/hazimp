@@ -69,6 +69,7 @@ PERMUTATE_EXPOSURE = 'permutate_exposure'
 AGGREGATE_LOSS = 'aggregate_loss'
 AGGREGATE = 'aggregate'
 TABULATE = 'tabulate'
+CATEGORISE = 'categorise'
 SAVEPROVENANCE = 'saveprovenance'
 
 class Job(object):
@@ -508,7 +509,6 @@ class LookUp(Job):
                 key - intensity measure
                 value - realised vulnerability curve instance per asset
         """
-
         for intensity_key in context.exposure_vuln_curves:
             vuln_curve = context.exposure_vuln_curves[intensity_key]
             int_measure = vuln_curve.intensity_measure_type
@@ -775,6 +775,15 @@ class Tabulate(Job):
                  columns=None, aggfunc=None, use_parallel=True):
         context.tabulate(file_name, index, columns, 
                          aggfunc, use_parallel=use_parallel)
+
+class Categorise(Job):
+
+    def __init__(self):
+        super(Categorise, self).__init__()
+        self.call_funct = CATEGORISE
+
+    def __call__(self, context, bins=None, labels=None, field_name=None):
+        context.categorise(bins, labels, field_name)
 
 class SaveProvenance(Job):
 

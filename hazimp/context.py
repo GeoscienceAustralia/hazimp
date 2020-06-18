@@ -31,6 +31,7 @@ import os
 import sys
 import numpy
 import csv
+import pandas as pd
 import geopandas as gpd
 
 from prov.model import ProvDocument
@@ -337,24 +338,65 @@ class Context(object):
         outdf.columns = outdf.columns.get_level_values(0)
         self.exposure_agg = outdf
 
+    def categorise(self, bins, labels, field_name):
+        """
+        Bin values into discrete intervals. 
+
+        :param list bins: Monotonically increasing array of bin edges,
+                          including the rightmost edge, allowing for non-uniform
+                          bin widths.
+        :param labels: Specifies the labels for the returned
+                       bins. Must be the same length as the resulting bins.
+        :param str field_name: Name of the new column in the `exposure_att` 
+                                `DataFrame`
+        """
+
+        for intensity_key in self.exposure_vuln_curves:
+            vuln_curve = self.exposure_vuln_curves[intensity_key]
+            loss_category_type = vuln_curve.loss_category_type
+        
+        self.exposure_att[field_name] = pd.cut(self.exposure_att[loss_category_type], 
+                                               bins, right=False, labels=labels)
+
+
     def tabulate(self, file_name, index=None, columns=None, aggfunc=None, use_parallel=True):
         """
-        Essentially perform a pivot table on the `exposure_atts` `DataFrame`
+        Reshape data (produce a "pivot" table) based on column values. Uses
+        unique values from specified `index` / `columns` to form axes of the
+        resulting DataFrame, then writes to an Excel file. This function does not support data
+        aggregation - multiple values will result in a MultiIndex in the
+        columns.
+        See
+        https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.pivot_table.html
+        for further details.
 
-
+        Parameters
+        ----------
+        file_name : destination for the pivot table
+        index : column or list of columns
+            Keys to group by on the pivot table index.  If an array is passed,
+            it is being used as the same manner as column values.
+        columns : column, or list of the columns
+            Keys to group by on the pivot table column.  If an array is passed,
+            it is being used as the same manner as column values.
+        aggfunc : function, list of functions, dict, default numpy.mean
+            If list of functions passed, the resulting pivot table will have
+            hierarchical columns whose top level are the function names
+            (inferred from the function objects themselves)
+            If dict is passed, the key is column to aggregate and value
+            is function or list of functions.
         """
-
         if index not in self.exposure_att.columns:
-            LOGGER.error(f"Cannot tabulate data using {index}")
+            LOGGER.error(f"Cannot tabulate data using {index} as index")
+            LOGGER.error(f"{index} is not an attribute of the exposure data")
             return
 
         if columns not in self.exposure_att.columns:
-            LOGGER.error(f"{columns} not in the exposure data")
+            LOGGER.error(f"Required attribute(s) {columns} not in the exposure data")
+            LOGGER.error(f"Maybe you need to run a categorise job before this one?")
             return
-
-        a1 = self.prov.activity(":Tabulate",
-                                datetime.now().strftime(DATEFMT), 
-                                None,
+        dt = datetime.now().strftime(DATEFMT)
+        a1 = self.prov.activity(":Tabulate", dt, None,
                                 {"prov:type":"Tabulation", 
                                  "void:aggregator":repr(index),
                                  "void:attributes":repr(columns),
@@ -362,16 +404,20 @@ class Context(object):
 
         tblfileent = self.prov.entity(":TabulationFile",
                                      {"prov:type":"void:Dataset",
-                                      "prov:atLocation":os.path.basename(filename),
+                                      "prov:atLocation":os.path.basename(file_name),
                                       "prov:generatedAtTime":dt})
 
-        self.prov.wasGeneratedBy(tblfileent, a1)
-        self.prov.wasInformedBy(a1, self.provlabel)
         self.pivot = self.exposure_att.pivot_table(index=index, 
                                                    columns=columns,
                                                    aggfunc=aggfunc,
                                                    fill_value=0)
-        self.pivot.to_excel(file_name)
+        try:
+            self.pivot.to_excel(file_name)
+        except:
+            LOGGER.error(f"Unable to save tabulated data to {file_name}")
+        else:
+            self.prov.wasGeneratedBy(tblfileent, a1)
+            self.prov.wasInformedBy(a1, self.provlabel)
 
 def save_csv(write_dict, filename):
     """
@@ -437,9 +483,7 @@ def save_csv_agg(write_dict, filename):
     """
 
     dirname = os.path.dirname(filename)
-    if dirname == '':
-        pass
-    elif not os.path.isdir(dirname):
+    if dirname and not os.path.isdir(dirname):
         LOGGER.warn(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
         
