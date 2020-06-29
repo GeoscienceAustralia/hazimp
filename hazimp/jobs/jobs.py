@@ -35,10 +35,14 @@ is not present Error out.
 
 """
 
+import os
+import re
 import sys
 import scipy
 import pandas as pd
 import numpy as np
+
+from prov.dot import prov_to_dot
 
 from hazimp import parallel
 from hazimp import misc
@@ -64,6 +68,9 @@ RANDOM_CONSTANT = 'random_constant'
 PERMUTATE_EXPOSURE = 'permutate_exposure'
 AGGREGATE_LOSS = 'aggregate_loss'
 AGGREGATE = 'aggregate'
+TABULATE = 'tabulate'
+CATEGORISE = 'categorise'
+SAVEPROVENANCE = 'saveprovenance'
 
 class Job(object):
 
@@ -308,6 +315,13 @@ class LoadCsvExposure(Job):
             key: column titles
             value: column values, except the title
         """
+        dt = misc.get_file_mtime(file_name)
+        expent = context.prov.entity(":Exposure data", 
+                            {'dcterms:title': 'Exposure data',
+                             'prov:type': 'void:Dataset',
+                             'prov:generatedAtTime':dt,
+                             'prov:atLocation':os.path.basename(file_name)})
+        context.prov.used(context.provlabel, expent)
         data_frame = parallel.csv2dict(file_name, use_parallel=use_parallel)
         # FIXME Need to do better error handling
         # FIXME this function can only be called once.
@@ -362,6 +376,12 @@ class LoadXmlVulnerability(Job):
         if file_name is not None:
             vuln_sets = vuln_sets_from_xml_file(file_name)
             context.vulnerability_sets.update(vuln_sets)
+            dt = misc.get_file_mtime(file_name)
+            vulent = context.prov.entity(":vulnerability file",
+                                         {'prov:type': 'prov:Collection',
+                                          'prov:generatedAtTime':dt,
+                                          'prov:atLocation':os.path.basename(file_name)})
+            context.prov.used(context.provlabel, vulent)
 
 
 class SimpleLinker(Job):
@@ -390,6 +410,12 @@ class SimpleLinker(Job):
         Content return:
            vul_function_titles: Add's the exposure_titles
         """
+        for k, v in vul_functions_in_exposure.items():
+            k1 = context.prov.entity(":vulnerability set",
+                                     {"dcterms:title":k,
+                                      "prov:value":v})
+            context.prov.wasDerivedFrom(context.provlabel, k1)
+            context.prov.specializationOf(k1, ":vulnerability file")
         context.vul_function_titles.update(vul_functions_in_exposure)
 
 
@@ -440,6 +466,7 @@ class SelectVulnFunction(Job):
            value - realised vulnerability curve instance per asset
         """
         exposure_vuln_curves = {}
+
         for vuln_set_key in variability_method:
             
             # Get the vulnerability set
@@ -482,7 +509,6 @@ class LookUp(Job):
                 key - intensity measure
                 value - realised vulnerability curve instance per asset
         """
-
         for intensity_key in context.exposure_vuln_curves:
             vuln_curve = context.exposure_vuln_curves[intensity_key]
             int_measure = vuln_curve.intensity_measure_type
@@ -642,6 +668,22 @@ class LoadRaster(Job):
         else:
             if isinstance(file_list, str):
                 file_list = [file_list]
+
+            for f in file_list:                    
+                dt = misc.get_file_mtime(f)
+                atts = {"dcterms:title":"Source hazard data",
+                        "prov:type":"prov:Dataset",
+                        "prov:atLocation":os.path.basename(f),
+                        "prov:format":os.path.splitext(f)[1].replace('.',''),
+                        "prov:generatedAtTime":dt,}
+                if file_format == 'nc' and variable:
+                    atts['prov:variable'] = variable
+                hazent = context.prov.entity(":Hazard data", atts)
+                context.prov.used(context.provlabel, hazent)
+
+            if file_format == 'nc' and variable:
+                file_list = misc.mod_file_list(file_list, variable)
+
             file_data, extent = raster_module.files_raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat, file_list)
@@ -672,8 +714,7 @@ class AggregateLoss(Job):
                         exposure assets by before performing aggregations 
                         (sum, mean, etc.).
         """
-        context.exposure_agg = misc.aggregate_loss_atts(context.exposure_att,
-                                                        groupby, kwargs)
+        context.aggregate_loss(groupby, kwargs)
 
 class SaveExposure(Job):
 
@@ -723,6 +764,43 @@ class Aggregate(Job):
                                  impactcode,
                                  boundarycode,
                                  use_parallel=use_parallel)
+
+class Tabulate(Job):
+
+    def __init__(self):
+        super(Tabulate, self).__init__()
+        self.call_funct = TABULATE
+    
+    def __call__(self, context, file_name=None, index=None,
+                 columns=None, aggfunc=None, use_parallel=True):
+        context.tabulate(file_name, index, columns, 
+                         aggfunc, use_parallel=use_parallel)
+
+class Categorise(Job):
+
+    def __init__(self):
+        super(Categorise, self).__init__()
+        self.call_funct = CATEGORISE
+
+    def __call__(self, context, bins=None, labels=None, field_name=None):
+        context.categorise(bins, labels, field_name)
+
+class SaveProvenance(Job):
+
+    def __init__(self):
+        super(SaveProvenance, self).__init__()
+        self.call_funct = SAVEPROVENANCE
+    
+    def __call__(self, context, file_name=None):
+        """
+        Save provenance information. 
+
+        By default we save to xml format.
+        """
+
+        dot = prov_to_dot(context.prov)
+        dot.write_png(file_name.replace('.xml', '.png'))
+        context.prov.serialize(file_name, format='xml')
 # ____________________________________________________
 # ----------------------------------------------------
 #                KEEP THIS AT THE END

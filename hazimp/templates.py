@@ -30,7 +30,9 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                                    LOADXMLVULNERABILITY, SIMPLELINKER,
                                    SELECTVULNFUNCTION, RANDOM_CONSTANT,
                                    LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
-                                   MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS)
+                                   MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS,
+                                   TABULATE, CATEGORISE,
+                                   SAVEPROVENANCE)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -72,7 +74,7 @@ CONT_TEMP = 'regime_action'
 
 AGGREGATION = 'aggregation'
 AGGREGATE = 'aggregate'
-
+TABULATE = 'tabulate'
 CONT_MAP = {SAVE_CONT: "_SAVE", NO_ACTION_CONT: "_NOACTION",
             EXPOSE_CONT: "_EXPOSE", SAVEAGG_CONT: "_SAVEAGG"}
 INSURE_MAP = {INSURED: "_INSURED", UNINSURED: "_UNINSURED"}
@@ -125,6 +127,11 @@ def _wind_v3_reader(config_list):
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
+    
     return job_insts
 
 
@@ -174,6 +181,11 @@ def _wind_v4_reader(config_list):
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
+        
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
 
     return job_insts
 
@@ -214,12 +226,7 @@ def _wind_nc_reader(config_list):
 
     file_list = find_atts(config_list, LOADWINDTCRM)
     atts = find_atts(config_list, LOADWINDTCRM)
-    if 'file_format' in atts:
-        if atts['file_format'] == 'nc' and 'variable' in atts:
-            atts['file_list'] = _mod_file_list(atts['file_list'],
-                                               atts['variable'])
-        else:
-            atts['file_list']
+    
 
     atts['attribute_label'] = '0.2s gust at 10m height m/s'
     add_job(job_insts, LOADRASTER, atts)
@@ -248,14 +255,16 @@ def _wind_nc_reader(config_list):
     else:
         add_job(job_insts, LOOKUP)
         
-    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
-    if REP_VAL_NAME not in atts_dict:
-        msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
-        raise RuntimeError(msg)
-    attributes = {
-        'var1': 'structural_loss_ratio', 'var2': atts_dict[REP_VAL_NAME],
-        'var_out': 'structural_loss'}
-    add_job(job_insts, MDMULT, attributes)
+    calcloss = config_dict.get(CALCSTRUCTLOSS)
+    if calcloss:
+        atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+        if REP_VAL_NAME not in atts_dict:
+            msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
+            raise RuntimeError(msg)
+        attributes = {'var1': 'structural_loss_ratio',
+                      'var2': atts_dict[REP_VAL_NAME],
+                      'var_out': 'structural_loss'}
+        add_job(job_insts, MDMULT, attributes)
 
     if config_dict.get(AGGREGATION):
         attributes = find_atts(config_list, AGGREGATION)
@@ -271,6 +280,23 @@ def _wind_nc_reader(config_list):
         attributes = find_atts(config_list, AGGREGATE)
         add_job(job_insts, AGGREGATE, attributes)
 
+    if config_dict.get(CATEGORISE):
+        attributes = find_atts(config_list, CATEGORISE)
+        add_job(job_insts, CATEGORISE, attributes)
+
+    if config_dict.get(TABULATE):
+        attributes = find_atts(config_list, TABULATE)
+        add_job(job_insts, TABULATE, attributes)
+
+
+
+    # Eventually, this needs to be included in pipeline.Pipeline and
+    # automatically added to the list of jobs
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
+
     return job_insts
 
 def _wind_v5_reader(config_list):
@@ -282,6 +308,7 @@ def _wind_v5_reader(config_list):
     """
 
     LOGGER.info("Using wind_v5 template")
+    config_dict = {k:v for item in config_list for k, v in list(item.items())}
     job_insts = []
     atts = find_atts(config_list, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
@@ -321,11 +348,26 @@ def _wind_v5_reader(config_list):
     attributes = find_atts(config_list, AGGREGATION)
     add_job(job_insts, AGGREGATE_LOSS, attributes)
 
+    if config_dict.get(CATEGORISE):
+        attributes = find_atts(config_list, CATEGORISE)
+        add_job(job_insts, CATEGORISE, attributes)
+
+    if config_dict.get(TABULATE):
+        attributes = find_atts(config_list, TABULATE)
+        add_job(job_insts, TABULATE, attributes)
+
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
     
     file_name = find_atts(config_list, SAVEAGG)
     add_job(job_insts, SAVEAGG, {'file_name': file_name})
+
+    # Eventually, this needs to be included in pipeline.Pipeline and
+    # automatically added to the list of jobs
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
 
     return job_insts    
 
@@ -382,6 +424,10 @@ def _flood_fabric_v2_reader(config_list):
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
     return job_insts
 
 # this is disabling R:171, 0: Too many statements
@@ -483,6 +529,10 @@ def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
+    file_name = find_atts(config_list, SAVE)
+    base, ext = os.path.splitext(file_name)
+    file_name = f"{base}.xml"
+    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
     return job_insts
 
 

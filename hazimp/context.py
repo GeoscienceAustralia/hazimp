@@ -31,14 +31,21 @@ import os
 import sys
 import numpy
 import csv
+import pandas as pd
 import geopandas as gpd
+
+from prov.model import ProvDocument
 
 from hazimp import misc
 from hazimp import parallel
 
 import logging
 
+from datetime import datetime
+import getpass
+
 LOGGER=logging.getLogger(__name__)
+DATEFMT = "%Y-%m-%d %H:%M:%S %Z"
 
 # The standard string names in the context instance
 EX_LAT = 'exposure_latitude'
@@ -100,6 +107,39 @@ class Context(object):
         # value being the exposure attribute who's values are vulnerability
         # function ID's.
         self.vul_function_titles = {}
+
+        # A `prov.ProvDocument` to manage provenance information, including
+        # adding required namespaces
+        self.prov = ProvDocument()
+        self.prov.set_default_namespace("")
+        self.prov.add_namespace('prov', 'http://www.w3.org/ns/prov#')
+        self.prov.add_namespace('xsd',  'http://www.w3.org/2001/XMLSchema#')
+        self.prov.add_namespace('foaf', 'http://xmlns.com/foaf/0.1/')
+        self.prov.add_namespace('void', 'http://vocab.deri.ie/void#')
+        self.prov.add_namespace('dcterms', 'http://purl.org/dc/terms/')
+        #self.prov.add_namespace("", 'http://example.com')
+        commit, branch, dt = misc.get_git_commit()
+        # Create the fundamental software agent that is this code:
+        self.prov.agent(":hazimp",
+                        {"prov:type":"prov:SoftwareAgent",
+                         "prov:commit":commit,
+                         "prov:branch":branch,
+                         "prov:date":dt})
+        self.prov.agent(f":{getpass.getuser()}",
+                        {"prov:type":"foaf:Person"})
+        self.prov.actedOnBehalfOf(":hazimp", f":{getpass.getuser()}")
+        self.provlabel = ''
+
+    def set_prov_label(self, label, title="HazImp analysis"):
+        """
+        Set the qualified label for the provenance data
+        """
+
+        self.provlabel = f":{label}"
+        self.prov.activity(f":{label}", datetime.now().strftime(DATEFMT), None,
+                           {f"dcterms:title":title,
+                            f"prov:type":"void:Analysis"})
+        self.prov.wasAttributedTo(self.provlabel, ":hazimp")
 
     def get_site_shape(self):
         """
@@ -168,6 +208,15 @@ class Context(object):
         :param filename: The file to be written.
         :return write_dict: The whole dictionary, returned for testing.
         """
+        s1 = self.prov.entity(f":HazImp output file",
+                              {f"prov:label":"Full HazImp output file",
+                               f"prov:type":"void:Dataset",
+                               "prov:atLocation":os.path.basename(filename)})
+        a1 = self.prov.activity(":SaveImpactData", 
+                                datetime.now().strftime(DATEFMT), 
+                                None)
+        self.prov.wasGeneratedBy(s1, a1)
+        self.prov.wasInformedBy(a1, self.provlabel)
         write_dict = self.exposure_att.copy()
         write_dict[EX_LAT] = self.exposure_lat
         write_dict[EX_LONG] = self.exposure_long
@@ -202,10 +251,16 @@ class Context(object):
         """
         write_dict = self.exposure_agg.copy()
 
-        #if use_parallel:
-            #assert misc.INTID in write_dict
-        #    write_dict = parallel.gather_dict(write_dict,
-        #                                      write_dict[misc.INTID])
+        s1 = self.prov.entity(f":Aggregated HazImp output file",
+                              {f"prov:label":"Aggregated HazImp output file",
+                               f"prov:type":"void:Dataset",
+                               "prov:atLocation":os.path.basename(filename)})
+        a1 = self.prov.activity(":SaveAggregatedImpactData", 
+                                datetime.now().strftime(DATEFMT), 
+                                None)
+        self.prov.wasGeneratedBy(s1, a1)
+        self.prov.wasInformedBy(a1, self.prov.activity(":AggregateLoss"))
+        #self.prov.wasInformedBy(a1, self.provlabel)
 
         if parallel.STATE.rank == 0 or not use_parallel:
             if filename[-4:] == '.csv':
@@ -228,11 +283,142 @@ class Context(object):
         """
         LOGGER.info("Saving aggregated data")
         write_dict = self.exposure_att.copy()
-
+        dt = datetime.now().strftime(DATEFMT)
+        bdyent = self.prov.entity(":Aggregation boundaries", 
+                                 {"prov:type":"void:Dataset",
+                                  "prov:atLocation":os.path.basename(boundaries),
+                                  "prov:generatedAtTime":misc.get_file_mtime(boundaries),
+                                  "void:boundary_code":boundarycode})
+        aggact = self.prov.activity(":AggregationByRegions", dt, None, 
+                                    {'prov:type':"Spatial aggregation"})
+        aggfileent = self.prov.entity(":AggregationFile",
+                                     {"prov:type":"void:Dataset",
+                                      "prov:atLocation":os.path.basename(filename),
+                                      "prov:generatedAtTime":dt})
+        self.prov.used(aggact, bdyent)
+        self.prov.wasInformedBy(aggact, self.provlabel)
+        self.prov.wasGeneratedBy(aggfileent, aggact)
         if parallel.STATE.rank == 0 or not use_parallel:
-            choropleth(write_dict, boundaries, impactcode, boundarycode, filename)
+            misc.choropleth(write_dict, boundaries, impactcode, boundarycode, filename)
         else:
             pass
+
+    def aggregate_loss(self, groupby=None, kwargs=None):
+        """
+        Aggregate data by the `groupby` attribute, using the `kwargs` to perform
+        any arithmetic aggregation on fields (e.g. summation, mean, etc.)
+
+        :param str groupby: A column in the `DataFrame` that corresponds to
+        regions by which to aggregate data
+        :param dict kwargs: A `dict` with keys of valid column names (from the
+        `DataFrame`) and values being lists of aggregation functions to apply to the
+        columns. 
+
+        For example::
+
+        kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
+                'structural_loss_ratio': ['mean', 'std']}
+        
+        See
+        https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
+        for more guidance on using aggregation with `DataFrames`
+
+        """
+        a1 = self.prov.activity(":AggregateLoss", 
+                                datetime.now().strftime(DATEFMT), 
+                                None,
+                                {"prov:type":"Aggregation", 
+                                 "void:aggregator":repr(groupby)})
+        self.prov.wasInformedBy(a1, self.provlabel)
+        grouped = self.exposure_att.groupby(groupby, as_index=False)
+    
+        outdf = grouped.agg(kwargs)
+        outdf.columns = ['_'.join(col).strip() for col in outdf.columns.values]
+        outdf.reset_index(col_level=1)
+        outdf.columns = outdf.columns.get_level_values(0)
+        self.exposure_agg = outdf
+
+    def categorise(self, bins, labels, field_name):
+        """
+        Bin values into discrete intervals. 
+
+        :param list bins: Monotonically increasing array of bin edges,
+                          including the rightmost edge, allowing for non-uniform
+                          bin widths.
+        :param labels: Specifies the labels for the returned
+                       bins. Must be the same length as the resulting bins.
+        :param str field_name: Name of the new column in the `exposure_att` 
+                                `DataFrame`
+        """
+
+        for intensity_key in self.exposure_vuln_curves:
+            vuln_curve = self.exposure_vuln_curves[intensity_key]
+            loss_category_type = vuln_curve.loss_category_type
+        
+        self.exposure_att[field_name] = pd.cut(self.exposure_att[loss_category_type], 
+                                               bins, right=False, labels=labels)
+
+
+    def tabulate(self, file_name, index=None, columns=None, aggfunc=None, use_parallel=True):
+        """
+        Reshape data (produce a "pivot" table) based on column values. Uses
+        unique values from specified `index` / `columns` to form axes of the
+        resulting DataFrame, then writes to an Excel file. This function does not support data
+        aggregation - multiple values will result in a MultiIndex in the
+        columns.
+        See
+        https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.pivot_table.html
+        for further details.
+
+        Parameters
+        ----------
+        file_name : destination for the pivot table
+        index : column or list of columns
+            Keys to group by on the pivot table index.  If an array is passed,
+            it is being used as the same manner as column values.
+        columns : column, or list of the columns
+            Keys to group by on the pivot table column.  If an array is passed,
+            it is being used as the same manner as column values.
+        aggfunc : function, list of functions, dict, default numpy.mean
+            If list of functions passed, the resulting pivot table will have
+            hierarchical columns whose top level are the function names
+            (inferred from the function objects themselves)
+            If dict is passed, the key is column to aggregate and value
+            is function or list of functions.
+        """
+        if index not in self.exposure_att.columns:
+            LOGGER.error(f"Cannot tabulate data using {index} as index")
+            LOGGER.error(f"{index} is not an attribute of the exposure data")
+            return
+
+        if columns not in self.exposure_att.columns:
+            LOGGER.error(f"Required attribute(s) {columns} not in the exposure data")
+            LOGGER.error(f"Maybe you need to run a categorise job before this one?")
+            return
+
+        dt = datetime.now().strftime(DATEFMT)
+        a1 = self.prov.activity(":Tabulate", dt, None,
+                                {"prov:type":"Tabulation", 
+                                 "void:aggregator":repr(index),
+                                 "void:attributes":repr(columns),
+                                 "void:aggregation":repr(aggfunc)})
+
+        tblfileent = self.prov.entity(":TabulationFile",
+                                     {"prov:type":"void:Dataset",
+                                      "prov:atLocation":os.path.basename(file_name),
+                                      "prov:generatedAtTime":dt})
+
+        self.pivot = self.exposure_att.pivot_table(index=index, 
+                                                   columns=columns,
+                                                   aggfunc=aggfunc,
+                                                   fill_value=0)
+        try:
+            self.pivot.to_excel(file_name)
+        except:
+            LOGGER.error(f"Unable to save tabulated data to {file_name}")
+        else:
+            self.prov.wasGeneratedBy(tblfileent, a1)
+            self.prov.wasInformedBy(a1, self.provlabel)
 
 def save_csv(write_dict, filename):
     """
@@ -270,7 +456,7 @@ def save_csv(write_dict, filename):
     # numpy.savetxt(filename, body, delimiter=',', header='yeah')
     
     dirname = os.path.dirname(filename)
-    if not os.path.isdir(dirname):
+    if dirname and not os.path.isdir(dirname):
         LOGGER.warn(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
         
@@ -298,7 +484,7 @@ def save_csv_agg(write_dict, filename):
     """
 
     dirname = os.path.dirname(filename)
-    if not os.path.isdir(dirname):
+    if dirname and not os.path.isdir(dirname):
         LOGGER.warn(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
         
@@ -307,71 +493,6 @@ def save_csv_agg(write_dict, filename):
     except FileNotFoundError:
         LOGGER.error(f"Cannot write to {filename}")
         sys.exit(1)
-    """
-    keys = write_dict.keys()
-    header = list(keys)
 
-    body = None
-    for key in header:
-        #  Only one dimension can be saved.
-        #  Average the results to the Site (first) dimension.
-        only_1d = misc.squash_narray(write_dict[key])
-        if body is None:
-            body = only_1d
-        else:
-            # NUMPY1.6 loses significant figures
-            body = numpy.column_stack((body, only_1d))
-    # Need numpy 1.7 > to do headers
-    # numpy.savetxt(filename, body, delimiter=',', header='yeah')
-    hnd = open(filename, 'wb')
-    writer = csv.writer(hnd, delimiter=',')
-    writer.writerow(header)
-    for i in range(body.shape[0]):
-        writer.writerow(list(body[i, :]))
-    """
     
-def choropleth(dframe, boundaries, impactcode, bcode, filename):
-    """
-    Aggregate to geospatial boundaries and save to file
 
-    :param dframe: `pandas.DataFrame` containing point data to be aggregated
-    :param str boundaries: File name of a geospatial dataset that contains boundaries 
-                   to serve as aggregation boundaries
-    :param str impactcode: Field name in the `dframe` to aggregate by
-    :param str bcode: Corresponding field name in the geospatial dataset.
-    :param str filename: Destination filename. Must have a valid extension from 
-                   `shp`, `json` or `gpkg`.
-    """
-    # List of possible drivers for output:
-    # See `import fiona; fiona.supported_drivers for a complete list of
-    # options, but we've only implemented a few to start with. 
-    DRIVERS = {'shp': 'ESRI Shapefile',
-               'json': 'GeoJSON',
-               'gpkg': 'GPKG'}
-    left, right = mergefield = impactcode, bcode
-
-    report = {'REPLACEMENT_VALUE': 'sum', 
-              'structural_loss_ratio': 'mean', 
-              '0.2s gust at 10m height m/s': 'max'}
-    aggregate = dframe.groupby(left).agg(report)
-    shapes = gpd.read_file(boundaries)
-
-    try:
-        shapes['key'] = shapes[right].astype(int)
-    except KeyError:
-        LOGGER.error(f"{boundaries} does not contain an attribute {right}")
-        sys.exit(1)
-
-    result = shapes.merge(aggregate, left_on='key', right_index=True)
-    driver = DRIVERS[os.path.splitext(filename)[1].replace('.', '')]
-    if driver == 'ESRI Shapefile':
-        LOGGER.debug("Changing field names for ESRI Shapefile")
-        # Need to modify the field names, as ESRI truncates them
-        result = result.rename(columns={'REPLACEMENT_VALUE':'REPVAL',
-                                        'structural_loss_ratio':'slr_mean',
-                                        '0.2s gust at 10m height m/s':'maxwind'})
-    dirname = os.path.dirname(filename)
-    if not os.path.isdir(dirname):
-        LOGGER.warn(f"{dirname} does not exist - trying to create it")
-        os.makedirs(dirname)
-    result.to_file(filename, driver=driver)
