@@ -17,7 +17,7 @@
 
 # W0221: 65:ConfigAwarePipeLine.run: Arguments number differs from
 # overridden method
-# pylint: disable=W0221
+# pylint: disable=W0221,R0205,R0902
 # I'm ok with .run having more arg's
 # I should use the ABC though.
 
@@ -29,22 +29,20 @@ order. The order is determined by the queue of jobs.
 
 import os
 import sys
-import numpy
+import getpass
+from datetime import datetime
+import logging
 import csv
+
+import numpy
 import pandas as pd
-import geopandas as gpd
 
 from prov.model import ProvDocument
 
 from hazimp import misc
 from hazimp import parallel
 
-import logging
-
-from datetime import datetime
-import getpass
-
-LOGGER=logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 DATEFMT = "%Y-%m-%d %H:%M:%S %Z"
 
 # The standard string names in the context instance
@@ -113,20 +111,20 @@ class Context(object):
         self.prov = ProvDocument()
         self.prov.set_default_namespace("")
         self.prov.add_namespace('prov', 'http://www.w3.org/ns/prov#')
-        self.prov.add_namespace('xsd',  'http://www.w3.org/2001/XMLSchema#')
+        self.prov.add_namespace('xsd', 'http://www.w3.org/2001/XMLSchema#')
         self.prov.add_namespace('foaf', 'http://xmlns.com/foaf/0.1/')
         self.prov.add_namespace('void', 'http://vocab.deri.ie/void#')
         self.prov.add_namespace('dcterms', 'http://purl.org/dc/terms/')
-        #self.prov.add_namespace("", 'http://example.com')
+
         commit, branch, dt = misc.get_git_commit()
         # Create the fundamental software agent that is this code:
         self.prov.agent(":hazimp",
-                        {"prov:type":"prov:SoftwareAgent",
-                         "prov:commit":commit,
-                         "prov:branch":branch,
-                         "prov:date":dt})
+                        {"prov:type": "prov:SoftwareAgent",
+                         "prov:commit": commit,
+                         "prov:branch": branch,
+                         "prov:date": dt})
         self.prov.agent(f":{getpass.getuser()}",
-                        {"prov:type":"foaf:Person"})
+                        {"prov:type": "foaf:Person"})
         self.prov.actedOnBehalfOf(":hazimp", f":{getpass.getuser()}")
         self.provlabel = ''
 
@@ -137,8 +135,8 @@ class Context(object):
 
         self.provlabel = f":{label}"
         self.prov.activity(f":{label}", datetime.now().strftime(DATEFMT), None,
-                           {f"dcterms:title":title,
-                            f"prov:type":"void:Analysis"})
+                           {f"dcterms:title": title,
+                            f"prov:type": "void:Analysis"})
         self.prov.wasAttributedTo(self.provlabel, ":hazimp")
 
     def get_site_shape(self):
@@ -184,7 +182,6 @@ class Context(object):
             self.exposure_lat = self.exposure_lat[good_indexes]
             self.exposure_long = self.exposure_long[good_indexes]
 
-        
         if isinstance(self.exposure_att, dict):
             for key in self.exposure_att:
                 if good_indexes.shape[0] is 0:
@@ -209,11 +206,11 @@ class Context(object):
         :return write_dict: The whole dictionary, returned for testing.
         """
         s1 = self.prov.entity(f":HazImp output file",
-                              {f"prov:label":"Full HazImp output file",
-                               f"prov:type":"void:Dataset",
-                               "prov:atLocation":os.path.basename(filename)})
-        a1 = self.prov.activity(":SaveImpactData", 
-                                datetime.now().strftime(DATEFMT), 
+                              {f"prov:label": "Full HazImp output file",
+                               f"prov:type": "void:Dataset",
+                               "prov:atLocation": os.path.basename(filename)})
+        a1 = self.prov.activity(":SaveImpactData",
+                                datetime.now().strftime(DATEFMT),
                                 None)
         self.prov.wasGeneratedBy(s1, a1)
         self.prov.wasInformedBy(a1, self.provlabel)
@@ -238,29 +235,28 @@ class Context(object):
 
     def save_exposure_aggregation(self, filename, use_parallel=True):
         """
-        Save the aggregated exposure attributes. 
+        Save the aggregated exposure attributes.
         The file type saved is based on the filename extension.
         Options
            '.npz': Save the arrays into a single file in uncompressed .npz
                    format.
 
-        :param use_parallel: Set to True for parallel behaviour which 
+        :param use_parallel: Set to True for parallel behaviour which
         is only node 0 writing to file.
         :param filename: The file to be written.
-        :return write_dict: The whole dictionary, returned for testing.       
+        :return write_dict: The whole dictionary, returned for testing.
         """
         write_dict = self.exposure_agg.copy()
 
         s1 = self.prov.entity(f":Aggregated HazImp output file",
-                              {f"prov:label":"Aggregated HazImp output file",
-                               f"prov:type":"void:Dataset",
-                               "prov:atLocation":os.path.basename(filename)})
-        a1 = self.prov.activity(":SaveAggregatedImpactData", 
-                                datetime.now().strftime(DATEFMT), 
+                              {f"prov:label": "Aggregated HazImp output file",
+                               f"prov:type": "void:Dataset",
+                               "prov:atLocation": os.path.basename(filename)})
+        a1 = self.prov.activity(":SaveAggregatedImpactData",
+                                datetime.now().strftime(DATEFMT),
                                 None)
         self.prov.wasGeneratedBy(s1, a1)
         self.prov.wasInformedBy(a1, self.prov.activity(":AggregateLoss"))
-        #self.prov.wasInformedBy(a1, self.provlabel)
 
         if parallel.STATE.rank == 0 or not use_parallel:
             if filename[-4:] == '.csv':
@@ -272,34 +268,36 @@ class Context(object):
             # of the context info
             return write_dict
 
-    def save_aggregation(self, filename, boundaries, impactcode, boundarycode, use_parallel=True):
+    def save_aggregation(self, filename, boundaries, impactcode,
+                         boundarycode, use_parallel=True):
         """
         Save data aggregated to geospatial regions
-        
+
         :param str filename: Destination filename
-        :param bool use_parallel: True for parallel behaviout, which 
+        :param bool use_parallel: True for parallel behaviout, which
                                   is only node 0 writing to file
 
         """
         LOGGER.info("Saving aggregated data")
         write_dict = self.exposure_att.copy()
         dt = datetime.now().strftime(DATEFMT)
-        bdyent = self.prov.entity(":Aggregation boundaries", 
-                                 {"prov:type":"void:Dataset",
-                                  "prov:atLocation":os.path.basename(boundaries),
-                                  "prov:generatedAtTime":misc.get_file_mtime(boundaries),
-                                  "void:boundary_code":boundarycode})
-        aggact = self.prov.activity(":AggregationByRegions", dt, None, 
-                                    {'prov:type':"Spatial aggregation"})
-        aggfileent = self.prov.entity(":AggregationFile",
-                                     {"prov:type":"void:Dataset",
-                                      "prov:atLocation":os.path.basename(filename),
-                                      "prov:generatedAtTime":dt})
+        atts = {"prov:type": "void:Dataset",
+                "prov:atLocation": os.path.basename(boundaries),
+                "prov:generatedAtTime": misc.get_file_mtime(boundaries),
+                "void:boundary_code": boundarycode}
+        bdyent = self.prov.entity(":Aggregation boundaries", atts)
+        aggact = self.prov.activity(":AggregationByRegions", dt, None,
+                                    {'prov:type': "Spatial aggregation"})
+        aggatts = {"prov:type": "void:Dataset",
+                   "prov:atLocation": os.path.basename(filename),
+                   "prov:generatedAtTime": dt}
+        aggfileent = self.prov.entity(":AggregationFile", aggatts)
         self.prov.used(aggact, bdyent)
         self.prov.wasInformedBy(aggact, self.provlabel)
         self.prov.wasGeneratedBy(aggfileent, aggact)
         if parallel.STATE.rank == 0 or not use_parallel:
-            misc.choropleth(write_dict, boundaries, impactcode, boundarycode, filename)
+            misc.choropleth(write_dict, boundaries, impactcode,
+                            boundarycode, filename)
         else:
             pass
 
@@ -312,26 +310,26 @@ class Context(object):
         regions by which to aggregate data
         :param dict kwargs: A `dict` with keys of valid column names (from the
         `DataFrame`) and values being lists of aggregation functions to apply to the
-        columns. 
+        columns.
 
         For example::
 
         kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
                 'structural_loss_ratio': ['mean', 'std']}
-        
+
         See
         https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
         for more guidance on using aggregation with `DataFrames`
 
         """
-        a1 = self.prov.activity(":AggregateLoss", 
-                                datetime.now().strftime(DATEFMT), 
+        a1 = self.prov.activity(":AggregateLoss",
+                                datetime.now().strftime(DATEFMT),
                                 None,
-                                {"prov:type":"Aggregation", 
-                                 "void:aggregator":repr(groupby)})
+                                {"prov:type": "Aggregation",
+                                 "void:aggregator": repr(groupby)})
         self.prov.wasInformedBy(a1, self.provlabel)
         grouped = self.exposure_att.groupby(groupby, as_index=False)
-    
+
         outdf = grouped.agg(kwargs)
         outdf.columns = ['_'.join(col).strip() for col in outdf.columns.values]
         outdf.reset_index(col_level=1)
@@ -340,26 +338,25 @@ class Context(object):
 
     def categorise(self, bins, labels, field_name):
         """
-        Bin values into discrete intervals. 
+        Bin values into discrete intervals.
 
         :param list bins: Monotonically increasing array of bin edges,
                           including the rightmost edge, allowing for non-uniform
                           bin widths.
         :param labels: Specifies the labels for the returned
                        bins. Must be the same length as the resulting bins.
-        :param str field_name: Name of the new column in the `exposure_att` 
+        :param str field_name: Name of the new column in the `exposure_att`
                                 `DataFrame`
         """
 
         for intensity_key in self.exposure_vuln_curves:
             vuln_curve = self.exposure_vuln_curves[intensity_key]
             loss_category_type = vuln_curve.loss_category_type
-        
-        self.exposure_att[field_name] = pd.cut(self.exposure_att[loss_category_type], 
+
+        self.exposure_att[field_name] = pd.cut(self.exposure_att[loss_category_type],
                                                bins, right=False, labels=labels)
 
-
-    def tabulate(self, file_name, index=None, columns=None, aggfunc=None, use_parallel=True):
+    def tabulate(self, file_name, index=None, columns=None, aggfunc=None):
         """
         Reshape data (produce a "pivot" table) based on column values. Uses
         unique values from specified `index` / `columns` to form axes of the
@@ -392,33 +389,36 @@ class Context(object):
             return
 
         if columns not in self.exposure_att.columns:
-            LOGGER.error(f"Required attribute(s) {columns} not in the exposure data")
-            LOGGER.error(f"Maybe you need to run a categorise job before this one?")
+            LOGGER.error(
+                f"Required attribute(s) {columns} not in the exposure data")
+            LOGGER.error(
+                f"Maybe you need to run a categorise job before this one?")
             return
 
         dt = datetime.now().strftime(DATEFMT)
         a1 = self.prov.activity(":Tabulate", dt, None,
-                                {"prov:type":"Tabulation", 
-                                 "void:aggregator":repr(index),
-                                 "void:attributes":repr(columns),
-                                 "void:aggregation":repr(aggfunc)})
+                                {"prov:type": "Tabulation",
+                                 "void:aggregator": repr(index),
+                                 "void:attributes": repr(columns),
+                                 "void:aggregation": repr(aggfunc)})
 
         tblfileent = self.prov.entity(":TabulationFile",
-                                     {"prov:type":"void:Dataset",
-                                      "prov:atLocation":os.path.basename(file_name),
-                                      "prov:generatedAtTime":dt})
+                                      {"prov:type": "void:Dataset",
+                                       "prov:atLocation": os.path.basename(file_name),
+                                       "prov:generatedAtTime": dt})
 
-        self.pivot = self.exposure_att.pivot_table(index=index, 
+        self.pivot = self.exposure_att.pivot_table(index=index,
                                                    columns=columns,
                                                    aggfunc=aggfunc,
                                                    fill_value=0)
         try:
             self.pivot.to_excel(file_name)
-        except:
+        except Exception:
             LOGGER.error(f"Unable to save tabulated data to {file_name}")
         else:
             self.prov.wasGeneratedBy(tblfileent, a1)
             self.prov.wasInformedBy(a1, self.provlabel)
+
 
 def save_csv(write_dict, filename):
     """
@@ -454,14 +454,14 @@ def save_csv(write_dict, filename):
             body = numpy.column_stack((body, only_1d))
     # Need numpy 1.7 > to do headers
     # numpy.savetxt(filename, body, delimiter=',', header='yeah')
-    
+
     dirname = os.path.dirname(filename)
     if dirname and not os.path.isdir(dirname):
         LOGGER.warn(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
-        
+
     hnd = open(filename, 'w', newline='')
-        
+
     writer = csv.writer(hnd, delimiter=',')
     writer.writerow(header)
     for i in range(body.shape[0]):
@@ -487,12 +487,9 @@ def save_csv_agg(write_dict, filename):
     if dirname and not os.path.isdir(dirname):
         LOGGER.warn(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
-        
+
     try:
         write_dict.to_csv(filename, index_label='FID')
     except FileNotFoundError:
         LOGGER.error(f"Cannot write to {filename}")
         sys.exit(1)
-
-    
-
