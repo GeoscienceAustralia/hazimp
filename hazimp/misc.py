@@ -114,7 +114,7 @@ def get_required_args(func):
     # can-you-list-the-keyword-arguments-a-python-function-receives
 
     # *args and **kwargs are not required, so ignore them.
-    args_and_defaults, _, _, default_vaules = inspect.getfullargspec(func)
+    args_and_defaults, _, _, default_vaules, _, _, _ = inspect.getfullargspec(func)
     defaults = []
     if default_vaules is None:
         args = args_and_defaults
