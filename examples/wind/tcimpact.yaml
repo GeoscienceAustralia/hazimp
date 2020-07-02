@@ -1,0 +1,26 @@
+##  python3 /g/data/w85/software/hazimp/hazimp/main.py -c /g/data/w85/QFES_SWHA/configuration/hazimp/011-01326.yaml
+
+ - template: wind_nc
+ 
+ - vulnerability_filename: <install_path>/resources/domestic_wind_vul_curves_wJCU.xml
+ - vulnerability_set: domestic_wind_2012
+ 
+ - load_exposure: 
+    file_name: </s3/path/exposure/NEXIS_TCRM.csv>
+    exposure_latitude: LATITUDE
+    exposure_longitude: LONGITUDE  
+ 
+ - load_wind:
+     file_list: </s3/path/local_wind.tif>
+ 
+ - calc_struct_loss:
+    replacement_value_label: REPLACEMENT_VALUE
+    
+ - save: </output/path/tcimpact.$FORECASTTIME.csv>
+ 
+ - aggregate:
+     boundaries: </s3/path/exposure/SA1_AUST.shp>
+     file_name: </output/path/tcimpact.$FORECASTTIME.shp>
+     impactcode: SA1_CODE
+     boundarycode: SA1_MAIN16
+     
