@@ -70,6 +70,7 @@ TABULATE = 'tabulate'
 CATEGORISE = 'categorise'
 SAVEPROVENANCE = 'saveprovenance'
 
+
 class Job(object):
 
     """
@@ -314,11 +315,11 @@ class LoadCsvExposure(Job):
             value: column values, except the title
         """
         dt = misc.get_file_mtime(file_name)
-        expent = context.prov.entity(":Exposure data", 
-                            {'dcterms:title': 'Exposure data',
-                             'prov:type': 'void:Dataset',
-                             'prov:generatedAtTime':dt,
-                             'prov:atLocation':os.path.basename(file_name)})
+        expent = context.prov.entity(":Exposure data",
+                                     {'dcterms:title': 'Exposure data',
+                                      'prov:type': 'void:Dataset',
+                                      'prov:generatedAtTime': dt,
+                                      'prov:atLocation': os.path.basename(file_name)})
         context.prov.used(context.provlabel, expent)
         data_frame = parallel.csv2dict(file_name, use_parallel=use_parallel)
         # FIXME Need to do better error handling
@@ -350,7 +351,7 @@ class LoadCsvExposure(Job):
             raise RuntimeError(msg)
 
         context.exposure_att = data_frame
-        #for key in data_frame:
+        # for key in data_frame:
         #    context.exposure_att[key] = data_frame[key].values
 
 
@@ -377,8 +378,8 @@ class LoadXmlVulnerability(Job):
             dt = misc.get_file_mtime(file_name)
             vulent = context.prov.entity(":vulnerability file",
                                          {'prov:type': 'prov:Collection',
-                                          'prov:generatedAtTime':dt,
-                                          'prov:atLocation':os.path.basename(file_name)})
+                                          'prov:generatedAtTime': dt,
+                                          'prov:atLocation': os.path.basename(file_name)})
             context.prov.used(context.provlabel, vulent)
 
 
@@ -410,8 +411,8 @@ class SimpleLinker(Job):
         """
         for k, v in vul_functions_in_exposure.items():
             k1 = context.prov.entity(":vulnerability set",
-                                     {"dcterms:title":k,
-                                      "prov:value":v})
+                                     {"dcterms:title": k,
+                                      "prov:value": v})
             context.prov.wasDerivedFrom(context.provlabel, k1)
             context.prov.specializationOf(k1, ":vulnerability file")
         context.vul_function_titles.update(vul_functions_in_exposure)
@@ -466,7 +467,7 @@ class SelectVulnFunction(Job):
         exposure_vuln_curves = {}
 
         for vuln_set_key in variability_method:
-            
+
             # Get the vulnerability set
             vuln_set = context.vulnerability_sets[vuln_set_key]
             # Get the column of function ID's
@@ -522,6 +523,7 @@ class LookUp(Job):
             losses = vuln_curve.look_up(intensities)
             context.exposure_att[loss_category_type] = losses
 
+
 class PermutateExposure(Job):
     """
     Iterate through the exposure attributes, randomly permutating
@@ -543,7 +545,7 @@ class PermutateExposure(Job):
                         exposure assets by before randomly permutating
                         the corresponding vulnerability curves.
         :param iterations: Number of iterations to perform
-        
+
         Content return:
            exposure_vuln_curves: A :class:`pandas.DataFrame` of realised
                vulnerability curves, associated with the exposure
@@ -557,12 +559,12 @@ class PermutateExposure(Job):
         losses = np.zeros((iterations, len(context.exposure_att)))
         for n in range(iterations):
             context.exposure_att = \
-                misc.permutate_att_values(context.exposure_att, 
+                misc.permutate_att_values(context.exposure_att,
                                           field, groupby=groupby)
 
             for intensity_key in context.exposure_vuln_curves:
                 SelectVulnFunction().__call__(context, variability_method={
-                                                    intensity_key: 'mean'})
+                    intensity_key: 'mean'})
                 vuln_curve = context.exposure_vuln_curves[intensity_key]
                 int_measure = vuln_curve.intensity_measure_type
                 loss_category_type = vuln_curve.loss_category_type
@@ -575,11 +577,11 @@ class PermutateExposure(Job):
                     raise RuntimeError(msg)
 
                 losses[n, :] = vuln_curve.look_up(intensities)
-                # By adding in a new attribute for each iteration, we can 
-                # capture all the possible permutations of loss outcomes. 
-                # This leads to a rather substantial output data volume, 
+                # By adding in a new attribute for each iteration, we can
+                # capture all the possible permutations of loss outcomes.
+                # This leads to a rather substantial output data volume,
                 # especially when considering the larger exposure datasets
-                # that will be used in real applications, and the number of 
+                # that will be used in real applications, and the number of
                 # iterations that should be used to achieve convergence.
                 loss_iteration = loss_category_type + "_{0:06d}".format(n)
                 field_iteration = field + "_{0:06d}".format(n)
@@ -591,6 +593,7 @@ class PermutateExposure(Job):
             loss_category_type_sd = loss_category_type + "_sd"
             context.exposure_att[loss_category_type] = mean_loss
             context.exposure_att[loss_category_type_sd] = loss_sd
+
 
 class LoadRaster(Job):
 
@@ -667,13 +670,13 @@ class LoadRaster(Job):
             if isinstance(file_list, str):
                 file_list = [file_list]
 
-            for f in file_list:                    
+            for f in file_list:
                 dt = misc.get_file_mtime(f)
-                atts = {"dcterms:title":"Source hazard data",
-                        "prov:type":"prov:Dataset",
-                        "prov:atLocation":os.path.basename(f),
-                        "prov:format":os.path.splitext(f)[1].replace('.',''),
-                        "prov:generatedAtTime":dt,}
+                atts = {"dcterms:title": "Source hazard data",
+                        "prov:type": "prov:Dataset",
+                        "prov:atLocation": os.path.basename(f),
+                        "prov:format": os.path.splitext(f)[1].replace('.', ''),
+                        "prov:generatedAtTime": dt, }
                 if file_format == 'nc' and variable:
                     atts['prov:variable'] = variable
                 hazent = context.prov.entity(":Hazard data", atts)
@@ -694,11 +697,13 @@ class LoadRaster(Job):
                 # Not optimised for speed, but easy to implement.
                 context.clip_exposure(*extent)
 
+
 class AggregateLoss(Job):
     """
     Aggregate loss attributes based on the ``groupby`` attribute 
     used in the permutation of the vulnerability curves.
     """
+
     def __init__(self):
         super(AggregateLoss, self).__init__()
         self.call_funct = AGGREGATE_LOSS
@@ -706,13 +711,14 @@ class AggregateLoss(Job):
     def __call__(self, context, groupby=None, kwargs=None):
         """
         Aggregate using `pandas.GroupBy` objects
-        
+
         :param context: The context instance, used to move data around.
         :param groupby: The name of the exposure attribute to group 
                         exposure assets by before performing aggregations 
                         (sum, mean, etc.).
         """
         context.aggregate_loss(groupby, kwargs)
+
 
 class SaveExposure(Job):
 
@@ -733,6 +739,7 @@ class SaveExposure(Job):
         """
         context.save_exposure_atts(file_name, use_parallel=use_parallel)
 
+
 class SaveAggregation(Job):
 
     def __init__(self):
@@ -749,6 +756,7 @@ class SaveAggregation(Job):
         context.save_exposure_aggregation(file_name,
                                           use_parallel=use_parallel)
 
+
 class Aggregate(Job):
 
     def __init__(self):
@@ -763,15 +771,17 @@ class Aggregate(Job):
                                  boundarycode,
                                  use_parallel=use_parallel)
 
+
 class Tabulate(Job):
 
     def __init__(self):
         super(Tabulate, self).__init__()
         self.call_funct = TABULATE
-    
+
     def __call__(self, context, file_name=None, index=None,
                  columns=None, aggfunc=None, use_parallel=True):
         context.tabulate(file_name, index, columns, aggfunc)
+
 
 class Categorise(Job):
 
@@ -782,12 +792,13 @@ class Categorise(Job):
     def __call__(self, context, bins=None, labels=None, field_name=None):
         context.categorise(bins, labels, field_name)
 
+
 class SaveProvenance(Job):
 
     def __init__(self):
         super(SaveProvenance, self).__init__()
         self.call_funct = SAVEPROVENANCE
-    
+
     def __call__(self, context, file_name=None):
         """
         Save provenance information. 
@@ -802,5 +813,6 @@ class SaveProvenance(Job):
 # ----------------------------------------------------
 #                KEEP THIS AT THE END
 # ____________________________________________________
+
 
 JOBS = misc.instanciate_classes(sys.modules[__name__])
