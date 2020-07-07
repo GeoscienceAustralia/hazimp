@@ -36,10 +36,8 @@ is not present Error out.
 """
 
 import os
-import re
 import sys
 import scipy
-import pandas as pd
 import numpy as np
 
 from prov.dot import prov_to_dot
@@ -775,8 +773,7 @@ class Tabulate(Job):
     
     def __call__(self, context, file_name=None, index=None,
                  columns=None, aggfunc=None, use_parallel=True):
-        context.tabulate(file_name, index, columns, 
-                         aggfunc, use_parallel=use_parallel)
+        context.tabulate(file_name, index, columns, aggfunc)
 
 class Categorise(Job):
 
