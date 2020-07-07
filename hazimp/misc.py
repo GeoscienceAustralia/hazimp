@@ -247,7 +247,7 @@ def permutate_att_values(dframe, fields, groupby=None):
                 newdf.groupby(groupby)[field].transform(permutation)
     elif groupby and groupby not in dframe.columns:
         LOGGER.error(f"Cannot use {groupby} for permuting exposure attributes")
-        LOGGER.error(f"The input expsoure data does not include that field")
+        LOGGER.error("The input expsoure data does not include that field")
         sys.exit()
     else:
         for field in fields:
@@ -264,8 +264,8 @@ def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
     :param str groupby: A column in the `DataFrame` that corresponds to
     regions by which to aggregate data
     :param dict kwargs: A `dict` with keys of valid column names (from the
-    `DataFrame`) and values being lists of aggregation functions to apply to the
-    columns.
+    `DataFrame`) and values being lists of aggregation functions to apply
+    to the columns.
 
     For example::
 
@@ -337,9 +337,9 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename):
     if driver == 'ESRI Shapefile':
         LOGGER.debug("Changing field names for ESRI Shapefile")
         # Need to modify the field names, as ESRI truncates them
-        colnames={'REPLACEMENT_VALUE': 'REPVAL',
-                  'structural_loss_ratio': 'slr_mean',
-                  '0.2s gust at 10m height m/s': 'maxwind'}
+        colnames = {'REPLACEMENT_VALUE': 'REPVAL',
+                    'structural_loss_ratio': 'slr_mean',
+                    '0.2s gust at 10m height m/s': 'maxwind'}
         result = result.rename(columns=colnames)
     dirname = os.path.dirname(filename)
     if not os.path.isdir(dirname):

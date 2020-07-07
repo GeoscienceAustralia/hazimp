@@ -135,8 +135,8 @@ class Context(object):
 
         self.provlabel = f":{label}"
         self.prov.activity(f":{label}", datetime.now().strftime(DATEFMT), None,
-                           {f"dcterms:title": title,
-                            f"prov:type": "void:Analysis"})
+                           {"dcterms:title": title,
+                            "prov:type": "void:Analysis"})
         self.prov.wasAttributedTo(self.provlabel, ":hazimp")
 
     def get_site_shape(self):
@@ -175,7 +175,7 @@ class Context(object):
         good_indexes = numpy.array(list(set(
             range(self.exposure_lat.size)).difference(bad_indexes)), dtype=int)
 
-        if good_indexes.shape[0] is 0:
+        if good_indexes.shape[0] == 0:
             self.exposure_lat = numpy.array([])
             self.exposure_long = numpy.array([])
         else:
@@ -184,7 +184,7 @@ class Context(object):
 
         if isinstance(self.exposure_att, dict):
             for key in self.exposure_att:
-                if good_indexes.shape[0] is 0:
+                if good_indexes.shape[0] == 0:
                     exp_att = numpy.array([])
                 else:
                     exp_att = self.exposure_att[key][good_indexes]
@@ -206,9 +206,9 @@ class Context(object):
         :return write_dict: The whole dictionary, returned for testing.
         """
         [filename, bucket_name, bucket_key] = misc.create_temporary_file_path_for_s3_if_applicable(filename)
-        s1 = self.prov.entity(f":HazImp output file",
-                              {f"prov:label": "Full HazImp output file",
-                               f"prov:type": "void:Dataset",
+        s1 = self.prov.entity(":HazImp output file",
+                              {"prov:label": "Full HazImp output file",
+                               "prov:type": "void:Dataset",
                                "prov:atLocation": os.path.basename(filename)})
         a1 = self.prov.activity(":SaveImpactData",
                                 datetime.now().strftime(DATEFMT),
@@ -250,9 +250,9 @@ class Context(object):
         """
         write_dict = self.exposure_agg.copy()
 
-        s1 = self.prov.entity(f":Aggregated HazImp output file",
-                              {f"prov:label": "Aggregated HazImp output file",
-                               f"prov:type": "void:Dataset",
+        s1 = self.prov.entity(":Aggregated HazImp output file",
+                              {"prov:label": "Aggregated HazImp output file",
+                               "prov:type": "void:Dataset",
                                "prov:atLocation": os.path.basename(filename)})
         a1 = self.prov.activity(":SaveAggregatedImpactData",
                                 datetime.now().strftime(DATEFMT),
@@ -315,14 +315,15 @@ class Context(object):
 
     def aggregate_loss(self, groupby=None, kwargs=None):
         """
-        Aggregate data by the `groupby` attribute, using the `kwargs` to perform
-        any arithmetic aggregation on fields (e.g. summation, mean, etc.)
+        Aggregate data by the `groupby` attribute, using the `kwargs` to
+        perform any arithmetic aggregation on fields (e.g. summation,
+        mean, etc.)
 
         :param str groupby: A column in the `DataFrame` that corresponds to
         regions by which to aggregate data
         :param dict kwargs: A `dict` with keys of valid column names (from the
-        `DataFrame`) and values being lists of aggregation functions to apply to the
-        columns.
+        `DataFrame`) and values being lists of aggregation functions to apply
+        to the columns.
 
         For example::
 
@@ -353,8 +354,8 @@ class Context(object):
         Bin values into discrete intervals.
 
         :param list bins: Monotonically increasing array of bin edges,
-                          including the rightmost edge, allowing for non-uniform
-                          bin widths.
+                          including the rightmost edge, allowing for
+                          non-uniform bin widths.
         :param labels: Specifies the labels for the returned
                        bins. Must be the same length as the resulting bins.
         :param str field_name: Name of the new column in the `exposure_att`
@@ -362,19 +363,20 @@ class Context(object):
         """
 
         for intensity_key in self.exposure_vuln_curves:
-            vuln_curve = self.exposure_vuln_curves[intensity_key]
-            loss_category_type = vuln_curve.loss_category_type
+            vc = self.exposure_vuln_curves[intensity_key]
+            lct = vc.loss_category_type
 
-        self.exposure_att[field_name] = pd.cut(self.exposure_att[loss_category_type],
-                                               bins, right=False, labels=labels)
+        self.exposure_att[field_name] = pd.cut(self.exposure_att[lct],
+                                               bins, right=False,
+                                               labels=labels)
 
     def tabulate(self, file_name, index=None, columns=None, aggfunc=None):
         """
         Reshape data (produce a "pivot" table) based on column values. Uses
         unique values from specified `index` / `columns` to form axes of the
-        resulting DataFrame, then writes to an Excel file. This function does not support data
-        aggregation - multiple values will result in a MultiIndex in the
-        columns.
+        resulting DataFrame, then writes to an Excel file. This function does
+        not support data aggregation - multiple values will result in a
+        MultiIndex in the columns.
         See
         https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.pivot_table.html
         for further details.
@@ -404,7 +406,7 @@ class Context(object):
             LOGGER.error(
                 f"Required attribute(s) {columns} not in the exposure data")
             LOGGER.error(
-                f"Maybe you need to run a categorise job before this one?")
+                "Maybe you need to run a categorise job before this one?")
             return
 
         dt = datetime.now().strftime(DATEFMT)
@@ -413,11 +415,10 @@ class Context(object):
                                  "void:aggregator": repr(index),
                                  "void:attributes": repr(columns),
                                  "void:aggregation": repr(aggfunc)})
-
-        tblfileent = self.prov.entity(":TabulationFile",
-                                      {"prov:type": "void:Dataset",
-                                       "prov:atLocation": os.path.basename(file_name),
-                                       "prov:generatedAtTime": dt})
+        tblatts = {"prov:type": "void:Dataset",
+                   "prov:atLocation": os.path.basename(file_name),
+                   "prov:generatedAtTime": dt}
+        tblfileent = self.prov.entity(":TabulationFile", tblatts)
 
         self.pivot = self.exposure_att.pivot_table(index=index,
                                                    columns=columns,
@@ -425,8 +426,15 @@ class Context(object):
                                                    fill_value=0)
         try:
             self.pivot.to_excel(file_name)
-        except Exception:
+        except TypeError as te:
+            LOGGER.error(te)
+            raise
+        except KeyError as ke:
+            LOGGER.error(ke)
+            raise
+        except ValueError as ve:
             LOGGER.error(f"Unable to save tabulated data to {file_name}")
+            LOGGER.error(ve)
         else:
             self.prov.wasGeneratedBy(tblfileent, a1)
             self.prov.wasInformedBy(a1, self.provlabel)
@@ -469,7 +477,7 @@ def save_csv(write_dict, filename):
 
     dirname = os.path.dirname(filename)
     if dirname and not os.path.isdir(dirname):
-        LOGGER.warn(f"{dirname} does not exist - trying to create it")
+        LOGGER.warning(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
 
     hnd = open(filename, 'w', newline='')
@@ -497,7 +505,7 @@ def save_csv_agg(write_dict, filename):
 
     dirname = os.path.dirname(filename)
     if dirname and not os.path.isdir(dirname):
-        LOGGER.warn(f"{dirname} does not exist - trying to create it")
+        LOGGER.warning(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
 
     try:
