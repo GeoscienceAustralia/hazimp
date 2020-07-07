@@ -53,6 +53,7 @@ class TestContext(unittest.TestCase):
         f.close()
 
         con = context.Context()
+        con.set_prov_label('test label')
         actual = {'shoes': array([10., 11]),
                   'depth': array([[5., 3.], [2., 4]]),
                   misc.INTID: array([0, 1, 2])}
@@ -91,6 +92,7 @@ class TestContext(unittest.TestCase):
                                         delete=False)
         f.close()
         con = context.Context()
+        con.set_prov_label('test label')
         actual = {'shoes': array([10., 11, 12]),
                   'depth': array([[5., 4., 3.], [3., 2, 1], [30., 20, 10]]),
                   misc.INTID: array([0, 1, 2])}

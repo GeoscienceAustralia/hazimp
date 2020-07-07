@@ -36,6 +36,8 @@ from git import Repo, InvalidGitRepositoryError
 
 LOGGER = logging.getLogger(__name__)
 
+_temporary_directory = None
+_s3_client = None
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
 EXAMPLE_DIR = os.path.join(ROOT_DIR, 'examples')
@@ -114,7 +116,7 @@ def get_required_args(func):
     # can-you-list-the-keyword-arguments-a-python-function-receives
 
     # *args and **kwargs are not required, so ignore them.
-    args_and_defaults, _, _, default_vaules = inspect.getfullargspec(func)
+    args_and_defaults, _, _, default_vaules, _, _, _ = inspect.getfullargspec(func)
     defaults = []
     if default_vaules is None:
         args = args_and_defaults

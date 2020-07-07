@@ -800,7 +800,7 @@ class SaveProvenance(Job):
         By default we save to xml format.
         """
 
-        [file_name, bucket_name, bucket_key, _] = misc.create_temporary_file_path_for_s3_if_applicable(file_name)
+        [file_name, bucket_name, bucket_key] = misc.create_temporary_file_path_for_s3_if_applicable(file_name)
         [basename, ext] = os.path.splitext(file_name)
         dot = prov_to_dot(context.prov)
         dot.write_png(basename + '.png')
