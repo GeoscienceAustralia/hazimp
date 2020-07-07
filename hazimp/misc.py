@@ -397,9 +397,7 @@ def s3_path_segments_from_vsis3(s3_path):
     """
     Function to extract bucket name, key and filename from path specified using
     GDAL Virtual File Systems conventions
-
     :param str s3_path: Path to S3 location in /vsis3/bucket/key format.
-
     :returns  bucket name, bucket key and file name
     """
     s3_path_segments = s3_path.split('/')
@@ -413,7 +411,6 @@ def s3_path_segments_from_vsis3(s3_path):
 def download_from_s3(s3_source_path, destination_directory, ignore_exception=False):
     """
     Function to download a S3 file into local directory.
-
     :param str s3_source_path: S3 path of the file.
     :param str destination_directory: Local directory location to
     """
@@ -437,12 +434,10 @@ def download_file_from_s3_if_needed(s3_source_path, default_file_extension_insid
     downloads the file to a temporary directory and return local file path. In case of shapefile,
     4 other files (with extensions .shx, .dbf, .prj and .shp.xml) are downloaded from S3. If zip
     file path is provided, the zip file is extracted and .shp file path is returned.
-
     :param str s3_source_path: S3 path of the file.
     :param str default_file_extension_inside_zip: If a zipped file is provided, this
                 extension shill be used to find the the target file
     :param str destination_directory: Local directory location to
-
     :returns: downloaded file path in local file system.
     """
     if not s3_source_path.startswith('/vsis3/'):
@@ -475,13 +470,10 @@ def download_file_from_s3_if_needed(s3_source_path, default_file_extension_insid
 
 def create_temporary_file_path_for_s3_if_applicable(destination_path):
     """
-    This function checks if the path is pointing to S3. If yes, it changes
-    file path to a file in temporary directory which will be uploaded after
-    later.
-
+    This function checks if the path is pointing to S3. If yes, it changes file
+    path to a file in temporary directory which will be uploaded after later.
     :param str destination_path: S3 path of the file.
-
-    :returns: local file path.
+    :returns: local file path, bucket name and bucket key.
     """
     if not destination_path.startswith('/vsis3/'):
         return destination_path, None, None
@@ -492,7 +484,6 @@ def create_temporary_file_path_for_s3_if_applicable(destination_path):
 def upload_to_s3_if_applicable(local_path, bucket_name, bucket_key, ignore_exception=False):
     """
     Function to upload files from local directory to s3.
-
     :param str local_path: Local directory path containing files to upload.
     :param str bucket_name: Destination S3 bucket name
     :param str bucket_key: Destination S3 bucket key for the file

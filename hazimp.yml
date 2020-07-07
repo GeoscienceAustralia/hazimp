@@ -19,5 +19,6 @@ dependencies:
   - gitpython
   - botocore
   - boto3
+  - moto
 prefix: ./envs/hazimp
 
