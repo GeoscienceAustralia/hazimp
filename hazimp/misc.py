@@ -25,6 +25,13 @@ import inspect
 from datetime import datetime
 
 import logging
+import tempfile
+import errno
+import boto3
+from botocore.exceptions import ClientError
+from zipfile import ZipFile
+
+LOGGER = logging.getLogger(__name__)
 
 import numpy
 from numpy.random import random_sample, permutation
@@ -36,6 +43,8 @@ from git import Repo, InvalidGitRepositoryError
 
 LOGGER = logging.getLogger(__name__)
 
+_temporary_directory = None
+_s3_client = None
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
 EXAMPLE_DIR = os.path.join(ROOT_DIR, 'examples')
@@ -363,3 +372,135 @@ def get_git_commit():
         dt = datetime.fromtimestamp(mtime).strftime(DATEFMT)
 
     return commit, branch, dt
+
+def get_s3_client():
+    """
+    Returns service client for S3. It eliminates initialising service client if AWS
+    path is not used.
+    """
+    global _s3_client
+    if _s3_client is None:
+        _s3_client = boto3.client('s3')
+    return _s3_client
+
+def get_temporary_directory():
+    """
+    Returns temporary directory to store file from and to S3 for local processing.
+    """
+    global _temporary_directory
+    if _temporary_directory is None:
+        _temporary_directory = tempfile.TemporaryDirectory(prefix='HazImp-')
+    return _temporary_directory.name
+
+
+def s3_path_segments_from_vsis3(s3_path):
+    """
+    Function to extract bucket name, key and filename from path specified using
+    GDAL Virtual File Systems conventions
+    :param str s3_path: Path to S3 location in /vsis3/bucket/key format.
+    :returns  bucket name, bucket key and file name
+    """
+    s3_path_segments = s3_path.split('/')
+    if s3_path_segments[0] != '' or s3_path_segments[1] != 'vsis3':
+        raise ValueError('Invalid path: ', [s3_path, s3_path_segments])
+    file_name = s3_path_segments[-1]
+    bucket_name = s3_path_segments[2]
+    bucket_key = '/'.join(s3_path_segments[3:])
+    return bucket_name, bucket_key, file_name
+
+def download_from_s3(s3_source_path, destination_directory, ignore_exception=False):
+    """
+    Function to download a S3 file into local directory.
+    :param str s3_source_path: S3 path of the file.
+    :param str destination_directory: Local directory location to
+    """
+    [bucket_name, bucket_key, file_name] = s3_path_segments_from_vsis3(s3_source_path)
+    file_path = os.path.join(destination_directory, file_name)
+    LOGGER.info("Downloading from S3 bucket: {0}, key: {1}, file: {2}"
+                .format(bucket_name, bucket_key, file_path))
+    try:
+        get_s3_client().download_file(bucket_name, bucket_key, file_path)
+    except ClientError as e:
+        if not ignore_exception:
+            LOGGER.exception("S3 read error: {0}".format(file_name))
+            raise e
+    return file_path
+
+
+def download_file_from_s3_if_needed(s3_source_path, default_file_extension_inside_zip='.shp',
+                                    destination_directory=None):
+    """
+    This function checks if the path is pointing to S3. If S3 path is specified, this function
+    downloads the file to a temporary directory and return local file path. In case of shapefile,
+    4 other files (with extensions .shx, .dbf, .prj and .shp.xml) are downloaded from S3. If zip
+    file path is provided, the zip file is extracted and .shp file path is returned.
+    :param str s3_source_path: S3 path of the file.
+    :param str default_file_extension_inside_zip: If a zipped file is provided, this
+                extension shill be used to find the the target file
+    :param str destination_directory: Local directory location to
+    :returns: downloaded file path in local file system.
+    """
+    if not s3_source_path.startswith('/vsis3/'):
+        return s3_source_path
+    if destination_directory is None:
+        destination_directory = get_temporary_directory()
+    if s3_source_path.endswith('.shp'):
+        file_name_base = s3_source_path[0:-4]
+        download_from_s3(file_name_base + '.shx', destination_directory)
+        download_from_s3(file_name_base + '.dbf', destination_directory)
+        download_from_s3(file_name_base + '.prj', destination_directory)
+        download_from_s3(file_name_base + '.shp.xml', destination_directory, True)
+        return download_from_s3(s3_source_path, destination_directory)
+    elif s3_source_path.endswith('.zip'):
+        zip_file_path = download_from_s3(s3_source_path, destination_directory)
+        [_, _, zip_file_name] = s3_path_segments_from_vsis3(s3_source_path)
+        [extracted_directory, _] = os.path.splitext(os.path.join(destination_directory, zip_file_name))
+        LOGGER.debug('Extracting: ' + zip_file_path)
+        with ZipFile(zip_file_path, 'r') as zipObj:
+            zipObj.extractall(extracted_directory)
+        for root, dirs, files in os.walk(extracted_directory):
+            target_files = list(filter(lambda file: file.endswith(default_file_extension_inside_zip), files))
+            if len(target_files) > 0:
+                LOGGER.debug("Target file inside zip found: " + target_files[0])
+                return os.path.join(extracted_directory, target_files[0])
+        LOGGER.error("Target file inside zip not found!")
+    else:
+        return download_from_s3(s3_source_path, destination_directory)
+
+
+def create_temporary_file_path_for_s3_if_applicable(destination_path):
+    """
+    This function checks if the path is pointing to S3. If yes, it changes file
+    path to a file in temporary directory which will be uploaded after later.
+    :param str destination_path: S3 path of the file.
+    :returns: local file path, bucket name and bucket key.
+    """
+    if not destination_path.startswith('/vsis3/'):
+        return destination_path, None, None
+    [bucket_name, bucket_key, file_name] = s3_path_segments_from_vsis3(destination_path)
+    return os.path.join(get_temporary_directory(), file_name), bucket_name, bucket_key
+
+
+def upload_to_s3_if_applicable(local_path, bucket_name, bucket_key, ignore_exception=False):
+    """
+    Function to upload files from local directory to s3.
+    :param str local_path: Local directory path containing files to upload.
+    :param str bucket_name: Destination S3 bucket name
+    :param str bucket_key: Destination S3 bucket key for the file
+    :param bool ignore_exception: ignore any exception related to file upload.
+                            Set true for optional files.
+    """
+    if bucket_name is None or bucket_key is None:
+        return
+    if not os.path.isfile(local_path):
+        if not ignore_exception:
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), local_path)
+        return
+    LOGGER.info("Uploading to S3 bucket: {0}, key: {1}, file: {2}"
+                .format(bucket_name, bucket_key, local_path))
+    try:
+        get_s3_client().upload_file(local_path, bucket_name, bucket_key)
+    except ClientError as e:
+        if not ignore_exception:
+            LOGGER.exception("S3 write error: {0}".format(local_path))
+            raise e

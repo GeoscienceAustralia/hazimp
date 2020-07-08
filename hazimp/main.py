@@ -20,7 +20,7 @@ The main entry point for the hazard impact tool.
 """
 import warnings
 warnings.simplefilter(action = "ignore", category = FutureWarning)
-from hazimp import console
+from hazimp import console, misc
 from hazimp import context
 from hazimp import config
 from hazimp import pipeline
@@ -68,6 +68,7 @@ def start(config_list=None, config_file=None, cont_in=None):
     :returns: The config dictionary.
     """
     if config_file:
+        config_file = misc.download_file_from_s3_if_needed(config_file)
         config_list = config.read_config_file(config_file)
 
     if isinstance(config_list, dict):

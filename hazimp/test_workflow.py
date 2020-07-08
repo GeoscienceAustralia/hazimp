@@ -74,6 +74,7 @@ class TestWorkFlow(unittest.TestCase):
 
         calc_list = [caj1, caj2, caj3, CALCS['add_test']]
         cont_in = context.Context()
+        cont_in.set_prov_label('Test label')
 
         the_pipeline = pipeline.PipeLine(calc_list)
         the_pipeline.run(cont_in)

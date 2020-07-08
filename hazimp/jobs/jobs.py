@@ -313,6 +313,7 @@ class LoadCsvExposure(Job):
             key: column titles
             value: column values, except the title
         """
+        file_name = misc.download_file_from_s3_if_needed(file_name)
         dt = misc.get_file_mtime(file_name)
         expent = context.prov.entity(":Exposure data", 
                             {'dcterms:title': 'Exposure data',
@@ -667,7 +668,8 @@ class LoadRaster(Job):
             if isinstance(file_list, str):
                 file_list = [file_list]
 
-            for f in file_list:                    
+            for f in file_list:
+                f = misc.download_file_from_s3_if_needed(f)
                 dt = misc.get_file_mtime(f)
                 atts = {"dcterms:title":"Source hazard data",
                         "prov:type":"prov:Dataset",
@@ -795,9 +797,14 @@ class SaveProvenance(Job):
         By default we save to xml format.
         """
 
+        [file_name, bucket_name, bucket_key] = misc.create_temporary_file_path_for_s3_if_applicable(file_name)
+        [basename, ext] = os.path.splitext(file_name)
         dot = prov_to_dot(context.prov)
-        dot.write_png(file_name.replace('.xml', '.png'))
+        dot.write_png(basename + '.png')
         context.prov.serialize(file_name, format='xml')
+        if bucket_key is not None:
+            misc.upload_to_s3_if_applicable(file_name, bucket_name, bucket_key)
+            misc.upload_to_s3_if_applicable(basename + '.png', bucket_name, bucket_key[:-len(ext)] + '.png')
 # ____________________________________________________
 # ----------------------------------------------------
 #                KEEP THIS AT THE END
