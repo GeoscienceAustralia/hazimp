@@ -13,14 +13,14 @@ LOGGER = logging.getLogger(__name__)
 
 # List of possible drivers for output:
 # See `import fiona; fiona.supported_drivers for a complete list of
-# options, but we've only implemented a few to start with. 
+# options, but we've only implemented a few to start with.
 DRIVERS = {'shp': 'ESRI Shapefile',
            'json': 'GeoJSON',
            'gpkg': 'GPKG'}
 
+
 def chloropleth(impactfile, shapefile, impactcode, shapecode, outputfile):
     """
-    
     :param str impactfile: Output csv file
     :param str shapefile: Geospatial boundaries to use for aggregation
     :param str impactcode: Field name in the `impactfile` that contains the id
@@ -37,14 +37,14 @@ def chloropleth(impactfile, shapefile, impactcode, shapecode, outputfile):
 
     # TODO: Consider what fields are essential and what can be
     # removed.
-    report = {'REPLACEMENT_VALUE': 'sum', 
-              'structural_loss_ratio': 'mean', 
+    report = {'REPLACEMENT_VALUE': 'sum',
+              'structural_loss_ratio': 'mean',
               '0.2s gust at 10m height m/s': 'max'}
 
-    aggregate = impact.groupby(left).agg(report)    
+    aggregate = impact.groupby(left).agg(report)
 
     shapes = geopandas.read_file(shapefile)
-    
+
     try:
         shapes['key'] = shapes[right].astype(int)
     except KeyError:
@@ -56,13 +56,9 @@ def chloropleth(impactfile, shapefile, impactcode, shapecode, outputfile):
     if driver == 'ESRI Shapefile':
         LOGGER.info("Changing field names")
         # Need to modify the field names, as ESRI truncates them
-        result = result.rename(columns={'REPLACEMENT_VALUE':'REPVAL',
-                                        'structural_loss_ratio':'slr_mean',
-                                        '0.2s gust at 10m height m/s':'maxwind'})
-        
-    result.to_file(outputfile, driver=driver)
+        cols = {'REPLACEMENT_VALUE': 'REPVAL',
+                'structural_loss_ratio': 'slr_mean',
+                '0.2s gust at 10m height m/s': 'maxwind'}
+        result = result.rename(columns=cols)
 
-#if __name__ == '__main__':
-#    chloropleth('../example/wind_impact.csv', 
-#                'examples/wind/northwestcape_meshblocks.geojson',
-#                'chloropleth.shp')
+    result.to_file(outputfile, driver=driver)

@@ -16,5 +16,9 @@ dependencies:
   - pandas
   - scipy
   - xlrd
+  - gitpython
+  - botocore
+  - boto3
+  - moto
 prefix: ./envs/hazimp
 
