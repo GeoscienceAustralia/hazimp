@@ -39,8 +39,6 @@ import pandas as pd
 
 from prov.model import ProvDocument
 
-from prov.model import ProvDocument
-
 from hazimp import misc
 from hazimp import parallel
 
@@ -331,6 +329,8 @@ class Context(object):
 
         kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
                 'structural_loss_ratio': ['mean', 'std']}
+
+
         See
         https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
         for more guidance on using aggregation with `DataFrames`
@@ -439,6 +439,7 @@ class Context(object):
         else:
             self.prov.wasGeneratedBy(tblfileent, a1)
             self.prov.wasInformedBy(a1, self.provlabel)
+
 
 def save_csv(write_dict, filename):
     """

@@ -36,7 +36,6 @@ is not present Error out.
 """
 
 import os
-import re
 import sys
 import scipy
 import numpy as np
@@ -70,6 +69,7 @@ AGGREGATE = 'aggregate'
 TABULATE = 'tabulate'
 CATEGORISE = 'categorise'
 SAVEPROVENANCE = 'saveprovenance'
+
 
 class Job(object):
 
@@ -721,6 +721,7 @@ class AggregateLoss(Job):
         """
         context.aggregate_loss(groupby, kwargs)
 
+
 class SaveExposure(Job):
 
     """
@@ -772,6 +773,7 @@ class Aggregate(Job):
                                  boundarycode,
                                  use_parallel=use_parallel)
 
+
 class Tabulate(Job):
 
     def __init__(self):
@@ -792,11 +794,14 @@ class Categorise(Job):
     def __call__(self, context, bins=None, labels=None, field_name=None):
         context.categorise(bins, labels, field_name)
 
+
 class SaveProvenance(Job):
 
     def __init__(self):
         super(SaveProvenance, self).__init__()
         self.call_funct = SAVEPROVENANCE
+
+
     def __call__(self, context, file_name=None):
         """
         Save provenance information. 
