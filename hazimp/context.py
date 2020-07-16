@@ -330,6 +330,7 @@ class Context(object):
         kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
                 'structural_loss_ratio': ['mean', 'std']}
 
+
         See
         https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
         for more guidance on using aggregation with `DataFrames`

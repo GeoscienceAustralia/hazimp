@@ -801,6 +801,7 @@ class SaveProvenance(Job):
         super(SaveProvenance, self).__init__()
         self.call_funct = SAVEPROVENANCE
 
+
     def __call__(self, context, file_name=None):
         """
         Save provenance information. 
