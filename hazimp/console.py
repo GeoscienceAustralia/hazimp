@@ -60,7 +60,8 @@ def cmd_line():
         parser.print_help()
     else:
         args = parser.parse_args()
-        if args.config_file[0] is not None and args.config_file[0].startswith('/vsis3/'):
+        if args.config_file[0] is not None and\
+           args.config_file[0].startswith('/vsis3/'):
             print('Loading configuration from S3: '+args.config_file[0])
         elif not os.path.exists(args.config_file[0]):
             print('Error: non existent config file\n')

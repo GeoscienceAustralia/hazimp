@@ -66,8 +66,8 @@ class Raster(object):
         self.x_size = x_size
         self.y_size = y_size
 
-        self.raster = numpy.where(self.raster == self.no_data_value, numpy.NAN,
-                               self.raster)
+        self.raster = numpy.where(self.raster == self.no_data_value,
+                                  numpy.NAN, self.raster)
 
     @classmethod
     def from_file(cls, filename):

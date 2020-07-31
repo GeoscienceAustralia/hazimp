@@ -43,7 +43,7 @@ from moto import mock_s3
 from hazimp.misc import (csv2dict, get_required_args, sorted_dict_values,
                          squash_narray, weighted_values, get_s3_client,
                          get_temporary_directory, s3_path_segments_from_vsis3,
-                         create_temporary_file_path_for_s3_if_applicable,
+                         create_temp_file_path_for_s3,
                          download_from_s3, upload_to_s3_if_applicable,
                          download_file_from_s3_if_needed)
 
@@ -177,7 +177,8 @@ class TestMisc(unittest.TestCase):
         values = numpy.array([1.0, 2.0, 3.0])
         probabilities = numpy.array([0.2, 0.5, 0.3])
         size = (2, 3)
-        forced_random = numpy.array([[0.19, 0.21, 0.69], [0.71, 0.99, 0.5]])
+        forced_random = numpy.array([[0.19, 0.21, 0.69],
+                                     [0.71, 0.99, 0.5]])
         self.assertRaises(AssertionError, weighted_values, values,
                           probabilities, size, forced_random=forced_random)
 
@@ -196,7 +197,8 @@ class TestMisc(unittest.TestCase):
         self.assertTrue('HazImp-' in directory_path)
 
     def test_s3_path_segments_from_vsis3(self):
-        [bucket_name, bucket_key, file_name] = s3_path_segments_from_vsis3('/vsis3/bucket/subdir/file.ext')
+        [bucket_name, bucket_key, file_name] = \
+            s3_path_segments_from_vsis3('/vsis3/bucket/subdir/file.ext')
         self.assertEqual(bucket_name, 'bucket')
         self.assertEqual(bucket_key, 'subdir/file.ext')
         self.assertEqual(file_name, 'file.ext')
@@ -207,48 +209,54 @@ class TestMisc(unittest.TestCase):
         s3.create_bucket(Bucket='bucket')
         s3.put_object(Bucket='bucket', Key='subdir/file.ext', Body='')
         directory_path = get_temporary_directory()
-        file_path = download_from_s3('/vsis3/bucket/subdir/file.ext', directory_path)
-        self.assertEqual(file_path, os.path.join(directory_path,'file.ext'))
+        file_path = \
+            download_from_s3('/vsis3/bucket/subdir/file.ext', directory_path)
+        self.assertEqual(file_path, os.path.join(directory_path, 'file.ext'))
         self.assertTrue(os.path.exists(file_path))
 
     @mock_s3
     def test_download_file_from_s3_if_needed(self):
-        s3=get_s3_client()
+        s3 = get_s3_client()
         s3.create_bucket(Bucket='bucket')
         file_path = download_file_from_s3_if_needed('/local/path/to/file')
         self.assertEqual(file_path, '/local/path/to/file')
 
         s3.put_object(Bucket='bucket', Key='subdir/file.ext', Body='')
-        file_path = download_file_from_s3_if_needed('/vsis3/bucket/subdir/file.ext')
+        file_path = \
+            download_file_from_s3_if_needed('/vsis3/bucket/subdir/file.ext')
         self.assertTrue('file.ext' in file_path)
 
         s3.put_object(Bucket='bucket', Key='subdir/file.shp', Body='')
         s3.put_object(Bucket='bucket', Key='subdir/file.shx', Body='')
         s3.put_object(Bucket='bucket', Key='subdir/file.dbf', Body='')
         s3.put_object(Bucket='bucket', Key='subdir/file.prj', Body='')
-        file_path = download_file_from_s3_if_needed('/vsis3/bucket/subdir/file.shp')
+        file_path = \
+            download_file_from_s3_if_needed('/vsis3/bucket/subdir/file.shp')
         self.assertTrue('file.shp' in file_path)
 
         # Check zip file
         directory_path = get_temporary_directory()
         zip_file_path = os.path.join(directory_path, 'file.zip')
         with ZipFile(zip_file_path, 'w') as zipObj:
-            for file_name in ['test.shp', 'test.shx', 'test.dbf', 'test.prj', 'test.cpg']:
+            for file_name in ['test.shp', 'test.shx', 'test.dbf',
+                              'test.prj', 'test.cpg']:
                 file_path = os.path.join(directory_path, file_name)
                 print('Test file', file=open(file_path, 'w'))
                 zipObj.write(file_path)
 
         s3.upload_file(zip_file_path, 'bucket', 'subdir/file.zip')
-        file_path = download_file_from_s3_if_needed('/vsis3/bucket/subdir/file.zip')
+        file_path = \
+            download_file_from_s3_if_needed('/vsis3/bucket/subdir/file.zip')
         self.assertTrue('test.shp' in file_path)
 
-
-    def test_create_temporary_file_path_for_s3_if_applicable(self):
-        [file_path, bucket_name, bucket_key] = create_temporary_file_path_for_s3_if_applicable('/local/path/to/file')
+    def test_create_temp_file_path_for_s3(self):
+        [file_path, bucket_name, bucket_key] = \
+            create_temp_file_path_for_s3('/local/path/to/file')
         self.assertEqual(file_path, '/local/path/to/file')
         self.assertIsNone(bucket_name)
         self.assertIsNone(bucket_key)
-        [file_path, bucket_name, bucket_key] = create_temporary_file_path_for_s3_if_applicable('/vsis3/bucket/subdir/file.ext')
+        [file_path, bucket_name, bucket_key] =\
+            create_temp_file_path_for_s3('/vsis3/bucket/subdir/file.ext')
         self.assertTrue('HazImp-' in file_path)
         self.assertTrue('file.ext' in file_path)
         self.assertEqual(bucket_name, 'bucket')
