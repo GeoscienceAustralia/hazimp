@@ -120,7 +120,7 @@ class Context(object):
         # Create the fundamental software agent that is this code:
         self.prov.agent(":hazimp",
                         {"prov:type": "prov:SoftwareAgent",
-                         "prov:commit": commit,
+                         "prov:Revision": commit,
                          "prov:branch": branch,
                          "prov:date": dt})
         self.prov.agent(f":{getpass.getuser()}",
@@ -205,7 +205,8 @@ class Context(object):
         :param filename: The file to be written.
         :return write_dict: The whole dictionary, returned for testing.
         """
-        [filename, bucket_name, bucket_key] = misc.create_temporary_file_path_for_s3_if_applicable(filename)
+        [filename, bucket_name, bucket_key] = \
+            misc.create_temp_file_path_for_s3(filename)
         s1 = self.prov.entity(":HazImp output file",
                               {"prov:label": "Full HazImp output file",
                                "prov:type": "void:Dataset",
@@ -282,7 +283,8 @@ class Context(object):
         """
         LOGGER.info("Saving aggregated data")
         boundaries = misc.download_file_from_s3_if_needed(boundaries)
-        [filename, bucket_name, bucket_key] = misc.create_temporary_file_path_for_s3_if_applicable(filename)
+        [filename, bucket_name, bucket_key] = \
+            misc.create_temp_file_path_for_s3(filename)
         write_dict = self.exposure_att.copy()
         dt = datetime.now().strftime(DATEFMT)
         atts = {"prov:type": "void:Dataset",
@@ -303,13 +305,23 @@ class Context(object):
             misc.choropleth(write_dict, boundaries, impactcode,
                             boundarycode, filename)
             misc.upload_to_s3_if_applicable(filename, bucket_name, bucket_key)
-            if bucket_name is not None and bucket_key is not None and bucket_key.endswith('.shp'):
+            if (bucket_name is not None and
+                    bucket_key is not None and
+                    bucket_key.endswith('.shp')):
                 [rootname, ext] = os.path.splitext(filename)
                 base_bucket_key = bucket_key[:-len(ext)]
-                misc.upload_to_s3_if_applicable(rootname + '.dbf', bucket_name, base_bucket_key + '.dbf')
-                misc.upload_to_s3_if_applicable(rootname + '.shx', bucket_name, base_bucket_key + '.shx')
-                misc.upload_to_s3_if_applicable(rootname + '.prj', bucket_name, base_bucket_key + '.prj')
-                misc.upload_to_s3_if_applicable(rootname + '.cpg', bucket_name, base_bucket_key + '.cpg', True)
+                misc.upload_to_s3_if_applicable(rootname + '.dbf',
+                                                bucket_name,
+                                                base_bucket_key + '.dbf')
+                misc.upload_to_s3_if_applicable(rootname + '.shx',
+                                                bucket_name,
+                                                base_bucket_key + '.shx')
+                misc.upload_to_s3_if_applicable(rootname + '.prj',
+                                                bucket_name,
+                                                base_bucket_key + '.prj')
+                misc.upload_to_s3_if_applicable(rootname + '.cpg',
+                                                bucket_name,
+                                                base_bucket_key + '.cpg', True)
         else:
             pass
 

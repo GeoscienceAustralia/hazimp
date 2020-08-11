@@ -25,15 +25,14 @@ import inspect
 from datetime import datetime
 
 import logging
-import tempfile
 import errno
-import boto3
-from botocore.exceptions import ClientError
+import tempfile
 from zipfile import ZipFile
 
-LOGGER = logging.getLogger(__name__)
 import numpy
 from numpy.random import random_sample, permutation
+import boto3
+from botocore.exceptions import ClientError
 
 import pandas as pd
 import geopandas as gpd
@@ -42,9 +41,8 @@ from git import Repo, InvalidGitRepositoryError
 
 LOGGER = logging.getLogger(__name__)
 
-
-_temporary_directory = None
-_s3_client = None
+TEMP_DIR = None
+S3_CLIENT = None
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RESOURCE_DIR = os.path.join(ROOT_DIR, 'resources')
 EXAMPLE_DIR = os.path.join(ROOT_DIR, 'examples')
@@ -88,50 +86,6 @@ def instanciate_classes(module):
                 callable_instances[instance.call_funct] = instance
     return callable_instances
 
-def mod_file_list(file_list, variable):
-    """
-    Modify the filename list for working with netcdf format files.
-
-    For netcdf files, GDAL expects the filename to be of the form
-    'NETCDF:"<filename>":<variable>', where variable is a valid
-    variable in the netcdf file.
-
-    :param file_list: List of files or a single file to be processed
-    :param str variable: Variable name
-
-    :returns: list of filenames, modified to the above format
-
-    """
-
-    if isinstance(file_list, str):
-        file_list = [file_list]
-    flist = []
-    for f in file_list:
-        flist.append(f'NETCDF:"{f}":{variable}')
-    return flist
-
-def mod_file_list(file_list, variable):
-    """
-    Modify the filename list for working with netcdf format files.
-
-    For netcdf files, GDAL expects the filename to be of the form
-    'NETCDF:"<filename>":<variable>', where variable is a valid
-    variable in the netcdf file.
-
-    :param file_list: List of files or a single file to be processed
-    :param str variable: Variable name
-
-    :returns: list of filenames, modified to the above format
-
-    """
-
-    if isinstance(file_list, str):
-        file_list = [file_list]
-    flist = []
-    for f in file_list:
-        flist.append(f'NETCDF:"{f}":{variable}')
-    return flist
-
 
 def mod_file_list(file_list, variable):
     """
@@ -167,7 +121,8 @@ def get_required_args(func):
     # can-you-list-the-keyword-arguments-a-python-function-receives
 
     # *args and **kwargs are not required, so ignore them.
-    args_and_defaults, _, _, default_vaules, _, _, _ = inspect.getfullargspec(func)
+    args_and_defaults, _, _, default_vaules, _, _, _ = \
+        inspect.getfullargspec(func)
     defaults = []
     if default_vaules is None:
         args = args_and_defaults
@@ -417,30 +372,33 @@ def get_git_commit():
 
     return commit, branch, dt
 
+
 def get_s3_client():
     """
-    Returns service client for S3. It eliminates initialising service client if AWS
-    path is not used.
+    Returns service client for S3. It eliminates initialising service
+    client if AWS path is not used.
     """
-    global _s3_client
-    if _s3_client is None:
-        _s3_client = boto3.client('s3')
-    return _s3_client
+    global S3_CLIENT
+    if S3_CLIENT is None:
+        S3_CLIENT = boto3.client('s3')
+    return S3_CLIENT
+
 
 def get_temporary_directory():
     """
-    Returns temporary directory to store file from and to S3 for local processing.
+    Returns temporary directory to store file from and to
+    S3 for local processing.
     """
-    global _temporary_directory
-    if _temporary_directory is None:
-        _temporary_directory = tempfile.TemporaryDirectory(prefix='HazImp-')
-    return _temporary_directory.name
+    global TEMP_DIR
+    if TEMP_DIR is None:
+        TEMP_DIR = tempfile.TemporaryDirectory(prefix='HazImp-')
+    return TEMP_DIR.name
 
 
 def s3_path_segments_from_vsis3(s3_path):
     """
-    Function to extract bucket name, key and filename from path specified using
-    GDAL Virtual File Systems conventions
+    Function to extract bucket name, key and filename from path specified
+    using GDAL Virtual File Systems conventions
     :param str s3_path: Path to S3 location in /vsis3/bucket/key format.
     :returns  bucket name, bucket key and file name
     """
@@ -452,13 +410,17 @@ def s3_path_segments_from_vsis3(s3_path):
     bucket_key = '/'.join(s3_path_segments[3:])
     return bucket_name, bucket_key, file_name
 
-def download_from_s3(s3_source_path, destination_directory, ignore_exception=False):
+
+def download_from_s3(s3_source_path, destination_directory,
+                     ignore_exception=False):
     """
     Function to download a S3 file into local directory.
     :param str s3_source_path: S3 path of the file.
     :param str destination_directory: Local directory location to
     """
-    [bucket_name, bucket_key, file_name] = s3_path_segments_from_vsis3(s3_source_path)
+
+    [bucket_name, bucket_key, file_name] = \
+        s3_path_segments_from_vsis3(s3_source_path)
     file_path = os.path.join(destination_directory, file_name)
     LOGGER.info("Downloading from S3 bucket: {0}, key: {1}, file: {2}"
                 .format(bucket_name, bucket_key, file_path))
@@ -471,16 +433,21 @@ def download_from_s3(s3_source_path, destination_directory, ignore_exception=Fal
     return file_path
 
 
-def download_file_from_s3_if_needed(s3_source_path, default_file_extension_inside_zip='.shp',
+def download_file_from_s3_if_needed(s3_source_path,
+                                    default_ext='.shp',
                                     destination_directory=None):
     """
-    This function checks if the path is pointing to S3. If S3 path is specified, this function
-    downloads the file to a temporary directory and return local file path. In case of shapefile,
-    4 other files (with extensions .shx, .dbf, .prj and .shp.xml) are downloaded from S3. If zip
-    file path is provided, the zip file is extracted and .shp file path is returned.
+    This function checks if the path is pointing to S3. If S3 path is
+    specified, this function downloads the file to a temporary directory and
+    return local file path. In case of shapefile, 4 other files (with
+    extensions .shx, .dbf, .prj and .shp.xml) are downloaded from S3.
+
+    If zip file path is provided, the zip file is extracted and .shp
+    file path is returned.
     :param str s3_source_path: S3 path of the file.
-    :param str default_file_extension_inside_zip: If a zipped file is provided, this
-                extension shill be used to find the the target file
+    :param str default_ext: If a zipped file i
+                provided, this extension shall be used to find the the
+                target file
     :param str destination_directory: Local directory location to
     :returns: downloaded file path in local file system.
     """
@@ -493,26 +460,34 @@ def download_file_from_s3_if_needed(s3_source_path, default_file_extension_insid
         download_from_s3(file_name_base + '.shx', destination_directory)
         download_from_s3(file_name_base + '.dbf', destination_directory)
         download_from_s3(file_name_base + '.prj', destination_directory)
-        download_from_s3(file_name_base + '.shp.xml', destination_directory, True)
+        download_from_s3(file_name_base + '.shp.xml', destination_directory,
+                         True)
         return download_from_s3(s3_source_path, destination_directory)
     elif s3_source_path.endswith('.zip'):
-        zip_file_path = download_from_s3(s3_source_path, destination_directory)
+        zip_file_path = download_from_s3(s3_source_path,
+                                         destination_directory)
         [_, _, zip_file_name] = s3_path_segments_from_vsis3(s3_source_path)
-        [extracted_directory, _] = os.path.splitext(os.path.join(destination_directory, zip_file_name))
+        [extracted_directory, _] = \
+            os.path.splitext(os.path.join(destination_directory,
+                                          zip_file_name))
         LOGGER.debug('Extracting: ' + zip_file_path)
-        with ZipFile(zip_file_path, 'r') as zipObj:
-            zipObj.extractall(extracted_directory)
+        with ZipFile(zip_file_path, 'r') as zipobj:
+            zipobj.extractall(extracted_directory)
         for root, dirs, files in os.walk(extracted_directory):
-            target_files = list(filter(lambda file: file.endswith(default_file_extension_inside_zip), files))
+            target_files = \
+                list(filter(lambda file:
+                            file.endswith(default_ext),
+                            files))
             if len(target_files) > 0:
-                LOGGER.debug("Target file inside zip found: " + target_files[0])
+                LOGGER.debug("Target file inside zip found: " +
+                             target_files[0])
                 return os.path.join(extracted_directory, target_files[0])
         LOGGER.error("Target file inside zip not found!")
     else:
         return download_from_s3(s3_source_path, destination_directory)
 
 
-def create_temporary_file_path_for_s3_if_applicable(destination_path):
+def create_temp_file_path_for_s3(destination_path):
     """
     This function checks if the path is pointing to S3. If yes, it changes file
     path to a file in temporary directory which will be uploaded after later.
@@ -521,11 +496,14 @@ def create_temporary_file_path_for_s3_if_applicable(destination_path):
     """
     if not destination_path.startswith('/vsis3/'):
         return destination_path, None, None
-    [bucket_name, bucket_key, file_name] = s3_path_segments_from_vsis3(destination_path)
-    return os.path.join(get_temporary_directory(), file_name), bucket_name, bucket_key
+    [bucket_name, bucket_key, file_name] = \
+        s3_path_segments_from_vsis3(destination_path)
+    return os.path.join(get_temporary_directory(), file_name), \
+        bucket_name, bucket_key
 
 
-def upload_to_s3_if_applicable(local_path, bucket_name, bucket_key, ignore_exception=False):
+def upload_to_s3_if_applicable(local_path, bucket_name, bucket_key,
+                               ignore_exception=False):
     """
     Function to upload files from local directory to s3.
     :param str local_path: Local directory path containing files to upload.
@@ -538,7 +516,9 @@ def upload_to_s3_if_applicable(local_path, bucket_name, bucket_key, ignore_excep
         return
     if not os.path.isfile(local_path):
         if not ignore_exception:
-            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), local_path)
+            raise FileNotFoundError(errno.ENOENT,
+                                    os.strerror(errno.ENOENT),
+                                    local_path)
         return
     LOGGER.info("Uploading to S3 bucket: {0}, key: {1}, file: {2}"
                 .format(bucket_name, bucket_key, local_path))

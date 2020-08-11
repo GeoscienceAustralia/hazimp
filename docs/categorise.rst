@@ -5,7 +5,7 @@ Including categorisations
 
 Users may want to convert from numerical values to categorical values for output
 fields. For example, converting the structural loss ratio from a value between 0
-and 1 into categories which are more descriptive (see the table below).
+and 1 into categories which are descriptive (see the table below).
 
 +-------------+--------------+------------+
 | Lower value | Uppper value | Category   |
@@ -21,9 +21,9 @@ and 1 into categories which are more descriptive (see the table below).
 | 0.5         | 1.0          | Complete   |
 +-------------+--------------+------------+
 
-The `Categorise` job enables users to do this categorisation. Add the
-"categorise" section to the configuration file to run this job. This is based on
-`pandas.cut`
+The `Categorise` job enables users to automatically perform this categorisation.
+Add the "categorise" section to the configuration file to run this job.
+This is based on the `pandas.cut` method.
 
 *categorise* 
     This will enable the `Categorise` job. The job requires the following
@@ -35,7 +35,8 @@ The `Categorise` job enables users to do this categorisation. Add the
 
     *bins*
         Monotonically increasing array of bin edges, including the rightmost edge,
-        allowing for non-uniform bin widths.
+        allowing for non-uniform bin widths. There must be (number of labels) +
+        1 bins. 
 
     *labels*
         Specifies the labels for the returned bins. Must be the same length as the
