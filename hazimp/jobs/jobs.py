@@ -320,7 +320,8 @@ class LoadCsvExposure(Job):
                                      {'dcterms:title': 'Exposure data',
                                       'prov:type': 'void:Dataset',
                                       'prov:generatedAtTime': dt,
-                                      'prov:atLocation': os.path.basename(file_name)})
+                                      'prov:atLocation':
+                                          os.path.basename(file_name)})
         context.prov.used(context.provlabel, expent)
         data_frame = parallel.csv2dict(file_name, use_parallel=use_parallel)
         # FIXME Need to do better error handling
@@ -352,8 +353,6 @@ class LoadCsvExposure(Job):
             raise RuntimeError(msg)
 
         context.exposure_att = data_frame
-        # for key in data_frame:
-        #    context.exposure_att[key] = data_frame[key].values
 
 
 class LoadXmlVulnerability(Job):
@@ -380,7 +379,8 @@ class LoadXmlVulnerability(Job):
             vulent = context.prov.entity(":vulnerability file",
                                          {'prov:type': 'prov:Collection',
                                           'prov:generatedAtTime': dt,
-                                          'prov:atLocation': os.path.basename(file_name)})
+                                          'prov:atLocation':
+                                              os.path.basename(file_name)})
             context.prov.used(context.provlabel, vulent)
 
 
@@ -537,12 +537,12 @@ class PermutateExposure(Job):
 
     def __call__(self, context, groupby=None, iterations=1000):
         """
-        Calculates the loss for the given vulnerability set, randomly 
-        permutating the exposure attributes to arrive at a 
+        Calculates the loss for the given vulnerability set, randomly
+        permutating the exposure attributes to arrive at a
         distribution of loss outcomes.
 
         :param context: The context instance, used to move data around.
-        :param groupby: The name of the exposure attribute to group 
+        :param groupby: The name of the exposure attribute to group
                         exposure assets by before randomly permutating
                         the corresponding vulnerability curves.
         :param iterations: Number of iterations to perform
@@ -574,7 +574,8 @@ class PermutateExposure(Job):
                 except KeyError:
                     vulnerability_set_id = vuln_curve.vulnerability_set_id
                     msg = 'Invalid intensity measure, %s. \n' % int_measure
-                    msg += 'vulnerability_set_id is %s. \n' % vulnerability_set_id
+                    msg += ('vulnerability_set_id is %s. \n' %
+                            vulnerability_set_id)
                     raise RuntimeError(msg)
 
                 losses[n, :] = vuln_curve.look_up(intensities)
@@ -587,7 +588,8 @@ class PermutateExposure(Job):
                 loss_iteration = loss_category_type + "_{0:06d}".format(n)
                 field_iteration = field + "_{0:06d}".format(n)
                 context.exposure_att[loss_iteration] = losses[n, :]
-                context.exposure_att[field_iteration] = context.exposure_att[field]
+                context.exposure_att[field_iteration] = \
+                    context.exposure_att[field]
             mean_loss = np.mean(losses, axis=0)
             loss_sd = np.std(losses, axis=0)
 
@@ -702,7 +704,7 @@ class LoadRaster(Job):
 
 class AggregateLoss(Job):
     """
-    Aggregate loss attributes based on the ``groupby`` attribute 
+    Aggregate loss attributes based on the ``groupby`` attribute
     used in the permutation of the vulnerability curves.
     """
 
@@ -715,8 +717,8 @@ class AggregateLoss(Job):
         Aggregate using `pandas.GroupBy` objects
 
         :param context: The context instance, used to move data around.
-        :param groupby: The name of the exposure attribute to group 
-                        exposure assets by before performing aggregations 
+        :param groupby: The name of the exposure attribute to group
+                        exposure assets by before performing aggregations
                         (sum, mean, etc.).
         """
         context.aggregate_loss(groupby, kwargs)
@@ -748,7 +750,7 @@ class SaveAggregation(Job):
         super(SaveAggregation, self).__init__()
         self.call_funct = SAVEAGG
 
-    def __call__(self, context, file_name=None,  use_parallel=True):
+    def __call__(self, context, file_name=None, use_parallel=True):
         """
         Save all of the aggregated exposure information in the context.
 
@@ -801,22 +803,26 @@ class SaveProvenance(Job):
         super(SaveProvenance, self).__init__()
         self.call_funct = SAVEPROVENANCE
 
-
     def __call__(self, context, file_name=None):
         """
-        Save provenance information. 
+        Save provenance information.
 
         By default we save to xml format.
         """
 
-        [file_name, bucket_name, bucket_key] = misc.create_temporary_file_path_for_s3_if_applicable(file_name)
+        [file_name, bucket_name, bucket_key] = \
+            misc.create_temp_file_path_for_s3(file_name)
         [basename, ext] = os.path.splitext(file_name)
         dot = prov_to_dot(context.prov)
         dot.write_png(basename + '.png')
         context.prov.serialize(file_name, format='xml')
         if bucket_key is not None:
-            misc.upload_to_s3_if_applicable(file_name, bucket_name, bucket_key)
-            misc.upload_to_s3_if_applicable(basename + '.png', bucket_name, bucket_key[:-len(ext)] + '.png')
+            misc.upload_to_s3_if_applicable(file_name,
+                                            bucket_name,
+                                            bucket_key)
+            misc.upload_to_s3_if_applicable(basename + '.png',
+                                            bucket_name,
+                                            bucket_key[:-len(ext)] + '.png')
 # ____________________________________________________
 # ----------------------------------------------------
 #                KEEP THIS AT THE END

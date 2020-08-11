@@ -37,8 +37,8 @@ import numpy
 from scipy import allclose, asarray, isnan, array, rollaxis
 
 from hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
-                                   SAVEALL, CONSTANT, ADD, RANDOM_CONSTANT,
-                                   MULT, MDMULT)
+                              SAVEALL, CONSTANT, ADD, RANDOM_CONSTANT,
+                              MULT, MDMULT)
 from hazimp.jobs.test_vulnerability_model import build_example
 from hazimp.jobs import jobs
 from hazimp import context
@@ -428,6 +428,7 @@ class TestJobs(unittest.TestCase):
         self.assertTrue(allclose(con_in.exposure_att[haz_v],
                                  con_in.exposure_att['haz_actual']), msg)
         os.remove(f.name)
+
     @unittest.skip("Failing comparison of NaN values")
     def test_load_raster_clipping(self):
         # Write a file to test
@@ -471,13 +472,15 @@ class TestJobs(unittest.TestCase):
                        'clip_exposure2all_hazards': True}
         inst(con_in, **test_kwargs)
         the_nans = isnan(con_in.exposure_att[haz_v])
-        
-        con_in.exposure_att.loc[the_nans, (haz_v,)] = numpy.NAN#-9999
-        msg = "con_in.exposure_att[haz_v] \n" + str(con_in.exposure_att[haz_v].values)
+
+        con_in.exposure_att.loc[the_nans, (haz_v,)] = numpy.NAN
+        msg = ("con_in.exposure_att[haz_v] \n" +
+               str(con_in.exposure_att[haz_v].values))
         msg += "\n not = con_in.exposure_att['haz_actual'] \n" + \
             str(con_in.exposure_att['haz_actual'].values)
         self.assertTrue(allclose(con_in.exposure_att[haz_v].values,
-                                 con_in.exposure_att['haz_actual'].values), msg)
+                                 con_in.exposure_att['haz_actual'].values),
+                        msg)
         # There should be only 3 exposure points
         expected = 3
         msg = "Number of exposure points is "
