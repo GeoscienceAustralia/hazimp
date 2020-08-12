@@ -53,9 +53,13 @@ Templates
 ---------
 
 The simplest way to use HazImp is with a template. There is currently
-a wind template.  Templates take into account internal vulnerability
-curves and the data flow needed to produce loss information,
+a wind template and a flood template. Templates take into account internal 
+vulnerability curves and the data flow needed to produce loss information,
 simplifying the configuration file.
+
+NOTE:: The order of key/value pairs in the sample configuration files is 
+important. The code will raise a `RuntimeError` if the order is incorrect.
+
 
 
 Wind Template
@@ -270,7 +274,7 @@ pairs are;
     vulnerability curves.
 
 Without Templates
------------------ 
+-----------------
 
 
 Vulnerability functions
