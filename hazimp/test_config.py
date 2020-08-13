@@ -34,8 +34,8 @@ import os
 from hazimp import config
 from hazimp.calcs import calcs
 from hazimp.config_build import (find_atts, _get_job_or_calc,
-                                      check_1st_level_keys, file_can_open,
-                                      check_files_to_load, check_attributes)
+                                 check_1st_level_keys, file_can_open,
+                                 check_files_to_load, check_attributes)
 from hazimp.jobs import jobs
 
 

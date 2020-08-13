@@ -31,14 +31,14 @@ passing the configuration infomation in as a dictionary.
 For example, to run a wind example do;::
 
      cd examples/wind
-     python ../../hazimp/hazimp.py  -c wind_v3.yaml
+     python ../../hazimp/main.py  -c wind_v5.yaml
 
 
 The -c specifies the configuration file.
 
 HazImp can also be ran in parallel, using mpirun.  For example;::
 
-     mpirun -np 4 python ../../hazimp/hazimp.py  -c wind_v3.yaml
+     mpirun -np 4 python ../../hazimp/main.py  -c wind_v5.yaml
  
 
 There are a suite of HazImp tests to test the install and code during
@@ -53,9 +53,13 @@ Templates
 ---------
 
 The simplest way to use HazImp is with a template. There is currently
-a wind template.  Templates take into account internal vulnerability
-curves and the data flow needed to produce loss information,
+a wind template and a flood template. Templates take into account internal 
+vulnerability curves and the data flow needed to produce loss information,
 simplifying the configuration file.
+
+NOTE:: The order of key/value pairs in the sample configuration files is 
+important. The code will raise a `RuntimeError` if the order is incorrect.
+
 
 
 Wind Template
@@ -270,7 +274,7 @@ pairs are;
     vulnerability curves.
 
 Without Templates
------------------ 
+-----------------
 
 
 Vulnerability functions

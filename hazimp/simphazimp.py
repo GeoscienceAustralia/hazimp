@@ -20,13 +20,13 @@ The main entry point for the hazard impact tool.
 This is working on a simpler interface.
 The pipeline will not be used.
 """
+import numpy
 
 from hazimp import console
 from hazimp import context
 from hazimp import config
 from hazimp import pipeline
 
-import numpy
 
 # This;
 #  numpy.column_stack((body, only_1d))
@@ -60,9 +60,7 @@ def start(config_list=None, config_file=None, cont_in=None):
 
     if cont_in is None:
         cont_in = context.Context()
-    #calc_jobs = config.instance_builder(config_list)
-    #the_pipeline = pipeline.PipeLine(calc_jobs)
-    #the_pipeline.run(cont_in)
+
     return cont_in
 
 ############################################################################

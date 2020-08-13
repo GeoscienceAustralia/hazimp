@@ -4,7 +4,7 @@ Generate tables
 ===============
 
 A common way of reporting the outcomes of a HazImp analysis is to look at the
-number of features distributed across various ranges. Fr example, the number of
+number of features distributed across various ranges. For example, the number of
 buildings in a given damage state, grouped by an age category. While many may
 want to do their own pivot tables on the output, this can automate the process
 for the most common index/column combination.
@@ -51,8 +51,8 @@ closely based on `pandas.DataFrame.pivot_table`.
         is function or list of functions.
 
 
-Example
--------
+Examples
+--------
 
 .. code:: yaml
 
@@ -65,6 +65,15 @@ Example
 This will return a table of the number (the `size` function) of buildings in each damage state,
 grouped by the "YEAR_BUILT" attribute, and saved to the file "wind_impact_by_year.xlsx"
 
+.. code:: yaml
 
+ - tabulate:
+    file_name: mean_slr_by_year.xlsx
+    index: YEAR_BUILT
+    columns: structural_loss_ratio
+    aggfunc: mean
+
+This will return a table of the mean structural loss ratio of buildings, grouped
+by the "YEAR_BUILT" attribute, and saved to the file "mean_slr_by_year.xlsx"
 
 

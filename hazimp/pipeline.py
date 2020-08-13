@@ -27,6 +27,7 @@ order. The order is determined by the queue of jobs.
 import logging
 log = logging.getLogger(__name__)
 
+
 class PipeLine(object):
 
     """
@@ -68,5 +69,6 @@ class PipeLine(object):
         :param context: Context object holding the i/o data for the pipelines.
         """
         for job in self.jobs:
-            log.info('Executing ' + type(getattr(job, 'job_instance', job)).__name__)
+            jobtype = type(getattr(job, 'job_instance', job)).__name__
+            log.info(f'Executing {jobtype}')
             job(context)

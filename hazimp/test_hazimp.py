@@ -27,7 +27,7 @@
 Test hazimp.
 """
 
-  # can now use print()
+# can now use print()
 
 import unittest
 import tempfile

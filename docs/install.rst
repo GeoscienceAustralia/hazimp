@@ -22,9 +22,9 @@ e.g. `conda activate hazimp`.
 User install using system python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-On some systems (e.g. rhe-compute1) the existing system python installation may be made suitable.::
+On some systems the existing system python installation may be made suitable.::
 
-  for x in pep8 coverage pyyaml pylint pandas ; do pip install --user $x ; done
+  for x in pep8 coverage pyyaml pylint pandas prov pydot; do pip install --user $x ; done
 
 On MS-Windows::
 
