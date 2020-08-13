@@ -34,10 +34,10 @@ Test the misc module.
 import unittest
 import tempfile
 import os
+from zipfile import ZipFile
 
 import numpy
 from scipy import allclose
-from zipfile import ZipFile
 from moto import mock_s3
 
 from hazimp.misc import (csv2dict, get_required_args, sorted_dict_values,
@@ -188,7 +188,7 @@ class TestMisc(unittest.TestCase):
         self.assertEqual(r_keys, ['boots', 'feet', 'socks'])
         self.assertEqual(r_values, [1, 2, 3])
 
-    def test_get_temporary_directory(self):
+    def test_get_s3_client(self):
         s3_client = get_s3_client()
         self.assertIsNotNone(s3_client)
 

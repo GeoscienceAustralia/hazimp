@@ -30,6 +30,7 @@ Test the calcs module.
 """
 
 import unittest
+from unittest import mock
 import tempfile
 import os
 import numpy
@@ -45,6 +46,7 @@ from hazimp import context
 from hazimp import misc
 from hazimp import parallel
 
+prov = mock.MagicMock(name='prov.model')
 
 class Dummy(object):
 
@@ -60,6 +62,8 @@ class Dummy(object):
         self.vulnerability_sets = {}
         self.exposure_att = {}
         self.site_shape = site_shape
+        self.prov = prov
+        self.provlabel=':test'
 
     def get_site_shape(self):
         """ Return the number of sites"""
@@ -379,7 +383,8 @@ class TestJobs(unittest.TestCase):
         actual = {set1: (exp1, 'mean1', set1), set2: (exp2, 'mean2', set2)}
         self.assertDictEqual(actual, con_in.exposure_vuln_curves)
 
-    def test_load_raster(self):
+    @mock.patch('prov.model.ProvDocument.used')
+    def test_load_raster(self, mock_used):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
@@ -429,8 +434,9 @@ class TestJobs(unittest.TestCase):
                                  con_in.exposure_att['haz_actual']), msg)
         os.remove(f.name)
 
-    @unittest.skip("Failing comparison of NaN values")
-    def test_load_raster_clipping(self):
+    #@unittest.skip("Failing comparison of NaN values")
+    @mock.patch('prov.model.ProvDocument.used')
+    def test_load_raster_clipping(self, mock_used):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
@@ -456,7 +462,7 @@ class TestJobs(unittest.TestCase):
         # Write a hazard file
         f = tempfile.NamedTemporaryFile(
             suffix='.aai', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False, mode='w')
         f.write('ncols 3    \r\n')
         f.write('nrows 2 \r\n')
         f.write('xllcorner +0.    \r\n')
@@ -478,9 +484,9 @@ class TestJobs(unittest.TestCase):
                str(con_in.exposure_att[haz_v].values))
         msg += "\n not = con_in.exposure_att['haz_actual'] \n" + \
             str(con_in.exposure_att['haz_actual'].values)
-        self.assertTrue(allclose(con_in.exposure_att[haz_v].values,
-                                 con_in.exposure_att['haz_actual'].values),
-                        msg)
+
+        numpy.testing.assert_array_equal(con_in.exposure_att[haz_v].values,
+                                 con_in.exposure_att['haz_actual'].values, msg)
         # There should be only 3 exposure points
         expected = 3
         msg = "Number of exposure points is "
@@ -489,7 +495,8 @@ class TestJobs(unittest.TestCase):
         self.assertTrue(len(con_in.exposure_att['ID']) == expected, msg)
         os.remove(f.name)
 
-    def test_load_raster_clippingII(self):
+    @mock.patch('prov.model.ProvDocument.used')
+    def test_load_raster_clippingII(self, mock_used):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
@@ -537,7 +544,8 @@ class TestJobs(unittest.TestCase):
         self.assertTrue(len(con_in.exposure_att['ID']) == expected, msg)
         os.remove(f.name)
 
-    def test_load_raster_clippingIII(self):
+    @mock.patch('prov.model.ProvDocument.used')
+    def test_load_raster_clippingIII(self, mock_used):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
@@ -584,7 +592,11 @@ class TestJobs(unittest.TestCase):
         pass
         # FIXME Needs test.
 
-    def test_LoadCsvExposure(self):
+    @mock.patch('prov.model.ProvDocument.entity')
+    @mock.patch('prov.model.ProvDocument.activity')
+    @mock.patch('prov.model.ProvDocument.agent')
+    @mock.patch('prov.model.ProvDocument.used')
+    def test_LoadCsvExposure(self, mock_used, mock_agent, mock_activity, mock_entity):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
@@ -645,7 +657,7 @@ class TestJobs(unittest.TestCase):
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
-        con_in = Dummy
+        con_in = Dummy()
         con_in.exposure_lat = con_in.exposure_long = None
         con_in.exposure_att = {}
         test_kwargs = {'file_name': f.name, 'exposure_latitude': 'monkey',
@@ -654,11 +666,12 @@ class TestJobs(unittest.TestCase):
         os.remove(f.name)
 
     @unittest.skip("Skip test of loading multiple rasters")
-    def test_load_rasters(self):
+    @mock.patch('prov.model.ProvDocument.used')
+    def test_load_rasters(self, mock_used):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False, mode='w')
         f.write('exposure_latitude, exposure_longitude, ID, haz_0, haz_1\n')
         f.write('8.1, 0.1, 1, 4, 40\n')
         f.write('7.9, 1.5, 2, -9999, -9999\n')
@@ -678,7 +691,7 @@ class TestJobs(unittest.TestCase):
         # Write a hazard file
         f = tempfile.NamedTemporaryFile(
             suffix='.aai', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False, mode='w')
         f.write('ncols 3 \r\n')
         f.write('nrows 2 \r\n')
         f.write('xllcorner +0. \r\n')
@@ -693,7 +706,7 @@ class TestJobs(unittest.TestCase):
         # Write another hazard file
         f = tempfile.NamedTemporaryFile(
             suffix='.aai', prefix='HAZIMPtest_jobs',
-            delete=False)
+            delete=False, mode='w')
         f.write('ncols 3 \r\n')
         f.write('nrows 2 \r\n')
         f.write('xllcorner +0. \r\n')
@@ -722,7 +735,9 @@ class TestJobs(unittest.TestCase):
         for a_file in files:
             os.remove(a_file)
 
-    def test_save_exposure(self):
+    @mock.patch('prov.model.ProvDocument.wasInformedBy')
+    @mock.patch('prov.model.ProvDocument.wasGeneratedBy')
+    def test_save_exposure(self, mock_wasInformedBy, mock_wasGeneratedBy):
         # get a file name
         f = tempfile.NamedTemporaryFile(
             suffix='.npz',
