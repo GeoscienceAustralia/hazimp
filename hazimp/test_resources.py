@@ -57,6 +57,7 @@ class TestResources(unittest.TestCase):
         vul_funct = set_id.vulnerability_functions['FCM1_INSURED_NOACTION']
         self.assertAlmostEqual(vul_funct.mean_loss[0], 0.0)
 
+
 # -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestResources, 'test')

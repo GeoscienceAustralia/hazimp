@@ -20,5 +20,6 @@ dependencies:
   - botocore
   - boto3
   - moto
+  - flake8
 prefix: ./envs/hazimp
 

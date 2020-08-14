@@ -152,6 +152,7 @@ class TestConfig(unittest.TestCase):
         atts = find_atts(config_list, jobs.LOADCSVEXPOSURE)
         self.assertEqual(atts, actual_atts)
 
+
 # -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestConfig, 'test')

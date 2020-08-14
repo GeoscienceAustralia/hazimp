@@ -768,6 +768,7 @@ class TestJobs(unittest.TestCase):
                                          actual[the_key]))
         os.remove(f.name)
 
+
 # -------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestJobs, 'test')

@@ -115,6 +115,7 @@ class TestWorkFlow(unittest.TestCase):
         self.assertEqual(cont_in.exposure_att['d_test'], 35)
         self.assertEqual(cont_in.exposure_att['g_test'], 10)
 
+
 # -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestWorkFlow, 'test')

@@ -1,5 +1,5 @@
 """
-Perform a PEP8 conformance test of the nc-time-axis code base.
+Perform a PEP8 conformance test of the hazimp code base.
 
 """
 import os
@@ -12,7 +12,7 @@ import hazimp
 
 class TestCodeFormat(unittest.TestCase):
     def test_pep8_conformance(self):
-        # Tests the nc-time-axis code base against the "pep8" tool.
+        # Tests the hazimp code base against the "pep8" tool.
         #
         # Users can add their own excluded files (should files exist in the
         # local directory which is not in the repository) by adding a
@@ -34,8 +34,8 @@ class TestCodeFormat(unittest.TestCase):
 
         root = os.path.abspath(hazimp.__file__)
         result = pep8style.check_files([os.path.dirname(root)])
-        self.assertEqual(result.total_errors, 0, "Found code syntax "
-                                                 "errors (and warnings).")
+        self.assertEqual(result.total_errors, 0,
+                        "Found code syntax errors (and warnings).")
 
 
 if __name__ == '__main__':

@@ -315,7 +315,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename):
     # See `import fiona; fiona.supported_drivers` for a complete list of
     # options, but we've only implemented a few to start with.
 
-    left, right = mergefield = impactcode, bcode
+    left, right = impactcode, bcode
 
     # TODO: Change to a function argument and configuration option
     report = {'REPLACEMENT_VALUE': 'sum',

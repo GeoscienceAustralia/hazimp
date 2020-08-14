@@ -217,4 +217,5 @@ class CalcFloorInundation(Calculator):
         """
         return [water_depth - floor_height]
 
+
 CALCS = misc.instanciate_classes(sys.modules[__name__])

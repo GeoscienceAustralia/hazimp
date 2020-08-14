@@ -51,10 +51,7 @@ def timer(f):
 
     return wrap
 
-# This;
-#  numpy.column_stack((body, only_1d))
-# loses significant figures in numpy1.6
-# numpy1.7 and 1.8 not checked
+
 NUMVER = numpy.__version__
 NUMVER = NUMVER.split('.')
 if NUMVER[0] == '1' and int(NUMVER[1]) < 9:
@@ -101,6 +98,7 @@ def cli():
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
         start(config_file=CMD_LINE_ARGS.config_file[0])
+
 
 if __name__ == "__main__":
     cli()
