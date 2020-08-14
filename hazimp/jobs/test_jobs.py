@@ -48,6 +48,7 @@ from hazimp import parallel
 
 prov = mock.MagicMock(name='prov.model')
 
+
 class Dummy(object):
 
     """
@@ -63,7 +64,7 @@ class Dummy(object):
         self.exposure_att = {}
         self.site_shape = site_shape
         self.prov = prov
-        self.provlabel=':test'
+        self.provlabel = ':test'
 
     def get_site_shape(self):
         """ Return the number of sites"""
@@ -434,7 +435,6 @@ class TestJobs(unittest.TestCase):
                                  con_in.exposure_att['haz_actual']), msg)
         os.remove(f.name)
 
-    #@unittest.skip("Failing comparison of NaN values")
     @mock.patch('prov.model.ProvDocument.used')
     def test_load_raster_clipping(self, mock_used):
         # Write a file to test
@@ -485,8 +485,9 @@ class TestJobs(unittest.TestCase):
         msg += "\n not = con_in.exposure_att['haz_actual'] \n" + \
             str(con_in.exposure_att['haz_actual'].values)
 
-        numpy.testing.assert_array_equal(con_in.exposure_att[haz_v].values,
-                                 con_in.exposure_att['haz_actual'].values, msg)
+        numpy.testing.assert_array_equal(
+            con_in.exposure_att[haz_v].values,
+            con_in.exposure_att['haz_actual'].values, msg)
         # There should be only 3 exposure points
         expected = 3
         msg = "Number of exposure points is "
@@ -596,7 +597,8 @@ class TestJobs(unittest.TestCase):
     @mock.patch('prov.model.ProvDocument.activity')
     @mock.patch('prov.model.ProvDocument.agent')
     @mock.patch('prov.model.ProvDocument.used')
-    def test_LoadCsvExposure(self, mock_used, mock_agent, mock_activity, mock_entity):
+    def test_LoadCsvExposure(self, mock_used, mock_agent,
+                             mock_activity, mock_entity):
         # Write a file to test
         f = tempfile.NamedTemporaryFile(
             suffix='.txt', prefix='HAZIMPtest_jobs',
