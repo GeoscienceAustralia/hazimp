@@ -13,22 +13,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Update Conda environment with hazimp.yml
-      uses: matthewrmshin/conda-action@v1
+      uses: goanpeca/setup-miniconda@v1
       with:
-        args: conda env update -f ./hazimp.yml
-    - name: Activate environment
-      uses: matthewrmshin/conda-action@v1
-      with:
-        args: conda activate hazimp
+        auto-update-conda: true
+        environment-file: hazimp.yml
+        activate-environment: hazimp
     - name: Flake8 test
-      uses: matthewrmshin/conda-action@v1
-      with:
-        activate-environment: hazimp
-        args: flake8 .
+      run: flake 8.
     - name: Test with nosetests
-      uses: matthewrmshin/conda-action@v1
-      with: 
-        activate-environment: hazimp
-        args: nosetests
+      run: nosetests -v
