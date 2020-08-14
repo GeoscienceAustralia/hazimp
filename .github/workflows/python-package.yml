@@ -20,7 +20,5 @@ jobs:
         auto-update-conda: true
         environment-file: hazimp.yml
         activate-environment: hazimp
-    - name: Flake8 test
-      run: flake8 .
     - name: Test with nosetests
       run: nosetests -v
