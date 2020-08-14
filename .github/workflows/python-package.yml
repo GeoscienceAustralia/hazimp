@@ -20,5 +20,5 @@ jobs:
         args: conda env update -f ./hazimp.yml
     - name: Test with nosetests
       uses: matthewrmshin/conda-action@v1
-      run: 
-        nosetests
+      with: 
+        args: nosetests
