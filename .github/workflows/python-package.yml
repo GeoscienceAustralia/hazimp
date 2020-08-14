@@ -13,12 +13,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: goanpeca/setup-miniconda@v1
     - name: Update Conda environment with hazimp.yml
-      uses: goanpeca/setup-miniconda@v1
       with:
         auto-update-conda: true
         environment-file: hazimp.yml
         activate-environment: hazimp
+        auto-activate-base: false
+    - name: Conda test
+      shell: bash
+      run: conda info
     - name: Test with nosetests
+      shell: bash
       run: nosetests -v
