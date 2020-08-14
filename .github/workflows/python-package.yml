@@ -21,8 +21,10 @@ jobs:
     - name: Flake8 test
       uses: matthewrmshin/conda-action@v1
       with:
+        activate-environment: hazimp
         args: flake8 .
     - name: Test with nosetests
       uses: matthewrmshin/conda-action@v1
       with: 
+        activate-environment: hazimp
         args: nosetests
