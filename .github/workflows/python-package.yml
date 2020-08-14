@@ -18,7 +18,6 @@ jobs:
       with:
         auto-update-conda: true
         environment-file: hazimp.yml
-        activate-environment: hazimp
         auto-activate-base: false
     - name: Conda test
       shell: bash
