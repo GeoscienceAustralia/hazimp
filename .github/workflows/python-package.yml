@@ -21,6 +21,6 @@ jobs:
         environment-file: hazimp.yml
         activate-environment: hazimp
     - name: Flake8 test
-      run: flake 8.
+      run: flake8 .
     - name: Test with nosetests
       run: nosetests -v
