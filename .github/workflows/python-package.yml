@@ -18,6 +18,10 @@ jobs:
       uses: matthewrmshin/conda-action@v1
       with:
         args: conda env update -f ./hazimp.yml
+    - name: Flake8 test
+      uses: matthewrmshin/conda-action@v1
+      with:
+        args: flake8 .
     - name: Test with nosetests
       uses: matthewrmshin/conda-action@v1
       with: 
