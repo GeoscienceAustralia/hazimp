@@ -21,7 +21,6 @@ jobs:
         activate-environment: hazimp
         environment-file: hazimp.yml
         auto-activate-base: false
-    - name: Conda test
       shell: bash
       run: |
         pwd
