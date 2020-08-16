@@ -14,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Update Conda environment with hazimp.yml
-      uses: goanpeca/setup-miniconda@v1
-      uses: ./
+    - uses: goanpeca/setup-miniconda@v1
+    - uses: ./
       with:
         auto-update-conda: true
         activate-environment: hazimp
