@@ -13,10 +13,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout      
+      uses: actions/checkout@v2
+
     - name: Update Conda environment with hazimp.yml
-    - uses: actions/checkout@v2
-    - uses: goanpeca/setup-miniconda@v1
-    - uses: ./
+      uses: goanpeca/setup-miniconda@v1
       with:
         auto-update-conda: true
         activate-environment: hazimp
