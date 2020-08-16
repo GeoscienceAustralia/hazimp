@@ -20,9 +20,10 @@ jobs:
         auto-activate-base: true
     - name: Conda test
       shell: bash
-      run: conda env create -f hazimp.yml 
-      run: conda activate hazimp
-      run: conda info
+      run: |
+        conda env create -f hazimp.yml 
+        conda activate hazimp
+        conda info
     - name: Test with nosetests
       shell: bash
       run: nosetests -v
