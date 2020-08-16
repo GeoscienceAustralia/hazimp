@@ -17,10 +17,11 @@ jobs:
       uses: goanpeca/setup-miniconda@v1
       with:
         auto-update-conda: true
-        environment-file: hazimp.yml
-        auto-activate-base: false
+        auto-activate-base: true
     - name: Conda test
       shell: bash
+      run: conda env create -f hazimp.yml 
+      run: conda activate hazimp
       run: conda info
     - name: Test with nosetests
       shell: bash
