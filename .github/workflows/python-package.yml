@@ -21,7 +21,7 @@ jobs:
     - name: Conda test
       shell: bash
       run: |
-        conda env create -f hazimp.yml 
+        conda env create -f ../hazimp.yml 
         conda activate hazimp
         conda info
     - name: Test with nosetests
