@@ -30,4 +30,4 @@ jobs:
         echo ${PATH}
     - name: Test with nose
       run: |
-        nosetests -vv --collect-only
+        pytest
