@@ -10,9 +10,10 @@ on:
     branches: [ master, develop ]
 
 jobs:
-  name: Test HazImp
-  runs-on: ubuntu-latest
-  steps:
+  Hazimp:
+    name: Test HazImp
+    runs-on: ubuntu-latest
+    steps:
     - uses: actions/checkout@v2
     - uses: goanpeca/setup-miniconda@v1
       with:
