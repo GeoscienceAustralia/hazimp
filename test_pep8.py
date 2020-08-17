@@ -5,14 +5,14 @@ Perform a PEP8 conformance test of the hazimp code base.
 import os
 import unittest
 
-import pep8
+import pycodestyle
 
 import hazimp
 
 
 class TestCodeFormat(unittest.TestCase):
     def test_pep8_conformance(self):
-        # Tests the hazimp code base against the "pep8" tool.
+        # Tests the hazimp code base against the "pycodestyle" tool.
         #
         # Users can add their own excluded files (should files exist in the
         # local directory which is not in the repository) by adding a
@@ -20,7 +20,7 @@ class TestCodeFormat(unittest.TestCase):
         # The file should be a line separated list of filenames/directories
         # as can be passed to the "pep8" tool's exclude list.
 
-        pep8style = pep8.StyleGuide(quiet=False)
+        pep8style = pycodestyle.StyleGuide(quiet=False)
         pep8style.options.exclude.extend(['*/_version.py'])
 
         # Allow users to add their own exclude list.

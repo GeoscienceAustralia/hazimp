@@ -20,6 +20,6 @@ dependencies:
   - botocore
   - boto3
   - moto
-  - flake8
+  - pycodestyle
 prefix: ./envs/hazimp
 

@@ -48,6 +48,7 @@ from hazimp import parallel
 
 prov = mock.MagicMock(name='prov.model')
 
+
 class Dummy(object):
 
     """
