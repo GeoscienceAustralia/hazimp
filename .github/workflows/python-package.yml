@@ -25,4 +25,4 @@ jobs:
       run: |
         conda info
         ls ./hazimp
-        nosetests -v ./hazimp/
+        pytest
