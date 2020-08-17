@@ -27,7 +27,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         echo "::add-path::/home/runner/.local/bin"
-        which nosetests
+        echo ${PATH}
     - name: Test with nose
       run: |
         nosetests -vv --collect-only
