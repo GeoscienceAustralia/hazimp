@@ -23,13 +23,10 @@ jobs:
         auto-update-conda: true
         activate-environment: hazimp
         environment-file: hazimp.yml
-      run: conda info
     - name: Test environment
       shell: bash
       run: |
         pwd
-        conda init bash
-        conda activate hazimp
         conda info
     - name: Test with nosetests
       shell: bash
