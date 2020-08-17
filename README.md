@@ -8,7 +8,13 @@ For the latest documentation, installation guide and user guide, see https://haz
 
 This branch enables users to develop new functions for HazImp.
 
-Requires `pandas` (provides methods for manipulation of the exposure file).
+Build status
+============
+
+![Master branch](https://github.com/GeoscienceAustralia/hazimp/workflows/Unit%20tests%20for%20HazImp/badge.svg?branch=master)
+
+![Develop branch](https://github.com/GeoscienceAustralia/hazimp/workflows/Unit%20tests%20for%20HazImp/badge.svg?branch=develop)
+
 
 Data
 ==== 
