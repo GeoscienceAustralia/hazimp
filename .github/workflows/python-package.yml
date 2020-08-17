@@ -10,7 +10,7 @@ on:
     branches: [ master, develop ]
 
 jobs:
-  runs-on: ubuntu-latest
+  runs-on: "ubuntu-latest"
   steps:
   - uses: actions/checkout@v2
   - uses: goanpeca/setup-miniconda@v1
@@ -19,8 +19,8 @@ jobs:
       environment-file: hazimp.yml
       python-version: 3.6
       auto-activate-base: false
- - shell: bash -l {0}
-   run: |
-     conda info
-     conda list
+  - shell: bash -l {0}
+    run: |
+      conda info
+      conda list
           
