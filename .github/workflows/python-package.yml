@@ -10,24 +10,17 @@ on:
     branches: [ master, develop ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout      
-      uses: actions/checkout@v2
-
-    - name: Update Conda environment with hazimp.yml
-      uses: goanpeca/setup-miniconda@v1
-      with:
-        auto-activate-base: true
-        auto-update-conda: true
-        activate-environment: hazimp
-        environment-file: hazimp.yml
-    - name: Test environment
-      shell: bash
-      run: |
-        pwd
-        conda info
-    - name: Test with nosetests
-      shell: bash
-      run: nosetests -v
+  runs-on: ubuntu-latest
+  steps:
+  - uses: actions/checkout@v2
+  - uses: goanpeca/setup-miniconda@v1
+        with:
+          activate-environment: hazimp
+          environment-file: hazimp.yml
+          python-version: 3.6
+          auto-activate-base: false
+      - shell: bash -l {0}
+        run: |
+          conda info
+          conda list
+          
