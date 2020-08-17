@@ -29,5 +29,6 @@ jobs:
         echo "::add-path::/home/runner/.local/bin"
         echo ${PATH}
     - name: Test with nose
+      shell: bash -l {0}
       run: |
-        pytest
+        nosetests -vv
