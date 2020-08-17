@@ -26,4 +26,4 @@ jobs:
         conda info
         conda list
         pwd
-        nosetests -v
+        nosetests -v hazimp/
