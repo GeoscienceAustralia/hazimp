@@ -19,14 +19,15 @@ jobs:
     - name: Update Conda environment with hazimp.yml
       uses: goanpeca/setup-miniconda@v1
       with:
+        auto-activate-base: true
         auto-update-conda: true
         activate-environment: hazimp
         environment-file: hazimp.yml
-        auto-activate-base: true
     - name: Test environment
       shell: bash
       run: |
         pwd
+        cinda init
         conda activate hazimp
         conda info
     - name: Test with nosetests
