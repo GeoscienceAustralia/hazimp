@@ -27,7 +27,7 @@ jobs:
       shell: bash
       run: |
         pwd
-        conda init
+        conda init bash
         conda activate hazimp
         conda info
     - name: Test with nosetests
