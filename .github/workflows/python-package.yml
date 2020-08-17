@@ -31,4 +31,4 @@ jobs:
     - name: Test with nose
       shell: bash -l {0}
       run: |
-        nosetests -vv
+        nosetests -v --exe
