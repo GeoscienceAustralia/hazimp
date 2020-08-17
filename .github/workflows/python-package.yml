@@ -10,17 +10,18 @@ on:
     branches: [ master, develop ]
 
 jobs:
-  runs-on: "ubuntu-latest"
+  name: Test HazImp
+  runs-on: ubuntu-latest
   steps:
-  - uses: actions/checkout@v2
-  - uses: goanpeca/setup-miniconda@v1
-    with:
-      activate-environment: hazimp
-      environment-file: hazimp.yml
-      python-version: 3.6
-      auto-activate-base: false
-  - shell: bash -l {0}
-    run: |
-      conda info
-      conda list
+    - uses: actions/checkout@v2
+    - uses: goanpeca/setup-miniconda@v1
+      with:
+        activate-environment: hazimp
+        environment-file: hazimp.yml
+        python-version: 3.6
+        auto-activate-base: false
+    - shell: bash -l {0}
+      run: |
+        conda info
+        conda list
           
