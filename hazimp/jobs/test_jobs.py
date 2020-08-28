@@ -66,7 +66,6 @@ class Dummy(object):
         self.prov = prov
         self.provlabel = ':test'
 
-
     def get_site_shape(self):
         """ Return the number of sites"""
         return self.site_shape
@@ -435,7 +434,6 @@ class TestJobs(unittest.TestCase):
         self.assertTrue(allclose(con_in.exposure_att[haz_v],
                                  con_in.exposure_att['haz_actual']), msg)
         os.remove(f.name)
-
 
     @mock.patch('prov.model.ProvDocument.used')
     def test_load_raster_clipping(self, mock_used):
