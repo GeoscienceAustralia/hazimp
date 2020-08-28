@@ -111,6 +111,7 @@ class TestXmlLayer(unittest.TestCase):
         msg = "Expected top-level tag of 'Event', got '%s'" % top_tag
         self.assertEqual(top_tag, 'Event', msg)
 
+
 # -------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestXmlLayer, 'test')

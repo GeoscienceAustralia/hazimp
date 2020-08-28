@@ -25,7 +25,6 @@ import numpy
 from hazimp import console
 from hazimp import context
 from hazimp import config
-from hazimp import pipeline
 
 
 # This;
@@ -62,6 +61,7 @@ def start(config_list=None, config_file=None, cont_in=None):
         cont_in = context.Context()
 
     return cont_in
+
 
 ############################################################################
 if __name__ == "__main__":

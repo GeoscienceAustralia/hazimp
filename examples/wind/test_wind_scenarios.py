@@ -11,7 +11,6 @@
 """
 Test wind scenarios.
 """
-  # can now use print()
 
 import unittest
 import os
@@ -23,15 +22,14 @@ from scipy import allclose
 from hazimp import misc
 from hazimp import main
 from hazimp.jobs.jobs import (LOADRASTER, LOADCSVEXPOSURE,
-                                   LOADXMLVULNERABILITY, SIMPLELINKER,
-                                   SELECTVULNFUNCTION,
-                                   LOOKUP, SAVEALL)
+                              LOADXMLVULNERABILITY, SIMPLELINKER,
+                              SELECTVULNFUNCTION,
+                              LOOKUP, SAVEALL)
 from hazimp.calcs import calcs
 from hazimp import parallel
-from hazimp import config
 from hazimp.templates import (SAVE, LOADWINDTCRM, WINDV3,
-                                   TEMPLATE, DEFAULT, CALCSTRUCTLOSS,
-                                   REP_VAL_NAME)
+                              TEMPLATE, DEFAULT, CALCSTRUCTLOSS,
+                              REP_VAL_NAME)
 
 
 class TestWind(unittest.TestCase):
@@ -212,6 +210,8 @@ class TestWind(unittest.TestCase):
             self.assertTrue(allclose(exp_dict['exposure_latitude'],
                                      [-22.99, -23.01, -22.99, -23.99, -23]))
         os.remove(f.name)
+
+
 # -------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestWind, 'test')

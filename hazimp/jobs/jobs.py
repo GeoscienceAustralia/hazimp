@@ -693,7 +693,7 @@ class LoadRaster(Job):
                 context.exposure_long,
                 context.exposure_lat, file_list)
             file_data[file_data == no_data_value] = np.NAN
-            
+
             context.exposure_att[attribute_label] = file_data
 
             if clip_exposure2all_hazards:

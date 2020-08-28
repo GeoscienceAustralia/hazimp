@@ -31,7 +31,7 @@ def chloropleth(impactfile, shapefile, impactcode, shapecode, outputfile):
     :param str outputfile: Destination geospatial file
     """
 
-    left, right = mergefield = impactcode, shapecode
+    left, right = impactcode, shapecode
 
     impact = pandas.read_csv(impactfile)
 

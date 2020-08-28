@@ -29,10 +29,10 @@ from hazimp.config_build import find_atts, add_job
 from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                               LOADXMLVULNERABILITY, SIMPLELINKER,
                               SELECTVULNFUNCTION, RANDOM_CONSTANT,
-                              LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
+                              LOOKUP, SAVEALL, CONSTANT, ADD,
                               MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS,
-                              TABULATE, CATEGORISE,
-                              SAVEPROVENANCE)
+                              CATEGORISE, SAVEPROVENANCE)
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -557,6 +557,7 @@ def _reader2(config_list):
             print(("job.job_instance", job.job_instance))
             print(("job.atts_to_add", job.atts_to_add))
     return job_insts
+
 
 READERS = {DEFAULT: _reader2,
            WINDV3: _wind_v3_reader,

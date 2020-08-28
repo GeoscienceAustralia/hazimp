@@ -11,7 +11,6 @@
 """
 Test wind scenarios.
 """
-  # can now use print()
 
 import unittest
 import os
@@ -24,8 +23,8 @@ from hazimp import main
 from hazimp.calcs.calcs import FLOOR_HEIGHT
 from hazimp.jobs.jobs import (LOADCSVEXPOSURE)
 from hazimp.templates import (SAVE, LOADFLOODASCII, FLOODFABRICV2,
-                                   TEMPLATE, FLOODCONTENTSV2, CALCCONTLOSS,
-                                   CALCSTRUCTLOSS, REP_VAL_NAME)
+                              TEMPLATE, FLOODCONTENTSV2, CALCCONTLOSS,
+                              CALCSTRUCTLOSS, REP_VAL_NAME)
 from hazimp import templates as flood_conts
 from hazimp import parallel
 
@@ -176,6 +175,8 @@ class TestFlood(unittest.TestCase):
             self.assertTrue(allclose(exp_dict['contents_loss'],
                                      exp_dict['calced_contents_loss']))
         os.remove(f.name)
+
+
 # -------------------------------------------------------------
 if __name__ == "__main__":
 

@@ -67,7 +67,6 @@ class Raster(object):
         self.y_size = y_size
         self.raster[self.raster == self.no_data_value] = numpy.NAN
 
-
     @classmethod
     def from_file(cls, filename):
         """

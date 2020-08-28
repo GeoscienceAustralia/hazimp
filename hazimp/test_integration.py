@@ -174,6 +174,7 @@ class TestIntegration(unittest.TestCase):
         os.remove(file_vuln)
         os.remove(file_exp)
 
+
 # -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestIntegration, 'test')

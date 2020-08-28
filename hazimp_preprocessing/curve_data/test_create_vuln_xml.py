@@ -202,6 +202,7 @@ class TestCreateVulnXML(unittest.TestCase):
         os.remove(contents_filename)
         os.remove(fabric_filename)
 
+
 # -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestCreateVulnXML, 'test')
