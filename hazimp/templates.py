@@ -33,6 +33,7 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                               MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS,
                               CATEGORISE, SAVEPROVENANCE)
 
+
 LOGGER = logging.getLogger(__name__)
 
 __author__ = 'u54709'
