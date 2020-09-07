@@ -36,7 +36,7 @@ This is based on the `pandas.cut` method.
     *bins*
         Monotonically increasing array of bin edges, including the rightmost edge,
         allowing for non-uniform bin widths. There must be (number of labels) +
-        1 bins. 
+        1 values, and range from 0.0 to 1.0.
 
     *labels*
         Specifies the labels for the returned bins. Must be the same length as the
@@ -55,3 +55,12 @@ being added to the column "Damage state":
     bins: [0.0, 0.02, 0.1, 0.2, 0.5, 1.0]
     labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
 
+
+Another example with three categories:
+
+.. code:: yaml
+
+- categorise:
+   field_name: 'Damage state'
+   bins: [0.0, 0.1, 0.5, 1.0]
+   labels: ['Negligible', 'Minor', 'Major']
