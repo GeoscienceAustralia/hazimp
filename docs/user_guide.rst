@@ -188,6 +188,13 @@ template file.
     *iterations* 
     The number of iterations to perform
 
+Example::
+
+ - exposure_permutation:
+     groupby: MB_CODE
+     iterations: 1000
+
+
 *aggregation* 
     This determines the way HazImp will aggregate results
 
