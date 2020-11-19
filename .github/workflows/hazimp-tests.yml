@@ -26,7 +26,4 @@ jobs:
       shell: bash -l {0}
       run: |
         nosetests -v --exe
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+
