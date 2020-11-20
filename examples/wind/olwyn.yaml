@@ -1,14 +1,26 @@
 #  python ../hazimp/hazimp/main.py -c olwyn_hazimp.yaml 
-- template: wind_v3
+- template: wind_nc
+- vulnerability_filename: synthetic_domestic_wind_vul_curves.xml
+- vulnerability_set: domestic_wind_2012
 - load_exposure:
    file_name: WA_Wind_Exposure_2013_Test_only.csv
    exposure_latitude: LATITUDE
    exposure_longitude: LONGITUDE
 #- load_wind_ascii: /g/data/w85/brl654/example/olwyngust.tif
-- load_wind_ascii: olwyn.tif
+- load_wind: 
+   file_list: olwyn.tif
 - calc_struct_loss:
    replacement_value_label: REPLACEMENT_VALUE
+- categorise:
+   field_name: 'Damage state'
+   bins: [0.0, 0.02, 0.1, 0.2, 0.5, 1.0]
+   labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
 - save: olwyn_impact.csv
 - aggregate:
    boundaries: northwestcape_meshblocks.geojson
-   save: olwyn_impact.shp
+   boundarycode: MB_CODE11
+   impactcode: MESHBLOCK_CODE_2011
+   file_name: olwyn_impact.shp
+   categories: True
+
+

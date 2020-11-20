@@ -36,7 +36,7 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
 
 LOGGER = logging.getLogger(__name__)
 
-__author__ = 'u54709'
+__author__ = 'u12161'
 
 TEMPLATE = 'template'
 DEFAULT = 'default'
@@ -260,7 +260,7 @@ def _wind_nc_reader(config_list):
     if calcloss:
         atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
         if REP_VAL_NAME not in atts_dict:
-            msg = 'Mandatory key not found in config file; %s' % REP_VAL_NAME
+            msg = f"Mandatory key not found in config file; {REP_VAL_NAME}"
             raise RuntimeError(msg)
         attributes = {'var1': 'structural_loss_ratio',
                       'var2': atts_dict[REP_VAL_NAME],
@@ -273,16 +273,16 @@ def _wind_nc_reader(config_list):
         file_name = find_atts(config_list, SAVEAGG)
         add_job(job_insts, SAVEAGG, {'file_name': file_name})
 
+    if config_dict.get(CATEGORISE):
+        attributes = find_atts(config_list, CATEGORISE)
+        add_job(job_insts, CATEGORISE, attributes)
+
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
     if config_dict.get(AGGREGATE):
         attributes = find_atts(config_list, AGGREGATE)
         add_job(job_insts, AGGREGATE, attributes)
-
-    if config_dict.get(CATEGORISE):
-        attributes = find_atts(config_list, CATEGORISE)
-        add_job(job_insts, CATEGORISE, attributes)
 
     if config_dict.get(TABULATE):
         attributes = find_atts(config_list, TABULATE)

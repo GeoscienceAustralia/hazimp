@@ -768,11 +768,13 @@ class Aggregate(Job):
         self.call_funct = AGGREGATE
 
     def __call__(self, context, file_name=None, boundaries=None,
-                 impactcode=None, boundarycode=None, use_parallel=True):
+                 impactcode=None, boundarycode=None, categories=True,
+                 use_parallel=True):
         context.save_aggregation(file_name,
                                  boundaries,
                                  impactcode,
                                  boundarycode,
+                                 categories,
                                  use_parallel=use_parallel)
 
 

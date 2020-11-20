@@ -41,6 +41,7 @@ from prov.model import ProvDocument
 
 from hazimp import misc
 from hazimp import parallel
+from hazimp import aggregate
 
 LOGGER = logging.getLogger(__name__)
 DATEFMT = "%Y-%m-%d %H:%M:%S %Z"
@@ -272,7 +273,7 @@ class Context(object):
             return write_dict
 
     def save_aggregation(self, filename, boundaries, impactcode,
-                         boundarycode, use_parallel=True):
+                         boundarycode, categories, use_parallel=True):
         """
         Save data aggregated to geospatial regions
 
@@ -302,8 +303,8 @@ class Context(object):
         self.prov.wasInformedBy(aggact, self.provlabel)
         self.prov.wasGeneratedBy(aggfileent, aggact)
         if parallel.STATE.rank == 0 or not use_parallel:
-            misc.choropleth(write_dict, boundaries, impactcode,
-                            boundarycode, filename)
+            aggregate.choropleth(write_dict, boundaries, impactcode,
+                                 boundarycode, filename, categories)
             misc.upload_to_s3_if_applicable(filename, bucket_name, bucket_key)
             if (bucket_name is not None and
                     bucket_key is not None and
@@ -378,7 +379,6 @@ class Context(object):
         for intensity_key in self.exposure_vuln_curves:
             vc = self.exposure_vuln_curves[intensity_key]
             lct = vc.loss_category_type
-
         self.exposure_att[field_name] = pd.cut(self.exposure_att[lct],
                                                bins, right=False,
                                                labels=labels)
