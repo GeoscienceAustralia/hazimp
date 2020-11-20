@@ -99,7 +99,7 @@ The rest of the file can be understood by the following key value pairs;
     The type of template to use.  This example describes the *wind_nc* template.
 
 *load_exposure*
-    This loads the exposure data. It has 3 sub-sections;
+    This loads the exposure data. It has 3 sub-sections::
 
     *file_name*
         The name of the csv exposure file to load. The first row of the csv
