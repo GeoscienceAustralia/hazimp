@@ -87,21 +87,11 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename, categories):
         # Need to modify the field names, as ESRI truncates them
         result = result.rename(columns=COLNAMES)
     directory = dirname(abspath(filename))
-    if not os.path.isdir(directory):
+    if not isdir(directory):
         LOGGER.warning(f"{directory} does not exist - trying to create it")
         os.makedirs(directory)
     try:
         result.to_file(filename, driver=driver)
     except ValueError:
-        LOGGER.error(f"Cannot save aggregated data")
-        LOGGER.error("check fields used to link aggregation boundaries")
-
-
-"""
-bins = [0.0, 0.02, 0.1, 0.2, 0.5, 1.0]
-labels = ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
-categorise(bins, labels, 'damage_state')
-aggds = df.groupby(['SA1_CODE', 'damage_state'])
-aggds.size().to_frame('count').unstack()
-
-"""
+        LOGGER.error("Cannot save aggregated data")
+        LOGGER.error("Check fields used to link aggregation boundaries")
