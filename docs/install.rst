@@ -92,6 +92,8 @@ the location where you have downloaded the HazImp source::
 .. code-block:: bash
   python setup.py develop
 
+Please read the `Contributing code`_ notes if you wish to modify HazImp. 
+
 To use HazImp, run `hazimp --help` from the command line.
 You can also verify the code using `./run_tests`.
 
