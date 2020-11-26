@@ -32,3 +32,4 @@ jobs:
       shell: bash -l {0}
       run: |
         nosetests -v --exe
+        nosetests examples/ --with-doctest -v

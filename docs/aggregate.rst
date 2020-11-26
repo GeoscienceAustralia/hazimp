@@ -11,7 +11,7 @@ data to spatial regions (for example suburbs, post codes).
 
     *boundaries* 
         The path to a geospatial file that contains polygons to aggregate by
-    *file_name* 
+    *filename* 
         The path to the output geospatial file. This can be either an ESRI shape
         file (extension `shp`), a GeoJSON file (`json`) or a GeoPackage
         (`gpkg`). If an ESRI shape file is specified, the attribute names are
@@ -41,6 +41,7 @@ Example::
      file_name: QLD_MeshblockImpacts.shp
      impactcode: MB_CODE
      boundarycode: MB_CODE16
+     categories: True
 
 
 This option has only been implemented in the ``wind_nc`` and ``wind_v5``

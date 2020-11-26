@@ -767,10 +767,10 @@ class Aggregate(Job):
         super(Aggregate, self).__init__()
         self.call_funct = AGGREGATE
 
-    def __call__(self, context, file_name=None, boundaries=None,
+    def __call__(self, context, filename=None, boundaries=None,
                  impactcode=None, boundarycode=None, categories=True,
                  use_parallel=True):
-        context.save_aggregation(file_name,
+        context.save_aggregation(filename,
                                  boundaries,
                                  impactcode,
                                  boundarycode,
