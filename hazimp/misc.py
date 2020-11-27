@@ -314,15 +314,14 @@ def get_git_commit():
         commit = str(r.commit('HEAD'))
         branch = r.active_branch.name
         dt = r.commit('HEAD').committed_datetime.strftime(DATEFMT)
-    except InvalidGitRepositoryError:
+    except (InvalidGitRepositoryError, TypeError):
         # We're not using a git repo
         commit = 'unknown'
         branch = ''
         f = os.path.realpath(__file__)
         mtime = os.path.getmtime(f)
         dt = datetime.fromtimestamp(mtime).strftime(DATEFMT)
-    except TypeError as te:
-        branch = ''
+
     return commit, branch, dt
 
 
