@@ -88,6 +88,8 @@ which uses the wind template.::
       - save: wind_impact.csv
       - aggregate:
          boundaries: SA1_2016_AUST.shp
+         boundarycode: SA1_MAIN16
+         impactcode: SA1_CODE
          save: gust01_impact.shp
 
 The first line is a comment, so this is ignored.
@@ -97,7 +99,7 @@ The rest of the file can be understood by the following key value pairs;
     The type of template to use.  This example describes the *wind_nc* template.
 
 *load_exposure*
-    This loads the exposure data. It has 3 sub-sections;
+    This loads the exposure data. It has 3 sub-sections::
 
     *file_name*
         The name of the csv exposure file to load. The first row of the csv
@@ -111,7 +113,8 @@ The rest of the file can be understood by the following key value pairs;
 
 There are some pre-requisites for the exposure data. It must have a column
 called ``WIND_VULNERABILITY_FUNCTION_ID`` which describe the vulnerability
-functions to be used. 
+functions to be used. It must also have a column called "WIND_VULNERABILITY_SET"
+which describes the vulnerability set to use (see below for more details).
 
 *load_wind*
     This loads the hazard data. It can have up to three subsections;
@@ -145,7 +148,6 @@ functions to be used.
     ``structural_loss_ratio`` given the ``0.2s gust at 10m height m/s``.
 
 *calc_struct_loss*
-
     This will multiply the replacement value and the ``structural_loss_ratio``
     to get the ``structural_loss``.
 
@@ -161,7 +163,6 @@ functions to be used.
     This data can be accessed using Python scripts and is not averaged.
 
 
-    
 
 Using permutation to understand uncertainty in vulnerability
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -186,6 +187,15 @@ template file.
 
     *iterations* 
     The number of iterations to perform
+
+Example::
+
+ - exposure_permutation:
+     groupby: MB_CODE
+     iterations: 1000
+
+Aggregation
+~~~~~~~~~~~
 
 *aggregation* 
     This determines the way HazImp will aggregate results
@@ -214,31 +224,6 @@ template file.
 This option has only been implemented in the ``wind_nc`` and ``wind_v5``
 templates at this time (June 2020).
 
-Saving to geospatial formats
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Data can optionally be saved to a geospatial format that aggregates the impact
-data to spatial regions (for example suburbs, post codes).
-
-*aggregate*
-    This will activate the option to save to a geospatial format.
-
-    *boundaries* 
-        The path to a geospatial file that contains polygons to aggregate by
-    *file_name* 
-        The path to the output geospatial file. THis can be either an ESRI shape
-        file (extension `shp`), a GeoJSON file (`json`) or a GeoPackage
-        (`gpkg`). 
-    *impactcode*
-        The attribute in the exposure file that contains a unique code for each
-        geographic region to aggregate by.
-    *boundarycode*
-        The attribute in the `boundaries` file that contains the same unique
-        code for each geographic region. Preferably the `impactcode` and
-        `boundarycode` will be of the same type (e.g. `int` or `str`)
-
-This option has only been implemented in the ``wind_nc`` and ``wind_v5``
-templates at this time (June 2020).
 
 Flood Template - Structural Damage
 ----------------------------------

@@ -299,54 +299,6 @@ def get_file_mtime(file):
     return dt.strftime(DATEFMT)
 
 
-def choropleth(dframe, boundaries, impactcode, bcode, filename):
-    """
-    Aggregate to geospatial boundaries and save to file
-
-    :param dframe: `pandas.DataFrame` containing point data to be aggregated
-    :param str boundaries: File name of a geospatial dataset that contains
-                  geographical boundaries to serve as aggregation boundaries
-    :param str impactcode: Field name in the `dframe` to aggregate by
-    :param str bcode: Corresponding field name in the geospatial dataset.
-    :param str filename: Destination filename. Must have a valid extension from
-                   `shp`, `json` or `gpkg`.
-    """
-    # List of possible drivers for output:
-    # See `import fiona; fiona.supported_drivers` for a complete list of
-    # options, but we've only implemented a few to start with.
-
-    left, right = impactcode, bcode
-
-    # TODO: Change to a function argument and configuration option
-    report = {'REPLACEMENT_VALUE': 'sum',
-              'structural_loss_ratio': 'mean',
-              '0.2s gust at 10m height m/s': 'max'}
-
-    aggregate = dframe.groupby(left).agg(report)
-    shapes = gpd.read_file(boundaries)
-
-    try:
-        shapes['key'] = shapes[right].astype(int)
-    except KeyError:
-        LOGGER.error(f"{boundaries} does not contain an attribute {right}")
-        sys.exit(1)
-
-    result = shapes.merge(aggregate, left_on='key', right_index=True)
-    driver = DRIVERS[os.path.splitext(filename)[1].replace('.', '')]
-    if driver == 'ESRI Shapefile':
-        LOGGER.debug("Changing field names for ESRI Shapefile")
-        # Need to modify the field names, as ESRI truncates them
-        colnames = {'REPLACEMENT_VALUE': 'REPVAL',
-                    'structural_loss_ratio': 'slr_mean',
-                    '0.2s gust at 10m height m/s': 'maxwind'}
-        result = result.rename(columns=colnames)
-    dirname = os.path.dirname(filename)
-    if not os.path.isdir(dirname):
-        LOGGER.warning(f"{dirname} does not exist - trying to create it")
-        os.makedirs(dirname)
-    result.to_file(filename, driver=driver)
-
-
 def get_git_commit():
     """
     Return the git commit hash, branch and datetime of the commit
@@ -360,9 +312,9 @@ def get_git_commit():
     try:
         r = Repo(ROOT_DIR)
         commit = str(r.commit('HEAD'))
-        branch = str(r.active_branch)
+        branch = r.active_branch.name
         dt = r.commit('HEAD').committed_datetime.strftime(DATEFMT)
-    except InvalidGitRepositoryError:
+    except (InvalidGitRepositoryError, TypeError):
         # We're not using a git repo
         commit = 'unknown'
         branch = ''

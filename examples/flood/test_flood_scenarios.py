@@ -41,6 +41,7 @@ class TestFlood(unittest.TestCase):
 
         # The output file
         f = tempfile.NamedTemporaryFile(
+            mode='w',
             suffix='.csv',
             prefix='HAZIMP_flood_scenarios_test_const',
             delete=False)
@@ -67,7 +68,7 @@ class TestFlood(unittest.TestCase):
             exp_dict = misc.csv2dict(f.name)
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
-        os.remove(f.name)
+        #os.remove(f.name)
 
     def test_flood_struct_yaml_list(self):
         # Test running an end to end flood test based
@@ -81,12 +82,14 @@ class TestFlood(unittest.TestCase):
 
         # The output file
         f_out = tempfile.NamedTemporaryFile(
+            mode='w',
             suffix='.npz',
             prefix='HAZIMPt_flood_scenarios_test_const',
             delete=False)
 
         # The config file
         f = tempfile.NamedTemporaryFile(
+            mode='w',
             suffix='.yaml',
             prefix='HAZIMP_flood_scenarios_test_const',
             delete=False)
@@ -114,8 +117,8 @@ class TestFlood(unittest.TestCase):
             exp_dict = numpy.load(f_out.name)
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
-        os.remove(f.name)
-        os.remove(f_out.name)
+        #os.remove(f.name)
+        #os.remove(f_out.name)
 
     def test_flood_contents_v2_template_list(self):
         # Test running an end to end  test based
@@ -124,6 +127,7 @@ class TestFlood(unittest.TestCase):
 
         # The output file
         f = tempfile.NamedTemporaryFile(
+            mode='w',
             suffix='.csv',
             prefix='HAZIMP_flood_scenarios_test_const',
             delete=False)
@@ -174,7 +178,8 @@ class TestFlood(unittest.TestCase):
             exp_dict = misc.csv2dict(f.name)
             self.assertTrue(allclose(exp_dict['contents_loss'],
                                      exp_dict['calced_contents_loss']))
-        os.remove(f.name)
+        #os.remove(f.name)
+
 
 
 # -------------------------------------------------------------

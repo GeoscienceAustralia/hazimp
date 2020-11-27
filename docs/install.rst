@@ -1,45 +1,6 @@
 Installing HazImp
 =================
 
-Dependencies
-------------
-
-HazImp relies on python and additional libraries.
-
-There are several alternatives for suitable python environments.
-
-Conda
-^^^^^
-Using conda helps to avoid version conflicts between different python packages
-and other dependencies. Download (wget) and install miniconda. 
-Create a new environment with a command such as::
-
-  conda create -f hazimp.yml 
-
-Before each session, remember to activate the corresponding environment, 
-e.g. `conda activate hazimp`.
-
-User install using system python
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-On some systems the existing system python installation may be made suitable.::
-
-  for x in pep8 coverage pyyaml pylint pandas prov pydot; do pip install --user $x ; done
-
-On MS-Windows::
-
-  for %x in (pep8, coverage, pyyaml, pylint, pandas, prov, pydot) do pip install --user %x
-
-System python install
-^^^^^^^^^^^^^^^^^^^^^
-
-On Ubuntu systems, the following requires system administrator privileges.::
-
-.. code-block:: bash
-
-  sudo apt-get install python-numpy, python-scipy
-  sudo apt-get install python-gdal, python-yaml, python-coverage, pep8, pylint, pandas, nose, prov, pydot
-
 Getting the code
 ----------------
 
@@ -61,6 +22,61 @@ Using HTTPS::
 
   git clone https://github.com/GeoscienceAustralia/hazimp
 
+The source code includes a number of files that may help with installing the
+package dependencies.
+
+Dependencies
+------------
+
+HazImp uses Python and additional libraries.
+
+There are several alternatives for suitable python environments.
+
+conda
+^^^^^
+
+We recommend using conda_ to manage dependencies and run HazImp. Using conda
+helps to avoid version conflicts between different python packages and other
+dependencies. Download (wget) and install miniconda_, then use the conda
+environment file `hazimp.yml` included with the software to install the
+set of compatible packages. conda_ is available for Linux, MacOS and Windows
+environments. 
+
+Once you have installed miniconda_, create a new environment with a command such
+as::
+
+  conda create -f hazimp.yml 
+
+Before each session, remember to activate the corresponding environment, 
+e.g. `conda activate hazimp`.
+
+User install using system python
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On some systems the existing system python installation may be made suitable.::
+
+  for x in pep8 coverage pyyaml pylint pandas prov pydot; do pip install --user $x ; done
+
+On MS-Windows::
+
+  for %x in (pep8, coverage, pyyaml, pylint, pandas, prov, pydot) do pip install
+  --user %x
+  
+NOTE:: This is not the exhaustive list of required packages. See the full list
+in `hazimp.yml`.
+
+System python install
+^^^^^^^^^^^^^^^^^^^^^
+
+On Ubuntu systems, the following requires system administrator privileges.::
+
+.. code-block:: bash
+
+  sudo apt-get install python-numpy, python-scipy
+  sudo apt-get install python-gdal, python-yaml, python-coverage, pep8, pylint, pandas, nose, prov, pydot
+
+
+
 Install HazImp
 --------------
 
@@ -76,6 +92,8 @@ the location where you have downloaded the HazImp source::
 .. code-block:: bash
   python setup.py develop
 
+Please read the `Contributing code`_ notes if you wish to modify HazImp. 
+
 To use HazImp, run `hazimp --help` from the command line.
 You can also verify the code using `./run_tests`.
 
@@ -90,6 +108,8 @@ be executed in a shell (e.g. `bash`, `sh` or `csh`).
 
 On a Windows command line::
   
-  nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+  nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file=nosetests.xml --nocapture
 
 
+.. _conda: https://conda.io/en/latest/index.html
+.. _miniconda: https://conda.io/en/latest/miniconda.html
