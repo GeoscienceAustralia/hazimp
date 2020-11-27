@@ -22,6 +22,7 @@ jobs:
         environment-file: hazimp.yml
         python-version: 3.6
         auto-activate-base: false
+
     - name: Test with nose
       shell: bash -l {0}
       run: |

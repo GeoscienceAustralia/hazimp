@@ -33,6 +33,7 @@ from hazimp.templates import (SAVE, LOADWINDTCRM, WINDV3,
                               REP_VAL_NAME, VULNFILE, VULNSET)
 
 
+
 class TestWind(unittest.TestCase):
 
     """
@@ -217,6 +218,7 @@ class TestWind(unittest.TestCase):
             self.assertTrue(allclose(exp_dict['exposure_latitude'],
                                      [-22.99, -23.01, -22.99, -23.99, -23]))
         #os.remove(f.name)
+
 
 
 # -------------------------------------------------------------
