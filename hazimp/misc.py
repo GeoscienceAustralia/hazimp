@@ -312,7 +312,7 @@ def get_git_commit():
     try:
         r = Repo(ROOT_DIR)
         commit = str(r.commit('HEAD'))
-        branch = str(r.active_branch)
+        branch = r.active_branch.name
         dt = r.commit('HEAD').committed_datetime.strftime(DATEFMT)
     except InvalidGitRepositoryError:
         # We're not using a git repo
@@ -321,7 +321,8 @@ def get_git_commit():
         f = os.path.realpath(__file__)
         mtime = os.path.getmtime(f)
         dt = datetime.fromtimestamp(mtime).strftime(DATEFMT)
-
+    except TypeError as te:
+        LOGGER.exception(te)
     return commit, branch, dt
 
 
