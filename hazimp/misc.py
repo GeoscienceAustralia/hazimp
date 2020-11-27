@@ -322,7 +322,7 @@ def get_git_commit():
         mtime = os.path.getmtime(f)
         dt = datetime.fromtimestamp(mtime).strftime(DATEFMT)
     except TypeError as te:
-        LOGGER.exception(te)
+        branch = ''
     return commit, branch, dt
 
 
