@@ -32,15 +32,18 @@ HazImp uses Python and additional libraries.
 
 There are several alternatives for suitable python environments.
 
-Conda
+conda
 ^^^^^
-We recommend using Conda to manage dependencies and run HazImp. Using conda helps to
-avoid version conflicts between different python packages 
-and other dependencies. Download (wget) and install miniconda, then use the
-conda environment file `hazimp.yml` included with the software to install the
-set of compatible packages. 
 
-Create a new environment with a command such as::
+We recommend using conda_ to manage dependencies and run HazImp. Using conda
+helps to avoid version conflicts between different python packages and other
+dependencies. Download (wget) and install miniconda_, then use the conda
+environment file `hazimp.yml` included with the software to install the
+set of compatible packages. conda_ is available for Linux, MacOS and Windows
+environments. 
+
+Once you have installed miniconda_, create a new environment with a command such
+as::
 
   conda create -f hazimp.yml 
 
@@ -89,6 +92,8 @@ the location where you have downloaded the HazImp source::
 .. code-block:: bash
   python setup.py develop
 
+Please read the `Contributing code`_ notes if you wish to modify HazImp. 
+
 To use HazImp, run `hazimp --help` from the command line.
 You can also verify the code using `./run_tests`.
 
@@ -103,6 +108,8 @@ be executed in a shell (e.g. `bash`, `sh` or `csh`).
 
 On a Windows command line::
   
-  nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+  nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file=nosetests.xml --nocapture
 
 
+.. _conda: https://conda.io/en/latest/index.html
+.. _miniconda: https://conda.io/en/latest/miniconda.html

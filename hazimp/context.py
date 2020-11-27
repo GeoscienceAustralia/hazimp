@@ -41,6 +41,7 @@ from prov.model import ProvDocument
 
 from hazimp import misc
 from hazimp import parallel
+from hazimp import aggregate
 
 LOGGER = logging.getLogger(__name__)
 DATEFMT = "%Y-%m-%d %H:%M:%S %Z"
@@ -272,7 +273,7 @@ class Context(object):
             return write_dict
 
     def save_aggregation(self, filename, boundaries, impactcode,
-                         boundarycode, use_parallel=True):
+                         boundarycode, categories, use_parallel=True):
         """
         Save data aggregated to geospatial regions
 
@@ -302,8 +303,8 @@ class Context(object):
         self.prov.wasInformedBy(aggact, self.provlabel)
         self.prov.wasGeneratedBy(aggfileent, aggact)
         if parallel.STATE.rank == 0 or not use_parallel:
-            misc.choropleth(write_dict, boundaries, impactcode,
-                            boundarycode, filename)
+            aggregate.choropleth(write_dict, boundaries, impactcode,
+                                 boundarycode, filename, categories)
             misc.upload_to_s3_if_applicable(filename, bucket_name, bucket_key)
             if (bucket_name is not None and
                     bucket_key is not None and
@@ -348,19 +349,15 @@ class Context(object):
         for more guidance on using aggregation with `DataFrames`
 
         """
+        LOGGER.info(f"Aggregating loss using {groupby} attribute")
         a1 = self.prov.activity(":AggregateLoss",
                                 datetime.now().strftime(DATEFMT),
                                 None,
                                 {"prov:type": "Aggregation",
                                  "void:aggregator": repr(groupby)})
         self.prov.wasInformedBy(a1, self.provlabel)
-        grouped = self.exposure_att.groupby(groupby, as_index=False)
-
-        outdf = grouped.agg(kwargs)
-        outdf.columns = ['_'.join(col).strip() for col in outdf.columns.values]
-        outdf.reset_index(col_level=1)
-        outdf.columns = outdf.columns.get_level_values(0)
-        self.exposure_agg = outdf
+        self.exposure_agg = aggregate.aggregate_loss_atts(self.exposure_att,
+                                                          groupby, kwargs)
 
     def categorise(self, bins, labels, field_name):
         """
@@ -378,7 +375,7 @@ class Context(object):
         for intensity_key in self.exposure_vuln_curves:
             vc = self.exposure_vuln_curves[intensity_key]
             lct = vc.loss_category_type
-
+        LOGGER.info(f"Categorising {lct} values into {len(labels)} categories")
         self.exposure_att[field_name] = pd.cut(self.exposure_att[lct],
                                                bins, right=False,
                                                labels=labels)

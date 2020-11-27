@@ -34,8 +34,9 @@ The preferred way to contribute to HazImp is to fork the
 
 Finally, go to the web page of the your fork of the hazimp repo,
 and click 'Pull request' to send your changes to the maintainers for
-review. This will send an email to the committers. Pull requests should
-be made against the 'develop' branch of the repository. 
+review. This will send an email to the committers. **Pull requests should
+only be made against the 'develop' branch of the repository.** Pull requests
+against the 'master' branch will not be approved.
 
 (If any of the above seems like magic to you, then look up the 
 `Git documentation <http://git-scm.com/documentation>`_ on the web.)

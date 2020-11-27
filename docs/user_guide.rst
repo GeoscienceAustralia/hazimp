@@ -99,7 +99,7 @@ The rest of the file can be understood by the following key value pairs;
     The type of template to use.  This example describes the *wind_nc* template.
 
 *load_exposure*
-    This loads the exposure data. It has 3 sub-sections;
+    This loads the exposure data. It has 3 sub-sections::
 
     *file_name*
         The name of the csv exposure file to load. The first row of the csv
@@ -194,6 +194,8 @@ Example::
      groupby: MB_CODE
      iterations: 1000
 
+Aggregation
+~~~~~~~~~~~
 
 *aggregation* 
     This determines the way HazImp will aggregate results
@@ -222,47 +224,6 @@ Example::
 This option has only been implemented in the ``wind_nc`` and ``wind_v5``
 templates at this time (June 2020).
 
-Saving to geospatial formats
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Data can optionally be saved to a geospatial format that aggregates the impact
-data to spatial regions (for example suburbs, post codes). 
-
-*aggregate*
-    This will activate the option to save to a geospatial format.
-
-    *boundaries* 
-        The path to a geospatial file that contains polygons to aggregate by
-    *file_name* 
-        The path to the output geospatial file. This can be either an ESRI shape
-        file (extension `shp`), a GeoJSON file (`json`) or a GeoPackage
-        (`gpkg`). If an ESRI shape file is specified, the attribute names are
-        modified to ensure they are not truncated/ 
-    *impactcode*
-        The attribute in the exposure file that contains a unique code for each
-        geographic region to aggregate by.
-    *boundarycode*
-        The attribute in the `boundaries` file that contains the same unique
-        code for each geographic region. Preferably the `impactcode` and
-        `boundarycode` will be of the same type (e.g. `int` or `str`)
-
-Presently, HazImp will aggregate the following fields::
-
-    'REPLACEMENT_VALUE': 'sum',
-    'structural_loss_ratio': 'mean',
-    '0.2s gust at 10m height m/s': 'max'
-
-Example::
-
- - aggregate:
-     boundaries: QLD_Mesh_Block_2016.shp
-     file_name: QLD_MeshblockImpacts.shp
-     impactcode: MB_CODE
-     boundarycode: MB_CODE16
-
-
-This option has only been implemented in the ``wind_nc`` and ``wind_v5``
-templates at this time (June 2020).
 
 Flood Template - Structural Damage
 ----------------------------------
