@@ -814,15 +814,15 @@ class SaveProvenance(Job):
             misc.create_temp_file_path_for_s3(file_name)
         [basename, ext] = os.path.splitext(file_name)
         dot = prov_to_dot(context.prov)
-        dot.write_png(basename + '.png')
+        dot.write_svg(basename + '.svg')
         context.prov.serialize(file_name, format='xml')
         if bucket_key is not None:
             misc.upload_to_s3_if_applicable(file_name,
                                             bucket_name,
                                             bucket_key)
-            misc.upload_to_s3_if_applicable(basename + '.png',
+            misc.upload_to_s3_if_applicable(basename + '.svg',
                                             bucket_name,
-                                            bucket_key[:-len(ext)] + '.png')
+                                            bucket_key[:-len(ext)] + '.svg')
 # ____________________________________________________
 # ----------------------------------------------------
 #                KEEP THIS AT THE END
