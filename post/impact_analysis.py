@@ -21,9 +21,9 @@ import os
 from os.path import join as pjoin
 import sys
 import seaborn as sns
-import matplotlib.pyplot as plt
 import pandas as pd
 import matplotlib
+import matplotlib.pyplot as plt
 matplotlib.use("Agg")
 
 
@@ -166,15 +166,17 @@ def main(input_file, res, fmt, output_path=None):
         to_excel(pjoin(output_path, f"{event_num}_damage_state_type.xlsx"))
 
     # Save a table of number of buildings in each damage state, broken
-    # down by construction era
-    df.pivot_table(index='YEAR_BUILT',
-                   columns='Damage state',
-                   aggfunc='size',
-                   fill_value=0).\
-        to_excel(pjoin(output_path, f"{event_num}_dmgstate.xlsx"))
+    # down by construction era, with totals for each category
+    tbl = df.pivot_table(index='YEAR_BUILT', columns='Damage state',
+                         aggfunc='size', fill_value=0)
+    tbl.loc['Total', :] = tbl.sum(axis=1).values
+    tbl.to_excel(pjoin(output_path, f"{event_num}_damage_state.xlsx"))
+    # Calculate percentages of each construction era, and the totals
+    pctbl = 100 * tbl.div(tbl.sum(axis=1).values, axis=0).round(3)
+    pctbl.to_excel(pjoin(output_path, f"{event_num}_damage_state_pct.xlsx"))
+
     fig, ax = plt.subplots(figsize=figsize)
     sns.set_context(context, font_scale=1.)
-
     sns.countplot(x='Damage state', data=df, order=labels, palette=dmgpal)
     ax.set_ylabel("Number")
     plt.savefig(pjoin(output_path, f"{event_num}_damage_state.{fmt}"),
