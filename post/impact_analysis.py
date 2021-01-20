@@ -169,7 +169,8 @@ def main(input_file, res, fmt, output_path=None):
     # down by construction era, with totals for each category
     tbl = df.pivot_table(index='YEAR_BUILT', columns='Damage state',
                          aggfunc='size', fill_value=0)
-    tbl.loc['Total', :] = tbl.sum(axis=0).values
+
+    tbl.loc['Total', :] = tbl.sum(axis=1).values
     tbl.to_excel(pjoin(output_path, f"{event_num}_damage_state.xlsx"))
     # Calculate percentages of each construction era, and the totals
     pctbl = 100 * tbl.div(tbl.sum(axis=1).values, axis=0).round(3)
