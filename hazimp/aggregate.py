@@ -63,7 +63,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename, categories):
                                  aggfunc='size', fill_value=0)
         aggregate = aggregate.merge(dsg, on=left).set_index(left)
     elif categories and ('Damage state' not in dframe.columns):
-        LOGGER.warn("No categorisation will be performed")
+        LOGGER.warning("No categorisation will be performed")
         aggregate.set_index(left, inplace=True)
     else:
         aggregate.set_index(left, inplace=True)

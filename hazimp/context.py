@@ -406,6 +406,19 @@ class Context(object):
             (inferred from the function objects themselves)
             If dict is passed, the key is column to aggregate and value
             is function or list of functions.
+
+        Example:
+
+        Include the following in the configuration file:
+         - tabulate:
+            file_name: wind_impact_table.xlsx
+            index: MESHBLOCK_CODE_2011
+            columns: Damage state
+            aggfunc: size
+
+        This will produce a file called "wind_impact_table.xlsx", with the
+        count of buildings in each "Damage state", grouped by the `index` field
+        `MESHBLOCK_CODE_2011`
         """
         if index not in self.exposure_att.columns:
             LOGGER.error(f"Cannot tabulate data using {index} as index")
@@ -434,6 +447,10 @@ class Context(object):
                                                    columns=columns,
                                                    aggfunc=aggfunc,
                                                    fill_value=0)
+        # Add a row that sums the columns
+        self.pivot.loc['Total', :] = self.pivot.sum(axis=0).values
+        self.pivot.loc['Percent', :] = 100. * self.pivot.loc['Total'].values\
+            / self.pivot.loc['Total'].sum()
         try:
             self.pivot.to_excel(file_name)
         except TypeError as te:
