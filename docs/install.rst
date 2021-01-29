@@ -83,6 +83,7 @@ Install HazImp
 Install HazImp into your python environment::
 
 .. code-block:: bash
+
   python setup.py install
 
 Or, if you are interested in modifying HazImp, the following alternative

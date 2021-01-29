@@ -13,13 +13,14 @@ hazard information. It is command line based and can be executed in parallel.
 .. toctree::
    :maxdepth: 2
    
-   user_guide <docs/user_guide>
-   install <docs/install>
-   templates <docs/templates>
-   categorise <docs/categorise>
-   tabulate <docs/templates>
-   vulnerability <docs/vulnerability>
-   contributing <docs/contributing>
+   Basic User Guide <docs/user_guide>
+   Installation <docs/install>
+   Vulnerability <docs/vulnerability>
+   Templates <docs/templates>
+   Categorise <docs/categorise>
+   Tabulate <docs/templates>
+   Function documentation <docs/code>
+   Contributing <docs/contributing>
   
 .. code
    
