@@ -20,6 +20,9 @@ DRIVERS = {'shp': 'ESRI Shapefile',
            'geojson': 'GeoJSON',
            'gpkg': 'GPKG'}
 
+# These are replacement names for use when writing ESRI shape files that have a
+# limited length for the attribute name.
+# TODO: Labels for other hazard measures, damage measures, etc.
 COLNAMES = {'REPLACEMENT_VALUE': 'REPVAL',
             'structural_loss_ratio': 'slr_mean',
             '0.2s gust at 10m height m/s': 'maxwind',
@@ -53,11 +56,12 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename, categories):
 
     # TODO: Consider what fields are essential and what can be
     # removed.
-    # TODO: Change to a function argument and configuration option
+    # TODO: Change to a function argument and make it a configuration option
     report = {'structural_loss_ratio': 'mean'}
 
     aggregate = dframe.groupby(left).agg(report).reset_index()
 
+    # Assumes "Damage state" is the derived attribute name.
     if categories and ('Damage state' in dframe.columns):
         dsg = dframe.pivot_table(index=left, columns='Damage state',
                                  aggfunc='size', fill_value=0)

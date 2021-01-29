@@ -20,6 +20,11 @@
    field_name: 'Damage state'
    bins: [0.0, 0.02, 0.1, 0.2, 0.5, 1.0]
    labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
+- tabulate:
+   file_name: olwyn_dmg_by_age.xlsx
+   index: YEAR_BUILT
+   columns: Damage state
+   aggfunc: size
 - save: olwyn_impact.csv
 - aggregate:
    boundaries: northwestcape_meshblocks.geojson

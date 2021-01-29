@@ -16,7 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Manipulate raster data
+Manipulate raster data.
+
+Currently loads the entire raster layer into memory, which can blow out memory
+usage in some cases.
+
+# TODO: optimise raster loading and reading
 """
 
 import numpy

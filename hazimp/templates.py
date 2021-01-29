@@ -82,6 +82,7 @@ INSURE_MAP = {INSURED: "_INSURED", UNINSURED: "_UNINSURED"}
 
 def _wind_v3_reader(config_list):
     """
+    DEPRECATED
     From a wind configuration list build the job list.
 
     :param config_list: A list describing the simulation.
@@ -229,6 +230,7 @@ def _wind_nc_reader(config_list):
     # file_list = find_atts(config_list, LOADWINDTCRM)
     atts = find_atts(config_list, LOADWINDTCRM)
 
+    # Hard-coded at this time for wind
     atts['attribute_label'] = '0.2s gust at 10m height m/s'
     add_job(job_insts, LOADRASTER, atts)
 

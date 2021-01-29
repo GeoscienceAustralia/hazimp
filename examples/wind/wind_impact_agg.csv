@@ -1,3 +1,2 @@
-,MB_CAT_2011,structural_loss_ratio,structural_loss_ratio,structural_loss,structural_loss,REPLACEMENT_VALUE,REPLACEMENT_VALUE
-,,mean,std,mean,sum,mean,sum
-0,Residential,0.07549611697599876,0.2106191807311107,24015.754544668904,5259450.24528249,333780.25570776255,73097876
+FID,MB_CAT_2011_,structural_loss_ratio_mean,structural_loss_ratio_std,structural_loss_mean,structural_loss_sum,REPLACEMENT_VALUE_mean,REPLACEMENT_VALUE_sum
+0,Residential,0.03148351618740656,0.12091723788656182,10076.72545932529,2206802.8755922383,333780.25570776255,73097876

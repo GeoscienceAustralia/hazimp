@@ -9,10 +9,10 @@
  - load_wind:  
     file_list: gust-0363.asc
  - exposure_permutation:
-    groupby: MB_CAT_2011
+    groupby: MESHBLOCK_CODE_2011
     iterations: 10
  - aggregation:
-    groupby: MB_CAT_2011
+    groupby: MESHBLOCK_CODE_2011
     kwargs: 
       structural_loss_ratio: [mean, std]
       structural_loss: [mean, sum]
@@ -23,7 +23,7 @@
  - save_agg: wind_impact_agg.csv
  - tabulate:
     file_name: wind_impact_v5.xlsx
-    index: MB_CAT_2011
+    index: MESHBLOCK_CODE_2011
     columns: Damage state
     aggfunc: size
  - categorise:

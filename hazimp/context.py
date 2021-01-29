@@ -60,8 +60,9 @@ EX_LONG = 'exposure_longitude'
 class Context(object):
 
     """
-    Context is a singlton storing all
-    of the run specific data.
+    Context is a singleton storing all of the run specific data, such as the
+    exposure features and their attributes, vulnerability sets, aggregations,
+    pivot tables, etc.
     """
 
     def __init__(self):
@@ -107,8 +108,11 @@ class Context(object):
         # function ID's.
         self.vul_function_titles = {}
 
+        # Instantiate the `pivot` attribute to None initially
+        self.pivot = None
+
         # A `prov.ProvDocument` to manage provenance information, including
-        # adding required namespaces
+        # adding required namespaces (TODO: are these all required?)
         self.prov = ProvDocument()
         self.prov.set_default_namespace("")
         self.prov.add_namespace('prov', 'http://www.w3.org/ns/prov#')
@@ -124,6 +128,8 @@ class Context(object):
                          "prov:Revision": commit,
                          "prov:branch": branch,
                          "prov:date": dt})
+
+        # Not sure this needs to be the user?
         self.prov.agent(f":{getpass.getuser()}",
                         {"prov:type": "foaf:Person"})
         self.prov.actedOnBehalfOf(":hazimp", f":{getpass.getuser()}")
@@ -132,6 +138,9 @@ class Context(object):
     def set_prov_label(self, label, title="HazImp analysis"):
         """
         Set the qualified label for the provenance data
+
+        :param label: the qualified label name
+        :param title: Optional value for the dcterms:title element
         """
 
         self.provlabel = f":{label}"
@@ -447,7 +456,9 @@ class Context(object):
                                                    columns=columns,
                                                    aggfunc=aggfunc,
                                                    fill_value=0)
-        # Add a row that sums the columns
+
+        # Add a row that sums the columns, then another to record the
+        # percentage in each column:
         self.pivot.loc['Total', :] = self.pivot.sum(axis=0).values
         self.pivot.loc['Percent', :] = 100. * self.pivot.loc['Total'].values\
             / self.pivot.loc['Total'].sum()
