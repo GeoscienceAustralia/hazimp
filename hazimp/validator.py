@@ -22,7 +22,7 @@ from pathlib import Path
 
 LOGGER = logging.getLogger(__name__)
 
-NRLM_SCHEMA = str(Path(__file__).parent / '../schema/openquake/nrml.xsd')
+NRML_SCHEMA = str(Path(__file__).parent / '../schema/openquake/nrml.xsd')
 
 
 class Validator:

@@ -23,7 +23,7 @@ import os
 import tempfile
 import unittest
 
-from hazimp.validator import Validator, NRLM_SCHEMA
+from hazimp.validator import Validator, NRML_SCHEMA
 
 valid_xml = '''<?xml version='1.0' encoding='utf-8'?>
 <nrml xmlns="http://openquake.org/xmlns/nrml/0.4"
@@ -60,7 +60,7 @@ invalid_xml = '''<?xml version='1.0' encoding='utf-8'?>
 
 class TestValidator(unittest.TestCase):
     def setUp(self):
-        self.validator = Validator(NRLM_SCHEMA)
+        self.validator = Validator(NRML_SCHEMA)
 
     def test_validator_succeeds(self):
         try:
