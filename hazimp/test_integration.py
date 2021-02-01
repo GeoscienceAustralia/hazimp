@@ -50,7 +50,6 @@ def build_example_vuln():
       xmlns:gml="http://www.opengis.net/gml">
 
     <vulnerabilityModel>
-        <config/>
 
         <discreteVulnerabilitySet vulnerabilitySetID="EQ_building"
         assetCategory="not_used" lossCategory="building_loss">

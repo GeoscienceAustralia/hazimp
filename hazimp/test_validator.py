@@ -26,20 +26,28 @@ import unittest
 from hazimp.validator import Validator, NRLM_SCHEMA
 
 valid_xml = '''<?xml version='1.0' encoding='utf-8'?>
-<nrml xmlns="http://openquake.org/xmlns/nrml/0.4" xmlns:gml="http://www.opengis.net/gml">
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.4"
+    xmlns:gml="http://www.opengis.net/gml">
     <vulnerabilityModel>
-        <discreteVulnerabilitySet vulnerabilitySetID="domestic_wind_2012" assetCategory=""
-                                  lossCategory="structural_loss_ratio">
-            <IML IMT="0.2s gust at 10m height m/s">17.0 20.0 22.0 24.0 26.0 28.0 30.0 32.0 34.0 36.0 38.0 40.0 42.0 44.0
-                46.0 48.0 50.0 52.0 54.0 56.0 58.0 60.0 62.0 64.0 66.0 68.0 70.0 72.0 74.0 76.0 78.0 80.0 82.0 84.0 86.0
-                88.0 90.0 100.0
+        <discreteVulnerabilitySet vulnerabilitySetID="domestic_wind_2012"
+            assetCategory="" lossCategory="structural_loss_ratio">
+            <IML IMT="0.2s gust at 10m height m/s">
+                17.0 20.0 22.0 24.0 26.0 28.0 30.0 32.0 34.0 36.0 38.0
+                40.0 42.0 44.0 46.0 48.0 50.0 52.0 54.0 56.0 58.0 60.0
+                62.0 64.0 66.0 68.0 70.0 72.0 74.0 76.0 78.0 80.0 82.0
+                84.0 86.0 88.0 90.0 100.0
             </IML>
-            <discreteVulnerability vulnerabilityFunctionID="dw1" probabilisticDistribution="LN">
-                <lossRatio>0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023 0.0038 0.006 0.0092 0.014 0.02 0.03
-                    0.042 0.058 0.078 0.1 0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9 0.93 0.96 0.98 0.985
-                    0.99 0.993 0.995 1
+            <discreteVulnerability vulnerabilityFunctionID="dw1"
+                probabilisticDistribution="LN">
+                <lossRatio>
+                    0 6.00E-05 0.00012 0.00024 0.00044 0.00081 0.0014 0.0023
+                    0.0038 0.006 0.0092 0.014 0.02 0.03 0.042 0.058 0.078 0.1
+                    0.14 0.18 0.23 0.3 0.36 0.44 0.52 0.61 0.69 0.77 0.84 0.9
+                    0.93 0.96 0.98 0.985 0.99 0.993 0.995 1
                 </lossRatio>
-                <coefficientsVariation>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+                <coefficientsVariation>
+                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+                    0 0 0 0 0 0 0 0 0 0
                 </coefficientsVariation>
             </discreteVulnerability>
         </discreteVulnerabilitySet>
