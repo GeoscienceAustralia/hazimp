@@ -109,7 +109,7 @@ be executed in a shell (e.g. `bash`, `sh` or `csh`).
 
 On a Windows command line::
   
-  nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file=nosetests.xml --nocapture
+  nosetests tests/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file=nosetests.xml --nocapture
 
 
 .. _conda: https://conda.io/en/latest/index.html

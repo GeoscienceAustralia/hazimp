@@ -4,8 +4,8 @@
 
 find . -name "*.pyc" -delete
 
-nosetests hazimp/ --with-doctest `find hazimp/ -name 'test_*.py'` --with-coverage  --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+nosetests tests/ --with-doctest `find tests/ -name 'test_*.py'` --with-coverage  --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
 # --nocapture let standard out go to standard out
 
 # This works on my PC
-#nosetests hazimp/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+#nosetests tests/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture

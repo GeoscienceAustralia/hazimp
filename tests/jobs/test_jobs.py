@@ -40,11 +40,11 @@ from scipy import allclose, asarray, isnan, array, rollaxis
 from hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                               SAVEALL, CONSTANT, ADD, RANDOM_CONSTANT,
                               MULT, MDMULT)
-from hazimp.jobs.test_vulnerability_model import build_example
 from hazimp.jobs import jobs
 from hazimp import context
 from hazimp import misc
 from hazimp import parallel
+from tests.jobs.test_vulnerability_model import build_example
 
 prov = mock.MagicMock(name='prov.model')
 
