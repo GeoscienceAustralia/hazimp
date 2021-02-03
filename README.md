@@ -8,7 +8,13 @@ For the latest documentation, installation guide and user guide, see https://haz
 
 This branch enables users to develop new functions for HazImp.
 
-Requires `pandas` (provides methods for manipulation of the exposure file).
+Build status
+------------
+
+Master branch: ![Master branch](https://github.com/GeoscienceAustralia/hazimp/workflows/Unit%20tests%20for%20HazImp/badge.svg?branch=master)
+
+Development branch: ![Develop branch](https://github.com/GeoscienceAustralia/hazimp/workflows/Unit%20tests%20for%20HazImp/badge.svg?branch=develop)
+
 
 Data
 ==== 
@@ -43,9 +49,17 @@ The preferred way to contribute to HazImp is to fork the
 
           $ git checkout -b my-feature
 
-   and start making changes. Never work in the ``master`` branch!
+   and start making changes. Never work in the ``master`` branch! We recommend
+   starting from the ``develop`` branch, where we do our development work. 
 
-4. Work on this copy on your computer using Git to do the version
+4. Check the code using the unit test suite. This will also run a quick check of
+   the code syntax using ``pycodestyle``::
+
+         $ nosetests -v --exe
+
+   If this passes with no errors, then you can commit the changes.
+
+5. Work on this copy on your computer using Git to do the version
    control. When you're done editing, do::
 
           $ git add modified_files
@@ -55,7 +69,7 @@ The preferred way to contribute to HazImp is to fork the
 
           $ git push -u origin my-feature
 
-Finally, go to the web page of the your fork of the hazimp repo,
+Finally, go to the web page of your fork of the hazimp repo,
 and click 'Pull request' to send your changes to the maintainers for
 review. request. This will send an email to the committers.
 

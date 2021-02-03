@@ -28,7 +28,8 @@ def _test(config_list, context):
     :return:
     """
     for elem in config_list:
-        print elem
+        print(elem)
     return context
+
 
 WORKFLOWS = {"test": _test, }

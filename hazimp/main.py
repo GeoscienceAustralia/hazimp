@@ -19,20 +19,23 @@
 The main entry point for the hazard impact tool.
 """
 import warnings
-warnings.simplefilter(action = "ignore", category = FutureWarning)
-from hazimp import console
+import time
+import logging
+from functools import wraps, reduce
+import numpy
+from hazimp import console, misc
 from hazimp import context
 from hazimp import config
 from hazimp import pipeline
 
-import numpy
-import logging
-from functools import wraps, reduce
-import time
-
+warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
 def timer(f):
+    """
+    A simple wrapper to time how long a function takes to run
+    """
+
     @wraps(f)
     def wrap(*args, **kwargs):
         t1 = time.time()
@@ -40,22 +43,20 @@ def timer(f):
 
         tottime = time.time() - t1
         msg = "%02d:%02d:%02d " % \
-          reduce(lambda ll, b : divmod(ll[0], b) + ll[1:],
-                        [(tottime,), 60, 60])
+              reduce(lambda ll, b: divmod(ll[0], b) + ll[1:],
+                     [(tottime,), 60, 60])
 
-        logging.info("Time for {0}: {1}".format(f.__name__, msg) )
+        logging.info("Time for {0}: {1}".format(f.__name__, msg))
         return res
 
     return wrap
 
-# This;
-#  numpy.column_stack((body, only_1d))
-# loses significant figures in numpy1.6
-# numpy1.7 and 1.8 not checked
+
 NUMVER = numpy.__version__
 NUMVER = NUMVER.split('.')
 if NUMVER[0] == '1' and int(NUMVER[1]) < 9:
     raise RuntimeError("Must use numpy 1.9 or greater")
+
 
 @timer
 def start(config_list=None, config_file=None, cont_in=None):
@@ -68,6 +69,7 @@ def start(config_list=None, config_file=None, cont_in=None):
     :returns: The config dictionary.
     """
     if config_file:
+        config_file = misc.download_file_from_s3_if_needed(config_file)
         config_list = config.read_config_file(config_file)
 
     if isinstance(config_list, dict):
@@ -88,6 +90,7 @@ def start(config_list=None, config_file=None, cont_in=None):
 
     return cont_in
 
+
 def cli():
     "Command-line interface to hazimp package"
     logging.basicConfig(level=logging.INFO)
@@ -95,6 +98,7 @@ def cli():
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
         start(config_file=CMD_LINE_ARGS.config_file[0])
+
 
 if __name__ == "__main__":
     cli()

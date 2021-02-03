@@ -21,21 +21,22 @@ to jobs and calcs.
 """
 
 import os
-import logging 
+import logging
 from hazimp import misc
 from hazimp.calcs.calcs import (WATER_DEPTH, FLOOR_HEIGHT,
-                                     FLOOR_HEIGHT_CALC)
+                                FLOOR_HEIGHT_CALC)
 from hazimp.config_build import find_atts, add_job
 from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
-                                   LOADXMLVULNERABILITY, SIMPLELINKER,
-                                   SELECTVULNFUNCTION, RANDOM_CONSTANT,
-                                   LOOKUP, SAVEALL, SAVEAGG, CONSTANT, ADD,
-                                   MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS,
-                                   SAVEPROVENANCE)
+                              LOADXMLVULNERABILITY, SIMPLELINKER,
+                              SELECTVULNFUNCTION, RANDOM_CONSTANT,
+                              LOOKUP, SAVEALL, CONSTANT, ADD,
+                              MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS,
+                              CATEGORISE, SAVEPROVENANCE)
+
 
 LOGGER = logging.getLogger(__name__)
 
-__author__ = 'u54709'
+__author__ = 'u12161'
 
 TEMPLATE = 'template'
 DEFAULT = 'default'
@@ -73,14 +74,15 @@ CONT_TEMP = 'regime_action'
 
 AGGREGATION = 'aggregation'
 AGGREGATE = 'aggregate'
-
+TABULATE = 'tabulate'
 CONT_MAP = {SAVE_CONT: "_SAVE", NO_ACTION_CONT: "_NOACTION",
-            EXPOSE_CONT: "_EXPOSE", SAVEAGG_CONT: "_SAVEAGG"}
+            EXPOSE_CONT: "_EXPOSE"}
 INSURE_MAP = {INSURED: "_INSURED", UNINSURED: "_UNINSURED"}
 
 
 def _wind_v3_reader(config_list):
     """
+    DEPRECATED
     From a wind configuration list build the job list.
 
     :param config_list: A list describing the simulation.
@@ -104,12 +106,12 @@ def _wind_v3_reader(config_list):
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     vulnerability_set_id = find_atts(config_list, VULNSET)
     atts = {'vul_functions_in_exposure': {
-            vulnerability_set_id:
+        vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
-            vulnerability_set_id: 'mean'}}
+        vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
@@ -127,10 +129,10 @@ def _wind_v3_reader(config_list):
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
     file_name = find_atts(config_list, SAVE)
-    base, ext = os.path.splitext(file_name)
+    base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
-    
+
     return job_insts
 
 
@@ -151,7 +153,7 @@ def _wind_v4_reader(config_list):
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
 
-    vul_filename = os.path.join(misc.RESOURCE_DIR, 
+    vul_filename = os.path.join(misc.RESOURCE_DIR,
                                 find_atts(config_list, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
@@ -159,12 +161,12 @@ def _wind_v4_reader(config_list):
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     vulnerability_set_id = find_atts(config_list, VULNSET)
     atts = {'vul_functions_in_exposure': {
-            vulnerability_set_id:
+        vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
-            vulnerability_set_id: 'mean'}}
+        vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
@@ -180,13 +182,14 @@ def _wind_v4_reader(config_list):
 
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
-        
+
     file_name = find_atts(config_list, SAVE)
-    base, ext = os.path.splitext(file_name)
+    base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
 
     return job_insts
+
 
 def _mod_file_list(file_list, variable):
     """
@@ -210,6 +213,7 @@ def _mod_file_list(file_list, variable):
         flist.append('NETCDF:"'+f+'":'+variable)
     return flist
 
+
 def _wind_nc_reader(config_list):
     """
     Build a job list from a wind configuration list for netcdf files.
@@ -217,34 +221,34 @@ def _wind_nc_reader(config_list):
     :param config_list: A list describing the simulation
     :returns: A list of jobs to process over
     """
-    config_dict = {k:v for item in config_list for k, v in list(item.items())}
+    config_dict = {k: v for item in config_list for k, v in list(item.items())}
     LOGGER.info("Using wind_nc template")
     job_insts = []
     atts = find_atts(config_list, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
-    file_list = find_atts(config_list, LOADWINDTCRM)
+    # file_list = find_atts(config_list, LOADWINDTCRM)
     atts = find_atts(config_list, LOADWINDTCRM)
-    
 
+    # Hard-coded at this time for wind
     atts['attribute_label'] = '0.2s gust at 10m height m/s'
     add_job(job_insts, LOADRASTER, atts)
 
     vul_filename = os.path.join(misc.RESOURCE_DIR,
                                 find_atts(config_list, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
-    
+
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     vulnerability_set_id = find_atts(config_list, VULNSET)
-    
+
     atts = {'vul_functions_in_exposure': {
-            vulnerability_set_id:
+        vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
-    
+
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
-            vulnerability_set_id: 'mean'}}
+        vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     permute = config_dict.get(PERMUTATION)
@@ -253,15 +257,17 @@ def _wind_nc_reader(config_list):
         add_job(job_insts, PERMUTATE_EXPOSURE, atts)
     else:
         add_job(job_insts, LOOKUP)
-        
-    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
-    if REP_VAL_NAME not in atts_dict:
-        msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
-        raise RuntimeError(msg)
-    attributes = {'var1': 'structural_loss_ratio',
-                  'var2': atts_dict[REP_VAL_NAME],
-                  'var_out': 'structural_loss'}
-    add_job(job_insts, MDMULT, attributes)
+
+    calcloss = config_dict.get(CALCSTRUCTLOSS)
+    if calcloss:
+        atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+        if REP_VAL_NAME not in atts_dict:
+            msg = f"Mandatory key not found in config file; {REP_VAL_NAME}"
+            raise RuntimeError(msg)
+        attributes = {'var1': 'structural_loss_ratio',
+                      'var2': atts_dict[REP_VAL_NAME],
+                      'var_out': 'structural_loss'}
+        add_job(job_insts, MDMULT, attributes)
 
     if config_dict.get(AGGREGATION):
         attributes = find_atts(config_list, AGGREGATION)
@@ -269,32 +275,41 @@ def _wind_nc_reader(config_list):
         file_name = find_atts(config_list, SAVEAGG)
         add_job(job_insts, SAVEAGG, {'file_name': file_name})
 
+    if config_dict.get(CATEGORISE):
+        attributes = find_atts(config_list, CATEGORISE)
+        add_job(job_insts, CATEGORISE, attributes)
+
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
-    
 
     if config_dict.get(AGGREGATE):
         attributes = find_atts(config_list, AGGREGATE)
         add_job(job_insts, AGGREGATE, attributes)
 
+    if config_dict.get(TABULATE):
+        attributes = find_atts(config_list, TABULATE)
+        add_job(job_insts, TABULATE, attributes)
+
     # Eventually, this needs to be included in pipeline.Pipeline and
     # automatically added to the list of jobs
     file_name = find_atts(config_list, SAVE)
-    base, ext = os.path.splitext(file_name)
+    base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
 
     return job_insts
 
+
 def _wind_v5_reader(config_list):
     """
     Build a job list from a wind configuration list.
-    
+
     :param config_list: A list describing the simulation
     :returns: A list of jobs to process over
     """
 
     LOGGER.info("Using wind_v5 template")
+    config_dict = {k: v for item in config_list for k, v in list(item.items())}
     job_insts = []
     atts = find_atts(config_list, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
@@ -304,19 +319,19 @@ def _wind_v5_reader(config_list):
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
 
-    vul_filename = os.path.join(misc.RESOURCE_DIR, 
+    vul_filename = os.path.join(misc.RESOURCE_DIR,
                                 find_atts(config_list, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     vulnerability_set_id = find_atts(config_list, VULNSET)
     atts = {'vul_functions_in_exposure': {
-            vulnerability_set_id:
+        vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
-            vulnerability_set_id: 'mean'}}
+        vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     atts = find_atts(config_list, PERMUTATION)
@@ -334,20 +349,29 @@ def _wind_v5_reader(config_list):
     attributes = find_atts(config_list, AGGREGATION)
     add_job(job_insts, AGGREGATE_LOSS, attributes)
 
+    if config_dict.get(CATEGORISE):
+        attributes = find_atts(config_list, CATEGORISE)
+        add_job(job_insts, CATEGORISE, attributes)
+
+    if config_dict.get(TABULATE):
+        attributes = find_atts(config_list, TABULATE)
+        add_job(job_insts, TABULATE, attributes)
+
     file_name = find_atts(config_list, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
-    
+
     file_name = find_atts(config_list, SAVEAGG)
     add_job(job_insts, SAVEAGG, {'file_name': file_name})
 
     # Eventually, this needs to be included in pipeline.Pipeline and
     # automatically added to the list of jobs
     file_name = find_atts(config_list, SAVE)
-    base, ext = os.path.splitext(file_name)
+    base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
 
-    return job_insts    
+    return job_insts
+
 
 def _flood_fabric_v2_reader(config_list):
     """
@@ -380,12 +404,12 @@ def _flood_fabric_v2_reader(config_list):
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
     atts = {'vul_functions_in_exposure': {
-            'structural_domestic_flood_2012':
+        'structural_domestic_flood_2012':
             'FABRIC_FLOOD_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
-            'structural_domestic_flood_2012': 'mean'}}
+        'structural_domestic_flood_2012': 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
@@ -403,7 +427,7 @@ def _flood_fabric_v2_reader(config_list):
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
     file_name = find_atts(config_list, SAVE)
-    base, ext = os.path.splitext(file_name)
+    base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
     return job_insts
@@ -485,12 +509,12 @@ def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'CONTENTS_FLOOD_FUNCTION_ID'
     atts = {'vul_functions_in_exposure': {
-            'contents_domestic_flood_2012':
+        'contents_domestic_flood_2012':
             'CONTENTS_FLOOD_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     atts = {'variability_method': {
-            'contents_domestic_flood_2012': 'mean'}}
+        'contents_domestic_flood_2012': 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
@@ -508,7 +532,7 @@ def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
     file_name = find_atts(config_list, SAVE)
-    base, ext = os.path.splitext(file_name)
+    base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
     return job_insts
@@ -535,6 +559,7 @@ def _reader2(config_list):
             print(("job.job_instance", job.job_instance))
             print(("job.atts_to_add", job.atts_to_add))
     return job_insts
+
 
 READERS = {DEFAULT: _reader2,
            WINDV3: _wind_v3_reader,

@@ -36,7 +36,7 @@ class Plane(object):
         y_origin = y - self.y_offset
 
         z_origin = ((self.coef[0] * x_origin + self.coef[1] * y_origin) /
-                    -(self.coef[2]))
+                    ((self.coef[2]) * -1))
 
         # Remove the z offset
         z = z_origin + self.z_offset
@@ -63,6 +63,7 @@ def fit_plane_svd(xyz):
 
     # (v[0]x + v[1]y)/-v[2] = z
     return v[:, -1]
+
 
 # -------------------------------------------------------------
 if __name__ == "__main__":

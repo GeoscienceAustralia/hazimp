@@ -12,6 +12,9 @@ hazard information. It is command line based and can be executed in parallel.
    user_guide
    install
    vulnerability
+   categorise
+   aggregate
+
   
 .. code
    

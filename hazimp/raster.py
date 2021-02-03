@@ -16,12 +16,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Manipulate raster data
+Manipulate raster data.
+
+Currently loads the entire raster layer into memory, which can blow out memory
+usage in some cases.
+
+# TODO: optimise raster loading and reading
 """
 
 import numpy
 import gdal
-from gdalconst import GA_ReadOnly
+from gdalconst import GA_ReadOnly, GDT_Float32
 
 
 class Raster(object):
@@ -65,9 +70,7 @@ class Raster(object):
         self.no_data_value = no_data_value
         self.x_size = x_size
         self.y_size = y_size
-
-        self.raster = numpy.where(self.raster == self.no_data_value, numpy.NAN,
-                               self.raster)
+        self.raster[self.raster == self.no_data_value] = numpy.NAN
 
     @classmethod
     def from_file(cls, filename):
@@ -96,14 +99,14 @@ class Raster(object):
         y_size = dataset.RasterYSize  # This will be a negative value.
         band = dataset.GetRasterBand(1)
         no_data_value = band.GetNoDataValue()
-        raster = band.ReadAsArray(0, 0, x_size, y_size)
+        raster = band.ReadAsArray(0, 0, x_size, y_size, buf_type=GDT_Float32)
         instance = cls(raster, upper_left_x, upper_left_y,
                        x_pixel, y_pixel, no_data_value, x_size, y_size)
         return instance
 
     @classmethod
     def from_array(cls, raster, upper_left_x, upper_left_y,
-                   cell_size, no_data_value):
+                   cell_size, no_data_value, dtype='float'):
         """
         Convert numeric array of raster data and info to a raster instance.
         The values are listed in 'English reading order' i.e.
@@ -114,9 +117,10 @@ class Raster(object):
         :param upper_left_y: The latitude at the upper left corner.
         :param cell_size: The cell size.
         :param no_data_value: Values in the raster that represent no data.
+        :param dtype: Data type for the raster values (default float).
         :returns: A Raster instance
         """
-        raster = numpy.array(raster, dtype='d', copy=False)
+        raster = numpy.array(raster, dtype=dtype, copy=False)
         if not len(raster.shape) == 2:
             msg = ('Bad Raster shape %s' % (str(raster.shape)))
             raise TypeError(msg)

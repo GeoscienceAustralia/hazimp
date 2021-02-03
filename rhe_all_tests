@@ -9,6 +9,6 @@ pylint hazimp  --disable=RP0401 --disable=RP0001 --disable=RP0002 --disable=RP00
 mpirun -n 2 python /usr/local/bin/nosetests examples/ --with-doctest `find examples/ -name 'test_*.py'` --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
 # --nocapture let standard out go to standard out
 
-mpirun -n 2  python /usr/local/bin/nosetests hazimp/ --with-doctest `find hazimp/ -name 'test_*.py'` --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
+mpirun -n 2  python /usr/local/bin/nosetests tests/ --with-doctest `find tests/ -name 'test_*.py'` --cover-package=hazimp --with-xunit --xunit-file='nosetests.xml' --nocapture
 
 pep8 .

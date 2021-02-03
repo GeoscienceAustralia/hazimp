@@ -36,10 +36,8 @@ is not present Error out.
 """
 
 import os
-import re
 import sys
 import scipy
-import pandas as pd
 import numpy as np
 
 from prov.dot import prov_to_dot
@@ -68,7 +66,10 @@ RANDOM_CONSTANT = 'random_constant'
 PERMUTATE_EXPOSURE = 'permutate_exposure'
 AGGREGATE_LOSS = 'aggregate_loss'
 AGGREGATE = 'aggregate'
+TABULATE = 'tabulate'
+CATEGORISE = 'categorise'
 SAVEPROVENANCE = 'saveprovenance'
+
 
 class Job(object):
 
@@ -313,12 +314,14 @@ class LoadCsvExposure(Job):
             key: column titles
             value: column values, except the title
         """
+        file_name = misc.download_file_from_s3_if_needed(file_name)
         dt = misc.get_file_mtime(file_name)
-        expent = context.prov.entity(":Exposure data", 
-                            {'dcterms:title': 'Exposure data',
-                             'prov:type': 'void:Dataset',
-                             'prov:generatedAtTime':dt,
-                             'prov:atLocation':os.path.basename(file_name)})
+        expent = context.prov.entity(":Exposure data",
+                                     {'dcterms:title': 'Exposure data',
+                                      'prov:type': 'void:Dataset',
+                                      'prov:generatedAtTime': dt,
+                                      'prov:atLocation':
+                                          os.path.basename(file_name)})
         context.prov.used(context.provlabel, expent)
         data_frame = parallel.csv2dict(file_name, use_parallel=use_parallel)
         # FIXME Need to do better error handling
@@ -350,8 +353,6 @@ class LoadCsvExposure(Job):
             raise RuntimeError(msg)
 
         context.exposure_att = data_frame
-        #for key in data_frame:
-        #    context.exposure_att[key] = data_frame[key].values
 
 
 class LoadXmlVulnerability(Job):
@@ -377,8 +378,9 @@ class LoadXmlVulnerability(Job):
             dt = misc.get_file_mtime(file_name)
             vulent = context.prov.entity(":vulnerability file",
                                          {'prov:type': 'prov:Collection',
-                                          'prov:generatedAtTime':dt,
-                                          'prov:atLocation':os.path.basename(file_name)})
+                                          'prov:generatedAtTime': dt,
+                                          'prov:atLocation':
+                                              os.path.basename(file_name)})
             context.prov.used(context.provlabel, vulent)
 
 
@@ -410,8 +412,8 @@ class SimpleLinker(Job):
         """
         for k, v in vul_functions_in_exposure.items():
             k1 = context.prov.entity(":vulnerability set",
-                                     {"dcterms:title":k,
-                                      "prov:value":v})
+                                     {"dcterms:title": k,
+                                      "prov:value": v})
             context.prov.wasDerivedFrom(context.provlabel, k1)
             context.prov.specializationOf(k1, ":vulnerability file")
         context.vul_function_titles.update(vul_functions_in_exposure)
@@ -466,7 +468,7 @@ class SelectVulnFunction(Job):
         exposure_vuln_curves = {}
 
         for vuln_set_key in variability_method:
-            
+
             # Get the vulnerability set
             vuln_set = context.vulnerability_sets[vuln_set_key]
             # Get the column of function ID's
@@ -507,7 +509,6 @@ class LookUp(Job):
                 key - intensity measure
                 value - realised vulnerability curve instance per asset
         """
-
         for intensity_key in context.exposure_vuln_curves:
             vuln_curve = context.exposure_vuln_curves[intensity_key]
             int_measure = vuln_curve.intensity_measure_type
@@ -523,6 +524,7 @@ class LookUp(Job):
             losses = vuln_curve.look_up(intensities)
             context.exposure_att[loss_category_type] = losses
 
+
 class PermutateExposure(Job):
     """
     Iterate through the exposure attributes, randomly permutating
@@ -535,16 +537,16 @@ class PermutateExposure(Job):
 
     def __call__(self, context, groupby=None, iterations=1000):
         """
-        Calculates the loss for the given vulnerability set, randomly 
-        permutating the exposure attributes to arrive at a 
+        Calculates the loss for the given vulnerability set, randomly
+        permutating the exposure attributes to arrive at a
         distribution of loss outcomes.
 
         :param context: The context instance, used to move data around.
-        :param groupby: The name of the exposure attribute to group 
+        :param groupby: The name of the exposure attribute to group
                         exposure assets by before randomly permutating
                         the corresponding vulnerability curves.
         :param iterations: Number of iterations to perform
-        
+
         Content return:
            exposure_vuln_curves: A :class:`pandas.DataFrame` of realised
                vulnerability curves, associated with the exposure
@@ -558,12 +560,12 @@ class PermutateExposure(Job):
         losses = np.zeros((iterations, len(context.exposure_att)))
         for n in range(iterations):
             context.exposure_att = \
-                misc.permutate_att_values(context.exposure_att, 
+                misc.permutate_att_values(context.exposure_att,
                                           field, groupby=groupby)
 
             for intensity_key in context.exposure_vuln_curves:
                 SelectVulnFunction().__call__(context, variability_method={
-                                                    intensity_key: 'mean'})
+                    intensity_key: 'mean'})
                 vuln_curve = context.exposure_vuln_curves[intensity_key]
                 int_measure = vuln_curve.intensity_measure_type
                 loss_category_type = vuln_curve.loss_category_type
@@ -572,26 +574,29 @@ class PermutateExposure(Job):
                 except KeyError:
                     vulnerability_set_id = vuln_curve.vulnerability_set_id
                     msg = 'Invalid intensity measure, %s. \n' % int_measure
-                    msg += 'vulnerability_set_id is %s. \n' % vulnerability_set_id
+                    msg += ('vulnerability_set_id is %s. \n' %
+                            vulnerability_set_id)
                     raise RuntimeError(msg)
 
                 losses[n, :] = vuln_curve.look_up(intensities)
-                # By adding in a new attribute for each iteration, we can 
-                # capture all the possible permutations of loss outcomes. 
-                # This leads to a rather substantial output data volume, 
+                # By adding in a new attribute for each iteration, we can
+                # capture all the possible permutations of loss outcomes.
+                # This leads to a rather substantial output data volume,
                 # especially when considering the larger exposure datasets
-                # that will be used in real applications, and the number of 
+                # that will be used in real applications, and the number of
                 # iterations that should be used to achieve convergence.
                 loss_iteration = loss_category_type + "_{0:06d}".format(n)
                 field_iteration = field + "_{0:06d}".format(n)
                 context.exposure_att[loss_iteration] = losses[n, :]
-                context.exposure_att[field_iteration] = context.exposure_att[field]
+                context.exposure_att[field_iteration] = \
+                    context.exposure_att[field]
             mean_loss = np.mean(losses, axis=0)
             loss_sd = np.std(losses, axis=0)
 
             loss_category_type_sd = loss_category_type + "_sd"
             context.exposure_att[loss_category_type] = mean_loss
             context.exposure_att[loss_category_type_sd] = loss_sd
+
 
 class LoadRaster(Job):
 
@@ -668,13 +673,14 @@ class LoadRaster(Job):
             if isinstance(file_list, str):
                 file_list = [file_list]
 
-            for f in file_list:                    
+            for f in file_list:
+                f = misc.download_file_from_s3_if_needed(f)
                 dt = misc.get_file_mtime(f)
-                atts = {"dcterms:title":"Source hazard data",
-                        "prov:type":"prov:Dataset",
-                        "prov:atLocation":os.path.basename(f),
-                        "prov:format":os.path.splitext(f)[1].replace('.',''),
-                        "prov:generatedAtTime":dt,}
+                atts = {"dcterms:title": "Source hazard data",
+                        "prov:type": "prov:Dataset",
+                        "prov:atLocation": os.path.basename(f),
+                        "prov:format": os.path.splitext(f)[1].replace('.', ''),
+                        "prov:generatedAtTime": dt, }
                 if file_format == 'nc' and variable:
                     atts['prov:variable'] = variable
                 hazent = context.prov.entity(":Hazard data", atts)
@@ -686,8 +692,8 @@ class LoadRaster(Job):
             file_data, extent = raster_module.files_raster_data_at_points(
                 context.exposure_long,
                 context.exposure_lat, file_list)
-            file_data = np.where(file_data == no_data_value, np.NAN,
-                                 file_data)
+            file_data[file_data == no_data_value] = np.NAN
+
             context.exposure_att[attribute_label] = file_data
 
             if clip_exposure2all_hazards:
@@ -695,11 +701,13 @@ class LoadRaster(Job):
                 # Not optimised for speed, but easy to implement.
                 context.clip_exposure(*extent)
 
+
 class AggregateLoss(Job):
     """
-    Aggregate loss attributes based on the ``groupby`` attribute 
+    Aggregate loss attributes based on the ``groupby`` attribute
     used in the permutation of the vulnerability curves.
     """
+
     def __init__(self):
         super(AggregateLoss, self).__init__()
         self.call_funct = AGGREGATE_LOSS
@@ -707,13 +715,14 @@ class AggregateLoss(Job):
     def __call__(self, context, groupby=None, kwargs=None):
         """
         Aggregate using `pandas.GroupBy` objects
-        
+
         :param context: The context instance, used to move data around.
-        :param groupby: The name of the exposure attribute to group 
-                        exposure assets by before performing aggregations 
+        :param groupby: The name of the exposure attribute to group
+                        exposure assets by before performing aggregations
                         (sum, mean, etc.).
         """
         context.aggregate_loss(groupby, kwargs)
+
 
 class SaveExposure(Job):
 
@@ -734,13 +743,14 @@ class SaveExposure(Job):
         """
         context.save_exposure_atts(file_name, use_parallel=use_parallel)
 
+
 class SaveAggregation(Job):
 
     def __init__(self):
         super(SaveAggregation, self).__init__()
         self.call_funct = SAVEAGG
 
-    def __call__(self, context, file_name=None,  use_parallel=True):
+    def __call__(self, context, file_name=None, use_parallel=True):
         """
         Save all of the aggregated exposure information in the context.
 
@@ -750,39 +760,85 @@ class SaveAggregation(Job):
         context.save_exposure_aggregation(file_name,
                                           use_parallel=use_parallel)
 
+
 class Aggregate(Job):
 
     def __init__(self):
         super(Aggregate, self).__init__()
         self.call_funct = AGGREGATE
 
-    def __call__(self, context, file_name=None, boundaries=None,
-                 impactcode=None, boundarycode=None, use_parallel=True):
-        context.save_aggregation(file_name,
+    def __call__(self, context, filename=None, boundaries=None,
+                 impactcode=None, boundarycode=None, categories=True,
+                 fields=None, use_parallel=True):
+        # Default filename to use when no output filename is specified
+        if filename is None:
+            filename = 'output.shp'
+
+        # Defaults fields to use when none are provided to maintain
+        # backwards compatibility
+        if fields is None:
+            fields = {'structural_loss_ratio': ['mean']}
+
+        context.save_aggregation(filename,
                                  boundaries,
                                  impactcode,
                                  boundarycode,
+                                 categories,
+                                 fields,
                                  use_parallel=use_parallel)
+
+
+class Tabulate(Job):
+
+    def __init__(self):
+        super(Tabulate, self).__init__()
+        self.call_funct = TABULATE
+
+    def __call__(self, context, file_name=None, index=None,
+                 columns=None, aggfunc=None, use_parallel=True):
+        context.tabulate(file_name, index, columns, aggfunc)
+
+
+class Categorise(Job):
+
+    def __init__(self):
+        super(Categorise, self).__init__()
+        self.call_funct = CATEGORISE
+
+    def __call__(self, context, bins=None, labels=None, field_name=None):
+        context.categorise(bins, labels, field_name)
+
 
 class SaveProvenance(Job):
 
     def __init__(self):
         super(SaveProvenance, self).__init__()
         self.call_funct = SAVEPROVENANCE
-    
+
     def __call__(self, context, file_name=None):
         """
-        Save provenance information. 
+        Save provenance information.
 
         By default we save to xml format.
         """
 
+        [file_name, bucket_name, bucket_key] = \
+            misc.create_temp_file_path_for_s3(file_name)
+        [basename, ext] = os.path.splitext(file_name)
         dot = prov_to_dot(context.prov)
-        dot.write_png(file_name.replace('.xml', '.png'))
+        dot.write_png(basename + '.png')
         context.prov.serialize(file_name, format='xml')
+        if bucket_key is not None:
+            misc.upload_to_s3_if_applicable(file_name,
+                                            bucket_name,
+                                            bucket_key)
+            misc.upload_to_s3_if_applicable(basename + '.png',
+                                            bucket_name,
+                                            bucket_key[:-len(ext)] + '.png')
 # ____________________________________________________
 # ----------------------------------------------------
 #                KEEP THIS AT THE END
 # ____________________________________________________
+
 
 JOBS = misc.instanciate_classes(sys.modules[__name__])

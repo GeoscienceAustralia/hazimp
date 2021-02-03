@@ -61,7 +61,6 @@ def write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category,
       xmlns:gml="http://www.opengis.net/gml">
 
     <vulnerabilityModel>
-        <config/>
 
         <discreteVulnerabilitySet """
     xml_h.write(intro)
@@ -80,7 +79,7 @@ def write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category,
 
 
 def write_nrml_curve(xml_h, vulnerability_function_id, loss_ratio,
-                     coef_var, alpha=None, beta=None):
+                     coef_var):
     """
     Write the curve info of an nrml file.
 
@@ -90,16 +89,10 @@ def write_nrml_curve(xml_h, vulnerability_function_id, loss_ratio,
                  vuln curve.
     :param coef_var: 1D vector of the coefficient of variation values (y-axis)
                      of the vuln curve.
-    :param alpha: curve variable - not used, just to help describe the curve.
-    :param beta: curve variable - not used, just to help describe the curve.
     """
     xml_h.write("<discreteVulnerability ")
     xml_write_variable(xml_h, "vulnerabilityFunctionID",
                        vulnerability_function_id)
-    if alpha is not None:
-        xml_write_variable(xml_h, "Alpha", alpha)
-    if beta is not None:
-        xml_write_variable(xml_h, "Beta", beta)
     xml_h.write('')
     xml_h.write('probabilisticDistribution="LN">\n')
     xml_h.write('<lossRatio>')
@@ -145,7 +138,7 @@ def csv_curve2nrml(csv_filename, xml_filename):
     imls = [v for v in csv_dict['IML'] if not v == '']
 
     # open the csv file to read the rows
-    reader = csv.DictReader(open(csv_filename, 'rb'))
+    reader = csv.DictReader(open(csv_filename, 'r'))
     xml_h = open(xml_filename, 'w')
     write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category,
                    csv_dict['IMT'][0], imls)
@@ -161,10 +154,10 @@ def csv_curve2nrml(csv_filename, xml_filename):
         for iml in imls:
             if numpy.isnan(iml):
                 continue
-            loss_ratio += str(row[str(int(iml))]) + ' '
+            loss_ratio += str(row[str(iml)]) + ' '
             coef_var += '0 '
         write_nrml_curve(xml_h, row['vulnerabilityFunctionID'], loss_ratio,
-                         coef_var, row['Alpha'], row['Beta'])
+                         coef_var)
     write_nrml_close(xml_h)
 
 
@@ -351,6 +344,7 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
                              coef_var)
         write_nrml_close(xml_h)
 
+
 # -----------------------------------------------------------
 if __name__ == "__main__":
     if False:
@@ -359,11 +353,11 @@ if __name__ == "__main__":
     if False:
         csv_curve2nrml('synthetic_domestic_wind_vul_curves.csv',
                        'synthetic_domestic_wind_vul_curves.xml')
-    if True:
+    if False:
         excel_curve2nrml('content_flood_vul_curves.xml',
                          'fabric_flood_vul_curves.xml',
                          'Flood_2012_actual_cleaned.xls')
-    if True:
+    if False:
         excel_curve2nrml('content_flood_avg_curve.xml',
                          'fabric_flood_avg_curve.xml',
                          'Flood_2012_averaged.xls')

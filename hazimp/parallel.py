@@ -98,7 +98,7 @@ def scatter_dict(whole):
             temp_subdict = {}
             for key in list(whole.keys()):
                 temp_subdict[key] = whole[key][temp_indexes]
-            if pro is 0:
+            if pro == 0:
                 indexes = temp_indexes
                 subdict = temp_subdict
             else:
@@ -169,6 +169,8 @@ def csv2dict(filename, use_parallel=True):
     else:
         subdict = misc.csv2dict(filename, add_ids=True)
     return subdict
+
+
 # -------------------------------------------------------------
 if __name__ == "__main__":
     pass

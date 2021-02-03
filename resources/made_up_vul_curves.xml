@@ -3,17 +3,16 @@
       xmlns:gml="http://www.opengis.net/gml">
 
     <vulnerabilityModel>
-        <config/>
 
         <discreteVulnerabilitySet vulnerabilitySetID="made_up_2012" 
 assetCategory="" lossCategory="structural_loss_ratio" >
  <IML IMT="strong_wind" > 10.0 100.0 </IML>
-<discreteVulnerability vulnerabilityFunctionID="dw1" Alpha="0.1" Beta="4.0" probabilisticDistribution="LN">
+<discreteVulnerability vulnerabilityFunctionID="dw1" probabilisticDistribution="LN">
 <lossRatio>0 1 </lossRatio>
 <coefficientsVariation>0 0</coefficientsVariation>
 </discreteVulnerability>
 
-<discreteVulnerability vulnerabilityFunctionID="dw2" Alpha="0.1" Beta="4.0" probabilisticDistribution="LN">
+<discreteVulnerability vulnerabilityFunctionID="dw2" probabilisticDistribution="LN">
 <lossRatio>0 .9</lossRatio>
 <coefficientsVariation>0 0</coefficientsVariation>
 </discreteVulnerability>
