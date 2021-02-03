@@ -282,7 +282,7 @@ class Context(object):
             return write_dict
 
     def save_aggregation(self, filename, boundaries, impactcode,
-                         boundarycode, categories, use_parallel=True):
+                         boundarycode, categories, fields, use_parallel=True):
         """
         Save data aggregated to geospatial regions
 
@@ -313,7 +313,7 @@ class Context(object):
         self.prov.wasGeneratedBy(aggfileent, aggact)
         if parallel.STATE.rank == 0 or not use_parallel:
             aggregate.choropleth(write_dict, boundaries, impactcode,
-                                 boundarycode, filename, categories)
+                                 boundarycode, filename, fields, categories)
             misc.upload_to_s3_if_applicable(filename, bucket_name, bucket_key)
             if (bucket_name is not None and
                     bucket_key is not None and
