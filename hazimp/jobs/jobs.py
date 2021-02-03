@@ -770,6 +770,10 @@ class Aggregate(Job):
     def __call__(self, context, filename=None, boundaries=None,
                  impactcode=None, boundarycode=None, categories=True,
                  use_parallel=True):
+        # Default filename to use when no output filename is specified
+        if filename is None:
+            filename = 'output.shp'
+
         context.save_aggregation(filename,
                                  boundaries,
                                  impactcode,
