@@ -33,13 +33,15 @@ import unittest
 from unittest import mock
 import tempfile
 import os
+
 import numpy
 
 from scipy import allclose, asarray, isnan, array, rollaxis
 
+from hazimp.context import Context
 from hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                               SAVEALL, CONSTANT, ADD, RANDOM_CONSTANT,
-                              MULT, MDMULT)
+                              MULT, MDMULT, AGGREGATE)
 from hazimp.jobs import jobs
 from hazimp import context
 from hazimp import misc
@@ -769,6 +771,17 @@ class TestJobs(unittest.TestCase):
                 self.assertTrue(allclose(exp_dict[the_key],
                                          actual[the_key]))
         os.remove(f.name)
+
+    def test_default_aggregate_filename(self):
+        context = Context()
+        context.save_aggregation = mock.MagicMock()
+
+        instance = JOBS[AGGREGATE]
+        instance(context, None, 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, False)
+
+        context.save_aggregation.assert_called_once_with(
+            'output.shp', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, use_parallel=False
+        )
 
 
 # -------------------------------------------------------------
