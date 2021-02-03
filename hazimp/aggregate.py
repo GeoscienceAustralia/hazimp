@@ -1,14 +1,13 @@
 """
 Aggregating impact data into a chloropleth map.
 """
-import os
-from os.path import abspath, isdir, dirname
-import sys
 import logging
-
-import numpy as np
+import os
+import sys
+from os.path import abspath, isdir, dirname
 
 import geopandas
+import numpy as np
 
 LOGGER = logging.getLogger(__name__)
 
@@ -24,12 +23,13 @@ DRIVERS = {'shp': 'ESRI Shapefile',
 # limited length for the attribute name.
 # TODO: Labels for other hazard measures, damage measures, etc.
 COLNAMES = {'REPLACEMENT_VALUE': 'REPVAL',
-            'structural_loss_ratio': 'slr_mean',
+            'structural_loss_ratio_mean': 'slr_mean',
             '0.2s gust at 10m height m/s': 'maxwind',
             'Damage state': 'dmgstate'}
 
 
-def choropleth(dframe, boundaries, impactcode, bcode, filename, categories):
+def choropleth(dframe, boundaries, impactcode, bcode, filename,
+               fields, categories):
     """
     Aggregate to geospatial boundaries and save to file
 
@@ -49,17 +49,25 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename, categories):
 
     NOTE:: presently, using `categories`=True will not do any categorisation of
     the mean damage index for the aggregation areas.
+    :param dict fields: A `dict` with keys of valid column names (from the
+    `DataFrame`) and values being lists of aggregation functions to apply
+    to the columns.
 
+    For example::
+
+    fields = {'structural_loss_ratio': ['mean']}
+
+    See
+    https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
+    for more guidance on using aggregation with `DataFrames`
     """
 
     left, right = impactcode, bcode
 
-    # TODO: Consider what fields are essential and what can be
-    # removed.
-    # TODO: Change to a function argument and make it a configuration option
-    report = {'structural_loss_ratio': 'mean'}
-
-    aggregate = dframe.groupby(left).agg(report).reset_index()
+    aggregate = dframe.groupby(left).agg(fields).reset_index()
+    aggregate.columns = [
+        '_'.join(columns).rstrip('_') for columns in aggregate.columns.values
+    ]
 
     # Assumes "Damage state" is the derived attribute name.
     if categories and ('Damage state' in dframe.columns):
