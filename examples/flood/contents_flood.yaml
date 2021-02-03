@@ -9,8 +9,8 @@
     exposure_longitude: LONGITUDE 
 - load_flood_ascii:  depth_small_synthetic.txt
 - insurance_probability:
-    insured:0.3
-    uninsured:0.7
+    insured: 0.3
+    uninsured: 0.7
 - contents_actions:
     save: 0.2
     no_action: 0.7
