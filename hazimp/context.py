@@ -301,9 +301,11 @@ class Context(object):
                 "prov:atLocation": os.path.basename(boundaries),
                 "prov:generatedAtTime": misc.get_file_mtime(boundaries),
                 "void:boundary_code": boundarycode}
+
         bdyent = self.prov.entity(":Aggregation boundaries", atts)
         aggact = self.prov.activity(":AggregationByRegions", dt, None,
-                                    {'prov:type': "Spatial aggregation"})
+                                    {'prov:type': "Spatial aggregation",
+                                     'void:functions': repr(fields)})
         aggatts = {"prov:type": "void:Dataset",
                    "prov:atLocation": os.path.basename(filename),
                    "prov:generatedAtTime": dt}
