@@ -28,7 +28,8 @@ COLNAMES = {'REPLACEMENT_VALUE': 'REPVAL',
             'Damage state': 'dmgstate'}
 
 
-def choropleth(dframe, boundaries, impactcode, bcode, filename, fields, categories):
+def choropleth(dframe, boundaries, impactcode, bcode, filename,
+               fields, categories):
     """
     Aggregate to geospatial boundaries and save to file
 
@@ -64,7 +65,9 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename, fields, categori
     left, right = impactcode, bcode
 
     aggregate = dframe.groupby(left).agg(fields).reset_index()
-    aggregate.columns = ['_'.join(columns).rstrip('_') for columns in aggregate.columns.values]
+    aggregate.columns = [
+        '_'.join(columns).rstrip('_') for columns in aggregate.columns.values
+    ]
 
     # Assumes "Damage state" is the derived attribute name.
     if categories and ('Damage state' in dframe.columns):
