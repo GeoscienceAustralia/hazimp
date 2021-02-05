@@ -54,10 +54,14 @@ def find_attributes(config: dict, keys: Union[str, list]) -> Union[str, dict]:
 
             if ignored_keys:
                 ignored_keys = ', '.join(ignored_keys)
-                LOGGER.warning(f'Ignored keys "{ignored_keys}" in config file, using preferred key "{key}"')
+                LOGGER.warning(f'Ignored keys "{ignored_keys}" in config file,'
+                               f' using preferred key "{key}"')
 
             if i > 0:
-                LOGGER.warning(f'Configuration key "{key}" is deprecated, consider switching to "{keys[0]}"')
+                LOGGER.warning(
+                    f'Configuration key "{key}" is deprecated,'
+                    f' consider switching to "{keys[0]}"'
+                )
 
             return config[key]
 
