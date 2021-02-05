@@ -22,9 +22,9 @@ from hazimp import misc
 from hazimp import main
 from hazimp.calcs.calcs import FLOOR_HEIGHT
 from hazimp.jobs.jobs import (LOADCSVEXPOSURE)
-from hazimp.templates import (SAVE, LOADFLOODASCII, FLOODFABRICV2,
+from hazimp.templates import (SAVE, FLOODFABRICV2,
                               TEMPLATE, FLOODCONTENTSV2, CALCCONTLOSS,
-                              CALCSTRUCTLOSS, REP_VAL_NAME)
+                              CALCSTRUCTLOSS, REP_VAL_NAME, HAZARDRASTER)
 from hazimp import templates as flood_conts
 from hazimp import parallel
 
@@ -54,7 +54,7 @@ class TestFlood(unittest.TestCase):
                                      'exposure_latitude': 'LATITUDE',
                                      'exposure_longitude': 'LONGITUDE'}},
                   {FLOOR_HEIGHT: .3},
-                  {LOADFLOODASCII: [haz_filename]},
+                  {HAZARDRASTER: [haz_filename]},
                   {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                   {SAVE: f.name}]
 
@@ -100,7 +100,7 @@ class TestFlood(unittest.TestCase):
         print('      exposure_latitude: LATITUDE', file=f)
         print('      exposure_longitude: LONGITUDE', file=f)
         print(' - ' + FLOOR_HEIGHT + ': .3', file=f)
-        a_str = ' - ' + LOADFLOODASCII + ': [' + flood_filename + ']'
+        a_str = ' - ' + HAZARDRASTER + ': [' + flood_filename + ']'
         print(a_str, file=f)
         print(' - ' + CALCSTRUCTLOSS + ': ', file=f)
         print('      ' + REP_VAL_NAME + ': ' + 'REPLACEMENT_VALUE', file=f)
@@ -140,7 +140,7 @@ class TestFlood(unittest.TestCase):
                                      'exposure_latitude': 'LATITUDE',
                                      'exposure_longitude': 'LONGITUDE'}},
                   {FLOOR_HEIGHT: .3},
-                  {LOADFLOODASCII: [haz_filename]},
+                  {HAZARDRASTER: [haz_filename]},
                   {flood_conts.INSURE_PROB: {flood_conts.INSURED: 1.0,
                                              flood_conts.UNINSURED: 0.0}},
                   {flood_conts.CONT_ACTIONS: {flood_conts.SAVE_CONT: 0.0,

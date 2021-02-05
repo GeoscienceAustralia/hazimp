@@ -43,7 +43,7 @@ DEFAULT = 'default'
 SAVE = 'save'
 SAVEAGG = 'save_agg'
 LOADWINDTCRM = 'load_wind'
-LOADFLOODASCII = 'load_flood_ascii'
+HAZARDRASTER = 'hazard_raster'
 CALCSTRUCTLOSS = 'calc_struct_loss'
 CALCCONTLOSS = 'calc_cont_loss'
 PERMUTATION = 'exposure_permutation'
@@ -388,7 +388,7 @@ def _flood_fabric_v2_reader(config_list):
     atts = find_atts(config_list, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
-    file_list = find_atts(config_list, LOADFLOODASCII)
+    file_list = find_atts(config_list, HAZARDRASTER)
     atts = {'file_list': file_list, 'attribute_label': WATER_DEPTH}
     add_job(job_insts, LOADRASTER, atts)
     vul_filename = os.path.join(misc.RESOURCE_DIR,
@@ -450,7 +450,7 @@ def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
     atts = find_atts(config_list, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
-    file_list = find_atts(config_list, LOADFLOODASCII)
+    file_list = find_atts(config_list, HAZARDRASTER)
     atts = {'file_list': file_list, 'attribute_label': WATER_DEPTH}
     add_job(job_insts, LOADRASTER, atts)
     vul_filename = os.path.join(misc.RESOURCE_DIR,
