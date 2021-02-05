@@ -6,7 +6,7 @@
    file_name: WA_Wind_Exposure_2013_Test_only.csv
    exposure_latitude: LATITUDE
    exposure_longitude: LONGITUDE
-- load_wind: 
+- hazard_raster:
    file_list: olwyn.tif
 - calc_struct_loss:
    replacement_value_label: REPLACEMENT_VALUE
