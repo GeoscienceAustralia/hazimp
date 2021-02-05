@@ -22,32 +22,50 @@ to jobs and calcs.
 """
 
 import copy
+import logging
+from typing import Union
+
+from hazimp import spell_check
 from hazimp import workflow
 from hazimp.calcs.calcs import CALCS
 from hazimp.jobs.jobs import JOBS
-from hazimp import spell_check
 
+LOGGER = logging.getLogger(__name__)
 
 # The complete list of first level key names in the post template config dic
 CONFIGKEYS = list(JOBS.keys()) + list(CALCS.keys())
 SPELLCHECK = spell_check.SpellCheck(CONFIGKEYS)
 
 
-def find_atts(config_list, job):
+def find_attributes(config: dict, keys: Union[str, list]) -> Union[str, dict]:
     """
-    Find the attributes on a job in a config_list.
+    Find attributes from config by the preferred key, keys must be
+    provided in order of preference.
 
-    :param config_list:
-    :param job: The job name as a string.
+    :param config: configuration
+    :param keys: configuration element to locate
     """
-    atts = None
-    for ele in config_list:
-        if job in ele:
-            atts = ele[job]
-    if atts is None:
-        msg = '\nMandatory key not found in config file; %s\n' % job
-        raise RuntimeError(msg)
-    return atts
+    if type(keys) is str:
+        keys = [keys]
+
+    for i, key in enumerate(keys):
+        if key in config:
+            ignored_keys = [x for x in keys[i+1:] if x in config]
+
+            if ignored_keys:
+                ignored_keys = ', '.join(ignored_keys)
+                LOGGER.warning(f'Ignored keys "{ignored_keys}" in config file,'
+                               f' using preferred key "{key}"')
+
+            if i > 0:
+                LOGGER.warning(
+                    f'Configuration key "{key}" is deprecated,'
+                    f' consider switching to "{keys[0]}"'
+                )
+
+            return config[key]
+
+    raise RuntimeError(f'Mandatory key not found in config file: {keys[0]}')
 
 
 def add_job(jobs, new_job, atts=None):

@@ -7,7 +7,7 @@
     file_name:  small_exposure.csv
     exposure_latitude: LATITUDE
     exposure_longitude: LONGITUDE 
-- load_flood_ascii:  depth_small_synthetic.txt
+- hazard_raster: depth_small_synthetic.txt
 - calc_struct_loss:
     replacement_value_label: REPLACEMENT_VALUE
 - save: flood_impact.csv  

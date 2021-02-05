@@ -246,7 +246,7 @@ def permutate_att_values(dframe, fields, groupby=None):
                 newdf.groupby(groupby)[field].transform(permutation)
     elif groupby and groupby not in dframe.columns:
         LOGGER.error(f"Cannot use {groupby} for permuting exposure attributes")
-        LOGGER.error("The input expsoure data does not include that field")
+        LOGGER.error("The input exposure data does not include that field")
         sys.exit()
     else:
         for field in fields:
