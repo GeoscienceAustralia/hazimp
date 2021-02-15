@@ -29,7 +29,7 @@ from hazimp.jobs.jobs import LOADCSVEXPOSURE, LoadCsvExposure, LoadRaster, LoadX
     AggregateLoss, SaveAggregation, Categorise, Aggregate, Tabulate, Const, RandomConst, Add
 from hazimp.templates import WINDNC, READERS, VULNFILE, PERMUTATION, CALCSTRUCTLOSS, AGGREGATION, SAVE, \
     VULNSET, HAZARDRASTER, AGGREGATE, TABULATE, SAVEAGG, WINDV5, CONT_ACTIONS, INSURE_PROB, CALCCONTLOSS, \
-    FLOODCONTENTSV2
+    FLOODCONTENTSV2, FLOODFABRICV2
 
 
 class TestTemplates(unittest.TestCase):
@@ -221,12 +221,44 @@ class TestTemplates(unittest.TestCase):
             (SaveProvenance, {'file_name': 'output.xml'})
         ])
 
+    def test_template_flood_fabric_v2_config(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            HAZARDRASTER: {},
+            FLOOR_HEIGHT: 0.3,
+            CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
+            SAVE: 'output.csv'
+        }
+
+        jobs = READERS[FLOODFABRICV2](config)
+
+        self.assertJobs(jobs, [
+            (LoadCsvExposure, {'file_name': 'exposure.csv'}),
+            (LoadRaster, {'file_list': {}, 'attribute_label': 'water_depth'}),
+            (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'fabric_flood_avg_curve.xml')}),
+            (Const, {'var': 'floor_height_(m)', 'value': 0.3}),
+            (CalcFloorInundation, {}),
+            (SimpleLinker, {'vul_functions_in_exposure':
+                                {'structural_domestic_flood_2012': 'FABRIC_FLOOD_FUNCTION_ID'}
+                            }),
+
+            (SelectVulnFunction, {'variability_method': {'structural_domestic_flood_2012': 'mean'}}),
+            (LookUp, {}),
+            (MultipleDimensionMult, {'var1': 'structural_loss_ratio',
+                                     'var2': 'REPLACEMENT_VALUE',
+                                     'var_out': 'structural_loss'}),
+            (SaveExposure, {'file_name': 'output.csv'}),
+            (SaveProvenance, {'file_name': 'output.xml'})
+        ])
+
     def assertJobs(self, actual: list, expected: list):
         for i, job in enumerate(actual):
             #print(type(job.job_instance).__name__)
             (instance, attributes) = expected[i]
             self.assertIsInstance(job.job_instance, instance)
-            self.assertEqual(job.atts_to_add, attributes)
+            self.assertEqual(attributes, job.atts_to_add)
 
 
 if __name__ == '__main__':
