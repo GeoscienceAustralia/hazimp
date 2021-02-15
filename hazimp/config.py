@@ -20,42 +20,24 @@ Functions concerning the yaml configuration file.
 """
 
 import yaml
+
 from hazimp.templates import READERS, TEMPLATE, DEFAULT
 
 
-def read_file(file_name):
-    """
-    Read the configuration file and return the info as a dictionary.
-
-    :param file_name: The yaml file.
-    :returns: A dictionary of the configuration file
-    """
-    config_file_handle = open(file_name, 'r')
-    config_inf = yaml.load(config_file_handle, Loader=yaml.FullLoader)
-    if isinstance(config_inf, dict):
-        config_dic = config_inf
-    else:
-        # Assume a list of dictionaries
-        config_dic = {}
-        for form in config_inf:
-            config_dic.update(form)
-    return config_dic
-
-
-def read_config_file(file_name):
+def read_config_file(file_name: str) -> list:
     """
     Read the configuration file and return the info as a list.
 
     :param file_name: The yaml file.
     :returns: A list of the configuration file
     """
-    config_file_handle = open(file_name, 'r')
-    the_conf = yaml.load(config_file_handle, Loader=yaml.FullLoader)
-    # print "the_conf", the_conf
-    return the_conf
+    with open(file_name, 'r') as config_file_handle:
+        config = yaml.load(config_file_handle, Loader=yaml.FullLoader)
+
+    return config
 
 
-def instance_builder(config_list):
+def instance_builder(config_list: list) -> list:
     """
     From the configuration list build and knowing
     the template, build the the job instances
@@ -64,7 +46,6 @@ def instance_builder(config_list):
     :param config_list: A list describing the simulation.
     :returns: A list of job instances to process over.
     """
-    # print "config_list", config_list
     assert isinstance(config_list, list)
 
     # Check that each element in the list is a single key dictionary.
@@ -88,30 +69,4 @@ def instance_builder(config_list):
     config_dict = {k: v for item in config_list for k, v in list(item.items())}
     jobs = reader_function(config_dict)
 
-    return jobs
-
-
-def template_builder(config_dic):
-    """
-    From the configuration dictionary build and knowing
-    the template, build the the job list
-    and add predefined info to the config_dic.
-
-    :param config_dic: A dictionary describing the simulation.
-    :returns: A list of jobs to process over.
-        ** The config_dic isn't returned, but it is modified.
-    """
-    try:
-        template = config_dic[TEMPLATE]
-        del config_dic[TEMPLATE]
-    except KeyError:
-        template = DEFAULT
-
-    try:
-        reader_function = READERS[str(template)]
-    except KeyError:
-        raise RuntimeError(
-            'Invalid template name, %s in config file.' % template)
-
-    jobs = reader_function(config_dic)
     return jobs
