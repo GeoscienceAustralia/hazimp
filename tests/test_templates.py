@@ -99,6 +99,32 @@ class TestTemplates(unittest.TestCase):
             (SaveProvenance, {'file_name': 'output.xml'})
         ])
 
+    def test_template_wind_nc_fails_without_mandatory(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            HAZARDRASTER: {},
+            VULNFILE: 'curve.xml',
+            VULNSET: 'wind',
+            PERMUTATION: {},
+            CALCSTRUCTLOSS: {},
+            AGGREGATION: {},
+            SAVEAGG: 'aggregation.csv',
+            CATEGORISE: {},
+            AGGREGATE: {},
+            TABULATE: {},
+            SAVE: 'output.csv'
+        }
+
+        with self.assertRaises(RuntimeError) as context:
+            READERS[WINDNC](config)
+
+        self.assertEqual(
+            'Mandatory key not found in config file; replacement_value_label',
+            str(context.exception)
+        )
+
     def test_template_wind_v5_without_optional_config(self):
         config = {
             LOADCSVEXPOSURE: {
