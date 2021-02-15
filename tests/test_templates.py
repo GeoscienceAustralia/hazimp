@@ -23,11 +23,13 @@ import os
 import unittest
 
 from hazimp import misc
+from hazimp.calcs.calcs import FLOOR_HEIGHT, CalcFloorInundation
 from hazimp.jobs.jobs import LOADCSVEXPOSURE, LoadCsvExposure, LoadRaster, LoadXmlVulnerability, SimpleLinker, \
     SelectVulnFunction, LookUp, SaveExposure, SaveProvenance, CATEGORISE, PermutateExposure, MultipleDimensionMult, \
-    AggregateLoss, SaveAggregation, Categorise, Aggregate, Tabulate
+    AggregateLoss, SaveAggregation, Categorise, Aggregate, Tabulate, Const, RandomConst, Add
 from hazimp.templates import WINDNC, READERS, VULNFILE, PERMUTATION, CALCSTRUCTLOSS, AGGREGATION, SAVE, \
-    VULNSET, HAZARDRASTER, AGGREGATE, TABULATE, SAVEAGG, WINDV5
+    VULNSET, HAZARDRASTER, AGGREGATE, TABULATE, SAVEAGG, WINDV5, CONT_ACTIONS, INSURE_PROB, CALCCONTLOSS, \
+    FLOODCONTENTSV2
 
 
 class TestTemplates(unittest.TestCase):
@@ -167,12 +169,64 @@ class TestTemplates(unittest.TestCase):
             (SaveProvenance, {'file_name': 'output.xml'})
         ])
 
-    def assertJobs(self, actual: list, expected: list):
-        self.assertEqual(len(actual), len(expected))
+    def test_template_flood_contents_v2_config(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            HAZARDRASTER: {},
+            FLOOR_HEIGHT: 0.3,
+            CONT_ACTIONS: {
+                'save': 0.2,
+                'no_action': 0.7,
+                'expose': 0.1
+            },
+            INSURE_PROB: {
+                'insured': 0.3,
+                'uninsured': 0.7
+            },
+            CALCCONTLOSS: {
+                'replacement_value_label': 'REPLACEMENT_VALUE'
+            },
+            SAVE: 'output.csv'
+        }
 
-        for i, (instance, attributes) in enumerate(expected):
-            self.assertIsInstance(actual[i].job_instance, instance)
-            self.assertEqual(actual[i].atts_to_add, attributes)
+        jobs = READERS[FLOODCONTENTSV2](config)
+
+        self.assertJobs(jobs, [
+            (LoadCsvExposure, {'file_name': 'exposure.csv'}),
+            (LoadRaster, {'file_list': {}, 'attribute_label': 'water_depth'}),
+            (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'content_flood_avg_curve.xml')}),
+            (Const, {'var': 'floor_height_(m)', 'value': 0.3}),
+            (CalcFloorInundation, {}),
+            (RandomConst, {'values': {'_EXPOSE': 0.1, '_NOACTION': 0.7, '_SAVE': 0.2},
+                           'var': 'contents_action'}),
+            (RandomConst, {'values': {'_INSURED': 0.3, '_UNINSURED': 0.7},
+                           'var': 'insurance_regime'}),
+            (Add, {'var1': 'BUILDING_TYPE',
+                   'var2': 'insurance_regime',
+                   'var_out': 'regime_action'}),
+            (Add, {'var1': 'regime_action',
+                   'var2': 'contents_action',
+                   'var_out': 'CONTENTS_FLOOD_FUNCTION_ID'}),
+            (SimpleLinker, {'vul_functions_in_exposure':
+                                {'contents_domestic_flood_2012': 'CONTENTS_FLOOD_FUNCTION_ID'}
+                            }),
+            (SelectVulnFunction, {'variability_method': {'contents_domestic_flood_2012': 'mean'}}),
+            (LookUp, {}),
+            (MultipleDimensionMult, {'var1': 'contents_loss_ratio',
+                                     'var2': 'REPLACEMENT_VALUE',
+                                     'var_out': 'contents_loss'}),
+            (SaveExposure, {'file_name': 'output.csv'}),
+            (SaveProvenance, {'file_name': 'output.xml'})
+        ])
+
+    def assertJobs(self, actual: list, expected: list):
+        for i, job in enumerate(actual):
+            #print(type(job.job_instance).__name__)
+            (instance, attributes) = expected[i]
+            self.assertIsInstance(job.job_instance, instance)
+            self.assertEqual(job.atts_to_add, attributes)
 
 
 if __name__ == '__main__':
