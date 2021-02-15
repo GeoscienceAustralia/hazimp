@@ -29,7 +29,7 @@ from hazimp.jobs.jobs import LOADCSVEXPOSURE, LoadCsvExposure, LoadRaster, LoadX
     AggregateLoss, SaveAggregation, Categorise, Aggregate, Tabulate, Const, RandomConst, Add
 from hazimp.templates import WINDNC, READERS, VULNFILE, PERMUTATION, CALCSTRUCTLOSS, AGGREGATION, SAVE, \
     VULNSET, HAZARDRASTER, AGGREGATE, TABULATE, SAVEAGG, WINDV5, CONT_ACTIONS, INSURE_PROB, CALCCONTLOSS, \
-    FLOODCONTENTSV2, FLOODFABRICV2, WINDV4
+    FLOODCONTENTSV2, FLOODFABRICV2, WINDV4, WINDV3
 
 
 class TestTemplates(unittest.TestCase):
@@ -188,6 +188,34 @@ class TestTemplates(unittest.TestCase):
             (LoadCsvExposure, {'file_name': 'exposure.csv'}),
             (LoadRaster, {'attribute_label': '0.2s gust at 10m height m/s', 'file_list': {}}),
             (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'curve.xml')}),
+            (SimpleLinker, {'vul_functions_in_exposure': {'wind': 'WIND_VULNERABILITY_FUNCTION_ID'}}),
+            (SelectVulnFunction, {'variability_method': {'wind': 'mean'}}),
+            (LookUp, {}),
+            (MultipleDimensionMult, {'var1': 'structural_loss_ratio',
+                                     'var2': 'REPLACEMENT_VALUE',
+                                     'var_out': 'structural_loss'}),
+            (SaveExposure, {'file_name': 'output.csv'}),
+            (SaveProvenance, {'file_name': 'output.xml'})
+        ])
+
+    def test_template_wind_v3_config(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            HAZARDRASTER: {},
+            VULNSET: 'wind',
+            CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
+            SAVE: 'output.csv',
+            SAVEAGG: 'aggregation.csv',
+        }
+
+        jobs = READERS[WINDV3](config)
+
+        self.assertJobs(jobs, [
+            (LoadCsvExposure, {'file_name': 'exposure.csv'}),
+            (LoadRaster, {'attribute_label': '0.2s gust at 10m height m/s', 'file_list': {}}),
+            (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'synthetic_domestic_wind_vul_curves.xml')}),
             (SimpleLinker, {'vul_functions_in_exposure': {'wind': 'WIND_VULNERABILITY_FUNCTION_ID'}}),
             (SelectVulnFunction, {'variability_method': {'wind': 'mean'}}),
             (LookUp, {}),
