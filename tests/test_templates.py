@@ -27,14 +27,14 @@ from hazimp.jobs.jobs import LOADCSVEXPOSURE, LoadCsvExposure, LoadRaster, LoadX
     SelectVulnFunction, LookUp, SaveExposure, SaveProvenance, CATEGORISE, PermutateExposure, MultipleDimensionMult, \
     AggregateLoss, SaveAggregation, Categorise, Aggregate, Tabulate
 from hazimp.templates import WINDNC, READERS, VULNFILE, PERMUTATION, CALCSTRUCTLOSS, AGGREGATION, SAVE, \
-    VULNSET, HAZARDRASTER, AGGREGATE, TABULATE, SAVEAGG
+    VULNSET, HAZARDRASTER, AGGREGATE, TABULATE, SAVEAGG, WINDV5
 
 
 class TestTemplates(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_template_wind_nc_without_optional_jobs(self):
+    def test_template_wind_nc_without_optional_config(self):
         config = {
             LOADCSVEXPOSURE: {
                 'file_name': 'exposure.csv'
@@ -58,7 +58,7 @@ class TestTemplates(unittest.TestCase):
             (SaveProvenance, {'file_name': 'output.xml'})
         ])
 
-    def test_template_wind_nc_with_optional_jobs(self):
+    def test_template_wind_nc_with_optional_config(self):
         config = {
             LOADCSVEXPOSURE: {
                 'file_name': 'exposure.csv'
@@ -97,11 +97,80 @@ class TestTemplates(unittest.TestCase):
             (SaveProvenance, {'file_name': 'output.xml'})
         ])
 
+    def test_template_wind_v5_without_optional_config(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            HAZARDRASTER: {},
+            VULNFILE: 'curve.xml',
+            VULNSET: 'wind',
+            PERMUTATION: {},
+            CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
+            AGGREGATION: {},
+            SAVE: 'output.csv',
+            SAVEAGG: 'aggregation.csv',
+        }
+
+        jobs = READERS[WINDV5](config)
+
+        self.assertJobs(jobs, [
+            (LoadCsvExposure, {'file_name': 'exposure.csv'}),
+            (LoadRaster, {'attribute_label': '0.2s gust at 10m height m/s', 'file_list': {}}),
+            (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'curve.xml')}),
+            (SimpleLinker, {'vul_functions_in_exposure': {'wind': 'WIND_VULNERABILITY_FUNCTION_ID'}}),
+            (SelectVulnFunction, {'variability_method': {'wind': 'mean'}}),
+            (PermutateExposure, {}),
+            (MultipleDimensionMult, {'var1': 'structural_loss_ratio',
+                                     'var2': 'REPLACEMENT_VALUE',
+                                     'var_out': 'structural_loss'}),
+            (AggregateLoss, {}),
+            (SaveExposure, {'file_name': 'output.csv'}),
+            (SaveAggregation, {'file_name': 'aggregation.csv'}),
+            (SaveProvenance, {'file_name': 'output.xml'})
+        ])
+
+    def test_template_wind_v5_with_optional_config(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            HAZARDRASTER: {},
+            VULNFILE: 'curve.xml',
+            VULNSET: 'wind',
+            PERMUTATION: {},
+            CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
+            AGGREGATION: {},
+            CATEGORISE: {},
+            TABULATE: {},
+            SAVE: 'output.csv',
+            SAVEAGG: 'aggregation.csv',
+        }
+
+        jobs = READERS[WINDV5](config)
+
+        self.assertJobs(jobs, [
+            (LoadCsvExposure, {'file_name': 'exposure.csv'}),
+            (LoadRaster, {'attribute_label': '0.2s gust at 10m height m/s', 'file_list': {}}),
+            (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'curve.xml')}),
+            (SimpleLinker, {'vul_functions_in_exposure': {'wind': 'WIND_VULNERABILITY_FUNCTION_ID'}}),
+            (SelectVulnFunction, {'variability_method': {'wind': 'mean'}}),
+            (PermutateExposure, {}),
+            (MultipleDimensionMult, {'var1': 'structural_loss_ratio',
+                                     'var2': 'REPLACEMENT_VALUE',
+                                     'var_out': 'structural_loss'}),
+            (AggregateLoss, {}),
+            (Categorise, {}),
+            (Tabulate, {}),
+            (SaveExposure, {'file_name': 'output.csv'}),
+            (SaveAggregation, {'file_name': 'aggregation.csv'}),
+            (SaveProvenance, {'file_name': 'output.xml'})
+        ])
+
     def assertJobs(self, actual: list, expected: list):
         self.assertEqual(len(actual), len(expected))
 
         for i, (instance, attributes) in enumerate(expected):
-            print(instance.__name__)
             self.assertIsInstance(actual[i].job_instance, instance)
             self.assertEqual(actual[i].atts_to_add, attributes)
 
