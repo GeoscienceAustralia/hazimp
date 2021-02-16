@@ -548,8 +548,4 @@ def save_csv_agg(write_dict, filename):
         LOGGER.warning(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
 
-    try:
-        write_dict.to_csv(filename, index_label='FID')
-    except FileNotFoundError:
-        LOGGER.error(f"Cannot write to {filename}")
-        sys.exit(1)
+    write_dict.to_csv(filename, index_label='FID')

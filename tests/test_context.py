@@ -27,15 +27,24 @@
 Test the workflow module.
 """
 
-import numpy
-import unittest
-import tempfile
 import os
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import patch, ANY, call
 
+import numpy
+import pandas as pd
+from mock import MagicMock
+from numpy.testing import assert_array_equal
+from pandas._testing import assert_frame_equal
 from scipy import allclose, array, arange
 
 from hazimp import context
 from hazimp import misc
+from hazimp.context import save_csv_agg
+
+cwd = Path(__file__).parent
 
 
 class TestContext(unittest.TestCase):
@@ -148,6 +157,123 @@ class TestContext(unittest.TestCase):
         for key in con.exposure_att:
             self.assertTrue(allclose(con.exposure_att[key],
                                      actual[key]))
+
+    @patch('hazimp.context.aggregate.choropleth')
+    @patch('hazimp.context.misc.upload_to_s3_if_applicable')
+    def test_save_aggregation_local(self, upload_mock, choropleth_mock):
+        boundaries = str(cwd / 'data/boundaries.json')
+
+        con = context.Context()
+        con.set_prov_label('test label')
+        con.exposure_att = pd.DataFrame(data={'column': [1, 2, 3]})
+
+        con.save_aggregation('aggregation.json', boundaries, 'MESHBLOCK_CODE_2011',
+                             'MB_CODE11', True, {'structural_loss_ratio': ['mean']}, False)
+
+        choropleth_mock.assert_called_with(ANY, boundaries, 'MESHBLOCK_CODE_2011', 'MB_CODE11', 'aggregation.json', {'structural_loss_ratio': ['mean']}, True)
+        upload_mock.assert_called_once_with('aggregation.json', None, None)
+
+    @patch('hazimp.context.aggregate.choropleth')
+    @patch('hazimp.context.misc.upload_to_s3_if_applicable')
+    @patch('hazimp.context.misc.create_temp_file_path_for_s3', lambda x: ('temp/aggregation.shp', 'bucket', 'aggregation.shp'))
+    def test_save_aggregation_s3(self, upload_mock: MagicMock, choropleth_mock: MagicMock):
+        boundaries = str(cwd / 'data/boundaries.json')
+
+        con = context.Context()
+        con.set_prov_label('test label')
+        con.exposure_att = pd.DataFrame(data={'column': [1, 2, 3]})
+
+        con.save_aggregation('/vsis3/bucket/aggregation.shp', boundaries, 'MESHBLOCK_CODE_2011',
+                             'MB_CODE11', True, {'structural_loss_ratio': ['mean']}, False)
+
+        choropleth_mock.assert_called_with(ANY, boundaries, 'MESHBLOCK_CODE_2011', 'MB_CODE11', 'temp/aggregation.shp', {'structural_loss_ratio': ['mean']}, True)
+        upload_mock.assert_has_calls([
+            call('temp/aggregation.shp', 'bucket', 'aggregation.shp'),
+            call('temp/aggregation.dbf', 'bucket', 'aggregation.dbf'),
+            call('temp/aggregation.shx', 'bucket', 'aggregation.shx'),
+            call('temp/aggregation.prj', 'bucket', 'aggregation.prj'),
+            call('temp/aggregation.cpg', 'bucket', 'aggregation.cpg', True)
+        ])
+
+    @patch('hazimp.context.aggregate.aggregate_loss_atts')
+    def test_aggregate_loss(self, aggregate_loss_atts_mock: MagicMock):
+        mock = MagicMock()
+        kwargs = MagicMock()
+
+        con = context.Context()
+        con.set_prov_label('test label')
+        con.exposure_att = mock
+
+        con.aggregate_loss('groupBy', kwargs)
+
+        aggregate_loss_atts_mock.assert_called_once_with(mock, 'groupBy', kwargs)
+
+    def test_categorise(self):
+        curve = MagicMock()
+        curve.loss_category_type = 'damage_index'
+
+        data_frame = pd.DataFrame(data={'damage_index': [0, 5, 9]})
+
+        con = context.Context()
+        con.exposure_vuln_curves = {'domestic_wind_2012': curve}
+        con.exposure_att = data_frame
+
+        con.categorise([0, 2.5, 7.5, 10], ['Low', 'Medium', 'High'], 'category')
+
+        self.assertEqual(['Low', 'Medium', 'High'], data_frame['category'].to_list())
+
+    def test_tabulate(self):
+        with tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False) as f:
+            con = context.Context()
+            con.set_prov_label('test label')
+            con.exposure_att = pd.DataFrame({
+                'YEAR_BUILT': ['1914 - 1946', '1952 - 1961', '1952 - 1961'],
+                'DAMAGE_STATE': ['Slight', 'Moderate', 'Moderate']
+            })
+
+            con.tabulate(f.name, 'YEAR_BUILT', 'DAMAGE_STATE', 'size')
+
+            actual = pd.read_excel(f.name, engine='openpyxl')
+
+            self.assertEqual(['YEAR_BUILT', 'Moderate', 'Slight'], actual.columns.to_list())
+            self.assertEqual(['Total', 2.0, 1.0], actual.loc[2].to_list())
+
+        os.unlink(f.name)
+
+    def test_save_exposure_aggregation_csv(self):
+        with tempfile.NamedTemporaryFile(suffix='.csv', delete=False) as f:
+            con = context.Context()
+            con.exposure_agg = pd.DataFrame(data={'column': [1, 2, 3]})
+            con.save_exposure_aggregation(f.name, use_parallel=False)
+
+            data_frame = pd.read_csv(f.name, index_col=False)
+
+            assert_frame_equal(
+                pd.DataFrame(data={'FID': [0, 1, 2], 'column': [1, 2, 3]}),
+                data_frame,
+            )
+
+        os.unlink(f.name)
+
+    def test_save_exposure_aggregation_npz(self):
+        with tempfile.NamedTemporaryFile(suffix='.npz', delete=False) as f:
+            con = context.Context()
+            con.exposure_agg = pd.DataFrame(data={'column': [1, 2, 3]})
+            con.save_exposure_aggregation(f.name, use_parallel=False)
+
+            with numpy.load(f.name) as data:
+                assert_array_equal([1, 2, 3], data['column'])
+
+        os.unlink(f.name)
+
+    def test_save_csv_agg(self):
+        with tempfile.NamedTemporaryFile(suffix='.csv', delete=False) as f:
+            save_csv_agg(pd.DataFrame(), f.name)
+
+            actual = pd.read_csv(f.name)
+            self.assertIsInstance(actual, pd.DataFrame)
+
+        os.unlink(f.name)
 
 
 # -------------------------------------------------------------
