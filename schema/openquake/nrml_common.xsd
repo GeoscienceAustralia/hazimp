@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:gml="http://www.opengis.net/gml"
-           xmlns:nrml="http://openquake.org/xmlns/nrml/0.4"
-           xmlns="http://openquake.org/xmlns/nrml/0.4"
-           targetNamespace="http://openquake.org/xmlns/nrml/0.4"
+           xmlns:nrml="http://openquake.org/xmlns/nrml/0.5"
+           xmlns="http://openquake.org/xmlns/nrml/0.5"
+           targetNamespace="http://openquake.org/xmlns/nrml/0.5"
            elementFormDefault="qualified"
            xml:lang="en">
 
@@ -40,6 +40,7 @@
             <xs:enumeration value="IA"/> <!-- arias intensity -->
             <xs:enumeration value="RSD"/> <!-- relative significant duration -->
             <xs:enumeration value="MMI"/> <!-- modified mercalli intensity -->
+            <xs:enumeration value="0.2s gust at 10m height m/s"/> <!-- surface gust wind speed -->
         </xs:restriction>
     </xs:simpleType>
 
