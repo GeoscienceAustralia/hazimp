@@ -85,7 +85,9 @@ def instance_builder(config_list):
         raise RuntimeError(
             'Invalid template name, %s in config file.' % template)
 
-    jobs = reader_function(config_list)
+    config_dict = {k: v for item in config_list for k, v in list(item.items())}
+    jobs = reader_function(config_dict)
+
     return jobs
 
 

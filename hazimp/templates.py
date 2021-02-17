@@ -20,19 +20,19 @@ Functions converting a yaml template configuration file
 to jobs and calcs.
 """
 
-import os
 import logging
+import os
+
 from hazimp import misc
 from hazimp.calcs.calcs import (WATER_DEPTH, FLOOR_HEIGHT,
                                 FLOOR_HEIGHT_CALC)
-from hazimp.config_build import find_atts, add_job
+from hazimp.config_build import add_job, find_attributes
 from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                               LOADXMLVULNERABILITY, SIMPLELINKER,
                               SELECTVULNFUNCTION, RANDOM_CONSTANT,
                               LOOKUP, SAVEALL, CONSTANT, ADD,
                               MDMULT, PERMUTATE_EXPOSURE, AGGREGATE_LOSS,
                               CATEGORISE, SAVEPROVENANCE)
-
 
 LOGGER = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ DEFAULT = 'default'
 SAVE = 'save'
 SAVEAGG = 'save_agg'
 LOADWINDTCRM = 'load_wind'
-LOADFLOODASCII = 'load_flood_ascii'
+HAZARDRASTER = 'hazard_raster'
 CALCSTRUCTLOSS = 'calc_struct_loss'
 CALCCONTLOSS = 'calc_cont_loss'
 PERMUTATION = 'exposure_permutation'
@@ -80,8 +80,9 @@ CONT_MAP = {SAVE_CONT: "_SAVE", NO_ACTION_CONT: "_NOACTION",
 INSURE_MAP = {INSURED: "_INSURED", UNINSURED: "_UNINSURED"}
 
 
-def _wind_v3_reader(config_list):
+def _wind_v3_reader(config: dict) -> list:
     """
+    DEPRECATED
     From a wind configuration list build the job list.
 
     :param config_list: A list describing the simulation.
@@ -89,10 +90,10 @@ def _wind_v3_reader(config_list):
     """
     job_insts = []
 
-    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    atts = find_attributes(config, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
-    file_list = find_atts(config_list, LOADWINDTCRM)
+    file_list = find_attributes(config, [HAZARDRASTER, LOADWINDTCRM])
     atts = {'file_list': file_list,
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
@@ -103,7 +104,7 @@ def _wind_v3_reader(config_list):
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    vulnerability_set_id = find_atts(config_list, VULNSET)
+    vulnerability_set_id = find_attributes(config, VULNSET)
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
@@ -115,7 +116,7 @@ def _wind_v3_reader(config_list):
 
     add_job(job_insts, LOOKUP)
 
-    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+    atts_dict = find_attributes(config, CALCSTRUCTLOSS)
     if REP_VAL_NAME not in atts_dict:
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
@@ -124,10 +125,10 @@ def _wind_v3_reader(config_list):
         'var_out': 'structural_loss'}
     add_job(job_insts, MDMULT, attributes)
 
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
@@ -135,7 +136,7 @@ def _wind_v3_reader(config_list):
     return job_insts
 
 
-def _wind_v4_reader(config_list):
+def _wind_v4_reader(config: dict) -> list:
     """
     From a wind configuration list build the job list.
 
@@ -144,21 +145,21 @@ def _wind_v4_reader(config_list):
     """
     job_insts = []
 
-    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    atts = find_attributes(config, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
-    file_list = find_atts(config_list, LOADWINDTCRM)
+    file_list = find_attributes(config, [HAZARDRASTER, LOADWINDTCRM])
     atts = {'file_list': file_list,
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
 
     vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                find_atts(config_list, VULNFILE))
+                                find_attributes(config, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    vulnerability_set_id = find_atts(config_list, VULNSET)
+    vulnerability_set_id = find_attributes(config, VULNSET)
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
@@ -170,7 +171,7 @@ def _wind_v4_reader(config_list):
 
     add_job(job_insts, LOOKUP)
 
-    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+    atts_dict = find_attributes(config, CALCSTRUCTLOSS)
     if REP_VAL_NAME not in atts_dict:
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
@@ -179,10 +180,10 @@ def _wind_v4_reader(config_list):
         'var_out': 'structural_loss'}
     add_job(job_insts, MDMULT, attributes)
 
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
@@ -213,31 +214,30 @@ def _mod_file_list(file_list, variable):
     return flist
 
 
-def _wind_nc_reader(config_list):
+def _wind_nc_reader(config: dict) -> list:
     """
     Build a job list from a wind configuration list for netcdf files.
 
     :param config_list: A list describing the simulation
     :returns: A list of jobs to process over
     """
-    config_dict = {k: v for item in config_list for k, v in list(item.items())}
     LOGGER.info("Using wind_nc template")
     job_insts = []
-    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    atts = find_attributes(config, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
-    # file_list = find_atts(config_list, LOADWINDTCRM)
-    atts = find_atts(config_list, LOADWINDTCRM)
+    atts = find_attributes(config, [HAZARDRASTER, LOADWINDTCRM])
 
+    # Hard-coded at this time for wind
     atts['attribute_label'] = '0.2s gust at 10m height m/s'
     add_job(job_insts, LOADRASTER, atts)
 
     vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                find_atts(config_list, VULNFILE))
+                                find_attributes(config, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    vulnerability_set_id = find_atts(config_list, VULNSET)
+    vulnerability_set_id = find_attributes(config, VULNSET)
 
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
@@ -249,16 +249,16 @@ def _wind_nc_reader(config_list):
         vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
-    permute = config_dict.get(PERMUTATION)
+    permute = config.get(PERMUTATION)
     if permute:
-        atts = find_atts(config_list, PERMUTATION)
+        atts = find_attributes(config, PERMUTATION)
         add_job(job_insts, PERMUTATE_EXPOSURE, atts)
     else:
         add_job(job_insts, LOOKUP)
 
-    calcloss = config_dict.get(CALCSTRUCTLOSS)
+    calcloss = config.get(CALCSTRUCTLOSS)
     if calcloss:
-        atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+        atts_dict = find_attributes(config, CALCSTRUCTLOSS)
         if REP_VAL_NAME not in atts_dict:
             msg = f"Mandatory key not found in config file; {REP_VAL_NAME}"
             raise RuntimeError(msg)
@@ -267,30 +267,30 @@ def _wind_nc_reader(config_list):
                       'var_out': 'structural_loss'}
         add_job(job_insts, MDMULT, attributes)
 
-    if config_dict.get(AGGREGATION):
-        attributes = find_atts(config_list, AGGREGATION)
+    if config.get(AGGREGATION):
+        attributes = find_attributes(config, AGGREGATION)
         add_job(job_insts, AGGREGATE_LOSS, attributes)
-        file_name = find_atts(config_list, SAVEAGG)
+        file_name = find_attributes(config, SAVEAGG)
         add_job(job_insts, SAVEAGG, {'file_name': file_name})
 
-    if config_dict.get(CATEGORISE):
-        attributes = find_atts(config_list, CATEGORISE)
+    if config.get(CATEGORISE):
+        attributes = find_attributes(config, CATEGORISE)
         add_job(job_insts, CATEGORISE, attributes)
 
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
-    if config_dict.get(AGGREGATE):
-        attributes = find_atts(config_list, AGGREGATE)
+    if config.get(AGGREGATE):
+        attributes = find_attributes(config, AGGREGATE)
         add_job(job_insts, AGGREGATE, attributes)
 
-    if config_dict.get(TABULATE):
-        attributes = find_atts(config_list, TABULATE)
+    if config.get(TABULATE):
+        attributes = find_attributes(config, TABULATE)
         add_job(job_insts, TABULATE, attributes)
 
     # Eventually, this needs to be included in pipeline.Pipeline and
     # automatically added to the list of jobs
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
@@ -298,7 +298,7 @@ def _wind_nc_reader(config_list):
     return job_insts
 
 
-def _wind_v5_reader(config_list):
+def _wind_v5_reader(config: dict) -> list:
     """
     Build a job list from a wind configuration list.
 
@@ -307,22 +307,21 @@ def _wind_v5_reader(config_list):
     """
 
     LOGGER.info("Using wind_v5 template")
-    config_dict = {k: v for item in config_list for k, v in list(item.items())}
     job_insts = []
-    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    atts = find_attributes(config, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
-    file_list = find_atts(config_list, LOADWINDTCRM)
+    file_list = find_attributes(config, [HAZARDRASTER, LOADWINDTCRM])
     atts = {'file_list': file_list,
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
 
     vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                find_atts(config_list, VULNFILE))
+                                find_attributes(config, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    vulnerability_set_id = find_atts(config_list, VULNSET)
+    vulnerability_set_id = find_attributes(config, VULNSET)
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
@@ -332,10 +331,10 @@ def _wind_v5_reader(config_list):
         vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
-    atts = find_atts(config_list, PERMUTATION)
+    atts = find_attributes(config, PERMUTATION)
     add_job(job_insts, PERMUTATE_EXPOSURE, atts)
 
-    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+    atts_dict = find_attributes(config, CALCSTRUCTLOSS)
     if REP_VAL_NAME not in atts_dict:
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
@@ -344,26 +343,26 @@ def _wind_v5_reader(config_list):
         'var_out': 'structural_loss'}
     add_job(job_insts, MDMULT, attributes)
 
-    attributes = find_atts(config_list, AGGREGATION)
+    attributes = find_attributes(config, AGGREGATION)
     add_job(job_insts, AGGREGATE_LOSS, attributes)
 
-    if config_dict.get(CATEGORISE):
-        attributes = find_atts(config_list, CATEGORISE)
+    if config.get(CATEGORISE):
+        attributes = find_attributes(config, CATEGORISE)
         add_job(job_insts, CATEGORISE, attributes)
 
-    if config_dict.get(TABULATE):
-        attributes = find_atts(config_list, TABULATE)
+    if config.get(TABULATE):
+        attributes = find_attributes(config, TABULATE)
         add_job(job_insts, TABULATE, attributes)
 
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
-    file_name = find_atts(config_list, SAVEAGG)
+    file_name = find_attributes(config, SAVEAGG)
     add_job(job_insts, SAVEAGG, {'file_name': file_name})
 
     # Eventually, this needs to be included in pipeline.Pipeline and
     # automatically added to the list of jobs
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
@@ -371,7 +370,7 @@ def _wind_v5_reader(config_list):
     return job_insts
 
 
-def _flood_fabric_v2_reader(config_list):
+def _flood_fabric_v2_reader(config: dict) -> list:
     """
     This function does two things;
        * From a flood fabric template v2 configuration dictionary
@@ -383,17 +382,17 @@ def _flood_fabric_v2_reader(config_list):
     """
     job_insts = []
 
-    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    atts = find_attributes(config, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
-    file_list = find_atts(config_list, LOADFLOODASCII)
+    file_list = find_attributes(config, HAZARDRASTER)
     atts = {'file_list': file_list, 'attribute_label': WATER_DEPTH}
     add_job(job_insts, LOADRASTER, atts)
     vul_filename = os.path.join(misc.RESOURCE_DIR,
                                 'fabric_flood_avg_curve.xml')
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
-    floor_height_value = find_atts(config_list, FLOOR_HEIGHT)
+    floor_height_value = find_attributes(config, FLOOR_HEIGHT)
     atts = {'var': FLOOR_HEIGHT, 'value': floor_height_value}
     add_job(job_insts, CONSTANT, atts)
 
@@ -412,7 +411,7 @@ def _flood_fabric_v2_reader(config_list):
 
     add_job(job_insts, LOOKUP)
 
-    atts_dict = find_atts(config_list, CALCSTRUCTLOSS)
+    atts_dict = find_attributes(config, CALCSTRUCTLOSS)
     if REP_VAL_NAME not in atts_dict:
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
@@ -421,10 +420,10 @@ def _flood_fabric_v2_reader(config_list):
         'var_out': 'structural_loss'}
     add_job(job_insts, MDMULT, attributes)
 
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
@@ -433,7 +432,7 @@ def _flood_fabric_v2_reader(config_list):
 # this is disabling R:171, 0: Too many statements
 
 
-def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
+def _flood_contents_v2_reader(config: dict) -> list:  # pylint: disable=R0915
     """
     This function does two things;
        * From a flood contents template v2 configuration dictionary
@@ -445,24 +444,24 @@ def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
     """
     job_insts = []
 
-    atts = find_atts(config_list, LOADCSVEXPOSURE)
+    atts = find_attributes(config, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
-    file_list = find_atts(config_list, LOADFLOODASCII)
+    file_list = find_attributes(config, HAZARDRASTER)
     atts = {'file_list': file_list, 'attribute_label': WATER_DEPTH}
     add_job(job_insts, LOADRASTER, atts)
     vul_filename = os.path.join(misc.RESOURCE_DIR,
                                 'content_flood_avg_curve.xml')
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
-    floor_height_value = find_atts(config_list, FLOOR_HEIGHT)
+    floor_height_value = find_attributes(config, FLOOR_HEIGHT)
     atts = {'var': FLOOR_HEIGHT, 'value': floor_height_value}
     add_job(job_insts, CONSTANT, atts)
 
     add_job(job_insts, FLOOR_HEIGHT_CALC)
 
     # select save, nosave or expose
-    atts = find_atts(config_list, CONT_ACTIONS)
+    atts = find_attributes(config, CONT_ACTIONS)
     probs = {}
     for key in CONT_MAP:
         if key not in atts:
@@ -478,7 +477,7 @@ def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
     add_job(job_insts, RANDOM_CONSTANT, attributes)
 
     # select insured or uninsured
-    atts = find_atts(config_list, INSURE_PROB)
+    atts = find_attributes(config, INSURE_PROB)
     probs = {}
     for key in INSURE_MAP:
         if key not in atts:
@@ -517,7 +516,7 @@ def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
 
     add_job(job_insts, LOOKUP)
 
-    atts_dict = find_atts(config_list, CALCCONTLOSS)
+    atts_dict = find_attributes(config, CALCCONTLOSS)
     if REP_VAL_NAME not in atts_dict:
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
@@ -526,17 +525,17 @@ def _flood_contents_v2_reader(config_list):  # pylint: disable=R0915
         'var_out': 'contents_loss'}
     add_job(job_insts, MDMULT, attributes)
 
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
-    file_name = find_atts(config_list, SAVE)
+    file_name = find_attributes(config, SAVE)
     base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
     return job_insts
 
 
-def _reader2(config_list):
+def _reader2(config: dict) -> list:
     """
     From an untemplated configuration list build the job list.
 
@@ -545,10 +544,8 @@ def _reader2(config_list):
     """
     job_insts = []
 
-    for jobcalc_dic in config_list:
-        new_string = list(jobcalc_dic.keys())[0]
-        atts = jobcalc_dic[new_string]
-        add_job(job_insts, new_string, atts=atts)
+    for key, attributes in config.items():
+        add_job(job_insts, key, atts=attributes)
 
     # For testing
     if False:

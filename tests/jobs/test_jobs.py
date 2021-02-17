@@ -33,18 +33,20 @@ import unittest
 from unittest import mock
 import tempfile
 import os
+
 import numpy
 
 from scipy import allclose, asarray, isnan, array, rollaxis
 
+from hazimp.context import Context
 from hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,
                               SAVEALL, CONSTANT, ADD, RANDOM_CONSTANT,
-                              MULT, MDMULT)
-from hazimp.jobs.test_vulnerability_model import build_example
+                              MULT, MDMULT, AGGREGATE)
 from hazimp.jobs import jobs
 from hazimp import context
 from hazimp import misc
 from hazimp import parallel
+from tests.jobs.test_vulnerability_model import build_example
 
 prov = mock.MagicMock(name='prov.model')
 
@@ -769,6 +771,28 @@ class TestJobs(unittest.TestCase):
                 self.assertTrue(allclose(exp_dict[the_key],
                                          actual[the_key]))
         os.remove(f.name)
+
+    def test_default_aggregate_filename(self):
+        context = Context()
+        context.save_aggregation = mock.MagicMock()
+
+        instance = JOBS[AGGREGATE]
+        instance(context, None, 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, False)
+
+        context.save_aggregation.assert_called_once_with(
+            'output.shp', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, use_parallel=False
+        )
+
+    def test_default_aggregate_fields(self):
+        context = Context()
+        context.save_aggregation = mock.MagicMock()
+
+        instance = JOBS[AGGREGATE]
+        instance(context, 'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, None, False)
+
+        context.save_aggregation.assert_called_once_with(
+            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {'structural_loss_ratio': ['mean']}, use_parallel=False
+        )
 
 
 # -------------------------------------------------------------

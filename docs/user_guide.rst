@@ -240,7 +240,7 @@ This is an example structural damage flood template;::
         file_name:  small_exposure.csv
         exposure_latitude: LATITUDE
         exposure_longitude: LONGITUDE
-    - load_flood_ascii:  depth_small_synthetic.txt
+    - hazard_raster:  depth_small_synthetic.txt
     - calc_struct_loss:
         replacement_value_label: REPLACEMENT_VALUE
     - save: flood_impact.csv
@@ -252,7 +252,7 @@ pairs are;
     This is used to calculate the water depth above ground floor;
     water depth(m) - floor height(m) = water depth above ground floor(m)
 
-*load_flood_ascii*
+*hazard_raster*
     A list of ascii grid hazard files to load or a single file.  The file
     format is grid ascii.  The values in the file must be
     ``water depth(m)``, since that is the axis of the
