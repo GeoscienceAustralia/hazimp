@@ -43,8 +43,7 @@ from scipy import allclose, array, arange
 from hazimp import context
 from hazimp import misc
 from hazimp.context import save_csv_agg
-
-cwd = Path(__file__).parent
+from tests import CWD
 
 
 class TestContext(unittest.TestCase):
@@ -161,7 +160,7 @@ class TestContext(unittest.TestCase):
     @patch('hazimp.context.aggregate.choropleth')
     @patch('hazimp.context.misc.upload_to_s3_if_applicable')
     def test_save_aggregation_local(self, upload_mock, choropleth_mock):
-        boundaries = str(cwd / 'data/boundaries.json')
+        boundaries = str(CWD / 'data/boundaries.json')
 
         con = context.Context()
         con.set_prov_label('test label')
@@ -177,7 +176,7 @@ class TestContext(unittest.TestCase):
     @patch('hazimp.context.misc.upload_to_s3_if_applicable')
     @patch('hazimp.context.misc.create_temp_file_path_for_s3', lambda x: ('temp/aggregation.shp', 'bucket', 'aggregation.shp'))
     def test_save_aggregation_s3(self, upload_mock: MagicMock, choropleth_mock: MagicMock):
-        boundaries = str(cwd / 'data/boundaries.json')
+        boundaries = str(CWD / 'data/boundaries.json')
 
         con = context.Context()
         con.set_prov_label('test label')

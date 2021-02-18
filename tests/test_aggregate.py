@@ -25,8 +25,7 @@ from pathlib import Path
 import pandas as pd
 
 from hazimp.aggregate import choropleth
-
-cwd = Path(__file__).parent
+from tests import CWD
 
 outputs_to_test = [
     'output.json',
@@ -47,7 +46,7 @@ class TestAggregate(unittest.TestCase):
     def test_choropleth_creates_output(self):
         for output in outputs_to_test:
             with self.subTest(output):
-                dframe = pd.read_csv(str(cwd / 'data/exposure_with_loss.csv'))
+                dframe = pd.read_csv(str(CWD / 'data/exposure_with_loss.csv'))
 
                 temp_dir = tempfile.TemporaryDirectory()
                 filename = f'{temp_dir.name}/{output}'
@@ -55,7 +54,7 @@ class TestAggregate(unittest.TestCase):
                 try:
                     choropleth(
                         dframe,
-                        str(cwd / 'data/boundaries.json'),
+                        str(CWD / 'data/boundaries.json'),
                         'MESHBLOCK_CODE_2011',
                         'MB_CODE11',
                         filename,

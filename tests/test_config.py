@@ -41,8 +41,7 @@ from hazimp.config_build import (_get_job_or_calc,
                                  check_files_to_load, check_attributes, find_attributes)
 from hazimp.jobs import jobs
 from hazimp.jobs.jobs import LOADRASTER, SAVEALL, LoadRaster, SaveExposure
-
-cwd = Path(__file__).parent
+from tests import CWD
 
 
 class TestConfig(unittest.TestCase):
@@ -205,7 +204,7 @@ class TestConfig(unittest.TestCase):
         self.assertIsInstance(save_job.job_instance, SaveExposure)
 
     def test_read_yaml_file(self):
-        template = read_config_file(str(cwd / 'data/template.yaml'))
+        template = read_config_file(str(CWD / 'data/template.yaml'))
 
         self.assertEqual([{'template': 'default'}, {'key': 'value'}], template)
 
