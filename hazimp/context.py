@@ -334,8 +334,6 @@ class Context(object):
                 misc.upload_to_s3_if_applicable(rootname + '.cpg',
                                                 bucket_name,
                                                 base_bucket_key + '.cpg', True)
-        else:
-            pass
 
     def aggregate_loss(self, groupby=None, kwargs=None):
         """
