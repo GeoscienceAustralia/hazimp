@@ -29,7 +29,7 @@ COLNAMES = {'REPLACEMENT_VALUE': 'REPVAL',
 
 
 def choropleth(dframe, boundaries, impactcode, bcode, filename,
-               fields, categories):
+               fields, categories) -> bool:
     """
     Aggregate to geospatial boundaries and save to file
 
@@ -99,7 +99,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
     except KeyError:
         LOGGER.error(f"Unknown output extension: {fileext}")
         LOGGER.error("No aggregation will be saved")
-        return
+        return False
 
     if driver == 'ESRI Shapefile':
         LOGGER.info("ESRI shape file output - changing field names")
@@ -111,9 +111,11 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
         os.makedirs(directory)
     try:
         result.to_file(filename, driver=driver)
+        return True
     except ValueError:
         LOGGER.error("Cannot save aggregated data")
         LOGGER.error("Check fields used to link aggregation boundaries")
+        return False
 
 
 def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
