@@ -318,17 +318,10 @@ class TestMisc(unittest.TestCase):
         self.assertTrue(response['ContentLength'] > 0)
 
     def test_upload_to_s3_missing_local_file(self):
-        with self.assertRaises(FileNotFoundError) as context:
+        with self.assertRaises(FileNotFoundError):
             upload_to_s3_if_applicable('invalid.zip', 'bucket', 'key')
 
-    @patch.object(get_s3_client(), 'upload_file')
-    def test_upload_to_s3_error(self, mock):
-        mock.side_effect = ClientError({}, ANY)
 
-        with self.assertRaises(ClientError):
-            upload_to_s3_if_applicable(str(CWD / 'data/boundaries.json'), 'bucket', 'key')
-
-#  -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestMisc, 'test')
     Runner = unittest.TextTestRunner()
