@@ -31,21 +31,28 @@
 Test the misc module.
 """
 
-import unittest
-import tempfile
 import os
+import tempfile
+import unittest
+from unittest.mock import patch, call, ANY
 from zipfile import ZipFile
 
 import numpy
-from scipy import allclose
+import pandas as pd
+from botocore.exceptions import ClientError
+from git import InvalidGitRepositoryError, Repo
+from mock import Mock
 from moto import mock_s3
+from numpy.random.mtrand import permutation
+from scipy import allclose
 
 from hazimp.misc import (csv2dict, get_required_args, sorted_dict_values,
                          squash_narray, weighted_values, get_s3_client,
                          get_temporary_directory, s3_path_segments_from_vsis3,
                          create_temp_file_path_for_s3,
                          download_from_s3, upload_to_s3_if_applicable,
-                         download_file_from_s3_if_needed)
+                         download_file_from_s3_if_needed, mod_file_list, permutate_att_values, get_git_commit)
+from tests import CWD
 
 
 class TestMisc(unittest.TestCase):
@@ -79,6 +86,17 @@ class TestMisc(unittest.TestCase):
                 self.assertTrue(allclose(file_dict[key],
                                          actual[key]))
         os.remove(f.name)
+
+    def test_mod_file_list(self):
+        self.assertEqual(
+            ['NETCDF:"a.nc":wind_speed', 'NETCDF:"b.nc":wind_speed'],
+            mod_file_list(['a.nc', 'b.nc'], 'wind_speed')
+        )
+
+        self.assertEqual(
+            ['NETCDF:"c.nc":wind_direction'],
+            mod_file_list('c.nc', 'wind_direction')
+        )
 
     def test_get_required_args(self):
         def yeah(mandatory, why=0, me=1):
@@ -188,6 +206,32 @@ class TestMisc(unittest.TestCase):
         self.assertEqual(r_keys, ['boots', 'feet', 'socks'])
         self.assertEqual(r_values, [1, 2, 3])
 
+    def test_permutate_att_values(self):
+        with patch('hazimp.misc.permutation', Mock(wraps=permutation)) as mock:
+            data_frame = pd.DataFrame({'x': [1, 2, 3]})
+            permutate_att_values(data_frame, 'x')
+
+            mock.assert_has_calls([
+                call(1),
+                call(2),
+                call(3),
+            ])
+
+    def test_permutate_att_values_invalid_group(self):
+        data_frame = pd.DataFrame({'x': [1, 2, 3]})
+
+        with self.assertRaises(SystemExit):
+            permutate_att_values(data_frame, 'x', 'y')
+
+    def test_get_git_commit(self):
+        self.assertEqual((ANY, ANY, ANY), get_git_commit())
+
+    @patch.object(Repo, 'commit')
+    def test_get_git_commit_without_git(self, mock):
+        mock.side_effect = InvalidGitRepositoryError()
+
+        self.assertEqual(('unknown', '', ANY), get_git_commit())
+
     def test_get_s3_client(self):
         s3_client = get_s3_client()
         self.assertIsNotNone(s3_client)
@@ -273,6 +317,16 @@ class TestMisc(unittest.TestCase):
         response = s3.head_object(Bucket='bucket', Key='subdir/file.ext')
         self.assertTrue(response['ContentLength'] > 0)
 
+    def test_upload_to_s3_missing_local_file(self):
+        with self.assertRaises(FileNotFoundError) as context:
+            upload_to_s3_if_applicable('invalid.zip', 'bucket', 'key')
+
+    @patch.object(get_s3_client(), 'upload_file')
+    def test_upload_to_s3_error(self, mock):
+        mock.side_effect = ClientError({}, ANY)
+
+        with self.assertRaises(ClientError):
+            upload_to_s3_if_applicable(str(CWD / 'data/boundaries.json'), 'bucket', 'key')
 
 #  -------------------------------------------------------------
 if __name__ == "__main__":
