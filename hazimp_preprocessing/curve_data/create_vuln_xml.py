@@ -57,51 +57,54 @@ def write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category,
     """
 
     intro = """<?xml version='1.0' encoding='utf-8'?>
-<nrml xmlns="http://openquake.org/xmlns/nrml/0.4"
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.5"
       xmlns:gml="http://www.opengis.net/gml">
 
     <vulnerabilityModel>
-
-        <discreteVulnerabilitySet """
+        <vulnerabilityFunction """
     xml_h.write(intro)
-    xml_write_variable(xml_h, "vulnerabilitySetID", vulnerability_set_id)
-    xml_h.write('\n')
+    xml_write_variable(xml_h, "id", vulnerability_set_id)
     xml_write_variable(xml_h, "assetCategory", asset_category)
     xml_write_variable(xml_h, "lossCategory", loss_category)
-    xml_h.write('>\n <IML ')
-    xml_write_variable(xml_h, "IMT", imt)
-    xml_h.write('>')
-    for iml in imls:
-        if numpy.isnan(iml):
-            continue
-        xml_h.write(str(iml) + ' ')
-    xml_h.write('</IML>\n')
+    xml_h.write('>\n')
+
+    
 
 
-def write_nrml_curve(xml_h, vulnerability_function_id, loss_ratio,
+
+def write_nrml_curve(xml_h, vulnerability_function_id, imls, imt, loss_ratio,
                      coef_var):
     """
     Write the curve info of an nrml file.
 
     :param xml_h: A handle to the xml file.
     :param vulnerability_function_id: String name of the vuln function.
+    :param imls: 1D vector of the intensity measure values (x-axis) of the
+                 vuln curve.
     :param loss_ratio: 1D vector of the loss ratio values (y-axis) of the
                  vuln curve.
     :param coef_var: 1D vector of the coefficient of variation values (y-axis)
                      of the vuln curve.
     """
-    xml_h.write("<discreteVulnerability ")
-    xml_write_variable(xml_h, "vulnerabilityFunctionID",
+    xml_h.write("<vulnerabilityFunction ")
+    xml_write_variable(xml_h, "id",
                        vulnerability_function_id)
     xml_h.write('')
-    xml_h.write('probabilisticDistribution="LN">\n')
-    xml_h.write('<lossRatio>')
+    xml_h.write('dist="LN">\n  <imls ')
+    xml_write_variable(xml_h, "imt", imt)
+    xml_h.write('>')
+    for iml in imls:
+        if numpy.isnan(iml):
+            continue
+        xml_h.write(str(iml) + ' ')
+    xml_h.write('</imls>\n')
+    xml_h.write('<meanLRs>')
     xml_h.write(loss_ratio)
-    xml_h.write('</lossRatio>\n')
-    xml_h.write('<coefficientsVariation>')
+    xml_h.write('</meanLRs>\n')
+    xml_h.write('<covLRs>')
     xml_h.write(coef_var)
-    xml_h.write('</coefficientsVariation>\n')
-    xml_h.write('</discreteVulnerability>\n\n')
+    xml_h.write('</covLRs>\n')
+    xml_h.write('</vulnerabilityFunction>\n\n')
 
 
 def write_nrml_close(xml_h):
@@ -110,7 +113,6 @@ def write_nrml_close(xml_h):
 
     :param xml_h: A handle to the xml file.
     """
-    xml_h.write('</discreteVulnerabilitySet>\n')
     xml_h.write('</vulnerabilityModel>\n')
     xml_h.write('</nrml>\n')
     xml_h.close()
@@ -156,8 +158,8 @@ def csv_curve2nrml(csv_filename, xml_filename):
                 continue
             loss_ratio += str(row[str(iml)]) + ' '
             coef_var += '0 '
-        write_nrml_curve(xml_h, row['vulnerabilityFunctionID'], loss_ratio,
-                         coef_var)
+        write_nrml_curve(xml_h, row['vulnerabilityFunctionID'], imls, imt,
+                         loss_ratio, coef_var)
     write_nrml_close(xml_h)
 
 
