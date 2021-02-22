@@ -23,10 +23,10 @@ import unittest
 from pathlib import Path
 
 import pandas as pd
+from pandas._testing import assert_frame_equal
 
-from hazimp.aggregate import choropleth
-
-cwd = Path(__file__).parent
+from hazimp.aggregate import choropleth, aggregate_loss_atts
+from tests import CWD
 
 outputs_to_test = [
     'output.json',
@@ -47,15 +47,15 @@ class TestAggregate(unittest.TestCase):
     def test_choropleth_creates_output(self):
         for output in outputs_to_test:
             with self.subTest(output):
-                dframe = pd.read_csv(str(cwd / 'data/exposure_with_loss.csv'))
+                data_frame = pd.read_csv(str(CWD / 'data/exposure_with_loss.csv'))
 
                 temp_dir = tempfile.TemporaryDirectory()
                 filename = f'{temp_dir.name}/{output}'
 
                 try:
                     choropleth(
-                        dframe,
-                        str(cwd / 'data/boundaries.json'),
+                        data_frame,
+                        str(CWD / 'data/boundaries.json'),
                         'MESHBLOCK_CODE_2011',
                         'MB_CODE11',
                         filename,
@@ -66,6 +66,50 @@ class TestAggregate(unittest.TestCase):
                     self.assert_file_exists(filename)
                 finally:
                     temp_dir.cleanup()
+
+    def test_choropleth_invalid_boundary(self):
+        with self.assertRaises(SystemExit) as context:
+            data_frame = pd.read_csv(str(CWD / 'data/exposure_with_loss.csv'))
+
+            choropleth(
+                data_frame,
+                str(CWD / 'data/boundaries.json'),
+                'MESHBLOCK_CODE_2011',
+                'INVALID',
+                'output.json',
+                {'structural_loss_ratio': ['mean']},
+                True
+            )
+
+        self.assertEqual(context.exception.code, 1)
+
+    def test_choropleth_invalid_driver(self):
+        data_frame = pd.read_csv(str(CWD / 'data/exposure_with_loss.csv'))
+
+        status = choropleth(
+            data_frame,
+            str(CWD / 'data/boundaries.json'),
+            'MESHBLOCK_CODE_2011',
+            'MB_CODE11',
+            'output.invalid',
+            {'structural_loss_ratio': ['mean']},
+            True
+        )
+
+        self.assertFalse(status)
+
+    def test_aggregate_loss_atts(self):
+        data_frame = pd.DataFrame({'A': ['X', 'Y', 'Y'], 'B': [1, 2, 3]})
+        aggregated = aggregate_loss_atts(data_frame, 'A', {'B': 'sum'})
+
+        assert_frame_equal(pd.DataFrame({'A': ['X', 'Y'], 'B': [1, 5]}), aggregated)
+
+    def test_aggregate_loss_atts_invalid_field(self):
+        with self.assertRaises(SystemExit) as context:
+            data_frame = pd.DataFrame({'A': ['X', 'Y', 'Y'], 'B': [1, 2, 3]})
+            aggregate_loss_atts(data_frame, 'Z')
+
+        self.assertEqual(context.exception.code, 1)
 
 
 if __name__ == '__main__':

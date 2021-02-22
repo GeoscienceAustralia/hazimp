@@ -191,29 +191,6 @@ def _wind_v4_reader(config: dict) -> list:
     return job_insts
 
 
-def _mod_file_list(file_list, variable):
-    """
-    Modify the filename list for working with netcdf format files.
-
-    For netcdf files, GDAL expects the filename to be of the form
-    'NETCDF:"<filename>":<variable>', where variable is a valid
-    variable in the netcdf file.
-
-    :param file_list: List of files or a single file to be processed
-    :param str variable: Variable name
-
-    :returns: list of filenames, modified to the above format
-
-    """
-
-    if isinstance(file_list, str):
-        file_list = [file_list]
-    flist = []
-    for f in file_list:
-        flist.append('NETCDF:"'+f+'":'+variable)
-    return flist
-
-
 def _wind_nc_reader(config: dict) -> list:
     """
     Build a job list from a wind configuration list for netcdf files.
@@ -249,15 +226,13 @@ def _wind_nc_reader(config: dict) -> list:
         vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
-    permute = config.get(PERMUTATION)
-    if permute:
+    if PERMUTATION in config:
         atts = find_attributes(config, PERMUTATION)
         add_job(job_insts, PERMUTATE_EXPOSURE, atts)
     else:
         add_job(job_insts, LOOKUP)
 
-    calcloss = config.get(CALCSTRUCTLOSS)
-    if calcloss:
+    if CALCSTRUCTLOSS in config:
         atts_dict = find_attributes(config, CALCSTRUCTLOSS)
         if REP_VAL_NAME not in atts_dict:
             msg = f"Mandatory key not found in config file; {REP_VAL_NAME}"
@@ -267,24 +242,24 @@ def _wind_nc_reader(config: dict) -> list:
                       'var_out': 'structural_loss'}
         add_job(job_insts, MDMULT, attributes)
 
-    if config.get(AGGREGATION):
+    if AGGREGATION in config:
         attributes = find_attributes(config, AGGREGATION)
         add_job(job_insts, AGGREGATE_LOSS, attributes)
         file_name = find_attributes(config, SAVEAGG)
         add_job(job_insts, SAVEAGG, {'file_name': file_name})
 
-    if config.get(CATEGORISE):
+    if CATEGORISE in config:
         attributes = find_attributes(config, CATEGORISE)
         add_job(job_insts, CATEGORISE, attributes)
 
     file_name = find_attributes(config, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
-    if config.get(AGGREGATE):
+    if AGGREGATE in config:
         attributes = find_attributes(config, AGGREGATE)
         add_job(job_insts, AGGREGATE, attributes)
 
-    if config.get(TABULATE):
+    if TABULATE in config:
         attributes = find_attributes(config, TABULATE)
         add_job(job_insts, TABULATE, attributes)
 
@@ -346,11 +321,11 @@ def _wind_v5_reader(config: dict) -> list:
     attributes = find_attributes(config, AGGREGATION)
     add_job(job_insts, AGGREGATE_LOSS, attributes)
 
-    if config.get(CATEGORISE):
+    if CATEGORISE in config:
         attributes = find_attributes(config, CATEGORISE)
         add_job(job_insts, CATEGORISE, attributes)
 
-    if config.get(TABULATE):
+    if TABULATE in config:
         attributes = find_attributes(config, TABULATE)
         add_job(job_insts, TABULATE, attributes)
 
