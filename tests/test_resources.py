@@ -52,8 +52,8 @@ class TestResources(unittest.TestCase):
 
     def test_domestic_wind_vul_curves(self):
         vuln_sets = vuln_sets_from_xml_file(
-            os.path.join(RESOURCE_DIR,
-                         'content_flood_avg_curve.xml'))
+            [os.path.join(RESOURCE_DIR,
+                         'content_flood_avg_curve.xml')])
         set_id = vuln_sets["contents_domestic_flood_2012"]
         actual = set_id.intensity_measure_type
         self.assertEqual(actual, "water depth above ground floor (m)")

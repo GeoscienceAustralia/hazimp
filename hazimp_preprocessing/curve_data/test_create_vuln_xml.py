@@ -75,7 +75,7 @@ class TestCreateVulnXML(unittest.TestCase):
                                         delete=False)
         xml_name = f.name
         create_vuln_xml.csv_curve2nrml(csv_name, xml_name)
-        vuln_sets = vuln_sets_from_xml_file(xml_name)
+        vuln_sets = vuln_sets_from_xml_file([xml_name])
 
         self.assertTrue(allclose(vuln_sets["d2012"].intensity_measure_level,
                                  asarray([17, 20])))
@@ -142,7 +142,7 @@ class TestCreateVulnXML(unittest.TestCase):
         create_vuln_xml.excel_curve2nrml(contents_filename, fabric_filename,
                                          excel_file)
         # load in the xml file to see if it's ok.
-        vuln_sets = vuln_sets_from_xml_file(contents_filename)
+        vuln_sets = vuln_sets_from_xml_file([contents_filename])
 
         skey = create_vuln_xml.FLOOD_HOUSE_CONTENTS
         self.assertTrue(allclose(vuln_sets[skey].intensity_measure_level,
@@ -176,7 +176,7 @@ class TestCreateVulnXML(unittest.TestCase):
             self.assertTrue(allclose(vul_funct.coefficient_of_variation,
                                      array([0., 0.])))
 
-        vuln_sets = vuln_sets_from_xml_file(fabric_filename)
+        vuln_sets = vuln_sets_from_xml_file([fabric_filename])
 
         skey = create_vuln_xml.FLOOD_HOUSE_FABRIC
         self.assertTrue(allclose(vuln_sets[skey].intensity_measure_level,

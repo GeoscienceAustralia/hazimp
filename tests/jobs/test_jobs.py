@@ -46,7 +46,7 @@ from hazimp.jobs import jobs
 from hazimp import context
 from hazimp import misc
 from hazimp import parallel
-from tests.jobs.test_vulnerability_model import build_example
+from tests.jobs.test_vulnerability_model import build_example1
 
 prov = mock.MagicMock(name='prov.model')
 
@@ -337,7 +337,7 @@ class TestJobs(unittest.TestCase):
 
     def test_load_vuln_set(self):
         # Write a file to test
-        filename = build_example()
+        filename = build_example1()
 
         con_in = Dummy()
         con_in.exposure_lat = None
