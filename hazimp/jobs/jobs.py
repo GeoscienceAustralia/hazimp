@@ -37,6 +37,8 @@ is not present Error out.
 
 import os
 import sys
+from typing import Union
+
 import scipy
 import numpy as np
 
@@ -359,23 +361,28 @@ class LoadXmlVulnerability(Job):
         super(LoadXmlVulnerability, self).__init__()
         self.call_funct = LOADXMLVULNERABILITY
 
-    def __call__(self, context, file_name):
+    def __call__(self, context, file_name: Union[str, list]):
         """
-        Read a csv exposure file into the context object.
+        Read XML vulnerability files into the context object.
 
         :param context: The context instance, used to move data around.
-        :param file_name: The xml file to load.
+        :param file_name: The xml files to load.
         """
         if file_name is not None:
+            if type(file_name) is str:
+                file_name = [file_name]
+
             vuln_sets = vuln_sets_from_xml_file(file_name)
             context.vulnerability_sets.update(vuln_sets)
-            dt = misc.get_file_mtime(file_name)
-            vulent = context.prov.entity(":vulnerability file",
-                                         {'prov:type': 'prov:Collection',
-                                          'prov:generatedAtTime': dt,
-                                          'prov:atLocation':
-                                              os.path.basename(file_name)})
-            context.prov.used(context.provlabel, vulent)
+
+            for filename in file_name:
+                dt = misc.get_file_mtime(filename)
+                vulent = context.prov.entity(":vulnerability file",
+                                             {'prov:type': 'prov:Collection',
+                                              'prov:generatedAtTime': dt,
+                                              'prov:atLocation':
+                                                  os.path.basename(filename)})
+                context.prov.used(context.provlabel, vulent)
 
 
 class SimpleLinker(Job):
@@ -771,7 +778,7 @@ class Aggregate(Job):
         # Defaults fields to use when none are provided to maintain
         # backwards compatibility
         if fields is None:
-            fields = {'structural_loss_ratio': ['mean']}
+            fields = {'structural': ['mean']}
 
         context.save_aggregation(filename,
                                  boundaries,

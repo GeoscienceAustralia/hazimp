@@ -350,7 +350,7 @@ class Context(object):
         For example::
 
         kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
-                'structural_loss_ratio': ['mean', 'std']}
+                'structural': ['mean', 'std']}
 
 
         See

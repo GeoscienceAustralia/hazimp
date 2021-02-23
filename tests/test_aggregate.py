@@ -59,7 +59,7 @@ class TestAggregate(unittest.TestCase):
                         'MESHBLOCK_CODE_2011',
                         'MB_CODE11',
                         filename,
-                        {'structural_loss_ratio': ['mean']},
+                        {'structural': ['mean']},
                         True
                     )
 
@@ -77,7 +77,7 @@ class TestAggregate(unittest.TestCase):
                 'MESHBLOCK_CODE_2011',
                 'INVALID',
                 'output.json',
-                {'structural_loss_ratio': ['mean']},
+                {'structural': ['mean']},
                 True
             )
 
@@ -92,7 +92,7 @@ class TestAggregate(unittest.TestCase):
             'MESHBLOCK_CODE_2011',
             'MB_CODE11',
             'output.invalid',
-            {'structural_loss_ratio': ['mean']},
+            {'structural': ['mean']},
             True
         )
 

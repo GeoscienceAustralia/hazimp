@@ -104,7 +104,7 @@ class TestCalcs(unittest.TestCase):
     def test_CalcLoss(self):
         inst = CALCS[calcs.STRUCT_LOSS]
         context = Dummy
-        context.exposure_att = {'structural_loss_ratio': 5,
+        context.exposure_att = {'structural': 5,
                                 'REPLACEMENT_VALUE': 20}
         inst(context)
         self.assertEqual(context.exposure_att['structural_loss'], 5 * 20)

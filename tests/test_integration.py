@@ -38,7 +38,7 @@ from hazimp.jobs import jobs
 from hazimp import parallel
 
 
-def build_example_vuln():
+def build_example_building_vulnerability():
     """Build an example xml file.
     If you call this remember to delete the file;  os.remove(filename).
 
@@ -46,53 +46,63 @@ def build_example_vuln():
         The name of the file
     """
     str2 = """<?xml version='1.0' encoding='utf-8'?>
-<nrml xmlns="http://openquake.org/xmlns/nrml/0.4"
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.5"
       xmlns:gml="http://www.opengis.net/gml">
 
-    <vulnerabilityModel>
+    <vulnerabilityModel id="EQ_building" assetCategory="not_used" lossCategory="building_loss">
+            <vulnerabilityFunction id="SW1" dist="LN">
+                <imls imt="MMI">0.00 5.00 10.00</imls>
+                <meanLRs>0.00  0.5  1.0</meanLRs>
+                <covLRs>0.30 0.30 0.30 </covLRs>
+            </vulnerabilityFunction>
 
-        <discreteVulnerabilitySet vulnerabilitySetID="EQ_building"
-        assetCategory="not_used" lossCategory="building_loss">
-
-            <IML IMT="MMI">0.00 5.00 10.00</IML>
-
-            <discreteVulnerability vulnerabilityFunctionID="SW1"
-            probabilisticDistribution="LN">
-                <lossRatio>0.00  0.5  1.0</lossRatio>
-                <coefficientsVariation>0.30 0.30 0.30 </coefficientsVariation>
-            </discreteVulnerability>
-
-            <discreteVulnerability vulnerabilityFunctionID="SW2"
-            probabilisticDistribution="LN">
-                <lossRatio>0.00 0.05  0.1</lossRatio>
-                <coefficientsVariation>0.30 0.30 0.30 </coefficientsVariation>
-            </discreteVulnerability>
-
-        </discreteVulnerabilitySet>
-
-        <discreteVulnerabilitySet vulnerabilitySetID="EQ_contents"
-         assetCategory="not_used" lossCategory="contents_loss">
-
-            <IML IMT="MMI">0.00 5.00 10.00</IML>
-
-            <discreteVulnerability vulnerabilityFunctionID="RICH"
-             probabilisticDistribution="LN">
-                <lossRatio>0.00 0.005 0.01</lossRatio>
-                <coefficientsVariation>0.50 0.50 0.50</coefficientsVariation>
-            </discreteVulnerability>
-
-            <discreteVulnerability vulnerabilityFunctionID="POOR"
-             probabilisticDistribution="LN">
-                <lossRatio>0.00 0.0005 0.001</lossRatio>
-                <coefficientsVariation>0.60 0.60 0.60</coefficientsVariation>
-            </discreteVulnerability>
-        </discreteVulnerabilitySet>
+            <vulnerabilityFunction id="SW2" dist="LN">
+                <imls imt="MMI">0.00 5.00 10.00</imls>
+                <meanLRs>0.00 0.05  0.1</meanLRs>
+                <covLRs>0.30 0.30 0.30 </covLRs>
+            </vulnerabilityFunction>
     </vulnerabilityModel>
 </nrml>"""
 
     # Write a file to test
     f = tempfile.NamedTemporaryFile(suffix='.xml',
-                                    prefix='test_integration',
+                                    prefix='building',
+                                    delete=False,
+                                    mode='w+t')
+    f.write(str2)
+    f.close()
+    return f.name
+
+
+def build_example_contents_vulnerability():
+    """Build an example xml file.
+    If you call this remember to delete the file;  os.remove(filename).
+
+    Returns:
+        The name of the file
+    """
+    str2 = """<?xml version='1.0' encoding='utf-8'?>
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.5"
+      xmlns:gml="http://www.opengis.net/gml">
+
+    <vulnerabilityModel id="EQ_contents" assetCategory="not_used" lossCategory="contents_loss">
+            <vulnerabilityFunction id="RICH" dist="LN">
+                <imls imt="MMI">0.00 5.00 10.00</imls>
+                <meanLRs>0.00 0.005 0.01</meanLRs>
+                <covLRs>0.50 0.50 0.50</covLRs>
+            </vulnerabilityFunction>
+
+            <vulnerabilityFunction id="POOR" dist="LN">
+                <imls imt="MMI">0.00 5.00 10.00</imls>
+                <meanLRs>0.00 0.0005 0.001</meanLRs>
+                <covLRs>0.60 0.60 0.60</covLRs>
+            </vulnerabilityFunction>
+    </vulnerabilityModel>
+</nrml>"""
+
+    # Write a file to test
+    f = tempfile.NamedTemporaryFile(suffix='.xml',
+                                    prefix='contents',
                                     delete=False,
                                     mode='w+t')
     f.write(str2)
@@ -127,9 +137,9 @@ class TestIntegration(unittest.TestCase):
     """
 
     def test_exposure_and_vuln_functions(self):
-
         # Create the files
-        file_vuln = build_example_vuln()
+        building_vulnerability = build_example_building_vulnerability()
+        contents_vulnerability = build_example_contents_vulnerability()
         file_exp, lat_name, long_name = build_example_exposure()
 
         the_config = [{'template': 'default'},
@@ -137,7 +147,7 @@ class TestIntegration(unittest.TestCase):
                        {'file_name': file_exp,
                         'exposure_latitude': lat_name,
                         'exposure_longitude': long_name}},
-                      {jobs.LOADXMLVULNERABILITY: {'file_name': file_vuln}},
+                      {jobs.LOADXMLVULNERABILITY: {'file_name': [building_vulnerability, contents_vulnerability]}},
                       {jobs.SIMPLELINKER: {'vul_functions_in_exposure':
                                            {"EQ_building": 'building',
                                             "EQ_contents": 'contents'}}},
@@ -170,7 +180,9 @@ class TestIntegration(unittest.TestCase):
                 self.assertTrue(allclose(actual,
                                          results), 'actual:' + str(actual) +
                                 '\n results:' + str(results))
-        os.remove(file_vuln)
+
+        os.remove(building_vulnerability)
+        os.remove(contents_vulnerability)
         os.remove(file_exp)
 
 
