@@ -46,7 +46,7 @@ from hazimp.jobs import jobs
 from hazimp import context
 from hazimp import misc
 from hazimp import parallel
-from tests.jobs.test_vulnerability_model import build_example
+from tests.jobs.test_vulnerability_model import build_example1
 
 prov = mock.MagicMock(name='prov.model')
 
@@ -337,7 +337,7 @@ class TestJobs(unittest.TestCase):
 
     def test_load_vuln_set(self):
         # Write a file to test
-        filename = build_example()
+        filename = build_example1()
 
         con_in = Dummy()
         con_in.exposure_lat = None
@@ -791,7 +791,7 @@ class TestJobs(unittest.TestCase):
         instance(context, 'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, None, False)
 
         context.save_aggregation.assert_called_once_with(
-            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {'structural_loss_ratio': ['mean']}, use_parallel=False
+            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {'structural': ['mean']}, use_parallel=False
         )
 
 

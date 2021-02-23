@@ -167,9 +167,9 @@ class TestContext(unittest.TestCase):
         con.exposure_att = pd.DataFrame(data={'column': [1, 2, 3]})
 
         con.save_aggregation('aggregation.json', boundaries, 'MESHBLOCK_CODE_2011',
-                             'MB_CODE11', True, {'structural_loss_ratio': ['mean']}, False)
+                             'MB_CODE11', True, {'structural': ['mean']}, False)
 
-        choropleth_mock.assert_called_with(ANY, boundaries, 'MESHBLOCK_CODE_2011', 'MB_CODE11', 'aggregation.json', {'structural_loss_ratio': ['mean']}, True)
+        choropleth_mock.assert_called_with(ANY, boundaries, 'MESHBLOCK_CODE_2011', 'MB_CODE11', 'aggregation.json', {'structural': ['mean']}, True)
         upload_mock.assert_called_once_with('aggregation.json', None, None)
 
     @patch('hazimp.context.aggregate.choropleth')
@@ -183,9 +183,9 @@ class TestContext(unittest.TestCase):
         con.exposure_att = pd.DataFrame(data={'column': [1, 2, 3]})
 
         con.save_aggregation('/vsis3/bucket/aggregation.shp', boundaries, 'MESHBLOCK_CODE_2011',
-                             'MB_CODE11', True, {'structural_loss_ratio': ['mean']}, False)
+                             'MB_CODE11', True, {'structural': ['mean']}, False)
 
-        choropleth_mock.assert_called_with(ANY, boundaries, 'MESHBLOCK_CODE_2011', 'MB_CODE11', 'temp/aggregation.shp', {'structural_loss_ratio': ['mean']}, True)
+        choropleth_mock.assert_called_with(ANY, boundaries, 'MESHBLOCK_CODE_2011', 'MB_CODE11', 'temp/aggregation.shp', {'structural': ['mean']}, True)
         upload_mock.assert_has_calls([
             call('temp/aggregation.shp', 'bucket', 'aggregation.shp'),
             call('temp/aggregation.dbf', 'bucket', 'aggregation.dbf'),

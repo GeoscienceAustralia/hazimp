@@ -171,7 +171,7 @@ class TestFlood(unittest.TestCase):
 
         self.assertTrue(allclose(
             context.exposure_att['calced_contents_loss_ratio'],
-            context.exposure_att['contents_loss_ratio']))
+            context.exposure_att['contents']))
 
         # Only the head node writes a file
         if parallel.STATE.rank == 0:
