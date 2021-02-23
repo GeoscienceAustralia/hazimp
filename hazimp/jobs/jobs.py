@@ -37,6 +37,8 @@ is not present Error out.
 
 import os
 import sys
+from typing import Union
+
 import scipy
 import numpy as np
 
@@ -259,29 +261,23 @@ class MultipleDimensionMult(Job):
         :param var_out: The new variable name, with the values of
             var1 * var2.
         """
-        # print "var1 ", context.exposure_att[var1].shape
 
         rolled = context.exposure_att[var1]
         context.exposure_att[var1] = scipy.rollaxis(rolled, 0,
                                                     rolled.ndim)
-        # print "var1 rolled", context.exposure_att[var1].shape
-        # print "var2", context.exposure_att[var2].shape
-        # print "rolled", rolled.shape
+
         context.exposure_att[var_out] = (context.exposure_att[var1] *
                                          context.exposure_att[var2])
         rolled = context.exposure_att[var1]
 
-        # print "var_out]", context.exposure_att[var_out].shape
         # Roll var1 back
         context.exposure_att[var1] = scipy.rollaxis(rolled,
                                                     rolled.ndim - 1, 0)
+
         # Roll the output so the asset dimension is 0.
         result = context.exposure_att[var_out]
         context.exposure_att[var_out] = scipy.rollaxis(result,
                                                        rolled.ndim - 1, 0)
-        # print "var1 unrolled", context.exposure_att[var1].shape
-        # print "var2", context.exposure_att[var2].shape
-        # print "var_out]", context.exposure_att[var_out].shape
 
 
 class LoadCsvExposure(Job):
@@ -365,23 +361,28 @@ class LoadXmlVulnerability(Job):
         super(LoadXmlVulnerability, self).__init__()
         self.call_funct = LOADXMLVULNERABILITY
 
-    def __call__(self, context, file_name):
+    def __call__(self, context, file_name: Union[str, list]):
         """
-        Read a csv exposure file into the context object.
+        Read XML vulnerability files into the context object.
 
         :param context: The context instance, used to move data around.
-        :param file_name: The xml file to load.
+        :param file_name: The xml files to load.
         """
         if file_name is not None:
+            if type(file_name) is str:
+                file_name = [file_name]
+
             vuln_sets = vuln_sets_from_xml_file(file_name)
             context.vulnerability_sets.update(vuln_sets)
-            dt = misc.get_file_mtime(file_name)
-            vulent = context.prov.entity(":vulnerability file",
-                                         {'prov:type': 'prov:Collection',
-                                          'prov:generatedAtTime': dt,
-                                          'prov:atLocation':
-                                              os.path.basename(file_name)})
-            context.prov.used(context.provlabel, vulent)
+
+            for filename in file_name:
+                dt = misc.get_file_mtime(filename)
+                vulent = context.prov.entity(":vulnerability file",
+                                             {'prov:type': 'prov:Collection',
+                                              'prov:generatedAtTime': dt,
+                                              'prov:atLocation':
+                                                  os.path.basename(filename)})
+                context.prov.used(context.provlabel, vulent)
 
 
 class SimpleLinker(Job):
@@ -777,7 +778,7 @@ class Aggregate(Job):
         # Defaults fields to use when none are provided to maintain
         # backwards compatibility
         if fields is None:
-            fields = {'structural_loss_ratio': ['mean']}
+            fields = {'structural': ['mean']}
 
         context.save_aggregation(filename,
                                  boundaries,

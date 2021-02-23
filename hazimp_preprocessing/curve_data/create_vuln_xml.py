@@ -42,8 +42,7 @@ def xml_write_variable(xml_h, name, value):
     xml_h.write('" ')
 
 
-def write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category,
-                   imt, imls):
+def write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category):
     """
     Write the top section of an nrml file.
 
@@ -60,19 +59,15 @@ def write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category,
 <nrml xmlns="http://openquake.org/xmlns/nrml/0.5"
       xmlns:gml="http://www.opengis.net/gml">
 
-    <vulnerabilityModel>
-        <vulnerabilityFunction """
+    <vulnerabilityModel """
     xml_h.write(intro)
     xml_write_variable(xml_h, "id", vulnerability_set_id)
     xml_write_variable(xml_h, "assetCategory", asset_category)
     xml_write_variable(xml_h, "lossCategory", loss_category)
     xml_h.write('>\n')
 
-    
 
-
-
-def write_nrml_curve(xml_h, vulnerability_function_id, imls, imt, loss_ratio,
+def write_nrml_curve(xml_h, vulnerability_function_id, imls: list, imt: str, loss_ratio,
                      coef_var):
     """
     Write the curve info of an nrml file.
@@ -81,6 +76,7 @@ def write_nrml_curve(xml_h, vulnerability_function_id, imls, imt, loss_ratio,
     :param vulnerability_function_id: String name of the vuln function.
     :param imls: 1D vector of the intensity measure values (x-axis) of the
                  vuln curve.
+    :param imt: intensity measure type
     :param loss_ratio: 1D vector of the loss ratio values (y-axis) of the
                  vuln curve.
     :param coef_var: 1D vector of the coefficient of variation values (y-axis)
@@ -115,7 +111,6 @@ def write_nrml_close(xml_h):
     """
     xml_h.write('</vulnerabilityModel>\n')
     xml_h.write('</nrml>\n')
-    xml_h.close()
 
 
 def csv_curve2nrml(csv_filename, xml_filename):
@@ -141,26 +136,26 @@ def csv_curve2nrml(csv_filename, xml_filename):
 
     # open the csv file to read the rows
     reader = csv.DictReader(open(csv_filename, 'r'))
-    xml_h = open(xml_filename, 'w')
-    write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category,
-                   csv_dict['IMT'][0], imls)
+    with open(xml_filename, 'w') as xml_h:
+        write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category)
 
-    # Loop over the csv file info
-    for row in reader:
-        row = {k.strip(): v.strip() for k, v in list(row.items())}
-        if row['Alpha'] == 'N/A':
-            # This row has no model
-            continue
-        coef_var = ''
-        loss_ratio = ''
-        for iml in imls:
-            if numpy.isnan(iml):
+        # Loop over the csv file info
+        for row in reader:
+            row = {k.strip(): v.strip() for k, v in list(row.items())}
+            if row['Alpha'] == 'N/A':
+                # This row has no model
                 continue
-            loss_ratio += str(row[str(iml)]) + ' '
-            coef_var += '0 '
-        write_nrml_curve(xml_h, row['vulnerabilityFunctionID'], imls, imt,
-                         loss_ratio, coef_var)
-    write_nrml_close(xml_h)
+            coef_var = ''
+            loss_ratio = ''
+            for iml in imls:
+                if numpy.isnan(iml):
+                    continue
+                loss_ratio += str(row[str(iml)]) + ' '
+                coef_var += '0 '
+            write_nrml_curve(xml_h, row['vulnerabilityFunctionID'], imls, csv_dict['IMT'][0],
+                             loss_ratio, coef_var)
+
+        write_nrml_close(xml_h)
 
 
 def validate_excel_curve_data(excel_file):
@@ -329,22 +324,27 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
 
     for set_id in curve_info:
 
-        xml_h = open(set_id['file_name'], 'w')
-        write_nrml_top(xml_h, set_id['set_id'], set_id['asset'],
-                       set_id['loss_category'],
-                       FLOOD_IMT, depths)
-        # Loop over the csv file info
-        for curve_dic_key in set_id['curves']:
-            curve_values = set_id['curves'][curve_dic_key]
-            coef_var = ''
-            loss_ratio = ''
-            # creating the coef_var vector
-            for iml in curve_values:
-                loss_ratio += str(iml) + ' '
-                coef_var += '0 '
-            write_nrml_curve(xml_h, curve_dic_key, loss_ratio,
-                             coef_var)
-        write_nrml_close(xml_h)
+        with open(set_id['file_name'], 'w') as xml_h:
+            write_nrml_top(
+                xml_h,
+                set_id['set_id'],
+                set_id['asset'],
+                set_id['loss_category']
+            )
+
+            # Loop over the csv file info
+            for curve_dic_key in set_id['curves']:
+                curve_values = set_id['curves'][curve_dic_key]
+                coef_var = ''
+                loss_ratio = ''
+                # creating the coef_var vector
+                for iml in curve_values:
+                    loss_ratio += str(iml) + ' '
+                    coef_var += '0 '
+                write_nrml_curve(xml_h, curve_dic_key, depths, FLOOD_IMT, loss_ratio,
+                                 coef_var)
+
+            write_nrml_close(xml_h)
 
 
 # -----------------------------------------------------------

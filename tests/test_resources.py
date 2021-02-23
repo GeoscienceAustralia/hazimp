@@ -32,11 +32,14 @@
 Test the data in resources.  Can it be loaded?
 """
 
-import unittest
 import os
+import unittest
+from glob import glob
 
-from hazimp.misc import RESOURCE_DIR
 from hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
+from hazimp.misc import RESOURCE_DIR
+from hazimp.validator import Validator, NRML_SCHEMA
+from tests import CWD
 
 
 class TestResources(unittest.TestCase):
@@ -47,8 +50,8 @@ class TestResources(unittest.TestCase):
 
     def test_domestic_wind_vul_curves(self):
         vuln_sets = vuln_sets_from_xml_file(
-            os.path.join(RESOURCE_DIR,
-                         'content_flood_avg_curve.xml'))
+            [os.path.join(RESOURCE_DIR,
+                         'content_flood_avg_curve.xml')])
         set_id = vuln_sets["contents_domestic_flood_2012"]
         actual = set_id.intensity_measure_type
         self.assertEqual(actual, "water depth above ground floor (m)")
@@ -57,8 +60,17 @@ class TestResources(unittest.TestCase):
         vul_funct = set_id.vulnerability_functions['FCM1_INSURED_NOACTION']
         self.assertAlmostEqual(vul_funct.mean_loss[0], 0.0)
 
+    def test_resources_pass_validation(self):
+        for resource in glob(str(CWD / '../resources/*.xml')):
+            filename = os.path.basename(resource)
+            with self.subTest(filename):
+                try:
+                    validator = Validator(NRML_SCHEMA)
+                    validator.validate(resource)
+                except AssertionError:
+                    self.fail(f'{filename} should validate against {NRML_SCHEMA}')
 
-# -------------------------------------------------------------
+
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestResources, 'test')
     Runner = unittest.TextTestRunner()

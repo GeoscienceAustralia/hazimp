@@ -13,7 +13,7 @@
  - aggregation:
     groupby: MB_CAT_2011
     kwargs: 
-      structural_loss_ratio: [mean, std]
+      structural: [mean, std]
       structural_loss: [mean, sum]
       REPLACEMENT_VALUE: [mean, sum]
  - calc_struct_loss:

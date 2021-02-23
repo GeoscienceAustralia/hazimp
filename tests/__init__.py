@@ -18,3 +18,6 @@
 """
 Unit tests for core hazard impact functionality
 """
+from pathlib import Path
+
+CWD = Path(__file__).parent

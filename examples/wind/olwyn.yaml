@@ -13,7 +13,7 @@
 - aggregation:
    groupby: MESHBLOCK_CODE_2011
    kwargs: 
-     structural_loss_ratio: [mean, std]
+     structural: [mean, std]
      structural_loss: [mean, sum]
 - save_agg: olwyn_agg.csv
 - categorise:
@@ -33,4 +33,4 @@
    filename: olwyn_impact.shp
    categories: True
    fields:
-      structural_loss_ratio: [mean]
+      structural: [mean]

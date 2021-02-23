@@ -1,4 +1,4 @@
-exposure_latitude,exposure_longitude,MB_CAT_2011,WIND_VULNERABILITY_SET,REPLACEMENT_VALUE,CONTENTS_VALUE,WIND_VULNERABILITY_FUNCTION_ID,internal_id,0.2s gust at 10m height m/s,structural_loss_ratio,structural_loss
+exposure_latitude,exposure_longitude,MB_CAT_2011,WIND_VULNERABILITY_SET,REPLACEMENT_VALUE,CONTENTS_VALUE,WIND_VULNERABILITY_FUNCTION_ID,internal_id,0.2s gust at 10m height m/s,structural,structural_loss
 -35.0,110.0,Residential,wind_vulnerability_2012,538053,45113,dw134,0,nan,0.0,0.0
 -35.5,110.0,Residential,wind_vulnerability_2012,170429,97567,dw133,1,nan,0.0,0.0
 -36.0,110.0,Residential,wind_vulnerability_2012,167663,99829,dw135,2,nan,0.0,0.0
