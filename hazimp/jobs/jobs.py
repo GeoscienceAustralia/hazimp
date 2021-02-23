@@ -778,7 +778,7 @@ class Aggregate(Job):
         # Defaults fields to use when none are provided to maintain
         # backwards compatibility
         if fields is None:
-            fields = {'structural_loss_ratio': ['mean']}
+            fields = {'structural': ['mean']}
 
         context.save_aggregation(filename,
                                  boundaries,

@@ -393,7 +393,7 @@ def _flood_fabric_v2_reader(config: dict) -> list:
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
     attributes = {
-        'var1': 'structural_loss_ratio', 'var2': atts_dict[REP_VAL_NAME],
+        'var1': 'structural', 'var2': atts_dict[REP_VAL_NAME],
         'var_out': 'structural_loss'}
     add_job(job_insts, MDMULT, attributes)
 
@@ -498,7 +498,7 @@ def _flood_contents_v2_reader(config: dict) -> list:  # pylint: disable=R0915
         msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
         raise RuntimeError(msg)
     attributes = {
-        'var1': 'contents_loss_ratio', 'var2': atts_dict[REP_VAL_NAME],
+        'var1': 'contents', 'var2': atts_dict[REP_VAL_NAME],
         'var_out': 'contents_loss'}
     add_job(job_insts, MDMULT, attributes)
 

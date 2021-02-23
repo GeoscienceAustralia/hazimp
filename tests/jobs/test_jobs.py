@@ -791,7 +791,7 @@ class TestJobs(unittest.TestCase):
         instance(context, 'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, None, False)
 
         context.save_aggregation.assert_called_once_with(
-            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {'structural_loss_ratio': ['mean']}, use_parallel=False
+            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {'structural': ['mean']}, use_parallel=False
         )
 
 

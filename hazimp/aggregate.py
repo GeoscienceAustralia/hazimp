@@ -23,7 +23,6 @@ DRIVERS = {'shp': 'ESRI Shapefile',
 # limited length for the attribute name.
 # TODO: Labels for other hazard measures, damage measures, etc.
 COLNAMES = {'REPLACEMENT_VALUE': 'REPVAL',
-            'structural_loss_ratio_mean': 'slr_mean',
             '0.2s gust at 10m height m/s': 'maxwind',
             'Damage state': 'dmgstate'}
 
@@ -55,7 +54,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
 
     For example::
 
-    fields = {'structural_loss_ratio': ['mean']}
+    fields = {'structural': ['mean']}
 
     See
     https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
@@ -132,7 +131,7 @@ def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
     For example::
 
     kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
-              'structural_loss_ratio': ['mean', 'std']}
+              'structural': ['mean', 'std']}
 
     See
     https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
