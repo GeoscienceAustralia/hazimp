@@ -35,13 +35,11 @@ Test the data in resources.  Can it be loaded?
 import os
 import unittest
 from glob import glob
-from pathlib import Path
 
 from hazimp.jobs.vulnerability_model import vuln_sets_from_xml_file
 from hazimp.misc import RESOURCE_DIR
 from hazimp.validator import Validator, NRML_SCHEMA
-
-cwd = Path(__file__).parent
+from tests import CWD
 
 
 class TestResources(unittest.TestCase):
@@ -63,7 +61,7 @@ class TestResources(unittest.TestCase):
         self.assertAlmostEqual(vul_funct.mean_loss[0], 0.0)
 
     def test_resources_pass_validation(self):
-        for resource in glob(str(cwd / '../resources/*.xml')):
+        for resource in glob(str(CWD / '../resources/*.xml')):
             filename = os.path.basename(resource)
             with self.subTest(filename):
                 try:
