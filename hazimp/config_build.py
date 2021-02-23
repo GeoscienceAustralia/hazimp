@@ -158,10 +158,9 @@ def file_can_open(file2load):
     """
     try:
         with open(file2load) as _:
-            pass
+            return True
     except IOError:
         return False
-    return True
 
 
 def check_files_to_load(atts):
