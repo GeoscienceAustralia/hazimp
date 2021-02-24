@@ -8,6 +8,7 @@
    exposure_longitude: LONGITUDE
 - hazard_raster:
    file_list: input/onshore/mmi_mean.flt
+   attribute_label: MMI
 - calc_struct_loss:
    replacement_value_label: REPLACEMENT_VALUE
 - aggregation:

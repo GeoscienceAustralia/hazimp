@@ -9,7 +9,7 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                               PERMUTATE_EXPOSURE, LOOKUP, MDMULT,
                               AGGREGATE_LOSS, CATEGORISE, SAVEALL,
                               SAVEPROVENANCE)
-from hazimp.templates.constants import (HAZARDRASTER, LOADWINDTCRM, VULNFILE,
+from hazimp.templates.constants import (HAZARDRASTER, VULNFILE,
                                         VULNSET,
                                         PERMUTATION, CALCSTRUCTLOSS,
                                         REP_VAL_NAME,
@@ -31,11 +31,9 @@ def _earthquake_v1_reader(config: dict) -> list:
     atts = find_attributes(config, LOADCSVEXPOSURE)
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
-    atts = find_attributes(config, [HAZARDRASTER, LOADWINDTCRM])
+    atts = find_attributes(config, HAZARDRASTER)
+    atts.setdefault('attribute_label', 'MMI')
 
-    # Hard-coded at this time for earthquake
-    # TODO: Make this configurable
-    atts['attribute_label'] = 'MMI'
     add_job(job_insts, LOADRASTER, atts)
 
     vul_filename = os.path.join(misc.RESOURCE_DIR,
