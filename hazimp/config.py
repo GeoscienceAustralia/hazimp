@@ -21,7 +21,7 @@ Functions concerning the yaml configuration file.
 
 import yaml
 
-from hazimp.templates import READERS, TEMPLATE, DEFAULT
+from hazimp.templates import READERS, DEFAULT, TEMPLATE
 
 
 def read_config_file(file_name: str) -> list:
