@@ -1,0 +1,37 @@
+# https://earthquakes.ga.gov.au/event/ga2020uwugwa
+- template: earthquake_v1
+- vulnerability_filename: domestic_eq_vul_curves.xml
+- vulnerability_set: GA_MMI_5Feb2021
+- load_exposure:
+   file_name: input/exposure.csv
+   exposure_latitude: LATITUDE
+   exposure_longitude: LONGITUDE
+- hazard_raster:
+   file_list: input/onshore/mmi_mean.flt
+   attribute_label: MMI
+- calc_struct_loss:
+   replacement_value_label: REPLACEMENT_VALUE
+- aggregation:
+   groupby: SA1_CODE
+   kwargs:
+     structural: [mean, std]
+     structural_loss: [mean, sum]
+- save_agg: output/gascoyne_agg.csv
+- categorise:
+   field_name: 'Damage state'
+   bins: [0.0, 0.02, 0.1, 0.2, 0.5, 1.0]
+   labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
+- tabulate:
+   file_name: output/damage_by_sa1code.xlsx
+   index: SA1_CODE
+   columns: Damage state
+   aggfunc: size
+- save: output/gascoyne_impact.csv
+- aggregate:
+   boundaries: input/SA1_2016_AUST.json
+   boundarycode: SA1_MAIN16
+   impactcode: SA1_CODE
+   filename: output/gascoyne_impact.json
+   categories: True
+   fields:
+      structural: [mean]

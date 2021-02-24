@@ -30,7 +30,6 @@ Test the config module.
 import os
 import tempfile
 import unittest
-from pathlib import Path
 
 from hazimp import config
 from hazimp.calcs import calcs
@@ -38,7 +37,8 @@ from hazimp.calcs.calcs import WATER_DEPTH
 from hazimp.config import instance_builder, read_config_file
 from hazimp.config_build import (_get_job_or_calc,
                                  check_1st_level_keys, file_can_open,
-                                 check_files_to_load, check_attributes, find_attributes)
+                                 check_files_to_load, check_attributes,
+                                 find_attributes)
 from hazimp.jobs import jobs
 from hazimp.jobs.jobs import LOADRASTER, SAVEALL, LoadRaster, SaveExposure
 from tests import CWD

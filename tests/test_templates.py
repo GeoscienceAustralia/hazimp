@@ -24,12 +24,20 @@ import unittest
 
 from hazimp import misc
 from hazimp.calcs.calcs import FLOOR_HEIGHT, CalcFloorInundation
-from hazimp.jobs.jobs import LOADCSVEXPOSURE, LoadCsvExposure, LoadRaster, LoadXmlVulnerability, SimpleLinker, \
-    SelectVulnFunction, LookUp, SaveExposure, SaveProvenance, CATEGORISE, PermutateExposure, MultipleDimensionMult, \
-    AggregateLoss, SaveAggregation, Categorise, Aggregate, Tabulate, Const, RandomConst, Add
-from hazimp.templates import WINDNC, READERS, VULNFILE, PERMUTATION, CALCSTRUCTLOSS, AGGREGATION, SAVE, \
-    VULNSET, HAZARDRASTER, AGGREGATE, TABULATE, SAVEAGG, WINDV5, CONT_ACTIONS, INSURE_PROB, CALCCONTLOSS, \
-    FLOODCONTENTSV2, FLOODFABRICV2, WINDV4, WINDV3
+from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LoadCsvExposure, LoadRaster,
+                              LoadXmlVulnerability, SimpleLinker,
+                              SelectVulnFunction, LookUp, SaveExposure,
+                              SaveProvenance, CATEGORISE,
+                              PermutateExposure, MultipleDimensionMult,
+                              AggregateLoss, SaveAggregation, Categorise,
+                              Aggregate, Tabulate, Const,
+                              RandomConst, Add)
+from hazimp.templates import (WINDNC, READERS, VULNFILE, PERMUTATION,
+                              CALCSTRUCTLOSS, AGGREGATION, SAVE,
+                              VULNSET, HAZARDRASTER, AGGREGATE, TABULATE,
+                              SAVEAGG, WINDV5, CALCCONTLOSS, FLOODCONTENTSV2,
+                              FLOODFABRICV2, WINDV4, WINDV3)
+from hazimp.templates.flood import CONT_ACTIONS, INSURE_PROB
 
 
 class TestTemplates(unittest.TestCase):
