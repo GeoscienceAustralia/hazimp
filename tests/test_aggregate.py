@@ -60,7 +60,8 @@ class TestAggregate(unittest.TestCase):
                         'MB_CODE11',
                         filename,
                         {'structural': ['mean']},
-                        True
+                        True,
+                        None
                     )
 
                     self.assert_file_exists(filename)
@@ -78,7 +79,8 @@ class TestAggregate(unittest.TestCase):
                 'INVALID',
                 'output.json',
                 {'structural': ['mean']},
-                True
+                True,
+                None
             )
 
         self.assertEqual(context.exception.code, 1)
@@ -93,7 +95,8 @@ class TestAggregate(unittest.TestCase):
             'MB_CODE11',
             'output.invalid',
             {'structural': ['mean']},
-            True
+            True,
+            None
         )
 
         self.assertFalse(status)
