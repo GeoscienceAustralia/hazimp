@@ -25,7 +25,8 @@ from pathlib import Path
 import pandas as pd
 from pandas._testing import assert_frame_equal
 
-from hazimp.aggregate import choropleth, aggregate_loss_atts
+from hazimp.aggregate import (choropleth, aggregate_loss_atts,
+                              aggregate_categorisation)
 from tests import CWD
 
 outputs_to_test = [
@@ -113,6 +114,72 @@ class TestAggregate(unittest.TestCase):
             aggregate_loss_atts(data_frame, 'Z')
 
         self.assertEqual(context.exception.code, 1)
+
+    def test_aggregate_categorisation_simple_label(self):
+        data_frame = pd.DataFrame({'structural_mean': [0.25]})
+
+        expected_data_frame = data_frame.copy()
+        expected_data_frame['Damage state'] = 'Extensive'
+
+        categorise = {
+            'field_name': 'Damage state',
+            'bins': [0.0, 0.02, 0.1, 0.2, 0.5, 1.0],
+            'labels': [
+                'Negligible',
+                'Slight',
+                'Moderate',
+                'Extensive',
+                'Complete'
+            ]
+        }
+
+        fields = {
+            'structural': ['mean']
+        }
+
+        aggregate_categorisation(
+            data_frame,
+            categorise,
+            fields,
+            'Damage state'
+        )
+
+        assert_frame_equal(expected_data_frame, data_frame)
+
+    def test_aggregate_categorisation_detailed_labels(self):
+        data_frame = pd.DataFrame({
+            'structural_mean': [0.1],
+            'structural_max': [0.2]
+        })
+
+        expected_data_frame = data_frame.copy()
+        expected_data_frame['Damage state (structural_mean)'] = 'Moderate'
+        expected_data_frame['Damage state (structural_max)'] = 'Extensive'
+
+        categorise = {
+            'field_name': 'Damage state',
+            'bins': [0.0, 0.02, 0.1, 0.2, 0.5, 1.0],
+            'labels': [
+                'Negligible',
+                'Slight',
+                'Moderate',
+                'Extensive',
+                'Complete'
+            ]
+        }
+
+        fields = {
+            'structural': ['mean', 'max']
+        }
+
+        aggregate_categorisation(
+            data_frame,
+            categorise,
+            fields,
+            'Damage state'
+        )
+
+        assert_frame_equal(expected_data_frame, data_frame)
 
 
 if __name__ == '__main__':
