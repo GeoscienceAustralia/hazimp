@@ -7,6 +7,7 @@ import sys
 from os.path import abspath, isdir, dirname
 
 import geopandas
+import pandas as pd
 import numpy as np
 
 LOGGER = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ COLNAMES = {'REPLACEMENT_VALUE': 'REPVAL',
 
 
 def choropleth(dframe, boundaries, impactcode, bcode, filename,
-               fields, categories) -> bool:
+               fields, categories, categorise) -> bool:
     """
     Aggregate to geospatial boundaries and save to file
 
@@ -45,6 +46,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
     damage state defined in the 'Damage state' attribute. This requires that a
     'categorise` job has been included in the pipeline, which in turn requires
     the bins and labels to be defined in the job configuration.
+    :param dict categorise: categorise job attributes
 
     NOTE:: presently, using `categories`=True will not do any categorisation of
     the mean damage index for the aggregation areas.
@@ -68,12 +70,16 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
         '_'.join(columns).rstrip('_') for columns in aggregate.columns.values
     ]
 
-    # Assumes "Damage state" is the derived attribute name.
-    if categories and ('Damage state' in dframe.columns):
-        dsg = dframe.pivot_table(index=left, columns='Damage state',
+    field_name = categorise['field_name'] if categorise else 'Damage state'
+
+    if categories and categorise:
+        aggregate_categorisation(aggregate, categorise, fields, field_name)
+
+    if categories and (field_name in dframe.columns):
+        dsg = dframe.pivot_table(index=left, columns=field_name,
                                  aggfunc='size', fill_value=0)
         aggregate = aggregate.merge(dsg, on=left).set_index(left)
-    elif categories and ('Damage state' not in dframe.columns):
+    elif categories and (field_name not in dframe.columns):
         LOGGER.warning("No categorisation will be performed")
         aggregate.set_index(left, inplace=True)
     else:
@@ -115,6 +121,37 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
         LOGGER.error("Cannot save aggregated data")
         LOGGER.error("Check fields used to link aggregation boundaries")
         return False
+
+
+def aggregate_categorisation(aggregate, categorise: dict,
+                             fields: dict, field_name: str):
+    """
+    Categorise aggregated field values into discrete intervals.
+
+    :param aggregate: `pandas.DataFrame` containing aggregated data
+    :param categorise: categorise job attributes
+    :param fields: fields to aggregate
+    :param field_name: name of categorised column
+    """
+    columns_to_aggregate = []
+
+    for (field, functions) in fields.items():
+        for func in functions:
+            column = f'{field}_{func}'
+            if column in aggregate:
+                columns_to_aggregate.append(column)
+
+    detailed_labels = len(columns_to_aggregate) > 1
+
+    for column in columns_to_aggregate:
+        label = f'{field_name} ({column})' if detailed_labels else field_name
+
+        aggregate[label] = pd.cut(
+            aggregate[column],
+            categorise['bins'],
+            right=False,
+            labels=categorise['labels']
+        ).astype('str')
 
 
 def aggregate_loss_atts(dframe, groupby=None, kwargs=None):

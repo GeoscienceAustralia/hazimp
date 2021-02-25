@@ -36,7 +36,7 @@ from hazimp.templates import (WINDNC, READERS, VULNFILE, PERMUTATION,
                               CALCSTRUCTLOSS, AGGREGATION, SAVE,
                               VULNSET, HAZARDRASTER, AGGREGATE, TABULATE,
                               SAVEAGG, WINDV5, CALCCONTLOSS, FLOODCONTENTSV2,
-                              FLOODFABRICV2, WINDV4, WINDV3)
+                              FLOODFABRICV2, WINDV4, WINDV3, EARTHQUAKEV1)
 from hazimp.templates.flood import CONT_ACTIONS, INSURE_PROB
 
 
@@ -102,7 +102,46 @@ class TestTemplates(unittest.TestCase):
             (SaveAggregation, {'file_name': 'aggregation.csv'}),
             (Categorise, {}),
             (SaveExposure, {'file_name': 'output.csv'}),
-            (Aggregate, {}),
+            (Aggregate, {'categorise': {}}),
+            (Tabulate, {}),
+            (SaveProvenance, {'file_name': 'output.xml'})
+        ])
+
+    def test_template_earthquake_v1(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            HAZARDRASTER: {},
+            VULNFILE: 'curve.xml',
+            VULNSET: 'eq',
+            PERMUTATION: {},
+            CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
+            AGGREGATION: {},
+            SAVEAGG: 'aggregation.csv',
+            CATEGORISE: {},
+            AGGREGATE: {},
+            TABULATE: {},
+            SAVE: 'output.csv'
+        }
+
+        jobs = READERS[EARTHQUAKEV1](config)
+
+        self.assertJobs(jobs, [
+            (LoadCsvExposure, {'file_name': 'exposure.csv'}),
+            (LoadRaster, {'attribute_label': 'MMI'}),
+            (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'curve.xml')}),
+            (SimpleLinker, {'vul_functions_in_exposure': {'eq': 'EQ_VULNERABILITY_FUNCTION_ID'}}),
+            (SelectVulnFunction, {'variability_method': {'eq': 'mean'}}),
+            (PermutateExposure, {}),
+            (MultipleDimensionMult, {'var1': 'structural',
+                                     'var2': 'REPLACEMENT_VALUE',
+                                     'var_out': 'structural_loss'}),
+            (AggregateLoss, {}),
+            (SaveAggregation, {'file_name': 'aggregation.csv'}),
+            (Categorise, {}),
+            (SaveExposure, {'file_name': 'output.csv'}),
+            (Aggregate, {'categorise': {}}),
             (Tabulate, {}),
             (SaveProvenance, {'file_name': 'output.xml'})
         ])

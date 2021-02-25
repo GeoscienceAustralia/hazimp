@@ -777,10 +777,10 @@ class TestJobs(unittest.TestCase):
         context.save_aggregation = mock.MagicMock()
 
         instance = JOBS[AGGREGATE]
-        instance(context, None, 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, False)
+        instance(context, None, 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, None, False)
 
         context.save_aggregation.assert_called_once_with(
-            'output.shp', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, use_parallel=False
+            'output.shp', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, None, use_parallel=False
         )
 
     def test_default_aggregate_fields(self):
@@ -788,10 +788,10 @@ class TestJobs(unittest.TestCase):
         context.save_aggregation = mock.MagicMock()
 
         instance = JOBS[AGGREGATE]
-        instance(context, 'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, None, False)
+        instance(context, 'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, None, None, False)
 
         context.save_aggregation.assert_called_once_with(
-            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {'structural': ['mean']}, use_parallel=False
+            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {'structural': ['mean']}, None, use_parallel=False
         )
 
 
