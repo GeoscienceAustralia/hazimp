@@ -46,6 +46,7 @@ from hazimp.jobs import jobs
 from hazimp import context
 from hazimp import misc
 from hazimp import parallel
+from tests import CWD
 from tests.jobs.test_vulnerability_model import build_example1
 
 prov = mock.MagicMock(name='prov.model')
@@ -569,20 +570,11 @@ class TestJobs(unittest.TestCase):
         inst(con_in, **test_kwargs)
         os.remove(f.name)
 
-        raster = array([[1, 2, -9999], [4, 5, 6]])
-        upper_left_x = 0
-        upper_left_y = 10
-        cell_size = 1
-        no_data_value = -9999
         haz_v = 'haz_v'
         inst = JOBS[LOADRASTER]
         test_kwargs = {'attribute_label': haz_v,
                        'clip_exposure2all_hazards': True,
-                       'raster': raster,
-                       'upper_left_x': upper_left_x,
-                       'upper_left_y': upper_left_y,
-                       'cell_size': cell_size,
-                       'no_data_value': no_data_value}
+                       'file_list': [str(CWD / 'data/basic_raster.aai')]}
         inst(con_in, **test_kwargs)
 
         # There should be only no exposure points

@@ -612,13 +612,9 @@ class LoadRaster(Job):
         super(LoadRaster, self).__init__()
         self.call_funct = LOADRASTER
 
-    # R0913:326: Too many arguments (9/6)
-    # pylint: disable=R0913
-    def __call__(self, context, attribute_label,
+    def __call__(self, context, attribute_label, file_list,
                  clip_exposure2all_hazards=False,
-                 file_list=None, file_format=None, variable=None,
-                 raster=None, upper_left_x=None, upper_left_y=None,
-                 cell_size=None, no_data_value=None):
+                 file_format=None, variable=None, no_data_value=None):
         """
         Load one or more files and get the value for all the
         exposure points. All files have to be of the same attribute.
@@ -628,15 +624,8 @@ class LoadRaster(Job):
         :param attribute_label: The string to be associated with this data.
         :param clip_exposure2all_hazards: True if the exposure data is
             clippped to the hazard data, so no hazard values are ignored.
-
         :param file_list: A list of files or a single file to be loaded.
-        OR
-        :param raster: A 2D numeric array of the raster values, North is up.
-        :param upper_left_x: The longitude at the upper left corner.
-        :param upper_left_y: The latitude at the upper left corner.
-        :param cell_size: The cell size.
         :param no_data_value: Values in the raster that represent no data.
-
 
         Context return:
            exposure_att: Add the file values into this dictionary.
@@ -644,63 +633,36 @@ class LoadRaster(Job):
                value: column values, except the title
         """
 
-        # We need a file or a full set of raster info.
-        if file_list is None:
-            # The raster info is being passed as an array
-            assert raster is not None
-            assert upper_left_x is not None
-            assert upper_left_y is not None
-            assert cell_size is not None
-            assert no_data_value is not None
-            a_raster = raster_module.Raster.from_array(
-                raster, upper_left_x,
-                upper_left_y,
-                cell_size,
-                no_data_value)
+        if isinstance(file_list, str):
+            file_list = [file_list]
 
-            if clip_exposure2all_hazards:
-                # Reduce the context to the hazard area
-                # before the raster info has been added to the context
-                extent = a_raster.extent()
-                context.clip_exposure(*extent)
-
-            file_data = a_raster.raster_data_at_points(
-                context.exposure_long,
-                context.exposure_lat)
-            file_data = np.where(file_data == no_data_value, np.NAN,
-                                 file_data)
-            context.exposure_att[attribute_label] = file_data
-        else:
-            if isinstance(file_list, str):
-                file_list = [file_list]
-
-            for f in file_list:
-                f = misc.download_file_from_s3_if_needed(f)
-                dt = misc.get_file_mtime(f)
-                atts = {"dcterms:title": "Source hazard data",
-                        "prov:type": "prov:Dataset",
-                        "prov:atLocation": os.path.basename(f),
-                        "prov:format": os.path.splitext(f)[1].replace('.', ''),
-                        "prov:generatedAtTime": dt, }
-                if file_format == 'nc' and variable:
-                    atts['prov:variable'] = variable
-                hazent = context.prov.entity(":Hazard data", atts)
-                context.prov.used(context.provlabel, hazent)
-
+        for f in file_list:
+            f = misc.download_file_from_s3_if_needed(f)
+            dt = misc.get_file_mtime(f)
+            atts = {"dcterms:title": "Source hazard data",
+                    "prov:type": "prov:Dataset",
+                    "prov:atLocation": os.path.basename(f),
+                    "prov:format": os.path.splitext(f)[1].replace('.', ''),
+                    "prov:generatedAtTime": dt, }
             if file_format == 'nc' and variable:
-                file_list = misc.mod_file_list(file_list, variable)
+                atts['prov:variable'] = variable
+            hazent = context.prov.entity(":Hazard data", atts)
+            context.prov.used(context.provlabel, hazent)
 
-            file_data, extent = raster_module.files_raster_data_at_points(
-                context.exposure_long,
-                context.exposure_lat, file_list)
-            file_data[file_data == no_data_value] = np.NAN
+        if file_format == 'nc' and variable:
+            file_list = misc.mod_file_list(file_list, variable)
 
-            context.exposure_att[attribute_label] = file_data
+        file_data, extent = raster_module.files_raster_data_at_points(
+            context.exposure_long,
+            context.exposure_lat, file_list)
+        file_data[file_data == no_data_value] = np.NAN
 
-            if clip_exposure2all_hazards:
-                # Clipping the exposure points after the data has been added.
-                # Not optimised for speed, but easy to implement.
-                context.clip_exposure(*extent)
+        context.exposure_att[attribute_label] = file_data
+
+        if clip_exposure2all_hazards:
+            # Clipping the exposure points after the data has been added.
+            # Not optimised for speed, but easy to implement.
+            context.clip_exposure(*extent)
 
 
 class AggregateLoss(Job):
