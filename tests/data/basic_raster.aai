@@ -1,0 +1,8 @@
+ncols 3
+nrows 2
+xllcorner +0.
+yllcorner +8.
+cellsize 1
+NODATA_value -9999
+1 2 -9999
+4 5 6

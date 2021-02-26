@@ -31,9 +31,9 @@
 Test the raster module.
 """
 
-import unittest
-import tempfile
 import os
+import tempfile
+import unittest
 
 import numpy
 from scipy import asarray, allclose, nan
@@ -179,42 +179,6 @@ class TestRaster(unittest.TestCase):
         for a_file in files:
             os.remove(a_file)
 
-    def test3_raster_data_from_array(self):
-        # A test based on this info;
-        # http://en.wikipedia.org/wiki/Esri_grid
-        # Let's hope no one edits the data....
-        raster = [[-9999, -9999, 5, 2], [-9999, 20, 100, 36],
-                  [3, 8, 35, 10], [32, 42, 50, 6],
-                  [88, 75, 27, 9], [13, 5, 1, -9999]]
-        upper_left_x = 0.
-        upper_left_y = 300.
-        cell_size = 50.0
-        no_data_value = -9999
-
-        # Just outside the midpoint of all sides
-        lon = asarray([125, 125, 125, 125, 125, 125])
-        lat = asarray([275, 225, 175, 125, 75, 25])
-
-        raster = Raster.from_array(raster, upper_left_x, upper_left_y,
-                                   cell_size, no_data_value)
-        self.assertEqual(raster.ul_x, 0)
-        self.assertEqual(raster.ul_y, 300)
-        self.assertEqual(raster.x_pixel, 50)
-        self.assertEqual(raster.y_pixel, -50)
-        self.assertEqual(raster.x_size, 4)
-        self.assertEqual(raster.y_size, 6)
-
-        data = raster.raster_data_at_points(lon, lat)
-        self.assertTrue(allclose(data, asarray([5.0, 100.0, 35.0,
-                                                50.0, 27.0, 1.0])))
-
-        # testing extent
-        min_long, min_lat, max_long, max_lat = raster.extent()
-        self.assertEqual(min_long, 0)
-        self.assertEqual(min_lat, 0)
-        self.assertEqual(max_long, 200)
-        self.assertEqual(max_lat, 300)
-
     def test3_recalc_max(self):
         max_extent = (0, 0, 0, 0)
         extent = [-10, -20, 20, 40]
@@ -232,7 +196,6 @@ class TestRaster(unittest.TestCase):
         self.assertEqual(old_max_extent, max_extent)
 
 
-# -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestRaster, 'test')
     Runner = unittest.TextTestRunner()
