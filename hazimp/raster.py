@@ -44,9 +44,7 @@ class Raster(object):
                  x_pixel, y_pixel, no_data_value, x_size, y_size):
         """
 
-        :param filename: A 2D numeric array of the raster values, North is up.
-                       The values are listed in 'English reading order' i.e.
-                       left-right and top-down.
+        :param filename: The raster file path string.
         :param upper_left_x: The longitude at the upper left corner of the
                              top left pixel.
         :param upper_left_y: The latitude at the upper left corner of the
