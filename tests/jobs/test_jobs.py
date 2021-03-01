@@ -772,7 +772,7 @@ class TestJobs(unittest.TestCase):
         instance(context, None, 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, False)
 
         context.save_aggregation.assert_called_once_with(
-            'output.shp', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, use_parallel=False
+            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, use_parallel=False
         )
 
     def test_default_aggregate_fields(self):
