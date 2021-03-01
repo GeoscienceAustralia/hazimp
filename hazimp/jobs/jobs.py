@@ -735,7 +735,7 @@ class Aggregate(Job):
                  fields=None, use_parallel=True):
         # Default filename to use when no output filename is specified
         if filename is None:
-            filename = 'output.shp'
+            filename = 'output.json'
 
         # Defaults fields to use when none are provided to maintain
         # backwards compatibility
