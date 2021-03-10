@@ -60,8 +60,9 @@ EX_LONG = 'exposure_longitude'
 class Context(object):
 
     """
-    Context is a singlton storing all
-    of the run specific data.
+    Context is a singleton storing all of the run specific data, such as the
+    exposure features and their attributes, vulnerability sets, aggregations,
+    pivot tables, etc.
     """
 
     def __init__(self):
@@ -107,8 +108,11 @@ class Context(object):
         # function ID's.
         self.vul_function_titles = {}
 
+        # Instantiate the `pivot` attribute to None initially
+        self.pivot = None
+
         # A `prov.ProvDocument` to manage provenance information, including
-        # adding required namespaces
+        # adding required namespaces (TODO: are these all required?)
         self.prov = ProvDocument()
         self.prov.set_default_namespace("")
         self.prov.add_namespace('prov', 'http://www.w3.org/ns/prov#')
@@ -124,6 +128,8 @@ class Context(object):
                          "prov:Revision": commit,
                          "prov:branch": branch,
                          "prov:date": dt})
+
+        # Not sure this needs to be the user?
         self.prov.agent(f":{getpass.getuser()}",
                         {"prov:type": "foaf:Person"})
         self.prov.actedOnBehalfOf(":hazimp", f":{getpass.getuser()}")
@@ -132,6 +138,9 @@ class Context(object):
     def set_prov_label(self, label, title="HazImp analysis"):
         """
         Set the qualified label for the provenance data
+
+        :param label: the qualified label name
+        :param title: Optional value for the dcterms:title element
         """
 
         self.provlabel = f":{label}"
@@ -273,7 +282,7 @@ class Context(object):
             return write_dict
 
     def save_aggregation(self, filename, boundaries, impactcode,
-                         boundarycode, categories, use_parallel=True):
+                         boundarycode, categories, fields, use_parallel=True):
         """
         Save data aggregated to geospatial regions
 
@@ -292,9 +301,11 @@ class Context(object):
                 "prov:atLocation": os.path.basename(boundaries),
                 "prov:generatedAtTime": misc.get_file_mtime(boundaries),
                 "void:boundary_code": boundarycode}
+
         bdyent = self.prov.entity(":Aggregation boundaries", atts)
         aggact = self.prov.activity(":AggregationByRegions", dt, None,
-                                    {'prov:type': "Spatial aggregation"})
+                                    {'prov:type': "Spatial aggregation",
+                                     'void:functions': repr(fields)})
         aggatts = {"prov:type": "void:Dataset",
                    "prov:atLocation": os.path.basename(filename),
                    "prov:generatedAtTime": dt}
@@ -304,7 +315,7 @@ class Context(object):
         self.prov.wasGeneratedBy(aggfileent, aggact)
         if parallel.STATE.rank == 0 or not use_parallel:
             aggregate.choropleth(write_dict, boundaries, impactcode,
-                                 boundarycode, filename, categories)
+                                 boundarycode, filename, fields, categories)
             misc.upload_to_s3_if_applicable(filename, bucket_name, bucket_key)
             if (bucket_name is not None and
                     bucket_key is not None and
@@ -323,8 +334,6 @@ class Context(object):
                 misc.upload_to_s3_if_applicable(rootname + '.cpg',
                                                 bucket_name,
                                                 base_bucket_key + '.cpg', True)
-        else:
-            pass
 
     def aggregate_loss(self, groupby=None, kwargs=None):
         """
@@ -341,7 +350,7 @@ class Context(object):
         For example::
 
         kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
-                'structural_loss_ratio': ['mean', 'std']}
+                'structural': ['mean', 'std']}
 
 
         See
@@ -406,6 +415,19 @@ class Context(object):
             (inferred from the function objects themselves)
             If dict is passed, the key is column to aggregate and value
             is function or list of functions.
+
+        Example:
+
+        Include the following in the configuration file:
+         - tabulate:
+            file_name: wind_impact_table.xlsx
+            index: MESHBLOCK_CODE_2011
+            columns: Damage state
+            aggfunc: size
+
+        This will produce a file called "wind_impact_table.xlsx", with the
+        count of buildings in each "Damage state", grouped by the `index` field
+        `MESHBLOCK_CODE_2011`
         """
         if index not in self.exposure_att.columns:
             LOGGER.error(f"Cannot tabulate data using {index} as index")
@@ -434,6 +456,12 @@ class Context(object):
                                                    columns=columns,
                                                    aggfunc=aggfunc,
                                                    fill_value=0)
+
+        # Add a row that sums the columns, then another to record the
+        # percentage in each column:
+        self.pivot.loc['Total', :] = self.pivot.sum(axis=0).values
+        self.pivot.loc['Percent', :] = 100. * self.pivot.loc['Total'].values\
+            / self.pivot.loc['Total'].sum()
         try:
             self.pivot.to_excel(file_name)
         except TypeError as te:
@@ -518,8 +546,4 @@ def save_csv_agg(write_dict, filename):
         LOGGER.warning(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
 
-    try:
-        write_dict.to_csv(filename, index_label='FID')
-    except FileNotFoundError:
-        LOGGER.error(f"Cannot write to {filename}")
-        sys.exit(1)
+    write_dict.to_csv(filename, index_label='FID')

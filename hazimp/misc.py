@@ -246,45 +246,13 @@ def permutate_att_values(dframe, fields, groupby=None):
                 newdf.groupby(groupby)[field].transform(permutation)
     elif groupby and groupby not in dframe.columns:
         LOGGER.error(f"Cannot use {groupby} for permuting exposure attributes")
-        LOGGER.error("The input expsoure data does not include that field")
+        LOGGER.error("The input exposure data does not include that field")
         sys.exit()
     else:
         for field in fields:
             newdf[field] = newdf[field].transform(permutation)
 
     return newdf
-
-
-def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
-    """
-    Aggregate the impact data contained in a `pandas.DataFrame`
-
-    :param dframe: `pandas.DataFrame` that contains impact data
-    :param str groupby: A column in the `DataFrame` that corresponds to
-    regions by which to aggregate data
-    :param dict kwargs: A `dict` with keys of valid column names (from the
-    `DataFrame`) and values being lists of aggregation functions to apply
-    to the columns.
-
-    For example::
-
-    kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
-              'structural_loss_ratio': ['mean', 'std']}
-
-    See
-    https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
-    for more guidance on using aggregation with `DataFrames`
-
-    :returns: A `pandas.GroupBy` object.
-
-    """
-    grouped = dframe.groupby(groupby, as_index=False)
-
-    outdf = grouped.agg(kwargs)
-    outdf.columns = ['_'.join(col).strip() for col in outdf.columns.values]
-    outdf.reset_index(col_level=1)
-    outdf.columns = outdf.columns.get_level_values(0)
-    return outdf
 
 
 def get_file_mtime(file):

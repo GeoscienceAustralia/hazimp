@@ -1,23 +1,21 @@
 <?xml version='1.0' encoding='utf-8'?>
-<nrml xmlns="http://openquake.org/xmlns/nrml/0.4"
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.5"
       xmlns:gml="http://www.opengis.net/gml">
 
-    <vulnerabilityModel>
-        <config/>
+    <vulnerabilityModel id="made_up_2012" assetCategory="buildings" lossCategory="structural">
+        <description>Made up vulnerability curves</description>
 
-        <discreteVulnerabilitySet vulnerabilitySetID="made_up_2012" 
-assetCategory="" lossCategory="structural_loss_ratio" >
- <IML IMT="strong_wind" > 10.0 100.0 </IML>
-<discreteVulnerability vulnerabilityFunctionID="dw1" Alpha="0.1" Beta="4.0" probabilisticDistribution="LN">
-<lossRatio>0 1 </lossRatio>
-<coefficientsVariation>0 0</coefficientsVariation>
-</discreteVulnerability>
+        <vulnerabilityFunction id="dw1" dist="LN">
+            <imls imt="0.2s gust at 10m height m/s">10.0 100.0</imls>
+            <meanLRs>0 1</meanLRs>
+            <covLRs>0 0</covLRs>
+        </vulnerabilityFunction>
 
-<discreteVulnerability vulnerabilityFunctionID="dw2" Alpha="0.1" Beta="4.0" probabilisticDistribution="LN">
-<lossRatio>0 .9</lossRatio>
-<coefficientsVariation>0 0</coefficientsVariation>
-</discreteVulnerability>
+        <vulnerabilityFunction id="dw2" dist="LN">
+            <imls imt="0.2s gust at 10m height m/s">10.0 100.0</imls>
+            <meanLRs>0 .9</meanLRs>
+            <covLRs>0 0</covLRs>
+        </vulnerabilityFunction>
 
-</discreteVulnerabilitySet>
-</vulnerabilityModel>
+    </vulnerabilityModel>
 </nrml>

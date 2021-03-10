@@ -3,7 +3,6 @@
       xmlns:gml="http://www.opengis.net/gml">
 
     <vulnerabilityModel>
-        <config/>
 
         <discreteVulnerabilitySet vulnerabilitySetID="structural_domestic_wind_2012" 
 assetCategory="" lossCategory="contents_loss_ratio" >

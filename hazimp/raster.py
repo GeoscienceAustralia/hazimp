@@ -16,12 +16,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Manipulate raster data
+Manipulate raster data.
 """
+import threading
+from concurrent.futures.thread import ThreadPoolExecutor
 
-import numpy
 import gdal
-from gdalconst import GA_ReadOnly, GDT_Float32
+import numpy
+from gdalconst import GA_ReadOnly
 
 
 class Raster(object):
@@ -38,13 +40,11 @@ class Raster(object):
     # R0913: 34:Raster.__init__: Too many arguments (9/6)
     # pylint: disable=R0902, R0913
 
-    def __init__(self, raster, upper_left_x, upper_left_y,
+    def __init__(self, filename, upper_left_x, upper_left_y,
                  x_pixel, y_pixel, no_data_value, x_size, y_size):
         """
 
-        :param raster: A 2D numeric array of the raster values, North is up.
-                       The values are listed in 'English reading order' i.e.
-                       left-right and top-down.
+        :param filename: The raster file path string.
         :param upper_left_x: The longitude at the upper left corner of the
                              top left pixel.
         :param upper_left_y: The latitude at the upper left corner of the
@@ -57,7 +57,7 @@ class Raster(object):
         :param y_size: Number of rows.
         :param no_data_value: Values in the raster that represent no data.
         """
-        self.raster = raster
+        self.filename = filename
         self.ul_x = upper_left_x
         self.ul_y = upper_left_y
         self.x_pixel = x_pixel
@@ -65,7 +65,6 @@ class Raster(object):
         self.no_data_value = no_data_value
         self.x_size = x_size
         self.y_size = y_size
-        self.raster[self.raster == self.no_data_value] = numpy.NAN
 
     @classmethod
     def from_file(cls, filename):
@@ -73,7 +72,7 @@ class Raster(object):
         Load a file in a raster file format known to GDAL.
         Note, image must be 'North up'.
 
-        :param filename: The csv file path string.
+        :param filename: The raster file path string.
         :returns: A Raster instance.
         """
 
@@ -94,40 +93,9 @@ class Raster(object):
         y_size = dataset.RasterYSize  # This will be a negative value.
         band = dataset.GetRasterBand(1)
         no_data_value = band.GetNoDataValue()
-        raster = band.ReadAsArray(0, 0, x_size, y_size, buf_type=GDT_Float32)
-        instance = cls(raster, upper_left_x, upper_left_y,
+        instance = cls(filename, upper_left_x, upper_left_y,
                        x_pixel, y_pixel, no_data_value, x_size, y_size)
-        return instance
 
-    @classmethod
-    def from_array(cls, raster, upper_left_x, upper_left_y,
-                   cell_size, no_data_value, dtype='float'):
-        """
-        Convert numeric array of raster data and info to a raster instance.
-        The values are listed in 'English reading order' i.e.
-        left-right and top-down.
-
-        :param raster: A 2D numeric array of the raster values, North is up.
-        :param upper_left_x: The longitude at the upper left corner.
-        :param upper_left_y: The latitude at the upper left corner.
-        :param cell_size: The cell size.
-        :param no_data_value: Values in the raster that represent no data.
-        :param dtype: Data type for the raster values (default float).
-        :returns: A Raster instance
-        """
-        raster = numpy.array(raster, dtype=dtype, copy=False)
-        if not len(raster.shape) == 2:
-            msg = ('Bad Raster shape %s' % (str(raster.shape)))
-            raise TypeError(msg)
-
-        x_size = raster.shape[1]
-        y_size = raster.shape[0]
-
-        x_pixel = cell_size
-        y_pixel = -cell_size
-
-        instance = cls(raster, upper_left_x, upper_left_y,
-                       x_pixel, y_pixel, no_data_value, x_size, y_size)
         return instance
 
     def raster_data_at_points(self, lon, lat):
@@ -163,11 +131,25 @@ class Raster(object):
             raw_row_offset = (lat - self.ul_y) / self.y_pixel
             row_offset = numpy.trunc(raw_row_offset).astype(int)
 
-            values[good_indexes] = self.raster[row_offset[good_indexes],
-                                               col_offset[good_indexes]]
-            # Change NODATA_value to NAN
-            values = numpy.where(values == self.no_data_value, numpy.NAN,
-                                 values)
+            data = threading.local()
+
+            def read_cell(i, x, y):
+                if 'band' not in data.__dict__:
+                    data.dataset = gdal.Open(self.filename, GA_ReadOnly)
+                    data.band = data.dataset.GetRasterBand(1)
+
+                values[i] = data.band.ReadAsArray(x, y, 1, 1)[0]
+
+            with ThreadPoolExecutor() as executor:
+                for index in good_indexes:
+                    executor.submit(read_cell, index,
+                                    col_offset[index].item(),
+                                    row_offset[index].item())
+
+        # Change NODATA_value to NAN
+        values = numpy.where(values == self.no_data_value, numpy.NAN,
+                             values)
+
         return values
 
     def extent(self):

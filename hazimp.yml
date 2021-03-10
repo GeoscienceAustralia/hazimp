@@ -4,23 +4,24 @@ channels:
   - defaults
 dependencies:
   - python=3.6
-  - nose
-  - coverage
-  - pytz
-  - prov
-  - pydot
-  - gdal
-  - libgdal
-  - pyyaml
-  - geopandas
-  - pandas
-  - scipy
-  - xlrd
-  - gitpython
-  - botocore
-  - boto3
-  - moto
-  - pycodestyle
-  - mscorefonts
+  - boto3=1.14.18
+  - botocore=1.17.41
+  - coverage=5.4
+  - gdal=3.0.2
+  - geopandas=0.8.1
+  - gitpython=3.1.3
+  - libgdal=3.0.2
+  - lxml=4.6.2
+  - moto=1.3.14
+  - mscorefonts=0.0.1
+  - nose=1.3.7
+  - openpyxl=3.0.6
+  - pandas=1.1.0
+  - prov=1.5.3
+  - pycodestyle=2.6.0
+  - pydot=1.4.1
+  - pytz=2019.3
+  - pyyaml=5.1.2
+  - scipy=1.3.1
+  - xlrd=2.0.1
 prefix: ./envs/hazimp
-

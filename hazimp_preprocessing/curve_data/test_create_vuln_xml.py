@@ -61,25 +61,28 @@ class TestCreateVulnXML(unittest.TestCase):
         # pylint: disable=R0801
         f = tempfile.NamedTemporaryFile(suffix='.csv',
                                         prefix='test_creazte_vuln_xml',
-                                        delete=False)
+                                        delete=False,
+                                        mode='w')
+
         f.write('vulnerabilityFunctionID, vulnerabilitySetID, assetCategory,')
         f.write(' lossCategory, Alpha, Beta, IMT, IML, 17, 20\r\n')
         f.write('dw1, d2012, , structural, 0.1, 0.01,')
-        f.write(' gust, 17, 0.01, 0.1 \r\n')
+        f.write(' 0.2s gust at 10m height m/s, 17, 0.01, 0.1 \r\n')
         f.write('dw2, d2012, , structural, 0.2, 0.02,')
-        f.write(' gust, 20, 0.02, 0.2 \r\n')
-        f.close
+        f.write(' 0.2s gust at 10m height m/s, 20, 0.02, 0.2 \r\n')
+        f.close()
         csv_name = f.name
         f = tempfile.NamedTemporaryFile(suffix='.xml',
                                         prefix='test_create_vuln_xml',
-                                        delete=False)
+                                        delete=False,
+                                        mode='w')
         xml_name = f.name
         create_vuln_xml.csv_curve2nrml(csv_name, xml_name)
-        vuln_sets = vuln_sets_from_xml_file(xml_name)
+        vuln_sets = vuln_sets_from_xml_file([xml_name])
 
         self.assertTrue(allclose(vuln_sets["d2012"].intensity_measure_level,
                                  asarray([17, 20])))
-        self.assertEqual(vuln_sets["d2012"].intensity_measure_type, "gust")
+        self.assertEqual("0.2s gust at 10m height m/s", vuln_sets["d2012"].intensity_measure_type)
         self.assertEqual(vuln_sets["d2012"].vulnerability_set_id, "d2012")
         self.assertEqual(vuln_sets["d2012"].asset_category, "")
         self.assertEqual(vuln_sets["d2012"].loss_category, "structural")
@@ -95,6 +98,8 @@ class TestCreateVulnXML(unittest.TestCase):
                                      loss_rs[key]))
             self.assertTrue(allclose(vul_funct.coefficient_of_variation,
                                      covs[key]))
+
+        f.close()
 
         os.remove(csv_name)
         os.remove(xml_name)
@@ -142,13 +147,13 @@ class TestCreateVulnXML(unittest.TestCase):
         create_vuln_xml.excel_curve2nrml(contents_filename, fabric_filename,
                                          excel_file)
         # load in the xml file to see if it's ok.
-        vuln_sets = vuln_sets_from_xml_file(contents_filename)
+        vuln_sets = vuln_sets_from_xml_file([contents_filename])
 
         skey = create_vuln_xml.FLOOD_HOUSE_CONTENTS
         self.assertTrue(allclose(vuln_sets[skey].intensity_measure_level,
                                  asarray([0, 1])))
-        self.assertEqual(vuln_sets[skey].intensity_measure_type,
-                         "water depth m")
+        self.assertEqual("water depth above ground floor (m)",
+                         vuln_sets[skey].intensity_measure_type)
         self.assertEqual(vuln_sets[skey].vulnerability_set_id, skey)
         self.assertEqual(vuln_sets[skey].asset_category, "")
         self.assertEqual(vuln_sets[skey].loss_category,
@@ -176,13 +181,13 @@ class TestCreateVulnXML(unittest.TestCase):
             self.assertTrue(allclose(vul_funct.coefficient_of_variation,
                                      array([0., 0.])))
 
-        vuln_sets = vuln_sets_from_xml_file(fabric_filename)
+        vuln_sets = vuln_sets_from_xml_file([fabric_filename])
 
         skey = create_vuln_xml.FLOOD_HOUSE_FABRIC
         self.assertTrue(allclose(vuln_sets[skey].intensity_measure_level,
                                  asarray([0, 1])))
-        self.assertEqual(vuln_sets[skey].intensity_measure_type,
-                         "water depth m")
+        self.assertEqual("water depth above ground floor (m)",
+                         vuln_sets[skey].intensity_measure_type)
         self.assertEqual(vuln_sets[skey].vulnerability_set_id, skey)
         self.assertEqual(vuln_sets[skey].asset_category, "")
         self.assertEqual(vuln_sets[skey].loss_category,

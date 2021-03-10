@@ -177,6 +177,7 @@ def main(input_file, res, fmt, output_path=None):
 
     fig, ax = plt.subplots(figsize=figsize)
     sns.set_context(context, font_scale=1.)
+
     sns.countplot(x='Damage state', data=df, order=labels, palette=dmgpal)
     ax.set_ylabel("Number")
     plt.savefig(pjoin(output_path, f"{event_num}_damage_state.{fmt}"),

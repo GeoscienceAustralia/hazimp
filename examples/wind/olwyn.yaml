@@ -6,20 +6,25 @@
    file_name: WA_Wind_Exposure_2013_Test_only.csv
    exposure_latitude: LATITUDE
    exposure_longitude: LONGITUDE
-- load_wind: 
+- hazard_raster:
    file_list: olwyn.tif
 - calc_struct_loss:
    replacement_value_label: REPLACEMENT_VALUE
 - aggregation:
    groupby: MESHBLOCK_CODE_2011
    kwargs: 
-     structural_loss_ratio: [mean, std]
+     structural: [mean, std]
      structural_loss: [mean, sum]
 - save_agg: olwyn_agg.csv
 - categorise:
    field_name: 'Damage state'
    bins: [0.0, 0.02, 0.1, 0.2, 0.5, 1.0]
    labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
+- tabulate:
+   file_name: olwyn_dmg_by_age.xlsx
+   index: YEAR_BUILT
+   columns: Damage state
+   aggfunc: size
 - save: olwyn_impact.csv
 - aggregate:
    boundaries: northwestcape_meshblocks.geojson
@@ -27,5 +32,5 @@
    impactcode: MESHBLOCK_CODE_2011
    filename: olwyn_impact.shp
    categories: True
-
-
+   fields:
+      structural: [mean]

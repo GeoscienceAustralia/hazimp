@@ -1,14 +1,13 @@
 """
 Aggregating impact data into a chloropleth map.
 """
-import os
-from os.path import abspath, isdir, dirname
-import sys
 import logging
-
-import numpy as np
+import os
+import sys
+from os.path import abspath, isdir, dirname
 
 import geopandas
+import numpy as np
 
 LOGGER = logging.getLogger(__name__)
 
@@ -20,13 +19,16 @@ DRIVERS = {'shp': 'ESRI Shapefile',
            'geojson': 'GeoJSON',
            'gpkg': 'GPKG'}
 
+# These are replacement names for use when writing ESRI shape files that have a
+# limited length for the attribute name.
+# TODO: Labels for other hazard measures, damage measures, etc.
 COLNAMES = {'REPLACEMENT_VALUE': 'REPVAL',
-            'structural_loss_ratio': 'slr_mean',
             '0.2s gust at 10m height m/s': 'maxwind',
             'Damage state': 'dmgstate'}
 
 
-def choropleth(dframe, boundaries, impactcode, bcode, filename, categories):
+def choropleth(dframe, boundaries, impactcode, bcode, filename,
+               fields, categories) -> bool:
     """
     Aggregate to geospatial boundaries and save to file
 
@@ -46,24 +48,33 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename, categories):
 
     NOTE:: presently, using `categories`=True will not do any categorisation of
     the mean damage index for the aggregation areas.
+    :param dict fields: A `dict` with keys of valid column names (from the
+    `DataFrame`) and values being lists of aggregation functions to apply
+    to the columns.
 
+    For example::
+
+    fields = {'structural': ['mean']}
+
+    See
+    https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
+    for more guidance on using aggregation with `DataFrames`
     """
 
     left, right = impactcode, bcode
 
-    # TODO: Consider what fields are essential and what can be
-    # removed.
-    # TODO: Change to a function argument and configuration option
-    report = {'structural_loss_ratio': 'mean'}
+    aggregate = dframe.groupby(left).agg(fields).reset_index()
+    aggregate.columns = [
+        '_'.join(columns).rstrip('_') for columns in aggregate.columns.values
+    ]
 
-    aggregate = dframe.groupby(left).agg(report).reset_index()
-
+    # Assumes "Damage state" is the derived attribute name.
     if categories and ('Damage state' in dframe.columns):
         dsg = dframe.pivot_table(index=left, columns='Damage state',
                                  aggfunc='size', fill_value=0)
         aggregate = aggregate.merge(dsg, on=left).set_index(left)
     elif categories and ('Damage state' not in dframe.columns):
-        LOGGER.warn("No categorisation will be performed")
+        LOGGER.warning("No categorisation will be performed")
         aggregate.set_index(left, inplace=True)
     else:
         aggregate.set_index(left, inplace=True)
@@ -87,7 +98,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename, categories):
     except KeyError:
         LOGGER.error(f"Unknown output extension: {fileext}")
         LOGGER.error("No aggregation will be saved")
-        return
+        return False
 
     if driver == 'ESRI Shapefile':
         LOGGER.info("ESRI shape file output - changing field names")
@@ -99,9 +110,11 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename, categories):
         os.makedirs(directory)
     try:
         result.to_file(filename, driver=driver)
+        return True
     except ValueError:
         LOGGER.error("Cannot save aggregated data")
         LOGGER.error("Check fields used to link aggregation boundaries")
+        return False
 
 
 def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
@@ -118,7 +131,7 @@ def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
     For example::
 
     kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
-              'structural_loss_ratio': ['mean', 'std']}
+              'structural': ['mean', 'std']}
 
     See
     https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
