@@ -17,10 +17,12 @@ hazard information. It is command line based and can be executed in parallel.
    Installation <docs/install>
    Vulnerability <docs/vulnerability>
    Templates <docs/templates>
+   Aggregation <docs/aggregate>
    Categorise <docs/categorise>
    Tabulate <docs/templates>
    Function documentation <docs/code>
    Contributing <docs/contributing>
+   History <docs/history>
   
 .. code
    

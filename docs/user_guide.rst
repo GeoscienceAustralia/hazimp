@@ -23,12 +23,12 @@ Quick how-to
 ------------
 Follow the install notes in the README.md file.
 
-A configuration file can be used to define a HazImp simulation.  The
+A configuration file can be used to define a HazImp simulation. The
 configuration file is described using yaml, a data serialisation
-format.  HazImp can also be used by another Python application, by
+format. HazImp can also be used by another Python application, by
 passing the configuration infomation in as a dictionary. 
 
-For example, to run a wind example do;::
+For example, to run a wind example do::
 
      cd examples/wind
      python ../../hazimp/main.py  -c wind_v5.yaml
@@ -36,16 +36,16 @@ For example, to run a wind example do;::
 
 The -c specifies the configuration file.
 
-HazImp can also be ran in parallel, using mpirun.  For example;::
+HazImp can also be ran in parallel, using mpirun. For example::
 
      mpirun -np 4 python ../../hazimp/main.py  -c wind_v5.yaml
  
 
 There are a suite of HazImp tests to test the install and code during
-software developemnt.  To run these, in the root HazImp directory
+software developemnt. To run these, in the root HazImp directory
 do;::
 
-    ./all_tests     
+    ./all_tests
 
 
 
@@ -57,9 +57,9 @@ a wind template and a flood template. Templates take into account internal
 vulnerability curves and the data flow needed to produce loss information,
 simplifying the configuration file.
 
-NOTE:: The order of key/value pairs in the sample configuration files is 
-important. The code will raise a `RuntimeError` if the order is incorrect.
-
+.. NOTE::
+   The order of key/value pairs in the sample configuration files is important.
+   The code will raise a `RuntimeError` if the order is incorrect.
 
 
 Wind Template
@@ -69,7 +69,9 @@ Given gust information from TCRM and point exposure data the loss
 associated with each site is calculated using the wind template.  
 
 Here is the example wind configuration file (from examples/wind),
-which uses the wind template.::
+which uses the wind template.
+
+.. code-block:: yaml
 
      #  python hazimp.py -c wind_nc.yaml
       - template: wind_nc
@@ -99,7 +101,7 @@ The rest of the file can be understood by the following key value pairs;
     The type of template to use.  This example describes the *wind_nc* template.
 
 *load_exposure*
-    This loads the exposure data. It has 3 sub-sections::
+    This loads the exposure data. It has 3 sub-sections:
 
     *file_name*
         The name of the csv exposure file to load. The first row of the csv
@@ -265,7 +267,7 @@ Without Templates
 Vulnerability functions
 -----------------------
 
-See the :ref:`Preparing vulnerability curves` section for guidance on
+See the :ref:`Preparing vulnerability curves`_ section for guidance on
 preparing vulnerability functions for use in HazImp.
 
 
@@ -273,7 +275,9 @@ Provenance tracking
 -------------------
 
 The provenance of information used in generating an impact analysis is tracked
-using the :ref:`prov` module. 
+using the Prov_ module. 
 
 Contributions to the code base should incorporate appropriate provenance
 statements to ensure consistency.
+
+.._Prov: https://prov.readthedocs.io/en/latest/
