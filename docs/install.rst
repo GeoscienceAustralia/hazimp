@@ -10,13 +10,13 @@ You can either download a zip file containing
 the HazImp code, or clone the repository (if you have `git`
 installed) as follows:
 
-Using ssh:: 
+Using ssh:
 
 .. code-block:: bash
 
   git clone git@github.com:GeoscienceAustralia/hazimp.git
 
-Using HTTPS::
+Using HTTPS:
 
 .. code-block:: bash
 
@@ -43,7 +43,9 @@ set of compatible packages. conda_ is available for Linux, MacOS and Windows
 environments. 
 
 Once you have installed miniconda_, create a new environment with a command such
-as::
+as:
+
+.. code-block:: bash
 
   conda create -f hazimp.yml 
 
@@ -68,7 +70,7 @@ in `hazimp.yml`.
 System python install
 ^^^^^^^^^^^^^^^^^^^^^
 
-On Ubuntu systems, the following requires system administrator privileges.::
+On Ubuntu systems, the following requires system administrator privileges.
 
 .. code-block:: bash
 
@@ -80,7 +82,7 @@ On Ubuntu systems, the following requires system administrator privileges.::
 Install HazImp
 --------------
 
-Install HazImp into your python environment::
+Install HazImp into your python environment:
 
 .. code-block:: bash
 
@@ -88,9 +90,10 @@ Install HazImp into your python environment::
 
 Or, if you are interested in modifying HazImp, the following alternative
 install command will instead provide your python environment with links to
-the location where you have downloaded the HazImp source::
+the location where you have downloaded the HazImp source:
 
 .. code-block:: bash
+
   python setup.py develop
 
 Please read the `Contributing code`_ notes if you wish to modify HazImp. 
