@@ -150,7 +150,7 @@ def csv_curve2nrml(csv_filename, xml_filename):
             for iml in imls:
                 if numpy.isnan(iml):
                     continue
-                loss_ratio += str(row[str(iml)]) + ' '
+                loss_ratio += str(row[str(int(iml))]) + ' '
                 coef_var += '0 '
             write_nrml_curve(xml_h, row['vulnerabilityFunctionID'], imls, csv_dict['IMT'][0],
                              loss_ratio, coef_var)
@@ -349,9 +349,9 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
 
 # -----------------------------------------------------------
 if __name__ == "__main__":
-    if False:
-        csv_curve2nrml('domestic_wind_vul_curves.csv',
-                       'domestic_wind_vul_curves.xml')
+    if True:
+        csv_curve2nrml('domestic_wind_vul_curves_2021.csv',
+                       'domestic_wind_vul_curves_2021.xml')
     if False:
         csv_curve2nrml('synthetic_domestic_wind_vul_curves.csv',
                        'synthetic_domestic_wind_vul_curves.xml')

@@ -1,7 +1,7 @@
 #  python ../hazimp/hazimp/main.py -c olwyn_hazimp.yaml 
 - template: wind_nc
-- vulnerability_filename: synthetic_domestic_wind_vul_curves.xml
-- vulnerability_set: domestic_wind_2012
+- vulnerability_filename: domestic_wind_vul_curves_2021.xml
+- vulnerability_set: domestic_wind_2021
 - load_exposure:
    file_name: WA_Wind_Exposure_2013_Test_only.csv
    exposure_latitude: LATITUDE
