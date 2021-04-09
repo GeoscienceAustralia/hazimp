@@ -735,20 +735,26 @@ class Aggregate(Job):
                  fields=None, use_parallel=True):
         # Default filename to use when no output filename is specified
         if filename is None:
-            filename = 'output.json'
+            filename = ['output.json']
+
+        # Ensure filename is a list - maintains backwards compatibility with
+        # earlier versions that only supported a single output filename/type
+        if isinstance(filename, str):
+            filename = [filename]
 
         # Defaults fields to use when none are provided to maintain
         # backwards compatibility
         if fields is None:
             fields = {'structural': ['mean']}
 
-        context.save_aggregation(filename,
-                                 boundaries,
-                                 impactcode,
-                                 boundarycode,
-                                 categories,
-                                 fields,
-                                 use_parallel=use_parallel)
+        for file in filename:
+            context.save_aggregation(file,
+                                     boundaries,
+                                     impactcode,
+                                     boundarycode,
+                                     categories,
+                                     fields,
+                                     use_parallel=use_parallel)
 
 
 class Tabulate(Job):
