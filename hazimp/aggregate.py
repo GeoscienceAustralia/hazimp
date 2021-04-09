@@ -23,6 +23,7 @@ DRIVERS = {'shp': 'ESRI Shapefile',
 # limited length for the attribute name.
 # TODO: Labels for other hazard measures, damage measures, etc.
 COLNAMES = {'REPLACEMENT_VALUE': 'REPVAL',
+            'structural_mean': 'slr_mean',
             '0.2s gust at 10m height m/s': 'maxwind',
             'Damage state': 'dmgstate'}
 
