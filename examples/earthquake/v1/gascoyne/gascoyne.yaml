@@ -31,7 +31,7 @@
    boundaries: input/SA1_2016_AUST.json
    boundarycode: SA1_MAIN16
    impactcode: SA1_CODE
-   filename: output/gascoyne_impact.json
+   filename: [output/gascoyne_impact.json, output/gascoyne_impact.shp]
    categories: True
    fields:
       structural: [mean]
