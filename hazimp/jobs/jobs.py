@@ -659,7 +659,6 @@ class LoadRaster(Job):
 
         context.exposure_att[attribute_label] = file_data
 
-
         if clip_exposure2all_hazards:
             # Clipping the exposure points after the data has been added.
             # Not optimised for speed, but easy to implement.
