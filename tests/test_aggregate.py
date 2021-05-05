@@ -25,7 +25,8 @@ from pathlib import Path
 import pandas as pd
 from pandas._testing import assert_frame_equal
 
-from hazimp.aggregate import choropleth, aggregate_loss_atts
+from hazimp.aggregate import (choropleth, aggregate_loss_atts,
+                              aggregate_categorisation, COLNAMES)
 from tests import CWD
 
 outputs_to_test = [
@@ -60,7 +61,8 @@ class TestAggregate(unittest.TestCase):
                         'MB_CODE11',
                         filename,
                         {'structural': ['mean']},
-                        True
+                        True,
+                        None
                     )
 
                     self.assert_file_exists(filename)
@@ -78,7 +80,8 @@ class TestAggregate(unittest.TestCase):
                 'INVALID',
                 'output.json',
                 {'structural': ['mean']},
-                True
+                True,
+                None
             )
 
         self.assertEqual(context.exception.code, 1)
@@ -93,7 +96,8 @@ class TestAggregate(unittest.TestCase):
             'MB_CODE11',
             'output.invalid',
             {'structural': ['mean']},
-            True
+            True,
+            None
         )
 
         self.assertFalse(status)
@@ -110,6 +114,105 @@ class TestAggregate(unittest.TestCase):
             aggregate_loss_atts(data_frame, 'Z')
 
         self.assertEqual(context.exception.code, 1)
+
+    def test_aggregate_categorisation_simple_label(self):
+        data_frame = pd.DataFrame({'structural_mean': [0.25]})
+
+        expected_data_frame = data_frame.copy()
+        expected_data_frame['Damage state'] = 'Extensive'
+
+        categorise = {
+            'field_name': 'Damage state',
+            'bins': [0.0, 0.02, 0.1, 0.2, 0.5, 1.0],
+            'labels': [
+                'Negligible',
+                'Slight',
+                'Moderate',
+                'Extensive',
+                'Complete'
+            ]
+        }
+
+        fields = {
+            'structural': ['mean']
+        }
+
+        aggregate_categorisation(
+            data_frame,
+            categorise,
+            fields,
+            'Damage state'
+        )
+
+        assert_frame_equal(expected_data_frame, data_frame)
+
+    def test_aggregate_categorisation_detailed_labels(self):
+        data_frame = pd.DataFrame({
+            'structural_mean': [0.1],
+            'structural_max': [0.2]
+        })
+
+        expected_data_frame = data_frame.copy()
+        expected_data_frame['Damage state (structural_mean)'] = 'Moderate'
+        expected_data_frame['Damage state (structural_max)'] = 'Extensive'
+
+        categorise = {
+            'field_name': 'Damage state',
+            'bins': [0.0, 0.02, 0.1, 0.2, 0.5, 1.0],
+            'labels': [
+                'Negligible',
+                'Slight',
+                'Moderate',
+                'Extensive',
+                'Complete'
+            ]
+        }
+
+        fields = {
+            'structural': ['mean', 'max']
+        }
+
+        aggregate_categorisation(
+            data_frame,
+            categorise,
+            fields,
+            'Damage state'
+        )
+
+        assert_frame_equal(expected_data_frame, data_frame)
+
+    def test_generated_replacement_labels(self):
+        replacements = {
+            '0.2s gust at 10m height m/s': 'maxwind',
+            'Damage state': 'dmgstate',
+            'Damage state (contents_loss_ratio_max)': 'ds_max',
+            'Damage state (contents_loss_ratio_mean)': 'ds_mean',
+            'Damage state (contents_loss_ratio_min)': 'ds_min',
+            'Damage state (contents_max)': 'ds_max',
+            'Damage state (contents_mean)': 'ds_mean',
+            'Damage state (contents_min)': 'ds_min',
+            'Damage state (structural_loss_ratio_max)': 'ds_max',
+            'Damage state (structural_loss_ratio_mean)': 'ds_mean',
+            'Damage state (structural_loss_ratio_min)': 'ds_min',
+            'Damage state (structural_max)': 'ds_max',
+            'Damage state (structural_mean)': 'ds_mean',
+            'Damage state (structural_min)': 'ds_min',
+            'REPLACEMENT_VALUE': 'REPVAL',
+            'contents_loss_ratio_max': 'clr_max',
+            'contents_loss_ratio_mean': 'clr_mean',
+            'contents_loss_ratio_min': 'clr_min',
+            'contents_max': 'clr_max',
+            'contents_mean': 'clr_mean',
+            'contents_min': 'clr_min',
+            'structural_loss_ratio_max': 'slr_max',
+            'structural_loss_ratio_mean': 'slr_mean',
+            'structural_loss_ratio_min': 'slr_min',
+            'structural_max': 'slr_max',
+            'structural_mean': 'slr_mean',
+            'structural_min': 'slr_min'
+        }
+
+        self.assertEqual(replacements, COLNAMES)
 
 
 if __name__ == '__main__':

@@ -102,12 +102,51 @@ class TestTemplates(unittest.TestCase):
             (SaveAggregation, {'file_name': 'aggregation.csv'}),
             (Categorise, {}),
             (SaveExposure, {'file_name': 'output.csv'}),
-            (Aggregate, {}),
+            (Aggregate, {'categorise': {}}),
             (Tabulate, {}),
             (SaveProvenance, {'file_name': 'output.xml'})
         ])
 
     def test_template_earthquake_v1(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            HAZARDRASTER: {'file_list': ['hazard.tif']},
+            VULNFILE: 'curve.xml',
+            VULNSET: 'eq',
+            PERMUTATION: {},
+            CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
+            AGGREGATION: {},
+            SAVEAGG: 'aggregation.csv',
+            CATEGORISE: {},
+            AGGREGATE: {},
+            TABULATE: {},
+            SAVE: 'output.csv'
+        }
+
+        jobs = READERS[EARTHQUAKEV1](config)
+
+        self.assertJobs(jobs, [
+            (LoadCsvExposure, {'file_name': 'exposure.csv'}),
+            (LoadRaster, {'attribute_label': 'MMI', 'file_list': ['hazard.tif']}),
+            (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'curve.xml')}),
+            (SimpleLinker, {'vul_functions_in_exposure': {'eq': 'EQ_VULNERABILITY_FUNCTION_ID'}}),
+            (SelectVulnFunction, {'variability_method': {'eq': 'mean'}}),
+            (PermutateExposure, {}),
+            (MultipleDimensionMult, {'var1': 'structural',
+                                     'var2': 'REPLACEMENT_VALUE',
+                                     'var_out': 'structural_loss'}),
+            (AggregateLoss, {}),
+            (SaveAggregation, {'file_name': 'aggregation.csv'}),
+            (Categorise, {}),
+            (SaveExposure, {'file_name': 'output.csv'}),
+            (Aggregate, {'categorise': {}}),
+            (Tabulate, {}),
+            (SaveProvenance, {'file_name': 'output.xml'})
+        ])
+
+    def test_template_earthquake_v1_categorise_aggregate(self):
         config = {
             LOADCSVEXPOSURE: {
                 'file_name': 'exposure.csv'
@@ -119,8 +158,8 @@ class TestTemplates(unittest.TestCase):
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
             SAVEAGG: 'aggregation.csv',
-            CATEGORISE: {},
-            AGGREGATE: {},
+            CATEGORISE: {'field_name': 'Damage state'},
+            AGGREGATE: {'boundaries': 'boundary.geojson'},
             TABULATE: {},
             SAVE: 'output.csv'
         }
@@ -139,9 +178,9 @@ class TestTemplates(unittest.TestCase):
                                      'var_out': 'structural_loss'}),
             (AggregateLoss, {}),
             (SaveAggregation, {'file_name': 'aggregation.csv'}),
-            (Categorise, {}),
+            (Categorise, {'field_name': 'Damage state'}),
             (SaveExposure, {'file_name': 'output.csv'}),
-            (Aggregate, {}),
+            (Aggregate, {'boundaries': 'boundary.geojson', 'categorise': {'field_name': 'Damage state'}}),
             (Tabulate, {}),
             (SaveProvenance, {'file_name': 'output.xml'})
         ])
