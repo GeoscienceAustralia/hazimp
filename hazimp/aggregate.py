@@ -21,12 +21,30 @@ DRIVERS = {'shp': 'ESRI Shapefile',
            'gpkg': 'GPKG'}
 
 # These are replacement names for use when writing ESRI shape files that have a
-# limited length for the attribute name.
+# limited length for the attribute name (10-bytes)
 # TODO: Labels for other hazard measures, damage measures, etc.
 COLNAMES = {'REPLACEMENT_VALUE': 'REPVAL',
-            'structural_mean': 'slr_mean',
             '0.2s gust at 10m height m/s': 'maxwind',
             'Damage state': 'dmgstate'}
+
+# Loss categories to rename
+loss_categories = [
+    {'label': 'slr', 'identifiers': ['structural', 'structural_loss_ratio']},
+    {'label': 'clr', 'identifiers': ['contents', 'contents_loss_ratio']}
+]
+
+# Supported Pandas aggregate functions
+aggregate_functions = ['mean', 'min', 'max']
+
+# Generate replacement labels for loss categories
+for function in aggregate_functions:
+    for loss_category in loss_categories:
+        for identifier in loss_category['identifiers']:
+            aggregate_label = f'{identifier}_{function}'
+            category_label = f'Damage state ({aggregate_label})'
+
+            COLNAMES[aggregate_label] = f'{loss_category["label"]}_{function}'
+            COLNAMES[category_label] = f'ds_{function}'
 
 
 def choropleth(dframe, boundaries, impactcode, bcode, filename,

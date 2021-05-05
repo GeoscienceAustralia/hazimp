@@ -34,4 +34,4 @@
    filename: [output/gascoyne_impact.json, output/gascoyne_impact.shp]
    categories: True
    fields:
-      structural: [mean]
+      structural: [mean, max]
