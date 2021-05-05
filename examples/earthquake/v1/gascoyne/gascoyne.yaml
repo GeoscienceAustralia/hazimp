@@ -7,7 +7,7 @@
    exposure_latitude: LATITUDE
    exposure_longitude: LONGITUDE
 - hazard_raster:
-   file_list: input/onshore/mmi_mean.flt
+   file_list: input/continental_crust/mmi_mean.flt
    attribute_label: MMI
 - calc_struct_loss:
    replacement_value_label: REPLACEMENT_VALUE
@@ -31,7 +31,7 @@
    boundaries: input/SA1_2016_AUST.json
    boundarycode: SA1_MAIN16
    impactcode: SA1_CODE
-   filename: output/gascoyne_impact.json
+   filename: [output/gascoyne_impact.json, output/gascoyne_impact.shp]
    categories: True
    fields:
-      structural: [mean]
+      structural: [mean, max]

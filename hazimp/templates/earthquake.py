@@ -40,7 +40,7 @@ def _earthquake_v1_reader(config: dict) -> list:
                                 find_attributes(config, VULNFILE))
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
-    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    # The column title in the exposure file = 'EQ_VULNERABILITY_FUNCTION_ID'
     vulnerability_set_id = find_attributes(config, VULNSET)
 
     atts = {'vul_functions_in_exposure': {
@@ -75,15 +75,17 @@ def _earthquake_v1_reader(config: dict) -> list:
         file_name = find_attributes(config, SAVEAGG)
         add_job(job_insts, SAVEAGG, {'file_name': file_name})
 
+    categorise_attributes = {}
     if CATEGORISE in config:
-        attributes = find_attributes(config, CATEGORISE)
-        add_job(job_insts, CATEGORISE, attributes)
+        categorise_attributes = find_attributes(config, CATEGORISE)
+        add_job(job_insts, CATEGORISE, categorise_attributes)
 
     file_name = find_attributes(config, SAVE)
     add_job(job_insts, SAVEALL, {'file_name': file_name})
 
     if AGGREGATE in config:
         attributes = find_attributes(config, AGGREGATE)
+        attributes['categorise'] = categorise_attributes
         add_job(job_insts, AGGREGATE, attributes)
 
     if TABULATE in config:
