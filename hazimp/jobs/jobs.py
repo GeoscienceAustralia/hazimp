@@ -754,6 +754,7 @@ class Aggregate(Job):
                                      boundarycode,
                                      categories,
                                      fields,
+                                     categorise,
                                      use_parallel=use_parallel)
 
 
