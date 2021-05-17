@@ -65,3 +65,7 @@ Another example with three categories. See the example configuration in
     field_name: 'Damage state'
     bins: [0.0, 0.1, 0.5, 1.0]
     labels: ['Minor', 'Moderate', 'Major']
+
+
+See also the :ref:`aggregate` documentation to categorise spatial aggregations
+using these configurations.
