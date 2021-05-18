@@ -115,27 +115,8 @@ class XmlLayer(object):
         tuple_list = [tuple(map(float,
                                 pair.split())) for pair in string.split('\n')]
 
-        # or (a bit slower)
-        # list_of_strings = string.split('\n')
-        # split it up into small strings
-
-        # l_of_lists = [coordinate.split() for coordinate in list_of_strings]
-        # split the small strings (coordinates) into ['lat','long'] lists
-
-        # list_of_lists = [map(float,coord) for coord in list_of_lists]
-        # coordintates into [lat,long] lists
-
-        # list_of_tuples = [tuple(coordinate) for coordinate in list_of_lists]
-        # coordintates into (lat,long)
-
-        # or
-        # list_of_tuples=[]
-        # for coordinate in string.split('\n')[1:-1]:
-        #    coordinate = coordinate.split()
-        #    coordinate = (float(coordinate[0]),float(coordinate[1]))
-        #    list_of_tuples.append(coordinate)
-
         list_of_tuples = [t for t in tuple_list if len(t) > 0]
+
         # Chomp out the empty lines
         return array(list_of_tuples)
 

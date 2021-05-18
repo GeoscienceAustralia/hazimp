@@ -56,11 +56,16 @@ being added to the column "Damage state":
     labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
 
 
-Another example with three categories:
+Another example with three categories. See the example configuration in
+`examples/wind/three_category_example.yaml`
 
 .. code:: yaml
 
-- categorise:
-   field_name: 'Damage state'
-   bins: [0.0, 0.1, 0.5, 1.0]
-   labels: ['Negligible', 'Minor', 'Major']
+ - categorise:
+    field_name: 'Damage state'
+    bins: [0.0, 0.1, 0.5, 1.0]
+    labels: ['Minor', 'Moderate', 'Major']
+
+
+See also the :ref:`aggregate` documentation to categorise spatial aggregations
+using these configurations.

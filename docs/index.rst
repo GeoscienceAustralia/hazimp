@@ -14,6 +14,8 @@ hazard information. It is command line based and can be executed in parallel.
    vulnerability
    categorise
    aggregate
+   tabulate
+   history
 
   
 .. code

@@ -1,4 +1,4 @@
-
+.. _aggregate:
 
 Saving to geospatial formats
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -10,12 +10,13 @@ data to spatial regions (for example suburbs, post codes).
     This will activate the option to save to a geospatial format.
 
     *boundaries* 
-        The path to a geospatial file that contains polygons to aggregate by
+        The path to a geospatial file that contains polygon features to aggregate by
     *filename* 
         The path to the output geospatial file. This can be either an ESRI shape
         file (extension `shp`), a GeoJSON file (`json`) or a GeoPackage
         (`gpkg`). If an ESRI shape file is specified, the attribute names are
-        modified to ensure they are not truncated/ 
+        modified to ensure they are not truncated. Multiple filenames can be
+        specified in a list format.
     *impactcode*
         The attribute in the exposure file that contains a unique code for each
         geographic region to aggregate by.
@@ -31,7 +32,8 @@ data to spatial regions (for example suburbs, post codes).
 
 Presently, HazImp will aggregate the following fields::
 
-    'structural_loss_ratio': 'mean',
+    'structural_loss_ratio': 'mean', 'min', 'max'
+    'contents_loss_ratio': 'mean', 'min', 'max'
 
 
 Example::
@@ -42,6 +44,19 @@ Example::
      impactcode: MB_CODE
      boundarycode: MB_CODE16
      categories: True
+     fields:
+      structural: [ mean ]
+
+Output data to multiple files::
+
+ - aggregate:
+   boundaries: northwestcape_meshblocks.geojson
+   boundarycode: MB_CODE11
+   impactcode: MESHBLOCK_CODE_2011
+   filename: [olwyn_impact.shp, olwyn_impact.json]
+   categories: True
+   fields:
+      structural: [mean]
 
 
 This option has only been implemented in the ``wind_nc`` and ``wind_v5``

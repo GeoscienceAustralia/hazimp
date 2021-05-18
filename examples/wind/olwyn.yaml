@@ -1,19 +1,19 @@
 #  python ../hazimp/hazimp/main.py -c olwyn_hazimp.yaml 
 - template: wind_nc
-- vulnerability_filename: synthetic_domestic_wind_vul_curves.xml
-- vulnerability_set: domestic_wind_2012
+- vulnerability_filename: domestic_wind_vul_curves_2021.xml
+- vulnerability_set: domestic_wind_2021
 - load_exposure:
    file_name: WA_Wind_Exposure_2013_Test_only.csv
    exposure_latitude: LATITUDE
    exposure_longitude: LONGITUDE
-- load_wind: 
+- hazard_raster:
    file_list: olwyn.tif
 - calc_struct_loss:
    replacement_value_label: REPLACEMENT_VALUE
 - aggregation:
    groupby: MESHBLOCK_CODE_2011
    kwargs: 
-     structural_loss_ratio: [mean, std]
+     structural: [mean, std]
      structural_loss: [mean, sum]
 - save_agg: olwyn_agg.csv
 - categorise:
@@ -33,4 +33,4 @@
    filename: olwyn_impact.shp
    categories: True
    fields:
-      structural_loss_ratio: [mean]
+      structural: [mean]

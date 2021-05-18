@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:gml="http://www.opengis.net/gml"
-           xmlns:nrml="http://openquake.org/xmlns/nrml/0.4"
-           xmlns="http://openquake.org/xmlns/nrml/0.4"
-           targetNamespace="http://openquake.org/xmlns/nrml/0.4"
+           xmlns:nrml="http://openquake.org/xmlns/nrml/0.5"
+           xmlns="http://openquake.org/xmlns/nrml/0.5"
+           targetNamespace="http://openquake.org/xmlns/nrml/0.5"
            elementFormDefault="qualified"
            xml:lang="en">
 
@@ -23,7 +23,7 @@
     <xs:complexType name="IMLType">
         <xs:simpleContent>
             <xs:extension base="gml:doubleList">
-                <xs:attribute name="IMT" type="xs:string" use="required"/>
+                <xs:attribute name="imt" type="IMTType" use="required"/>
                 <xs:attribute name="imlUnit" type="xs:string" use="optional"/>
                 <xs:attribute name="minIML" type="PositiveDoubleType" use="optional"/>
                 <xs:attribute name="maxIML" type="PositiveDoubleType" use="optional"/>
@@ -40,6 +40,8 @@
             <xs:enumeration value="IA"/> <!-- arias intensity -->
             <xs:enumeration value="RSD"/> <!-- relative significant duration -->
             <xs:enumeration value="MMI"/> <!-- modified mercalli intensity -->
+            <xs:enumeration value="0.2s gust at 10m height m/s"/> <!-- surface gust wind speed -->
+            <xs:enumeration value="water depth above ground floor (m)"/> <!-- water depth -->
         </xs:restriction>
     </xs:simpleType>
 

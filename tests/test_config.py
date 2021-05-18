@@ -27,16 +27,21 @@
 Test the config module.
 """
 
-import unittest
-import tempfile
 import os
+import tempfile
+import unittest
 
 from hazimp import config
 from hazimp.calcs import calcs
-from hazimp.config_build import (find_atts, _get_job_or_calc,
+from hazimp.calcs.calcs import WATER_DEPTH
+from hazimp.config import instance_builder, read_config_file
+from hazimp.config_build import (_get_job_or_calc,
                                  check_1st_level_keys, file_can_open,
-                                 check_files_to_load, check_attributes)
+                                 check_files_to_load, check_attributes,
+                                 find_attributes)
 from hazimp.jobs import jobs
+from hazimp.jobs.jobs import LOADRASTER, SAVEALL, LoadRaster, SaveExposure
+from tests import CWD
 
 
 class TestConfig(unittest.TestCase):
@@ -59,6 +64,26 @@ class TestConfig(unittest.TestCase):
         the_config = [{'add_test': None}]
         actual = config.instance_builder(the_config)
         self.assertEqual(calcs.CALCS['add_test'], actual[0].job_instance)
+
+    def test_instance_builder_bad_format(self):
+        with self.assertRaises(RuntimeError) as context:
+            instance_builder(['template'])
+
+        self.assertEqual(
+            '\nConfig bad format. Forgotten dash? Two key dictionary?\ntemplate \n',
+            str(context.exception)
+        )
+
+    def test_instance_builder_invalid_template(self):
+        with self.assertRaises(RuntimeError) as context:
+            instance_builder([{
+                'template': 'invalid'
+            }])
+
+        self.assertEqual(
+            'Invalid template name, invalid in config file.',
+            str(context.exception)
+        )
 
     def test_file_can_open(self):
         # Write a file to test
@@ -137,23 +162,53 @@ class TestConfig(unittest.TestCase):
         inst = jobs.JOBS[jobs.SELECTVULNFUNCTION]
         self.assertTrue(check_attributes(inst, atts))
 
-    def test_find_atts(self):
-        config_list = [{jobs.LOADCSVEXPOSURE: {
-            'file_name': 'yeah',
-            'yeahe': 'latitude',
-            'expode': 'longitude'}}]
-        self.assertRaises(RuntimeError, find_atts, config_list, 'foo')
+    def test_find_attributes_fails(self):
+        config = {jobs.LOADCSVEXPOSURE: {'file_name': 'exposure.csv'}}
 
-    def test_find_attsII(self):
-        actual_atts = {'file_name': 'yeah',
-                       'yeahe': 'latitude',
-                       'expode': 'longitude'}
-        config_list = [{jobs.LOADCSVEXPOSURE: actual_atts}]
-        atts = find_atts(config_list, jobs.LOADCSVEXPOSURE)
-        self.assertEqual(atts, actual_atts)
+        with self.assertRaises(RuntimeError) as context:
+            find_attributes(config, 'invalid_key')
+
+        self.assertEqual(
+            str(context.exception),
+            'Mandatory key not found in config file: invalid_key'
+        )
+
+    def test_find_attributes_succeeds(self):
+        expected_attributes = {'file_name': 'exposure.csv'}
+
+        config = {jobs.LOADCSVEXPOSURE: expected_attributes}
+        attributes = find_attributes(config, jobs.LOADCSVEXPOSURE)
+        self.assertEqual(attributes, expected_attributes)
+
+    def test_find_attributes_by_lesser_preference(self):
+        expected_attributes = {'file_name': 'exposure.csv'}
+
+        config = {jobs.LOADCSVEXPOSURE: expected_attributes}
+        attributes = find_attributes(config, [jobs.LOADRASTER, jobs.LOADCSVEXPOSURE])
+        self.assertEqual(attributes, expected_attributes)
+
+    def test_instansiate_jobs_without_template(self):
+        config = [
+            {LOADRASTER: {
+                'attribute_label': WATER_DEPTH,
+                'file_list': ['raster1.tif', 'raster2.tif']
+            }},
+            {SAVEALL: {
+                'file_name': 'output.csv'
+            }}
+        ]
+
+        [raster_job, save_job] = instance_builder(config)
+
+        self.assertIsInstance(raster_job.job_instance, LoadRaster)
+        self.assertIsInstance(save_job.job_instance, SaveExposure)
+
+    def test_read_yaml_file(self):
+        template = read_config_file(str(CWD / 'data/template.yaml'))
+
+        self.assertEqual([{'template': 'default'}, {'key': 'value'}], template)
 
 
-# -------------------------------------------------------------
 if __name__ == "__main__":
     Suite = unittest.makeSuite(TestConfig, 'test')
     Runner = unittest.TextTestRunner()

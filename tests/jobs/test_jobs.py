@@ -46,7 +46,8 @@ from hazimp.jobs import jobs
 from hazimp import context
 from hazimp import misc
 from hazimp import parallel
-from tests.jobs.test_vulnerability_model import build_example
+from tests import CWD
+from tests.jobs.test_vulnerability_model import build_example1
 
 prov = mock.MagicMock(name='prov.model')
 
@@ -337,7 +338,7 @@ class TestJobs(unittest.TestCase):
 
     def test_load_vuln_set(self):
         # Write a file to test
-        filename = build_example()
+        filename = build_example1()
 
         con_in = Dummy()
         con_in.exposure_lat = None
@@ -569,20 +570,11 @@ class TestJobs(unittest.TestCase):
         inst(con_in, **test_kwargs)
         os.remove(f.name)
 
-        raster = array([[1, 2, -9999], [4, 5, 6]])
-        upper_left_x = 0
-        upper_left_y = 10
-        cell_size = 1
-        no_data_value = -9999
         haz_v = 'haz_v'
         inst = JOBS[LOADRASTER]
         test_kwargs = {'attribute_label': haz_v,
                        'clip_exposure2all_hazards': True,
-                       'raster': raster,
-                       'upper_left_x': upper_left_x,
-                       'upper_left_y': upper_left_y,
-                       'cell_size': cell_size,
-                       'no_data_value': no_data_value}
+                       'file_list': [str(CWD / 'data/basic_raster.aai')]}
         inst(con_in, **test_kwargs)
 
         # There should be only no exposure points
@@ -777,10 +769,10 @@ class TestJobs(unittest.TestCase):
         context.save_aggregation = mock.MagicMock()
 
         instance = JOBS[AGGREGATE]
-        instance(context, None, 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, False)
+        instance(context, None, 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, None, False)
 
         context.save_aggregation.assert_called_once_with(
-            'output.shp', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, use_parallel=False
+            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {}, None, use_parallel=False
         )
 
     def test_default_aggregate_fields(self):
@@ -788,10 +780,10 @@ class TestJobs(unittest.TestCase):
         context.save_aggregation = mock.MagicMock()
 
         instance = JOBS[AGGREGATE]
-        instance(context, 'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, None, False)
+        instance(context, 'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, None, None, False)
 
         context.save_aggregation.assert_called_once_with(
-            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {'structural_loss_ratio': ['mean']}, use_parallel=False
+            'output.json', 'boundaries.json', 'MESHBLOCK_CODE_2011', 'MB_CODE11', True, {'structural': ['mean']}, None, use_parallel=False
         )
 
 

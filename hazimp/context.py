@@ -282,7 +282,8 @@ class Context(object):
             return write_dict
 
     def save_aggregation(self, filename, boundaries, impactcode,
-                         boundarycode, categories, fields, use_parallel=True):
+                         boundarycode, categories, fields, categorise,
+                         use_parallel=True):
         """
         Save data aggregated to geospatial regions
 
@@ -315,7 +316,8 @@ class Context(object):
         self.prov.wasGeneratedBy(aggfileent, aggact)
         if parallel.STATE.rank == 0 or not use_parallel:
             aggregate.choropleth(write_dict, boundaries, impactcode,
-                                 boundarycode, filename, fields, categories)
+                                 boundarycode, filename, fields, categories,
+                                 categorise)
             misc.upload_to_s3_if_applicable(filename, bucket_name, bucket_key)
             if (bucket_name is not None and
                     bucket_key is not None and
@@ -334,8 +336,6 @@ class Context(object):
                 misc.upload_to_s3_if_applicable(rootname + '.cpg',
                                                 bucket_name,
                                                 base_bucket_key + '.cpg', True)
-        else:
-            pass
 
     def aggregate_loss(self, groupby=None, kwargs=None):
         """
@@ -352,7 +352,7 @@ class Context(object):
         For example::
 
         kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
-                'structural_loss_ratio': ['mean', 'std']}
+                'structural': ['mean', 'std']}
 
 
         See
@@ -548,8 +548,4 @@ def save_csv_agg(write_dict, filename):
         LOGGER.warning(f"{dirname} does not exist - trying to create it")
         os.makedirs(dirname)
 
-    try:
-        write_dict.to_csv(filename, index_label='FID')
-    except FileNotFoundError:
-        LOGGER.error(f"Cannot write to {filename}")
-        sys.exit(1)
+    write_dict.to_csv(filename, index_label='FID')

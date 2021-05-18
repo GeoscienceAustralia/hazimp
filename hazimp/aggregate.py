@@ -7,6 +7,7 @@ import sys
 from os.path import abspath, isdir, dirname
 
 import geopandas
+import pandas as pd
 import numpy as np
 
 LOGGER = logging.getLogger(__name__)
@@ -20,16 +21,34 @@ DRIVERS = {'shp': 'ESRI Shapefile',
            'gpkg': 'GPKG'}
 
 # These are replacement names for use when writing ESRI shape files that have a
-# limited length for the attribute name.
+# limited length for the attribute name (10-bytes)
 # TODO: Labels for other hazard measures, damage measures, etc.
 COLNAMES = {'REPLACEMENT_VALUE': 'REPVAL',
-            'structural_loss_ratio_mean': 'slr_mean',
             '0.2s gust at 10m height m/s': 'maxwind',
             'Damage state': 'dmgstate'}
 
+# Loss categories to rename
+loss_categories = [
+    {'label': 'slr', 'identifiers': ['structural', 'structural_loss_ratio']},
+    {'label': 'clr', 'identifiers': ['contents', 'contents_loss_ratio']}
+]
+
+# Supported Pandas aggregate functions
+aggregate_functions = ['mean', 'min', 'max']
+
+# Generate replacement labels for loss categories
+for function in aggregate_functions:
+    for loss_category in loss_categories:
+        for identifier in loss_category['identifiers']:
+            aggregate_label = f'{identifier}_{function}'
+            category_label = f'Damage state ({aggregate_label})'
+
+            COLNAMES[aggregate_label] = f'{loss_category["label"]}_{function}'
+            COLNAMES[category_label] = f'ds_{function}'
+
 
 def choropleth(dframe, boundaries, impactcode, bcode, filename,
-               fields, categories):
+               fields, categories, categorise) -> bool:
     """
     Aggregate to geospatial boundaries and save to file
 
@@ -46,6 +65,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
     damage state defined in the 'Damage state' attribute. This requires that a
     'categorise` job has been included in the pipeline, which in turn requires
     the bins and labels to be defined in the job configuration.
+    :param dict categorise: categorise job attributes
 
     NOTE:: presently, using `categories`=True will not do any categorisation of
     the mean damage index for the aggregation areas.
@@ -55,7 +75,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
 
     For example::
 
-    fields = {'structural_loss_ratio': ['mean']}
+    fields = {'structural': ['mean']}
 
     See
     https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
@@ -69,12 +89,16 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
         '_'.join(columns).rstrip('_') for columns in aggregate.columns.values
     ]
 
-    # Assumes "Damage state" is the derived attribute name.
-    if categories and ('Damage state' in dframe.columns):
-        dsg = dframe.pivot_table(index=left, columns='Damage state',
+    field_name = categorise['field_name'] if categorise else 'Damage state'
+
+    if categories and categorise:
+        aggregate_categorisation(aggregate, categorise, fields, field_name)
+
+    if categories and (field_name in dframe.columns):
+        dsg = dframe.pivot_table(index=left, columns=field_name,
                                  aggfunc='size', fill_value=0)
         aggregate = aggregate.merge(dsg, on=left).set_index(left)
-    elif categories and ('Damage state' not in dframe.columns):
+    elif categories and (field_name not in dframe.columns):
         LOGGER.warning("No categorisation will be performed")
         aggregate.set_index(left, inplace=True)
     else:
@@ -99,7 +123,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
     except KeyError:
         LOGGER.error(f"Unknown output extension: {fileext}")
         LOGGER.error("No aggregation will be saved")
-        return
+        return False
 
     if driver == 'ESRI Shapefile':
         LOGGER.info("ESRI shape file output - changing field names")
@@ -111,9 +135,42 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
         os.makedirs(directory)
     try:
         result.to_file(filename, driver=driver)
+        return True
     except ValueError:
         LOGGER.error("Cannot save aggregated data")
         LOGGER.error("Check fields used to link aggregation boundaries")
+        return False
+
+
+def aggregate_categorisation(aggregate, categorise: dict,
+                             fields: dict, field_name: str):
+    """
+    Categorise aggregated field values into discrete intervals.
+
+    :param aggregate: `pandas.DataFrame` containing aggregated data
+    :param categorise: categorise job attributes
+    :param fields: fields to aggregate
+    :param field_name: name of categorised column
+    """
+    columns_to_aggregate = []
+
+    for (field, functions) in fields.items():
+        for func in functions:
+            column = f'{field}_{func}'
+            if column in aggregate:
+                columns_to_aggregate.append(column)
+
+    detailed_labels = len(columns_to_aggregate) > 1
+
+    for column in columns_to_aggregate:
+        label = f'{field_name} ({column})' if detailed_labels else field_name
+
+        aggregate[label] = pd.cut(
+            aggregate[column],
+            categorise['bins'],
+            right=False,
+            labels=categorise['labels']
+        ).astype('str')
 
 
 def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
@@ -130,7 +187,7 @@ def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
     For example::
 
     kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
-              'structural_loss_ratio': ['mean', 'std']}
+              'structural': ['mean', 'std']}
 
     See
     https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
