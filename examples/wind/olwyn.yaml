@@ -18,6 +18,7 @@
    kwargs: 
      structural: [mean, std]
      structural_max: [mean]
+
      structural_loss: [mean, sum]
 - save_agg: olwyn_agg.csv
 - categorise:
@@ -39,3 +40,4 @@
    fields:
       structural: [mean]
       structural_max: [mean]
+

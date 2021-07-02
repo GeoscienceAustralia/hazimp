@@ -76,6 +76,7 @@ Aggregate with permuted exposure::
       structural_max: [mean]
 
 
+
 This option has only been implemented in the ``wind_nc`` and ``wind_v5``
 templates at this time (June 2020).
 
