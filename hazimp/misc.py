@@ -86,6 +86,7 @@ def instanciate_classes(module):
                 callable_instances[instance.call_funct] = instance
     return callable_instances
 
+
 def mod_file_list(file_list, variable):
     """
     Modify the filename list for working with netcdf format files.
@@ -107,6 +108,7 @@ def mod_file_list(file_list, variable):
     for f in file_list:
         flist.append(f'NETCDF:"{f}":{variable}')
     return flist
+
 
 def mod_file_list(file_list, variable):
     """

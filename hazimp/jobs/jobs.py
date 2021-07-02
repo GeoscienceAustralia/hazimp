@@ -541,8 +541,8 @@ class PermutateExposure(Job):
         """
         Calculates the loss for the given vulnerability set, randomly
         permutating the exposure attributes to arrive at a
-        distribution of loss outcomes. We do not take the absolute maximum loss,
-        rather we use an upper quantile of the accumulated loss to define
+        distribution of loss outcomes. We do not take the absolute maximum
+        loss, rather we use an upper quantile of the accumulated loss to define
         "maximum" (or "worst-case") loss.
 
         The result is that the "structural_max" is the loss associated with the
@@ -604,6 +604,7 @@ class PermutateExposure(Job):
         context.exposure_att[loss_category_type] = mean_loss
         loss_category_type_max = loss_category_type + '_max'
         context.exposure_att[loss_category_type_max] = lossmax
+
 
 class LoadRaster(Job):
 
