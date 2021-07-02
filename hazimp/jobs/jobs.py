@@ -314,7 +314,8 @@ class LoadCsvExposure(Job):
         dt = misc.get_file_mtime(file_name)
         expent = context.prov.entity(":Exposure data",
                                      {'dcterms:title': 'Exposure data',
-                                      'prov:type': 'void:Dataset',
+                                      'prov:type': 'prov:Dataset',
+                                      'prov:format': 'Comma-separated values',
                                       'prov:generatedAtTime': dt,
                                       'prov:atLocation':
                                           os.path.basename(file_name)})
@@ -536,17 +537,24 @@ class PermutateExposure(Job):
         super(PermutateExposure, self).__init__()
         self.call_funct = PERMUTATE_EXPOSURE
 
-    def __call__(self, context, groupby=None, iterations=1000):
+    def __call__(self, context, groupby=None, iterations=1000, quantile=0.95):
         """
         Calculates the loss for the given vulnerability set, randomly
         permutating the exposure attributes to arrive at a
-        distribution of loss outcomes.
+        distribution of loss outcomes. We do not take the absolute maximum loss,
+        rather we use an upper quantile of the accumulated loss to define
+        "maximum" (or "worst-case") loss. 
+
+        The result is that the "structural_max" is the loss associated with the
+        permutation that gives the upper percentile of total loss for the analysis
+        area. The "structural" value is the average loss across all permutations.
 
         :param context: The context instance, used to move data around.
         :param groupby: The name of the exposure attribute to group
                         exposure assets by before randomly permutating
                         the corresponding vulnerability curves.
         :param iterations: Number of iterations to perform
+        :param quantile: Represents the "maximum" event loss. Default=0.95
 
         Content return:
            exposure_vuln_curves: A :class:`pandas.DataFrame` of realised
@@ -580,24 +588,21 @@ class PermutateExposure(Job):
                     raise RuntimeError(msg)
 
                 losses[n, :] = vuln_curve.look_up(intensities)
-                # By adding in a new attribute for each iteration, we can
-                # capture all the possible permutations of loss outcomes.
-                # This leads to a rather substantial output data volume,
-                # especially when considering the larger exposure datasets
-                # that will be used in real applications, and the number of
-                # iterations that should be used to achieve convergence.
-                loss_iteration = loss_category_type + "_{0:06d}".format(n)
-                field_iteration = field + "_{0:06d}".format(n)
-                context.exposure_att[loss_iteration] = losses[n, :]
-                context.exposure_att[field_iteration] = \
-                    context.exposure_att[field]
-            mean_loss = np.mean(losses, axis=0)
-            loss_sd = np.std(losses, axis=0)
 
-            loss_category_type_sd = loss_category_type + "_sd"
-            context.exposure_att[loss_category_type] = mean_loss
-            context.exposure_att[loss_category_type_sd] = loss_sd
+        # Mean loss per unit across all permutations:
+        mean_loss = np.mean(losses, axis=0)
 
+        # Mean loss across separate permutations:
+        lossmean = losses.mean(axis=1)
+
+        # Gives the index of the permutation with the 95th percentile mean loss
+        idx = np.abs(lossmean - np.quantile(lossmean, 0.95)).argmin()
+
+        # Unit losses for the event with 95th percentile mean loss
+        lossmax = losses[idx, :]
+        context.exposure_att[loss_category_type] = mean_loss
+        loss_category_type_max = loss_category_type + '_max'
+        context.exposure_att[loss_category_type_max] = lossmax
 
 class LoadRaster(Job):
 
@@ -639,12 +644,13 @@ class LoadRaster(Job):
         for f in file_list:
             f = misc.download_file_from_s3_if_needed(f)
             dt = misc.get_file_mtime(f)
+            current_file_format = os.path.splitext(f)[1].replace('.', '')
             atts = {"dcterms:title": "Source hazard data",
                     "prov:type": "prov:Dataset",
                     "prov:atLocation": os.path.basename(f),
-                    "prov:format": os.path.splitext(f)[1].replace('.', ''),
+                    "prov:format": current_file_format,
                     "prov:generatedAtTime": dt, }
-            if file_format == 'nc' and variable:
+            if current_file_format == 'nc' and variable:
                 atts['prov:variable'] = variable
             hazent = context.prov.entity(":Hazard data", atts)
             context.prov.used(context.provlabel, hazent)
