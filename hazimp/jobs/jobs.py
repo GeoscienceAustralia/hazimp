@@ -370,7 +370,7 @@ class LoadXmlVulnerability(Job):
         :param file_name: The xml files to load.
         """
         if file_name is not None:
-            if type(file_name) is str:
+            if isinstance(file_name, str):
                 file_name = [file_name]
 
             vuln_sets = vuln_sets_from_xml_file(file_name)
@@ -543,11 +543,12 @@ class PermutateExposure(Job):
         permutating the exposure attributes to arrive at a
         distribution of loss outcomes. We do not take the absolute maximum loss,
         rather we use an upper quantile of the accumulated loss to define
-        "maximum" (or "worst-case") loss. 
+        "maximum" (or "worst-case") loss.
 
         The result is that the "structural_max" is the loss associated with the
-        permutation that gives the upper percentile of total loss for the analysis
-        area. The "structural" value is the average loss across all permutations.
+        permutation that gives the upper percentile of total loss for the
+        analysis area. The "structural" value is the average loss across all
+        permutations.
 
         :param context: The context instance, used to move data around.
         :param groupby: The name of the exposure attribute to group
