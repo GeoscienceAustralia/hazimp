@@ -32,15 +32,20 @@ data to spatial regions (for example suburbs, post codes).
 
 Presently, HazImp will aggregate the following fields::
 
-    'structural_loss_ratio': 'mean', 'min', 'max'
-    'contents_loss_ratio': 'mean', 'min', 'max'
+    'structural': 'mean', 'min', 'max'
+    'contents': 'mean', 'min', 'max'
+
+If :ref:`permutation` of the exposure is performed, then the corresponding
+'_max' field can also be included in the aggregation::
+
+    'structural_max': 'mean', 'min', 'max'
 
 
 Example::
 
  - aggregate:
      boundaries: QLD_Mesh_Block_2016.shp
-     file_name: QLD_MeshblockImpacts.shp
+     filename: QLD_MeshblockImpacts.shp
      impactcode: MB_CODE
      boundarycode: MB_CODE16
      categories: True
@@ -57,6 +62,19 @@ Output data to multiple files::
    categories: True
    fields:
       structural: [mean]
+
+Aggregate with permuted exposure::
+
+ - aggregate:
+   boundaries: northwestcape_meshblocks.geojson
+   boundarycode: MB_CODE11
+   impactcode: MESHBLOCK_CODE_2011
+   filename: [olwyn_impact.json]
+   categories: True
+   fields:
+      structural: [mean]
+      structural_max: [mean]
+
 
 
 This option has only been implemented in the ``wind_nc`` and ``wind_v5``

@@ -164,7 +164,7 @@ which describes the vulnerability set to use (see below for more details).
     saved as numpy arrays.  This can be done by using the *.npz* extension.
     This data can be accessed using Python scripts and is not averaged.
 
-
+.. _permutation:
 
 Using permutation to understand uncertainty in vulnerability
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -185,16 +185,26 @@ template file.
     permutation, and the number of permuations.
     
     *groupby*
-    The field name in the exposure data by which the assets will be grouped. 
+    The field name in the exposure data by which the assets will be grouped.
 
     *iterations* 
-    The number of iterations to perform
+    The number of iterations to perform. Default is 1000 iterations
+
+    *quantile*
+    The quantile to represent the "worst-case" result. Default=0.95 (95th percentile)
 
 Example::
 
  - exposure_permutation:
      groupby: MB_CODE
      iterations: 1000
+
+
+The resulting output calculates a mean loss per building from all permutations,
+as well as a "worst-case" loss, which is the permutation that provides the
+highest mean loss over all buildings. In reality, we actually use the 95th
+percentile of the mean loss to determine the "worst-case" event. The values are
+stored in an attribute with the suffix '_max' appended.
 
 Aggregation
 ~~~~~~~~~~~

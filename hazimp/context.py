@@ -28,7 +28,6 @@ order. The order is determined by the queue of jobs.
 """
 
 import os
-import sys
 import getpass
 from datetime import datetime
 import logging
