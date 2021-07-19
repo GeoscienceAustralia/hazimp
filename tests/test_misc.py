@@ -51,7 +51,8 @@ from hazimp.misc import (csv2dict, get_required_args, sorted_dict_values,
                          get_temporary_directory, s3_path_segments_from_vsis3,
                          create_temp_file_path_for_s3,
                          download_from_s3, upload_to_s3_if_applicable,
-                         download_file_from_s3_if_needed, mod_file_list, permutate_att_values, get_git_commit)
+                         download_file_from_s3_if_needed, mod_file_list,
+                         permutate_att_values, get_git_commit)
 from tests import CWD
 
 

@@ -67,8 +67,8 @@ def write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category):
     xml_h.write('>\n')
 
 
-def write_nrml_curve(xml_h, vulnerability_function_id, imls: list, imt: str, loss_ratio,
-                     coef_var):
+def write_nrml_curve(xml_h, vulnerability_function_id, imls: list, imt: str,
+                     loss_ratio, coef_var):
     """
     Write the curve info of an nrml file.
 
@@ -137,7 +137,8 @@ def csv_curve2nrml(csv_filename, xml_filename):
     # open the csv file to read the rows
     reader = csv.DictReader(open(csv_filename, 'r'))
     with open(xml_filename, 'w') as xml_h:
-        write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category)
+        write_nrml_top(xml_h, vulnerability_set_id, asset_category,
+                       loss_category)
 
         # Loop over the csv file info
         for row in reader:
@@ -152,7 +153,8 @@ def csv_curve2nrml(csv_filename, xml_filename):
                     continue
                 loss_ratio += str(row[str(int(iml))]) + ' '
                 coef_var += '0 '
-            write_nrml_curve(xml_h, row['vulnerabilityFunctionID'], imls, csv_dict['IMT'][0],
+            write_nrml_curve(xml_h, row['vulnerabilityFunctionID'],
+                             imls, csv_dict['IMT'][0],
                              loss_ratio, coef_var)
 
         write_nrml_close(xml_h)
@@ -341,8 +343,8 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
                 for iml in curve_values:
                     loss_ratio += str(iml) + ' '
                     coef_var += '0 '
-                write_nrml_curve(xml_h, curve_dic_key, depths, FLOOD_IMT, loss_ratio,
-                                 coef_var)
+                write_nrml_curve(xml_h, curve_dic_key, depths, FLOOD_IMT,
+                                 loss_ratio, coef_var)
 
             write_nrml_close(xml_h)
 

@@ -133,6 +133,8 @@ class Context(object):
                         {"prov:type": "foaf:Person"})
         self.prov.actedOnBehalfOf(":hazimp", f":{getpass.getuser()}")
         self.provlabel = ''
+        self.provtitle = ''
+        self.provstarttime = datetime.now().strftime(DATEFMT)
 
     def set_prov_label(self, label, title="HazImp analysis"):
         """
@@ -143,10 +145,7 @@ class Context(object):
         """
 
         self.provlabel = f":{label}"
-        self.prov.activity(f":{label}", datetime.now().strftime(DATEFMT), None,
-                           {"dcterms:title": title,
-                            "prov:type": "void:Analysis"})
-        self.prov.wasAttributedTo(self.provlabel, ":hazimp")
+        self.provtitle = title
 
     def get_site_shape(self):
         """

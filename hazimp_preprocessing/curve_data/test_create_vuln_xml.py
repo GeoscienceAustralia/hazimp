@@ -82,7 +82,8 @@ class TestCreateVulnXML(unittest.TestCase):
 
         self.assertTrue(allclose(vuln_sets["d2012"].intensity_measure_level,
                                  asarray([17, 20])))
-        self.assertEqual("0.2s gust at 10m height m/s", vuln_sets["d2012"].intensity_measure_type)
+        self.assertEqual("0.2s gust at 10m height m/s",
+                         vuln_sets["d2012"].intensity_measure_type)
         self.assertEqual(vuln_sets["d2012"].vulnerability_set_id, "d2012")
         self.assertEqual(vuln_sets["d2012"].asset_category, "")
         self.assertEqual(vuln_sets["d2012"].loss_category, "structural")

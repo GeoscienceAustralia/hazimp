@@ -38,7 +38,7 @@ is not present Error out.
 import os
 import sys
 from typing import Union
-
+import datetime
 import scipy
 import numpy as np
 
@@ -71,6 +71,7 @@ AGGREGATE = 'aggregate'
 TABULATE = 'tabulate'
 CATEGORISE = 'categorise'
 SAVEPROVENANCE = 'saveprovenance'
+DATEFMT = "%Y-%m-%d %H:%M:%S"
 
 
 class Job(object):
@@ -568,6 +569,7 @@ class PermutateExposure(Job):
         field = context.vul_function_titles[vulnerability_set_id]
 
         losses = np.zeros((iterations, len(context.exposure_att)))
+        starttime = datetime.datetime.now()
         for n in range(iterations):
             context.exposure_att = \
                 misc.permutate_att_values(context.exposure_att,
@@ -590,6 +592,7 @@ class PermutateExposure(Job):
 
                 losses[n, :] = vuln_curve.look_up(intensities)
 
+        endtime = datetime.datetime.now()
         # Mean loss per unit across all permutations:
         mean_loss = np.mean(losses, axis=0)
 
@@ -597,13 +600,29 @@ class PermutateExposure(Job):
         lossmean = losses.mean(axis=1)
 
         # Gives the index of the permutation with the 95th percentile mean loss
-        idx = np.abs(lossmean - np.quantile(lossmean, 0.95)).argmin()
+        idx = np.abs(lossmean - np.quantile(lossmean, quantile)).argmin()
 
         # Unit losses for the event with 95th percentile mean loss
         lossmax = losses[idx, :]
         context.exposure_att[loss_category_type] = mean_loss
         loss_category_type_max = loss_category_type + '_max'
         context.exposure_att[loss_category_type_max] = lossmax
+        permatts = {"dcterms:title": "Exposure permutation",
+                    ":iterations": iterations,
+                    ":GroupingField": groupby,
+                    ":quantile": quantile}
+        permact = context.prov.activity(":ExposurePermutation",
+                                        starttime.strftime(DATEFMT),
+                                        endtime.strftime(DATEFMT),
+                                        permatts)
+        perment = context.prov.entity(":Permuted exposure",
+                                      {"prov:label": "Permuted exposure data",
+                                       "prov:type": "void:Dataset",
+                                       }
+                                      )
+        context.prov.wasGeneratedBy(perment, permact)
+        context.prov.used(permact, ":Exposure data")
+        context.prov.used(context.provlabel, perment)
 
 
 class LoadRaster(Job):
@@ -803,6 +822,14 @@ class SaveProvenance(Job):
         [file_name, bucket_name, bucket_key] = \
             misc.create_temp_file_path_for_s3(file_name)
         [basename, ext] = os.path.splitext(file_name)
+        endtime = datetime.datetime.now().strftime(DATEFMT)
+        context.prov.activity(context.provlabel,
+                              context.provstarttime,
+                              endtime,
+                              {"dcterms:title": context.provtitle,
+                               "prov:type": "void:Analysis"}
+                              )
+        context.prov.wasAttributedTo(context.provlabel, ":hazimp")
         dot = prov_to_dot(context.prov)
         dot.write_png(basename + '.png')
         context.prov.serialize(file_name, format='xml')
