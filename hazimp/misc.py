@@ -35,7 +35,6 @@ import boto3
 from botocore.exceptions import ClientError
 
 import pandas as pd
-import geopandas as gpd
 
 from git import Repo, InvalidGitRepositoryError
 
@@ -305,6 +304,8 @@ def get_git_commit():
         commit = str(r.commit('HEAD'))
         branch = r.active_branch.name
         dt = r.commit('HEAD').committed_datetime.strftime(DATEFMT)
+        url = r.remote().url
+
     except (InvalidGitRepositoryError, TypeError):
         # We're not using a git repo
         commit = 'unknown'
@@ -312,8 +313,8 @@ def get_git_commit():
         f = os.path.realpath(__file__)
         mtime = os.path.getmtime(f)
         dt = datetime.fromtimestamp(mtime).strftime(DATEFMT)
-
-    return commit, branch, dt
+        url = 'unknown'
+    return commit, branch, dt, url
 
 
 def get_s3_client():

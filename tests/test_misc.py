@@ -225,13 +225,13 @@ class TestMisc(unittest.TestCase):
             permutate_att_values(data_frame, 'x', 'y')
 
     def test_get_git_commit(self):
-        self.assertEqual((ANY, ANY, ANY), get_git_commit())
+        self.assertEqual((ANY, ANY, ANY, ANY), get_git_commit())
 
     @patch.object(Repo, 'commit')
     def test_get_git_commit_without_git(self, mock):
         mock.side_effect = InvalidGitRepositoryError()
 
-        self.assertEqual(('unknown', '', ANY), get_git_commit())
+        self.assertEqual(('unknown', '', ANY, 'unknown'), get_git_commit())
 
     def test_get_s3_client(self):
         s3_client = get_s3_client()

@@ -120,13 +120,14 @@ class Context(object):
         self.prov.add_namespace('void', 'http://vocab.deri.ie/void#')
         self.prov.add_namespace('dcterms', 'http://purl.org/dc/terms/')
 
-        commit, branch, dt = misc.get_git_commit()
+        commit, branch, dt, url = misc.get_git_commit()
         # Create the fundamental software agent that is this code:
         self.prov.agent(":hazimp",
                         {"prov:type": "prov:SoftwareAgent",
                          "prov:Revision": commit,
                          "prov:branch": branch,
-                         "prov:date": dt})
+                         "prov:date": dt,
+                         "prov:url": url})
 
         # Not sure this needs to be the user?
         self.prov.agent(f":{getpass.getuser()}",
