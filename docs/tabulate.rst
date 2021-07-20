@@ -43,7 +43,7 @@ closely based on `pandas.DataFrame.pivot_table`.
         it is used as the same manner as column values.
 
     *aggfunc*
-        function, list of functions, dict, default numpy.mean
+        function, list of functions, dict, default `numpy.mean`
         If a list of functions passed, the resulting pivot table will have
         hierarchical columns whose top level are the function names
         (inferred from the function objects themselves)
@@ -57,23 +57,23 @@ Examples
 .. code:: yaml
 
  - tabulate:
-    file_name: wind_impact_by_year.xlsx
+    file_name: wind_impact_by_age.xlsx
     index: YEAR_BUILT
     columns: Damage state
     aggfunc: size
 
 This will return a table of the number (the `size` function) of buildings in each damage state,
-grouped by the "YEAR_BUILT" attribute, and saved to the file "wind_impact_by_year.xlsx"
+grouped by the "YEAR_BUILT" attribute, and saved to the file "wind_impact_by_age.xlsx"
 
 .. code:: yaml
 
  - tabulate:
-    file_name: mean_slr_by_year.xlsx
+    file_name: mean_slr_by_age.xlsx
     index: YEAR_BUILT
     columns: structural_loss_ratio
     aggfunc: mean
 
 This will return a table of the mean structural loss ratio of buildings, grouped
-by the "YEAR_BUILT" attribute, and saved to the file "mean_slr_by_year.xlsx"
+by the "YEAR_BUILT" attribute, and saved to the file "mean_slr_by_age.xlsx"
 
 
