@@ -5,7 +5,7 @@ Auto Generated Documentation
 PipeLine
 --------
 .. automodule:: hazimp.pipeline
-   :members:
+    :members:
 
 Config
 ------
@@ -15,30 +15,28 @@ Config
 Context
 -------
 .. automodule:: hazimp.context
-   :members:
+    :members:
 
 Templates
 ---------
 .. automodule:: hazimp.templates
-   :members:
+    :members:
 
 Aggregate
 ---------
 .. automodule:: hazimp.aggregate
-   :members:
-
-
+    :members:
 
 Miscellaneous
 -------------
 .. automodule:: hazimp.misc
-   :members:
+    :members:
 
 Raster
 ------
 .. automodule:: hazimp.raster
-   :members:
-   
+    :members:
+
 Validator
 ---------
 .. automodule:: hazimp.validator
