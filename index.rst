@@ -5,8 +5,8 @@
 
 Introduction
 ============
-HazImp is a tool for determining the impact due to natural hazards.
-It can be used to calculate damage to sites, given exposure and
+HazImp is a tool for determining the impact to assets due to natural hazards
+such as severe winds, earthquake or flood inundation. It can be used to calculate damage to sites, given exposure and
 hazard information. It is command line based and can be executed in parallel.
 
 
@@ -16,10 +16,12 @@ hazard information. It is command line based and can be executed in parallel.
    Basic User Guide <docs/user_guide>
    Installation <docs/install>
    Vulnerability <docs/vulnerability>
+   Exposure <docs/exposure>
    Templates <docs/templates>
    Aggregation <docs/aggregate>
    Categorise <docs/categorise>
-   Tabulate <docs/templates>
+   Tabulate <docs/tabulate>
+   Permutation <docs/permutation>
    Function documentation <docs/code>
    Contributing <docs/contributing>
    History <docs/history>

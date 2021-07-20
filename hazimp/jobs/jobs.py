@@ -552,11 +552,12 @@ class PermutateExposure(Job):
         permutations.
 
         :param context: The context instance, used to move data around.
-        :param groupby: The name of the exposure attribute to group
-                        exposure assets by before randomly permutating
-                        the corresponding vulnerability curves.
-        :param iterations: Number of iterations to perform
-        :param quantile: Represents the "maximum" event loss. Default=0.95
+        :param str groupby: The name of the exposure attribute to group
+                            exposure assets by before randomly permutating
+                            the corresponding vulnerability curves.
+        :param int iterations: Number of iterations to perform
+        :param float quantile: Represents the "maximum" event loss in the range
+        [0, 1], default=0.95
 
         Content return:
            exposure_vuln_curves: A :class:`pandas.DataFrame` of realised

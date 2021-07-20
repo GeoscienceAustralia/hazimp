@@ -15,11 +15,11 @@ government area, etc.). This requires some additional entries in the
 template file.
 
 *exposure_permutation*
-    This describes the :ref:`exposure`_ attribute that will constrain the 
+    This describes the :ref:`exposure` attribute that will constrain the 
     permutation, and the number of permuations.
     
     *groupby*
-    The field name in the :ref:`exposure`_ data by which the assets will be grouped.
+    The field name in the :ref:`exposure` data by which the assets will be grouped.
 
     *iterations* 
     The number of iterations to perform. Default is 1000 iterations
@@ -41,4 +41,4 @@ percentile of the mean loss to determine the "worst-case" event. The values are
 stored in an attribute with the suffix '_max' appended.
 
 An example of aggregation to geospatial fomats using permutation is given in the
-:ref:`aggregate`_ section.
+:ref:`aggregate` section.

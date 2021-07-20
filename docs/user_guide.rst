@@ -236,17 +236,15 @@ pairs are;
 Vulnerability functions
 -----------------------
 
-See the :ref:`Preparing vulnerability curves`_ section for guidance on
-preparing vulnerability functions for use in HazImp.
+See the :ref:`vulnerability` section for guidance on preparing vulnerability functions
+for use in HazImp.
 
 
 Provenance tracking
 -------------------
 
 The provenance of information used in generating an impact analysis is tracked
-using the Prov_ module. 
+using the `Prov <https://prov.readthedocs.io/en/latest/>`_ module. 
 
 Contributions to the code base should incorporate appropriate provenance
 statements to ensure consistency.
-
-.._Prov: https://prov.readthedocs.io/en/latest/

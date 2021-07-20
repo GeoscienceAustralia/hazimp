@@ -205,14 +205,12 @@ class Context(object):
         """
         Save the exposure attributes, including latitude and longitude.
         The file type saved is based on the filename extension.
-        Options
-           '.npz': Save the arrays into a single file in uncompressed .npz
-                   format.
 
-        :param use_parallel: Set to True for parallel behaviour
-        Which is only node 0 writing to file.
-        :param filename: The file to be written.
+        :param use_parallel: Set to True for parallel behaviour, which is only node 0 writing to file.
+        :param filename: The file to be written. If the extension is '.npz', then the arrays are save to an uncompressed numpy format file.
+
         :return write_dict: The whole dictionary, returned for testing.
+
         """
         [filename, bucket_name, bucket_key] = \
             misc.create_temp_file_path_for_s3(filename)
@@ -249,14 +247,12 @@ class Context(object):
         """
         Save the aggregated exposure attributes.
         The file type saved is based on the filename extension.
-        Options
-           '.npz': Save the arrays into a single file in uncompressed .npz
-                   format.
 
-        :param use_parallel: Set to True for parallel behaviour which
-        is only node 0 writing to file.
-        :param filename: The file to be written.
+        :param use_parallel: Set to True for parallel behaviour which is only node 0 writing to file.
+        :param filename: The file to be written. If the extension is '.npz', then the arrays are save to an uncompressed numpy format file.
+
         :return write_dict: The whole dictionary, returned for testing.
+
         """
         write_dict = self.exposure_agg.copy()
 
@@ -342,17 +338,13 @@ class Context(object):
         perform any arithmetic aggregation on fields (e.g. summation,
         mean, etc.)
 
-        :param str groupby: A column in the `DataFrame` that corresponds to
-        regions by which to aggregate data
-        :param dict kwargs: A `dict` with keys of valid column names (from the
-        `DataFrame`) and values being lists of aggregation functions to apply
-        to the columns.
+        :param groupby: A column in the `DataFrame` that corresponds to regions by which to aggregate data
+        :param kwargs: A `dict` with keys of valid column names (from the `DataFrame`) and values being lists of aggregation functions to apply to the columns.
 
         For example::
 
-        kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
-                'structural': ['mean', 'std']}
-
+            kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
+                      'structural': ['mean', 'std']}
 
         See
         https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
@@ -401,21 +393,10 @@ class Context(object):
         https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.pivot_table.html
         for further details.
 
-        Parameters
-        ----------
-        file_name : destination for the pivot table
-        index : column or list of columns
-            Keys to group by on the pivot table index.  If an array is passed,
-            it is being used as the same manner as column values.
-        columns : column, or list of the columns
-            Keys to group by on the pivot table column.  If an array is passed,
-            it is being used as the same manner as column values.
-        aggfunc : function, list of functions, dict, default numpy.mean
-            If list of functions passed, the resulting pivot table will have
-            hierarchical columns whose top level are the function names
-            (inferred from the function objects themselves)
-            If dict is passed, the key is column to aggregate and value
-            is function or list of functions.
+        :param file_name: destination for the pivot table
+        :param index: column or list of columns. Keys to group by on the pivot table index. If an array is passed, it is being used as the same manner as column values.
+        :param columns: column, or list of the columns. Keys to group by on the pivot  table column.  If an array is passed, it is being used as the same manner as column values.
+        :param aggfunc: function, list of functions, dict, default numpy.mean. If list of functions passed, the resulting pivot table will have hierarchical columns whose top level are the function names (inferred from the function objects themselves). If dict is passed, the key is column to aggregate and value is function or list of functions.
 
         Example:
 

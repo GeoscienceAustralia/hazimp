@@ -2,10 +2,15 @@ Auto Generated Documentation
 ============================
 
 
-Pipeline
+PipeLine
 --------
 .. automodule:: hazimp.pipeline
    :members:
+
+Config
+------
+.. automodule:: hazimp.config
+    :members:
 
 Context
 -------
@@ -22,12 +27,24 @@ Aggregate
 .. automodule:: hazimp.aggregate
    :members:
 
-Raster
-------
-.. automodule:: hazimp.raster
-   :members:
+
 
 Miscellaneous
 -------------
 .. automodule:: hazimp.misc
    :members:
+
+Raster
+------
+.. automodule:: hazimp.raster
+   :members:
+   
+Validator
+---------
+.. automodule:: hazimp.validator
+    :members:
+
+Workflow
+--------
+.. automodule:: hazimp.workflow
+    :members:

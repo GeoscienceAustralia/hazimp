@@ -1,7 +1,7 @@
 .. _aggregate:
 
 Saving to geospatial formats
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+============================
 
 Data can optionally be saved to a geospatial format that aggregates the impact
 data to spatial regions (for example suburbs, post codes). 
@@ -25,10 +25,9 @@ data to spatial regions (for example suburbs, post codes).
         code for each geographic region. Preferably the `impactcode` and
         `boundarycode` will be of the same type (e.g. `int` or `str`)
     *categories*
-        If True, and the :ref:`categorise` job is included in the pipeline, the
-        number of assets in each damage state defined by the :ref:`categorise`,
-        in each geographic region, will be added as an attribute to the output
-        file. **Note the different spelling used in this section.**
+        If True, and the `Categorise <categorise>`_ job is included in the pipeline, the
+        number of assets in each damage state defined by the categories will be added as an attribute to the output
+        file for each geographic region. **Note the different spelling used in this section.**
 
 Presently, HazImp will aggregate the following fields::
 

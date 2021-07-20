@@ -175,9 +175,10 @@ def files_raster_data_at_points(lon, lat, files):
     :param lat: A 1d array of the latitude of the points.
     :returns: reshaped_data, max_extent
       reshaped_data: A numpy array, shape (sites, hazards) or shape (sites),
-        for one hazard.
+      for one hazard.
       max_extent: [min_long, min_lat, max_long, max_lat] A rectange covering
-        the extents of all of the loaded rasters.
+      the extents of all of the loaded rasters.
+
     """
 
     data = []
