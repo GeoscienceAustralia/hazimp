@@ -1,11 +1,17 @@
-Auto Generated Documentation
-============================
+Class and function documentation
+================================
 
 
 PipeLine
 --------
 .. automodule:: hazimp.pipeline
     :members:
+
+Jobs
+----
+.. automodule:: hazimp.jobs.jobs
+    :members: 
+    :special-members: __call__
 
 Config
 ------

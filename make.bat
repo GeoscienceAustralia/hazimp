@@ -1,6 +1,7 @@
 @ECHO OFF
 
-REM Command file for Sphinx documentation
+REM Command file for Sphinx documentation - this is what's required on my local machine
+REM set SPHINXBUILD=C:\W10Dev\Continuum\anaconda3\envs\hazimp\Scripts\sphinx-build.exe
 
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
