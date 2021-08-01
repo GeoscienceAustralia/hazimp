@@ -11,7 +11,7 @@ The preferred way to contribute to HazImp is to fork the
    click on the 'Fork' button near the top of the page. This creates
    a copy of the code under your account on the GitHub server.
 
-2. Clone this copy to your local disk::
+2. Clone this copy to your local disk (using ssh commands)::
 
           $ git clone git@github.com:YourLogin/hazimp.git
           $ cd hazimp
@@ -91,8 +91,7 @@ Issues
 
 A great way to start contributing to HazImp is to pick an item
 from the list of `Issues <https://github.com/GeoscienceAustralia/hazimp/issues>`_
-in the issue tracker. (Well there are none there yet, but we will be 
-putting some up soon!) Resolving these issues allow you to start
+in the issue tracker. Resolving these issues allow you to start
 contributing to the project without much prior knowledge. Your
 assistance in this area will be greatly appreciated by the more
 experienced developers as it helps free up their time to concentrate on
@@ -101,19 +100,35 @@ other issues.
 Documentation
 -------------
 
-We are in the process of creating sphinx based documentation for HazImp. 
-Any help in setting this up will be gratefully accepted!
+We use sphinx-doc_ for creating documentation for HazImp. reStructuredText
+files are stored in the `docs` folder, while function docstrings are embedded in
+the code base.
 
-At present you will find the user guide in the docs folder. 
+Running Sphinx
+~~~~~~~~~~~~~~
 
-We are glad to accept any sort of documentation: function docstrings,
-reStructuredText documents (like this one), tutorials, etc.
-reStructuredText documents live in the source code repository under the
-docs/ directory.
+If using a conda_ environment to run HazImp, users may need to set the
+`SPHINXBUILD` environment variable to point to the correct `sphinx-build.exe`
+executable. 
 
-When you are writing documentation, it is important to keep a good
-compromise between mathematical and algorithmic details, and give
-intuition to the reader on what the algorithm does. It is best to always
-start with a small paragraph with a hand-waving explanation of what the
-method does to the data and a figure (coming from an example)
-illustrating it.
+To build the HTML pages on your local computer, use the `make html` command.
+
+On Windows::
+
+    set SPHINXBUILD=%CONDAPATH%\envs\hazimp\Scripts\sphinx-build.exe
+    make html
+
+On bash::
+
+    export SPHINXBUILD=$CONDAPATH/envs/hazimp/scripts/sphinx-build
+    make html
+
+Check the output for any error messages, then open the created docs in
+`_build/html/index.html`. 
+
+See the sphinx-doc_ pages for more details on using Sphinx Python Documentation
+Generator.
+
+
+.. _conda: https://conda.io/en/latest/index.html
+.. _sphinx-doc: https://www.sphinx-doc.org/en/master/

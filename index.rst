@@ -6,8 +6,9 @@
 Introduction
 ============
 HazImp is a tool for determining the impact to assets due to natural hazards
-such as severe winds, earthquake or flood inundation. It can be used to calculate damage to sites, given exposure and
-hazard information. It is command line based and can be executed in parallel.
+such as severe winds, earthquake or flood inundation. It can be used to
+calculate damage to sites, given exposure and hazard information. It is command
+line based and can be executed in parallel.
 
 
 .. toctree::
@@ -22,7 +23,7 @@ hazard information. It is command line based and can be executed in parallel.
    Categorise <docs/categorise>
    Tabulate <docs/tabulate>
    Permutation <docs/permutation>
-   Function documentation <docs/code>
+   API documentation <docs/code>
    Contributing <docs/contributing>
    History <docs/history>
   
