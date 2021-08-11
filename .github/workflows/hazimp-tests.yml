@@ -50,5 +50,6 @@ jobs:
         path: coverage.xml
     - uses: codecov/codecov-action@v2
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         env_vars: PYTHON
         files: ./coverage.xml
