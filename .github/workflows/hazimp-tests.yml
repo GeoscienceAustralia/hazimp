@@ -19,6 +19,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Cache conda
+      uses: actions/cache@v2
+      env:
+        CACHE_NUMBER: 0
+      with:
+        path: ~/conda_pkgs_dir
+        key:
+          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('hazimp.yml') }}
+          
     - name: Set up environment
       uses: conda-incubator/setup-miniconda@v2.0.0
       with:
@@ -26,6 +35,7 @@ jobs:
         environment-file: hazimp.yml
         python-version: ${{ matrix.python-version }}
         auto-activate-base: false
+        use-only-tar-bz2: true
 
     - name: Test with nose
       shell: bash -l {0}
