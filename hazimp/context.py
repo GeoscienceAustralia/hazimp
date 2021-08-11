@@ -286,7 +286,7 @@ class Context(object):
             then the arrays are save to an uncompressed numpy format file.
 
         :return write_dict: The whole :class:`pandas.DataFrame`, returned for
-        testing.
+            testing.
 
 
         """
