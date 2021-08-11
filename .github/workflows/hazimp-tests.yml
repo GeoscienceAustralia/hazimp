@@ -30,7 +30,7 @@ jobs:
     - name: Test with nose
       shell: bash -l {0}
       run: |
-        nosetests -v --exe --with-xunit --xunit-file-name=coverage.xml
+        nosetests -v --exe --with-xunit --xunit-file=coverage.xml
         nosetests examples/ --with-doctest -v
 
     - uses: codecov/codecov-action@v2
