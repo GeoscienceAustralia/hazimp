@@ -30,10 +30,15 @@ jobs:
     - name: Test with nose
       shell: bash -l {0}
       run: |
-        nosetests -v --exe --with-xunit --xunit-file=coverage.xml
+        nosetests -v --exe --with-coverage --cover-xml --cover-xml-file=coverage.xml --cover-package=hazimp
         nosetests examples/ --with-doctest -v
-
+        
+    - name: Upload coverage.xml as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage report
+        path: coverage.xml
     - uses: codecov/codecov-action@v2
       with:
-        env_vars: OS,PYTHON
+        env_vars: PYTHON
         files: ./coverage.xml
