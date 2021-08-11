@@ -187,8 +187,8 @@ def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
     :param str groupby: A column in the `DataFrame` that corresponds to
             regions by which to aggregate data
     :param dict kwargs: A `dict` with keys of valid column names (from the
-            `DataFrame`) and values being lists of aggregation functions to apply
-            to the columns.
+            `DataFrame`) and values being lists of aggregation functions to
+            apply to the columns.
 
     For example::
 

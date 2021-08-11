@@ -453,16 +453,17 @@ class SelectVulnFunction(Job):
         :param context: The context instance, used to move data around.
         :param variability_method: The vulnerability sets that will be
             looked up and the sampling method used for each set.
-            A dictionary with keys being vulnerability_set_ids and values being the sampling method
-            to generate a vulnerability curve from a vulnerability function.
+            A dictionary with keys being vulnerability_set_ids and values being
+            the sampling method to generate a vulnerability curve from a
+            vulnerability function.
             e.g. `{'EQ_contents': 'mean', 'EQ_building': 'mean'}`
             Limitation: A vulnerability set can only be used once, since
             it needs a unique name.
 
-        :returns: A dictionary of realised vulnerability curves, associated with the exposure
-            data. key - intensity measure; value - realised vulnerability curve
-            instance per asset
-            
+        :returns: A dictionary of realised vulnerability curves, associated
+            with the exposure data. key - intensity measure; value - realised
+            vulnerability curve instance per asset
+
         """
         exposure_vuln_curves = {}
 
@@ -757,12 +758,12 @@ class Aggregate(Job):
         :param str filename: Path to the output file
         :param str boundaries: Path to a geospatial data file that contains
             polygon features by which the data will be aggregated.
-        :param str impactcode: An attribute in the exposure file that contains a
-            unique code for each geographic region to aggregate by.
+        :param str impactcode: An attribute in the exposure file that
+            contains a unique code for each geographic region to aggregate by.
         :param str boundarycode: An attribute in the :data:`boundaries` file
-            that contains the same unique code for each geographic region. Prferably
-            the :data:`impactcode` and :data:`boundarycode` will be of the same
-            type. These values are used to join the two datasets.
+            that contains the same unique code for each geographic region.
+            Prferably the :data:`impactcode` and :data:`boundarycode` will be
+            of the same type. These values are used to join the two datasets.
         :param dict fields: A `dict` with keys of valid column names (from the
             `DataFrame`) and values being lists of aggregation
             functions to apply to the columns. For example::
@@ -773,7 +774,9 @@ class Aggregate(Job):
             labels used to classify loss data. For example::
 
                 categorise = dict('bins': [0, 0.02, 0.1, 0.2, 0.5, 1.0],
-                                  'labels': ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete'])
+                                  'labels': ['Negligible', 'Slight',
+                                             'Moderate', 'Extensive',
+                                             'Complete'])
         """
         # Default filename to use when no output filename is specified
         if filename is None:
@@ -834,11 +837,11 @@ class SaveProvenance(Job):
 
     def __call__(self, context, file_name=None):
         """
-        Save provenance information. By default we save to xml format. This will
-        also generate an image of the provenance graph.
+        Save provenance information. By default we save to xml format. This
+        will also generate an image of the provenance graph.
 
-        :param context: :class:`Context` instance to move data around, including
-            provenance information
+        :param context: :class:`Context` instance to move data around,
+            including provenance information
         :param str file_name: Destination for the provenance file.
         """
 

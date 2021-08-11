@@ -8,13 +8,12 @@ For the latest documentation, installation guide and user guide, see https://haz
 
 This branch enables users to develop new functions for HazImp.
 
-Build status
+Status
 ------------
 
-Master branch: ![Master branch](https://github.com/GeoscienceAustralia/hazimp/workflows/Unit%20tests%20for%20HazImp/badge.svg?branch=master)
-
-Development branch: ![Develop branch](https://github.com/GeoscienceAustralia/hazimp/workflows/Unit%20tests%20for%20HazImp/badge.svg?branch=develop)
-
+[![Unit tests for HazImp (master branch)](https://github.com/GeoscienceAustralia/hazimp/actions/workflows/hazimp-tests.yml/badge.svg?branch=master)](https://github.com/GeoscienceAustralia/hazimp/actions/workflows/hazimp-tests.yml)
+[![Unit tests for HazImp (develop branch)](https://github.com/GeoscienceAustralia/hazimp/actions/workflows/hazimp-tests.yml/badge.svg?branch=develop)](https://github.com/GeoscienceAustralia/hazimp/actions/workflows/hazimp-tests.yml)
+[![Documentation Status](https://readthedocs.org/projects/hazimp/badge/?version=latest)](https://hazimp.readthedocs.io/en/latest/?badge=latest)
 
 Data
 ==== 

@@ -272,9 +272,9 @@ def get_git_commit():
     url of the remote repo.
 
     :returns: the commit hash and current branch if the code is maintained in a
-              git repo. If not, the commit is "unknown", branch is empty and the datetime
-              is set to be the modified time of the called python script
-              (usually hazimp/main.py)
+              git repo. If not, the commit is "unknown", branch is empty and
+              the datetime is set to be the modified time of the called python
+              script (usually hazimp/main.py)
 
     """
     try:

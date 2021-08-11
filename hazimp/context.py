@@ -69,19 +69,22 @@ class Context(object):
     :ivar exposure_att: A :class:`pandas.DataFrame` to hold the exposure
         attributes
     :ivar exposure_agg: A :class:`pandas.DataFrame.groupby` object that holds
-        aggregated exposure data after executing :meth:`save_exposure_aggregation`
-    :ivar exposure_vuln_curves: A :class:`dict` of :class:`hazimp.jobs.RealisedVulnerabilityCurves`
+        aggregated exposure data after executing
+        :meth:`save_exposure_aggregation`
+    :ivar exposure_vuln_curves: A :class:`dict` of
+        :class:`hazimp.jobs.RealisedVulnerabilityCurves`
     :ivar vulnerability_sets: A :class:`dict` of the available vulnerability
         sets
     :ivar vul_function_titles: A dictionary with keys being
-        vulnerability_set_ids and value being the exposure attribute who's values are
-        vulnerability function ID's.
+        vulnerability_set_ids and value being the exposure attribute who's
+        values are vulnerability function ID's.
     :ivar pivot: :class:`pandas.DataFrame` for an Excel-style pivot table (e.g.
         for tabulation of results)
     :ivar prov: :class:`prov.ProvDocument` for provenance information.
     :ivar str provlabel: Qualified label for the provenance information
     :ivar str provtitle: Descriptive title for provenance information
-    :ivar str provstarttime: Formatted datetime representing the start of the analysis
+    :ivar str provstarttime: Formatted datetime representing the start of
+        the analysis.
 
     """
 
@@ -282,7 +285,9 @@ class Context(object):
         :param filename: The file to be written. If the extension is '.npz',
             then the arrays are save to an uncompressed numpy format file.
 
-        :return write_dict: The whole :class:`pandas.DataFrame`, returned for testing.
+        :return write_dict: The whole :class:`pandas.DataFrame`, returned for
+        testing.
+
 
         """
         write_dict = self.exposure_agg.copy()
@@ -311,7 +316,7 @@ class Context(object):
                          boundarycode, categories, fields, categorise,
                          use_parallel=True):
         """
-        Save data aggregated to geospatial regions. 
+        Save data aggregated to geospatial regions.
 
         :param str filename: Destination filename
         :param str boundaries: File name of a geospatial dataset that contains
@@ -320,15 +325,16 @@ class Context(object):
         :param str boundarycode: Corresponding field name in the geospatial
             dataset.
         :param boolean categories: Add columns for the number of buildings in
-            each damage state defined in the 'Damage state' attribute. This requires
-            that a 'categorise` job has been included in the pipeline, which in turn
-            requires the bins and labels to be defined in the job configuration.
+            each damage state defined in the 'Damage state' attribute. This
+            requires that a 'categorise` job has been included in the pipeline,
+            which in turn requires the bins and labels to be defined in the job
+            configuration.
         :param dict fields: A `dict` with keys of valid column names (from the
             :class:`pandas.DataFrame`) and values being lists of aggregation
-            functions to apply to the columns. 
+            functions to apply to the columns.
         :param dict categorise: categorise job attributes
         :param bool use_parallel: True for parallel behaviour, which is only
-            node 0 writing to file 
+            node 0 writing to file
         """
         LOGGER.info("Saving aggregated data")
         boundaries = misc.download_file_from_s3_if_needed(boundaries)
@@ -382,19 +388,18 @@ class Context(object):
         mean, etc.)
 
         :param groupby: A column in the `DataFrame` that corresponds to regions
-            by which to aggregate data 
+            by which to aggregate data
         :param kwargs: A `dict` with keys of valid column names (from the
             `DataFrame`) and values being lists of aggregation functions to
-            apply to the columns. 
+            apply to the columns.
 
         For example::
 
             kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
                       'structural': ['mean', 'std']}
 
-        See
-        https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
-        for more guidance on using aggregation with `DataFrames`
+        See https://tinyurl.com/54rbacwm for more guidance on using aggregation
+        with :class:`pd.DataFrames`.
 
         >>> groupby = 'MB_CODE11'
         >>> kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
@@ -451,22 +456,22 @@ class Context(object):
         resulting DataFrame, then writes to an Excel file. This function does
         not support data aggregation - multiple values will result in a
         MultiIndex in the columns.
-        See
-        https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.pivot_table.html
-        for further details.
+
+        See https://tinyurl.com/6x535u5t for further details.
 
         :param file_name: destination for the pivot table
         :param index: column or list of columns. Keys to group by on the pivot
-            table index. If an array is passed, it is being used as the same manner
-            as column values.
+            table index. If an array is passed, it is being used as the same
+            manner as column values.
         :param columns: column, or list of the columns. Keys to group by on the
-            pivot  table column.  If an array is passed, it is being used as the
-            same manner as column values. 
+            pivot  table column.  If an array is passed, it is being used in
+            the same manner as column values.
         :param aggfunc: function, list of functions, dict, default numpy.mean.
             If list of functions passed, the resulting pivot table will have
-            hierarchical columns whose top level are the function names (inferred
-            from the function objects themselves). If dict is passed, the key is
-            column to aggregate and value is function or list of functions.
+            hierarchical columns whose top level are the function names
+            (inferred from the function objects themselves). If dict is passed,
+            the key is column to aggregate and value is function or list of
+            functions.
 
         Example:
 
