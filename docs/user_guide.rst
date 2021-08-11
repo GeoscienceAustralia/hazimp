@@ -17,6 +17,14 @@ value of the x-axis and the loss associated with that hazard on the y-axis:
 
    *An example vulnerability curve.*
 
+HazImp calculates a loss ratio value for each asset, based on the asset's
+vulnerability and the magnitude of the hazard at the location of the asset. The
+loss ratio is the cost of repair divided by the total replacement cost of the
+asset. The loss ratio is also referred to as the damage ratio, or damage index.
+
+.. math::
+
+    LR = \frac{\mathrm{Repair\: cost}}{\mathrm{Replacement\: cost}}
 
 
 Quick how-to
@@ -150,7 +158,7 @@ which describes the vulnerability set to use (see below for more details).
     ``structural_loss_ratio`` given the ``0.2s gust at 10m height m/s``.
 
 *calc_struct_loss*
-    This will multiply the replacement value and the ``structural_loss_ratio``
+    This will multiply the replacement value and the ``structural``
     to get the ``structural_loss``.
 
     *replacement_value_label*
@@ -163,6 +171,25 @@ which describes the vulnerability set to use (see below for more details).
     of averaging data from multiple wind hazards.  The information can also be
     saved as numpy arrays.  This can be done by using the *.npz* extension.
     This data can be accessed using Python scripts and is not averaged.
+
+Output
+~~~~~~
+
+HazImp will calculate the loss ratio for each exposure asset and append that
+value to the record for the asset as the ``structural`` attribute. The resulting
+data are saved to a csv-format file defined in the configuration file:
+
+.. code-block:: yaml
+
+      - save: wind_impact.csv
+
+If the ``calc_struct_loss`` configuration option is included, then HazImp will
+calculate the loss value as the product of the loss ratio and the replacement
+value of the asset. This will appear in the output file under the attribute
+``structural_loss``, and will be available for inclusion in any aggregation::
+
+      - calc_struct_loss:
+          replacement_value_label: REPLACEMENT_VALUE
 
 
 Aggregation
@@ -179,19 +206,19 @@ Aggregation
     *kwargs* 
     A list of fields that will be aggregated to the level
     identified above. Each entry under this section must match an
-    output field (``structural_loss_ratio``, ``structural_loss``,
+    output field (``structural``, ``structural_loss``,
     ``REPLACEMENT_VALUE``), followed by a Python-style list of
-    statisticts to calculate: e.g. ``mean``, ``std`` or ``sum``.::
+    statisticts to calculate: e.g. ``mean``, ``std`` or ``sum``::
 
       kwargs: 
-        structural_loss_ratio: [mean, std]
+        structural: [mean, std]
         structural_loss: [mean, sum]
         REPLACEMENT_VALUE: [mean, sum]
 
 
 *save_agg*
     The file where the aggregated results will be saved. This will save data to
-    a csv-format file.
+    a csv-format file::
 
     - save_agg: olwyn_agg.csv
 

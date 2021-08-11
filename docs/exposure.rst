@@ -10,7 +10,8 @@ asset, and an attribute that indicates which vulnerability function to use for
 that asset. 
 
 Additional attributes can enable a more detailed analysis - for example,
-aggregation based on specific attributes. For example, including an attribute of
+aggregation based on specific attributes such as post codes/zip codes, local
+government areas or building type. For example, including an attribute of
 the construction era would allow aggregation by that attribute. In the case of
 using `permutation <permutation>`_, the exposure data must include an attribute that
 indicates the geographic region over which the permutation will be performed. 
