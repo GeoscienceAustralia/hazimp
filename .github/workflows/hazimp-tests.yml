@@ -33,3 +33,7 @@ jobs:
         nosetests -v --exe
         nosetests examples/ --with-doctest -v
 
+    - uses: codecov/codecov-action@v2.02
+      with:
+        env_vars: PYTHON
+        file: ./coverage.xml
