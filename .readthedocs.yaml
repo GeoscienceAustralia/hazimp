@@ -12,5 +12,5 @@ sphinx:
 formats:
   - pdf
 
-  conda:
-    environment: hazimp.yml
+conda:
+  environment: hazimp.yml
