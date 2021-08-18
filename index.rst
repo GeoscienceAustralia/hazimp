@@ -23,7 +23,6 @@ line based and can be executed in parallel.
    Categorise <docs/categorise>
    Tabulate <docs/tabulate>
    Permutation <docs/permutation>
-   API documentation <docs/code>
    Contributing <docs/contributing>
    History <docs/history>
   

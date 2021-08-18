@@ -21,7 +21,6 @@
 """
 Calculations
 
-
 """
 
 import sys
@@ -41,6 +40,7 @@ class Calculator(Job):
 
     """
     Abstract Calculator class. Should use abc then.
+
     """
 
     def __init__(self):
@@ -80,6 +80,7 @@ class MultiplyTest(Calculator):
 
     """
     Simple test class, multiplying args.
+
     """
 
     def __init__(self):

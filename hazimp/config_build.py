@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Functions to assist in converting a yaml  configuration file
+Functions to assist in converting a yaml configuration file
 to jobs and calcs.
 """
 
@@ -145,6 +145,7 @@ def validate_job_instance(job_inst, atts):
 
     :param job_inst: A reference to the job function.
     :param atts: The function attributes from config.
+
     """
     check_files_to_load(atts)
     check_attributes(job_inst, atts)
@@ -155,6 +156,7 @@ def file_can_open(file2load):
     Check if a file can be opened.
     :param file2load: file.
     :returns: True if file2load can be opened.
+
     """
     try:
         with open(file2load) as _:
@@ -168,9 +170,9 @@ def check_files_to_load(atts):
     Check the context, based on config attributes.
 
     This function relies on some assumptions.
-    All jobs/calcs that load files label the files as;
-       file_name OR
-       file_list - for a list of files or a file
+    All jobs/calcs that load files label the files as::
+    * file_name OR
+    * file_list - for a list of files or a file
 
     :param atts: The function attributes from config.
     :raises: True for testing or RuntimeError
@@ -198,13 +200,14 @@ def check_files_to_load(atts):
 def check_attributes(job_calc_function, config_args):
     """
     Check the attributes of the jobs/cal functions for spelling.
-    It will check if all attributes are
+    It will check if all attributes are::
     * Missing when they are mandatory
     * typo args
 
     :param job_calc_function: A reference to the job function.
     :param config_args: The function attributes from config
     :raises: RuntimeError
+
     """
     unchecked_config_args = copy.copy(config_args)
     args, defaults = job_calc_function.get_required_args_no_context()
