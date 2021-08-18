@@ -8,7 +8,8 @@ version: 2
 python:
   install:
     - method: pip
-      extra_requirements:
+      path: .
+      requirements:
         - sphinx-autoapi
 
 # Build documentation in the docs/ directory with Sphinx
