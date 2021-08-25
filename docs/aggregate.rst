@@ -62,6 +62,12 @@ Output data to multiple files::
    fields:
       structural: [mean]
 
+.. NOTE::
+    The length of some attribute names exceeds the maximum length allowed for
+    ESRI shape files and will be automatically truncated when saving to that
+    format. A warning message will be generated indicating this truncation is
+    being applied.
+
 Aggregate with permuted exposure::
 
  - aggregate:

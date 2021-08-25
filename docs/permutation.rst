@@ -15,11 +15,14 @@ government area, etc.). This requires some additional entries in the
 template file.
 
 *exposure_permutation*
-    This describes the :ref:`exposure` attribute that will constrain the 
+    This section describes the :ref:`exposure` attribute that will constrain the
     permutation, and the number of permuations.
     
     *groupby*
-    The field name in the :ref:`exposure` data by which the assets will be grouped.
+    The field name in the :ref:`exposure` data by which the assets will be
+    grouped. While any categorical attribute could be used (e.g. building age),
+    it is recommended to use an attribute that represents the geographical
+    region.
 
     *iterations* 
     The number of iterations to perform. Default is 1000 iterations
