@@ -4,10 +4,10 @@ Templates
 =========
 
 The simplest way to use HazImp is with a template, which sets up a
-:class:`PipeLine` to run a collection of :class:`Job` functions. There is currently
-a wind template and a flood template. Templates take into account internal 
-vulnerability curves and the data flow needed to produce loss information,
-simplifying the configuration file.
+:class:`PipeLine` to run a collection of :class:`Job` functions. There are
+currently templates for wind, earthquake and flood hazard events. Templates take
+into account internal vulnerability curves and the data flow needed to produce
+loss information, simplifying the configuration file.
 
 Templates are used to set out the flow of processing invoked in separate
 :class:`Job` functions that are then connected into a :class:`PipeLine` that is
