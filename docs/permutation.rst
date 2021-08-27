@@ -1,7 +1,7 @@
 .. _permutation:
 
 Using permutation to understand uncertainty in vulnerability
-============================================================
+------------------------------------------------------------
 
 In many regions (in Australia), the attributes of individual buildings are 
 unknown, but are recorded for some statistical area (e.g. suburb, local 

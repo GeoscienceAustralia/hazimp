@@ -1,7 +1,7 @@
 .. _templates:
 
 Templates
-=========
+---------
 
 The simplest way to use HazImp is with a template, which sets up a
 :class:`PipeLine` to run a collection of :class:`Job` functions. There are
@@ -36,7 +36,7 @@ sequence in a specific order:
 
 
 Available templates
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 There are currently 6 templates pre-packaged with HazImp (plus one deprecated
 template). Most are built around wind impacts, but there are also templates for

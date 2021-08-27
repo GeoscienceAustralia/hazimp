@@ -1,7 +1,7 @@
 .. _aggregate:
 
 Saving to geospatial formats
-============================
+----------------------------
 
 Data can optionally be saved to a geospatial format that aggregates the impact
 data to spatial regions (for example suburbs, post codes). 

@@ -1,7 +1,7 @@
 .. _categorise: 
 
 Including categorisations
-=========================
+-------------------------
 
 Users may want to convert from numerical values to categorical values for output
 fields. For example, converting the structural loss ratio from a value between 0
@@ -43,7 +43,7 @@ This is based on the `pandas.cut` method.
         resulting bins.
 
 Example
--------
+~~~~~~~
 
 A basic example, which would result in the categories listed in the table above
 being added to the column "Damage state": 

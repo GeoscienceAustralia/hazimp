@@ -1,7 +1,7 @@
 .. _tabulate:
 
 Generate tables
-===============
+---------------
 
 A common way of reporting the outcomes of a HazImp analysis is to look at the
 number of features distributed across various ranges. For example, the number of
@@ -52,7 +52,7 @@ closely based on `pandas.DataFrame.pivot_table`.
 
 
 Examples
---------
+~~~~~~~~
 
 .. code:: yaml
 
