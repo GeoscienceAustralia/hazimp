@@ -570,14 +570,23 @@ class PermutateExposure(Job):
 
         losses = np.zeros((iterations, len(context.exposure_att)))
         starttime = datetime.datetime.now()
+
+        # This calls the damage calculation for the base vulnerability
+        # definition:
+        LookUp()(context)
+
+        # Iterate and randomly assign vulnerability within the given
+        # attribute grouping:
         for n in range(iterations):
             context.exposure_att = \
                 misc.permutate_att_values(context.exposure_att,
                                           field, groupby=groupby)
 
             for intensity_key in context.exposure_vuln_curves:
-                SelectVulnFunction().__call__(context, variability_method={
-                    intensity_key: 'mean'})
+                SelectVulnFunction()(
+                    context,
+                    variability_method={intensity_key: 'mean'}
+                    )
                 vuln_curve = context.exposure_vuln_curves[intensity_key]
                 int_measure = vuln_curve.intensity_measure_type
                 loss_category_type = vuln_curve.loss_category_type
@@ -593,20 +602,15 @@ class PermutateExposure(Job):
                 losses[n, :] = vuln_curve.look_up(intensities)
 
         endtime = datetime.datetime.now()
-        # Mean loss per unit across all permutations:
-        mean_loss = np.mean(losses, axis=0)
 
         # Mean loss across separate permutations:
-        lossmean = losses.mean(axis=1)
+        lossmean = np.mean(losses, axis=1)
 
         # Gives the index of the permutation with the 95th percentile mean loss
         idx = np.abs(lossmean - np.quantile(lossmean, quantile)).argmin()
+        loss_category_type_max = loss_category_type + '_upper'
+        context.exposure_att[loss_category_type_max] = losses[idx, :]
 
-        # Unit losses for the event with 95th percentile mean loss
-        lossmax = losses[idx, :]
-        context.exposure_att[loss_category_type] = mean_loss
-        loss_category_type_max = loss_category_type + '_max'
-        context.exposure_att[loss_category_type_max] = lossmax
         permatts = {"dcterms:title": "Exposure permutation",
                     ":iterations": iterations,
                     ":GroupingField": groupby,
