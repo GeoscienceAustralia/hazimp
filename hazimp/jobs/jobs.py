@@ -579,7 +579,7 @@ class PermutateExposure(Job):
                     )
                 vuln_curve = context.exposure_vuln_curves[intensity_key]
                 int_measure = vuln_curve.intensity_measure_type
-                loss_category_type = vuln_curve.loss_category_type
+                lct = vuln_curve.loss_category_type
                 try:
                     intensities = context.exposure_att[int_measure]
                 except KeyError:
@@ -593,13 +593,8 @@ class PermutateExposure(Job):
 
         endtime = datetime.datetime.now()
 
-        # Mean loss across separate permutations:
-        lossmean = np.mean(losses, axis=1)
-
-        # Gives the index of the permutation with the 95th percentile mean loss
-        idx = np.abs(lossmean - np.quantile(lossmean, quantile)).argmin()
-        loss_category_type_max = loss_category_type + '_upper'
-        context.exposure_att[loss_category_type_max] = losses[idx, :]
+        lct_max = lct + '_upper'
+        context.exposure_att[lct_max] = np.quantile(losses, quantile, axis=0)
 
         permatts = {"dcterms:title": "Exposure permutation",
                     ":iterations": iterations,

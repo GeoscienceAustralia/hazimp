@@ -446,7 +446,7 @@ class Context(object):
             lct = vc.loss_category_type
         LOGGER.info(f"Categorising {lct} values into {len(labels)} categories")
         self.exposure_att[field_name] = pd.cut(self.exposure_att[lct],
-                                               bins, right=False,
+                                               bins, right=True,
                                                labels=labels)
 
     def tabulate(self, file_name, index=None, columns=None, aggfunc=None):
