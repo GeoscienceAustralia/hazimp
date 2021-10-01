@@ -33,7 +33,6 @@ from hazimp.templates import (SAVE, LOADWINDTCRM, WINDV3,
                               REP_VAL_NAME, VULNFILE, VULNSET)
 
 
-
 class TestWind(unittest.TestCase):
 
     """
@@ -84,7 +83,7 @@ class TestWind(unittest.TestCase):
 
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
-        #os.remove(f.name)
+        # os.remove(f.name)
 
     def test_wind_v3_template(self):
         # Test running an end to end cyclone test based
@@ -123,7 +122,7 @@ class TestWind(unittest.TestCase):
             exp_dict = numpy.load(f.name)
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
-        #os.remove(f.name)
+        # os.remove(f.name)
 
     def test_wind_yaml_v3_list(self):
         # Test running an end to end cyclone test based
@@ -172,8 +171,8 @@ class TestWind(unittest.TestCase):
             exp_dict = numpy.load(f_out.name)
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
-        #os.remove(f.name)
-        #os.remove(f_out.name)
+        # os.remove(f.name)
+        # os.remove(f_out.name)
 
     def test_wind_v3_template_list_csv(self):
         # Test running an end to end cyclone test based
@@ -217,13 +216,11 @@ class TestWind(unittest.TestCase):
             # number of significant figures in the output
             self.assertTrue(allclose(exp_dict['exposure_latitude'],
                                      [-22.99, -23.01, -22.99, -23.99, -23]))
-        #os.remove(f.name)
-
+        # os.remove(f.name)
 
 
 # -------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestWind, 'test')
-    # SUITE = unittest.makeSuite(TestWind, 'test_wind_v3_template')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)

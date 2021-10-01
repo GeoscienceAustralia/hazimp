@@ -379,7 +379,7 @@ class TestTemplates(unittest.TestCase):
                    'var2': 'contents_action',
                    'var_out': 'CONTENTS_FLOOD_FUNCTION_ID'}),
             (SimpleLinker, {'vul_functions_in_exposure':
-                                {'contents_domestic_flood_2012': 'CONTENTS_FLOOD_FUNCTION_ID'}
+                            {'contents_domestic_flood_2012': 'CONTENTS_FLOOD_FUNCTION_ID'}
                             }),
             (SelectVulnFunction, {'variability_method': {'contents_domestic_flood_2012': 'mean'}}),
             (LookUp, {}),
@@ -410,7 +410,7 @@ class TestTemplates(unittest.TestCase):
             (Const, {'var': 'floor_height_(m)', 'value': 0.3}),
             (CalcFloorInundation, {}),
             (SimpleLinker, {'vul_functions_in_exposure':
-                                {'structural_domestic_flood_2012': 'FABRIC_FLOOD_FUNCTION_ID'}
+                            {'structural_domestic_flood_2012': 'FABRIC_FLOOD_FUNCTION_ID'}
                             }),
 
             (SelectVulnFunction, {'variability_method': {'structural_domestic_flood_2012': 'mean'}}),
@@ -424,7 +424,6 @@ class TestTemplates(unittest.TestCase):
 
     def assertJobs(self, actual: list, expected: list):
         for i, job in enumerate(actual):
-            #print(type(job.job_instance).__name__)
             (instance, attributes) = expected[i]
             self.assertIsInstance(job.job_instance, instance)
             self.assertEqual(attributes, job.atts_to_add)

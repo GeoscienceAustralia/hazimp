@@ -19,6 +19,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Cache conda
+      uses: actions/cache@v2
+      env:
+        CACHE_NUMBER: 0
+      with:
+        path: ~/conda_pkgs_dir
+        key:
+          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('hazimp.yml') }}
+          
     - name: Set up environment
       uses: conda-incubator/setup-miniconda@v2.0.0
       with:
@@ -26,10 +35,21 @@ jobs:
         environment-file: hazimp.yml
         python-version: ${{ matrix.python-version }}
         auto-activate-base: false
+        use-only-tar-bz2: true
 
     - name: Test with nose
       shell: bash -l {0}
       run: |
-        nosetests -v --exe
+        nosetests -v --exe --with-coverage --cover-xml --cover-xml-file=coverage.xml --cover-package=hazimp
         nosetests examples/ --with-doctest -v
-
+        
+    - name: Upload coverage.xml as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage report
+        path: coverage.xml
+    - uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        env_vars: PYTHON
+        files: ./coverage.xml

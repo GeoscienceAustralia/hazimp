@@ -49,7 +49,9 @@ def build_example_building_vulnerability():
 <nrml xmlns="http://openquake.org/xmlns/nrml/0.5"
       xmlns:gml="http://www.opengis.net/gml">
 
-    <vulnerabilityModel id="EQ_building" assetCategory="not_used" lossCategory="building_loss">
+    <vulnerabilityModel id="EQ_building"
+     assetCategory="not_used"
+     lossCategory="building_loss">
             <vulnerabilityFunction id="SW1" dist="LN">
                 <imls imt="MMI">0.00 5.00 10.00</imls>
                 <meanLRs>0.00  0.5  1.0</meanLRs>
@@ -85,7 +87,9 @@ def build_example_contents_vulnerability():
 <nrml xmlns="http://openquake.org/xmlns/nrml/0.5"
       xmlns:gml="http://www.opengis.net/gml">
 
-    <vulnerabilityModel id="EQ_contents" assetCategory="not_used" lossCategory="contents_loss">
+    <vulnerabilityModel id="EQ_contents"
+     assetCategory="not_used"
+     lossCategory="contents_loss">
             <vulnerabilityFunction id="RICH" dist="LN">
                 <imls imt="MMI">0.00 5.00 10.00</imls>
                 <meanLRs>0.00 0.005 0.01</meanLRs>

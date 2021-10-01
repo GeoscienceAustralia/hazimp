@@ -36,6 +36,7 @@ def _reader2(config: dict) -> list:
 
     :param config_list: A list describing the simulation.
     :returns: A list of jobs to process over.
+
     """
     job_insts = []
 

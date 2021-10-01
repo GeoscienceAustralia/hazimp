@@ -17,6 +17,14 @@ value of the x-axis and the loss associated with that hazard on the y-axis:
 
    *An example vulnerability curve.*
 
+HazImp calculates a loss ratio value for each asset, based on the asset's
+vulnerability and the magnitude of the hazard at the location of the asset. The
+loss ratio is the cost of repair divided by the total replacement cost of the
+asset. The loss ratio is also referred to as the damage ratio, or damage index.
+
+.. math::
+
+    LR = \frac{\mathrm{Repair\: cost}}{\mathrm{Replacement\: cost}}
 
 
 Quick how-to
@@ -150,7 +158,7 @@ which describes the vulnerability set to use (see below for more details).
     ``structural_loss_ratio`` given the ``0.2s gust at 10m height m/s``.
 
 *calc_struct_loss*
-    This will multiply the replacement value and the ``structural_loss_ratio``
+    This will multiply the replacement value and the ``structural``
     to get the ``structural_loss``.
 
     *replacement_value_label*
@@ -164,37 +172,25 @@ which describes the vulnerability set to use (see below for more details).
     saved as numpy arrays.  This can be done by using the *.npz* extension.
     This data can be accessed using Python scripts and is not averaged.
 
+Output
+~~~~~~
 
+HazImp will calculate the loss ratio for each exposure asset and append that
+value to the record for the asset as the ``structural`` attribute. The resulting
+data are saved to a csv-format file defined in the configuration file:
 
-Using permutation to understand uncertainty in vulnerability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: yaml
 
-In many regions (in Australia), the attributes of individual buildings are 
-unknown, but are recorded for some statistical area (e.g. suburb, local 
-government area). In this case, the vulnerability curve assigned to a 
-building may not be precisely determined, which can lead to uncertainty 
-in the impact for a region.
+      - save: wind_impact.csv
 
-To overcome this, users can run the impact calculation multiple times, 
-while permuting the vulnerability curves for each region (suburb, local 
-government area, etc.). This requires some additional entries in the 
-template file.
+If the ``calc_struct_loss`` configuration option is included, then HazImp will
+calculate the loss value as the product of the loss ratio and the replacement
+value of the asset. This will appear in the output file under the attribute
+``structural_loss``, and will be available for inclusion in any aggregation::
 
-*exposure_permutation*
-    This describes the exposure attribute that will constrain the 
-    permutation, and the number of permuations.
-    
-    *groupby*
-    The field name in the exposure data by which the assets will be grouped. 
+      - calc_struct_loss:
+          replacement_value_label: REPLACEMENT_VALUE
 
-    *iterations* 
-    The number of iterations to perform
-
-Example::
-
- - exposure_permutation:
-     groupby: MB_CODE
-     iterations: 1000
 
 Aggregation
 ~~~~~~~~~~~
@@ -210,18 +206,21 @@ Aggregation
     *kwargs* 
     A list of fields that will be aggregated to the level
     identified above. Each entry under this section must match an
-    output field (``structural_loss_ratio``, ``structural_loss``,
+    output field (``structural``, ``structural_loss``,
     ``REPLACEMENT_VALUE``), followed by a Python-style list of
-    statisticts to calculate: e.g. ``mean``, ``std`` or ``sum``.::
+    statisticts to calculate: e.g. ``mean``, ``std`` or ``sum``::
 
       kwargs: 
-        structural_loss_ratio: [mean, std]
+        structural: [mean, std]
         structural_loss: [mean, sum]
         REPLACEMENT_VALUE: [mean, sum]
 
 
 *save_agg*
-    The file where the aggregated results will be saved. 
+    The file where the aggregated results will be saved. This will save data to
+    a csv-format file::
+
+    - save_agg: olwyn_agg.csv
 
 This option has only been implemented in the ``wind_nc`` and ``wind_v5``
 templates at this time (June 2020).
@@ -260,24 +259,22 @@ pairs are;
     ``water depth(m)``, since that is the axis of the
     vulnerability curves.
 
-Without Templates
------------------
-
 
 Vulnerability functions
 -----------------------
 
-See the :ref:`Preparing vulnerability curves`_ section for guidance on
-preparing vulnerability functions for use in HazImp.
+See the :ref:`vulnerability` section for guidance on preparing vulnerability functions
+for use in HazImp.
 
 
 Provenance tracking
 -------------------
 
 The provenance of information used in generating an impact analysis is tracked
-using the Prov_ module. 
+using the `Prov <https://prov.readthedocs.io/en/latest/>`_ module. This
+information is stored in an xml-format file alongside the other output files. A
+graphical representation of the connections between the components is also
+created.
 
 Contributions to the code base should incorporate appropriate provenance
 statements to ensure consistency.
-
-.._Prov: https://prov.readthedocs.io/en/latest/
