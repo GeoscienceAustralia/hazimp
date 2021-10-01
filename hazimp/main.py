@@ -52,8 +52,7 @@ def timer(f):
     return wrap
 
 
-NUMVER = numpy.__version__
-NUMVER = NUMVER.split('.')
+NUMVER = numpy.__version__.split('.')
 if NUMVER[0] == '1' and int(NUMVER[1]) < 9:
     raise RuntimeError("Must use numpy 1.9 or greater")
 

@@ -61,7 +61,31 @@ class Context(object):
     """
     Context is a singleton storing all of the run specific data, such as the
     exposure features and their attributes, vulnerability sets, aggregations,
-    pivot tables, etc.
+    pivot tables, provenance, etc.
+
+    :ivar exposure_lat: Latitude values of the exposure data
+    :ivar exposure_long: Longitude values of the exposure data
+
+    :ivar exposure_att: A :class:`pandas.DataFrame` to hold the exposure
+        attributes
+    :ivar exposure_agg: A :class:`pandas.DataFrame.groupby` object that holds
+        aggregated exposure data after executing
+        :meth:`save_exposure_aggregation`
+    :ivar exposure_vuln_curves: A :class:`dict` of
+        :class:`hazimp.jobs.RealisedVulnerabilityCurves`
+    :ivar vulnerability_sets: A :class:`dict` of the available vulnerability
+        sets
+    :ivar vul_function_titles: A dictionary with keys being
+        vulnerability_set_ids and value being the exposure attribute who's
+        values are vulnerability function ID's.
+    :ivar pivot: :class:`pandas.DataFrame` for an Excel-style pivot table (e.g.
+        for tabulation of results)
+    :ivar prov: :class:`prov.ProvDocument` for provenance information.
+    :ivar str provlabel: Qualified label for the provenance information
+    :ivar str provtitle: Descriptive title for provenance information
+    :ivar str provstarttime: Formatted datetime representing the start of
+        the analysis.
+
     """
 
     def __init__(self):
@@ -141,7 +165,8 @@ class Context(object):
         """
         Set the qualified label for the provenance data
 
-        :param label: the qualified label name
+        :param label: the qualified label name. This is used to reference the
+            analysis activity in other functions and methods.
         :param title: Optional value for the dcterms:title element
         """
 
@@ -150,10 +175,10 @@ class Context(object):
 
     def get_site_shape(self):
         """
-        Get the numpy shape of sites the context is storing.
-        It is based on the shape of exposure_long.
+        Get the :class:`numpy.shape` of sites the context is storing.
+        It is based on the shape of :data:`exposure_long`.
 
-        :return: The numpy shape of sites the context is storing.
+        :return: The :class:`numpy.shape` of sites the context is storing.
         """
         if self.exposure_long is None:
             shape = (0)
@@ -162,13 +187,18 @@ class Context(object):
         return shape
 
     def clip_exposure(self, min_long, min_lat, max_long, max_lat):
-        """ min_long, min_lat, max_long, max_lat
+        """
         Clip the exposure data so only the exposure values within
         the rectangle formed by  max_lat, min_lat, max_long and
         min_long are included.
 
         Note: This must be called before the exposure_vuln_curves
         are determined, since the curves have a site dimension.
+
+        :param float min_long: minimum longitude of exposure data to use
+        :param float min_lat: minimum latitude of exposure data to use
+        :param float max_long: maximum longitude of exposure data to use
+        :param float max_lat: maximum latitude of exposure data to use
         """
         assert self.exposure_vuln_curves is None
 
@@ -205,14 +235,14 @@ class Context(object):
         """
         Save the exposure attributes, including latitude and longitude.
         The file type saved is based on the filename extension.
-        Options
-           '.npz': Save the arrays into a single file in uncompressed .npz
-                   format.
 
-        :param use_parallel: Set to True for parallel behaviour
-        Which is only node 0 writing to file.
-        :param filename: The file to be written.
+        :param use_parallel: Set to True for parallel behaviour, which is only
+            node 0 writing to file.
+        :param filename: The file to be written. If the extension is '.npz',
+            then the arrays are save to an uncompressed numpy format file.
+
         :return write_dict: The whole dictionary, returned for testing.
+
         """
         [filename, bucket_name, bucket_key] = \
             misc.create_temp_file_path_for_s3(filename)
@@ -249,14 +279,16 @@ class Context(object):
         """
         Save the aggregated exposure attributes.
         The file type saved is based on the filename extension.
-        Options
-           '.npz': Save the arrays into a single file in uncompressed .npz
-                   format.
 
-        :param use_parallel: Set to True for parallel behaviour which
-        is only node 0 writing to file.
-        :param filename: The file to be written.
-        :return write_dict: The whole dictionary, returned for testing.
+        :param use_parallel: Set to True for parallel behaviour which is only
+            node 0 writing to file.
+        :param filename: The file to be written. If the extension is '.npz',
+            then the arrays are save to an uncompressed numpy format file.
+
+        :return write_dict: The whole :class:`pandas.DataFrame`, returned for
+            testing.
+
+
         """
         write_dict = self.exposure_agg.copy()
 
@@ -276,7 +308,7 @@ class Context(object):
             else:
                 numpy.savez(filename, **write_dict)
             # The write_dict is returned for testing
-            # When running in paralled this is a way of getting all
+            # When running in parallel this is a way of getting all
             # of the context info
             return write_dict
 
@@ -284,12 +316,25 @@ class Context(object):
                          boundarycode, categories, fields, categorise,
                          use_parallel=True):
         """
-        Save data aggregated to geospatial regions
+        Save data aggregated to geospatial regions.
 
         :param str filename: Destination filename
-        :param bool use_parallel: True for parallel behaviout, which
-                                  is only node 0 writing to file
-
+        :param str boundaries: File name of a geospatial dataset that contains
+            geographical boundaries to serve as aggregation boundaries
+        :param str impactcode: Field name in the `dframe` to aggregate by
+        :param str boundarycode: Corresponding field name in the geospatial
+            dataset.
+        :param boolean categories: Add columns for the number of buildings in
+            each damage state defined in the 'Damage state' attribute. This
+            requires that a 'categorise` job has been included in the pipeline,
+            which in turn requires the bins and labels to be defined in the job
+            configuration.
+        :param dict fields: A `dict` with keys of valid column names (from the
+            :class:`pandas.DataFrame`) and values being lists of aggregation
+            functions to apply to the columns.
+        :param dict categorise: categorise job attributes
+        :param bool use_parallel: True for parallel behaviour, which is only
+            node 0 writing to file
         """
         LOGGER.info("Saving aggregated data")
         boundaries = misc.download_file_from_s3_if_needed(boundaries)
@@ -342,21 +387,24 @@ class Context(object):
         perform any arithmetic aggregation on fields (e.g. summation,
         mean, etc.)
 
-        :param str groupby: A column in the `DataFrame` that corresponds to
-        regions by which to aggregate data
-        :param dict kwargs: A `dict` with keys of valid column names (from the
-        `DataFrame`) and values being lists of aggregation functions to apply
-        to the columns.
+        :param groupby: A column in the `DataFrame` that corresponds to regions
+            by which to aggregate data
+        :param kwargs: A `dict` with keys of valid column names (from the
+            `DataFrame`) and values being lists of aggregation functions to
+            apply to the columns.
 
         For example::
 
-        kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
-                'structural': ['mean', 'std']}
+            kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
+                      'structural': ['mean', 'std']}
 
+        See https://tinyurl.com/54rbacwm for more guidance on using aggregation
+        with :class:`pd.DataFrames`.
 
-        See
-        https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
-        for more guidance on using aggregation with `DataFrames`
+        >>> groupby = 'MB_CODE11'
+        >>> kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
+                      'structural': ['mean', 'std']}
+        >>> context.aggregate_loss(groupby, kwargs)
 
         """
         LOGGER.info(f"Aggregating loss using {groupby} attribute")
@@ -374,12 +422,23 @@ class Context(object):
         Bin values into discrete intervals.
 
         :param list bins: Monotonically increasing array of bin edges,
-                          including the rightmost edge, allowing for
-                          non-uniform bin widths.
+            including the rightmost edge, allowing for non-uniform bin widths.
         :param labels: Specifies the labels for the returned
-                       bins. Must be the same length as the resulting bins.
+            bins. Must be the same length as the resulting bins.
         :param str field_name: Name of the new column in the `exposure_att`
-                                `DataFrame`
+            :class:`pandas.DataFrame`
+
+        See
+        https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.cut.html
+        for more details
+
+        >>> bins = [0.0, 0.02, 0.1, 0.2, 0.5, 1.0]
+        >>> labels = ['Negligible', 'Slight', 'Moderate', 'Extensive',
+        >>> 'Complete']
+        >>> field_name = 'Damage state'
+        >>> context.categorise(bins, labels, field_name)
+        >>> context.exposure_att.head()
+
         """
 
         for intensity_key in self.exposure_vuln_curves:
@@ -397,29 +456,27 @@ class Context(object):
         resulting DataFrame, then writes to an Excel file. This function does
         not support data aggregation - multiple values will result in a
         MultiIndex in the columns.
-        See
-        https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.pivot_table.html
-        for further details.
 
-        Parameters
-        ----------
-        file_name : destination for the pivot table
-        index : column or list of columns
-            Keys to group by on the pivot table index.  If an array is passed,
-            it is being used as the same manner as column values.
-        columns : column, or list of the columns
-            Keys to group by on the pivot table column.  If an array is passed,
-            it is being used as the same manner as column values.
-        aggfunc : function, list of functions, dict, default numpy.mean
+        See https://tinyurl.com/6x535u5t for further details.
+
+        :param file_name: destination for the pivot table
+        :param index: column or list of columns. Keys to group by on the pivot
+            table index. If an array is passed, it is being used as the same
+            manner as column values.
+        :param columns: column, or list of the columns. Keys to group by on the
+            pivot  table column.  If an array is passed, it is being used in
+            the same manner as column values.
+        :param aggfunc: function, list of functions, dict, default numpy.mean.
             If list of functions passed, the resulting pivot table will have
             hierarchical columns whose top level are the function names
-            (inferred from the function objects themselves)
-            If dict is passed, the key is column to aggregate and value
-            is function or list of functions.
+            (inferred from the function objects themselves). If dict is passed,
+            the key is column to aggregate and value is function or list of
+            functions.
 
         Example:
 
-        Include the following in the configuration file:
+        Include the following in the configuration file::
+
          - tabulate:
             file_name: wind_impact_table.xlsx
             index: MESHBLOCK_CODE_2011

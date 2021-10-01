@@ -21,7 +21,6 @@
 """
 Calculations
 
-
 """
 
 import sys
@@ -41,6 +40,7 @@ class Calculator(Job):
 
     """
     Abstract Calculator class. Should use abc then.
+
     """
 
     def __init__(self):
@@ -80,6 +80,7 @@ class MultiplyTest(Calculator):
 
     """
     Simple test class, multiplying args.
+
     """
 
     def __init__(self):
@@ -91,9 +92,9 @@ class MultiplyTest(Calculator):
     def calc(self, a_test, c_test):
         """
         Multiply values element-wise
-        :param a_test:
-        :param c_test:
-        :return: the product of a_test and c_test
+        :param a_test: an array of values
+        :param c_test: an array of values
+        :return: the product of a_test and c_test, elementwise.
         """
         return [a_test * c_test]
 
@@ -137,6 +138,7 @@ class ConstantTest(Calculator):
     def calc(self, constant=None):
         """
         Testing returning a constant value, multiplied by two.
+
         :param constant:
         :return:
         """
@@ -185,10 +187,11 @@ class CalcLoss(Calculator):
     def calc(self, structural, structural_value):
         """
         Calculate the structural loss, given the structural value and
-            the loss ratio.
-        :param structural:
-        :param structural_value:
-        :return: The structural loss
+        the loss ratio.
+
+        :param structural: Structural loss ratio
+        :param structural_value: Structural value (in dollar terms)
+        :return: The structural loss in dollar terms
         """
         return [structural * structural_value]
 

@@ -95,30 +95,7 @@ def mod_file_list(file_list, variable):
     variable in the netcdf file.
 
     :param file_list: List of files or a single file to be processed
-    :param str variable: Variable name
-
-    :returns: list of filenames, modified to the above format
-
-    """
-
-    if isinstance(file_list, str):
-        file_list = [file_list]
-    flist = []
-    for f in file_list:
-        flist.append(f'NETCDF:"{f}":{variable}')
-    return flist
-
-
-def mod_file_list(file_list, variable):
-    """
-    Modify the filename list for working with netcdf format files.
-
-    For netcdf files, GDAL expects the filename to be of the form
-    'NETCDF:"<filename>":<variable>', where variable is a valid
-    variable in the netcdf file.
-
-    :param file_list: List of files or a single file to be processed
-    :param str variable: Variable name
+    :param variable: Variable name
 
     :returns: list of filenames, modified to the above format
 
@@ -235,7 +212,7 @@ def sorted_dict_values(adict):
     code from: goo.gl/Sb7Czw
     :param adict: A dictionary.
     :return: The sorted keys and the corresponding values
-        as two lists.
+    as two lists.
     """
     keys = sorted(sorted(adict.keys()))
     return keys, [adict[key] for key in keys]
@@ -291,12 +268,13 @@ def get_file_mtime(file):
 
 def get_git_commit():
     """
-    Return the git commit hash, branch and datetime of the commit
+    Return the git commit hash, branch, datetime of the commit, as well as the
+    url of the remote repo.
 
     :returns: the commit hash and current branch if the code is maintained in a
-    git repo. If not, the commit is "unknown", branch is empty and the datetime
-    is set to be the modified time of the called python script
-    (usually hazimp/main.py)
+              git repo. If not, the commit is "unknown", branch is empty and
+              the datetime is set to be the modified time of the called python
+              script (usually hazimp/main.py)
 
     """
     try:
@@ -388,12 +366,14 @@ def download_file_from_s3_if_needed(s3_source_path,
 
     If zip file path is provided, the zip file is extracted and .shp
     file path is returned.
+
     :param str s3_source_path: S3 path of the file.
-    :param str default_ext: If a zipped file i
-                provided, this extension shall be used to find the the
-                target file
+    :param str default_ext: If a zipped file is
+               provided, this extension shall be used to find the the
+               target file
     :param str destination_directory: Local directory location to
     :returns: downloaded file path in local file system.
+
     """
     if not s3_source_path.startswith('/vsis3/'):
         return s3_source_path
@@ -450,11 +430,13 @@ def upload_to_s3_if_applicable(local_path, bucket_name, bucket_key,
                                ignore_exception=False):
     """
     Function to upload files from local directory to s3.
+
     :param str local_path: Local directory path containing files to upload.
     :param str bucket_name: Destination S3 bucket name
     :param str bucket_key: Destination S3 bucket key for the file
     :param bool ignore_exception: ignore any exception related to file upload.
-                            Set true for optional files.
+            Set true for optional files.
+
     """
     if bucket_name is None or bucket_key is None:
         return

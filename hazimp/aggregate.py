@@ -50,7 +50,8 @@ for function in aggregate_functions:
 def choropleth(dframe, boundaries, impactcode, bcode, filename,
                fields, categories, categorise) -> bool:
     """
-    Aggregate to geospatial boundaries and save to file
+    Aggregate to geospatial boundaries using joins on attributes and save to
+    file.
 
     :param dframe: `pandas.DataFrame` containing point data to be aggregated
     :param str boundaries: File name of a geospatial dataset that contains
@@ -58,24 +59,30 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
     :param str impactcode: Field name in the `dframe` to aggregate by
     :param str bcode: Corresponding field name in the geospatial dataset.
     :param str filename: Destination file name. Must have a valid extension of
-    `shp`, `json` or `gpkg`. See `import fiona; fiona.supported_drivers` for a
-    complete list of options, but at this time only three have been
-    implemented.
+                         `shp`, `json` or `gpkg`.
+                         See `import fiona; fiona.supported_drivers` for a
+                         complete list of options, but at this time only three
+                         have been implemented.
     :param boolean categories: Add columns for the number of buildings in each
-    damage state defined in the 'Damage state' attribute. This requires that a
-    'categorise` job has been included in the pipeline, which in turn requires
-    the bins and labels to be defined in the job configuration.
+                               damage state defined in the 'Damage state'
+                               attribute. This requires that a 'categorise`
+                               job has been included in the pipeline, which in
+                               turn requires the bins and labels to be defined
+                               in the job configuration.
     :param dict categorise: categorise job attributes
 
-    NOTE:: presently, using `categories`=True will not do any categorisation of
-    the mean damage index for the aggregation areas.
+    NOTE::
+
+        Presently, using `categories`=True will not do any categorisation of
+        the mean damage index for the aggregation areas.
+
     :param dict fields: A `dict` with keys of valid column names (from the
-    `DataFrame`) and values being lists of aggregation functions to apply
-    to the columns.
+                        `DataFrame`) and values being lists of aggregation
+                        functions to apply to the columns.
 
     For example::
 
-    fields = {'structural': ['mean']}
+        fields = {'structural': ['mean']}
 
     See
     https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation
@@ -179,15 +186,15 @@ def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
 
     :param dframe: `pandas.DataFrame` that contains impact data
     :param str groupby: A column in the `DataFrame` that corresponds to
-    regions by which to aggregate data
+            regions by which to aggregate data
     :param dict kwargs: A `dict` with keys of valid column names (from the
-    `DataFrame`) and values being lists of aggregation functions to apply
-    to the columns.
+            `DataFrame`) and values being lists of aggregation functions to
+            apply to the columns.
 
     For example::
 
-    kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
-              'structural': ['mean', 'std']}
+        kwargs = {'REPLACEMENT_VALUE': ['mean', 'sum'],
+                'structural': ['mean', 'std']}
 
     See
     https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#aggregation

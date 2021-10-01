@@ -28,12 +28,14 @@ that have been built into HazImp already. These templates ensure the correct
 set of jobs are executed, in the correct order, for given use cases.
 
 It's also possible to build a :class:`PipeLine` manually, using the
-:method:`add_job` method to add more jobs.
+:meth:`PipeLine.add_job` method to add more jobs.
 
 .. warning:: The order of jobs in a :class:`PipeLine` is important. The
    existing templates ensure correct order of the jobs. If creating a
    :class:`PipeLine` manually, the user will be responsible for ensuring
-   the correct order of jobs.
+   the correct order of jobs. A `RuntimeError` is raised if the order is
+   incorrect, and we recommend any new job pipelines are adapted from the
+   existing templates.
 
 .. note:: Currently we include the :class:`SaveProvenance` job in the
    templates, so a manually defined :class:`PipeLine` will have to explicitly
