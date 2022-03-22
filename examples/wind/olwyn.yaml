@@ -22,7 +22,7 @@
 - save_agg: olwyn_agg.csv
 - categorise:
    field_name: 'Damage state'
-   bins: [0.05, 0.02, 0.1, 0.2, 0.5, 1.0]
+   bins: [0.005, 0.02, 0.1, 0.2, 0.5, 1.0]
    labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
 - tabulate:
    file_name: olwyn_dmg_by_age.xlsx

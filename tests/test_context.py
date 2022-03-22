@@ -221,6 +221,18 @@ class TestContext(unittest.TestCase):
 
         self.assertEqual(['Low', 'Medium', 'High'], data_frame['category'].to_list())
 
+    def test_categorise_unsorted_bins(self):
+        curve = MagicMock()
+        curve.loss_category_type = 'damage_index'
+
+        data_frame = pd.DataFrame(data={'damage_index': [0, 5, 9]})
+
+        con = context.Context()
+        con.exposure_vuln_curves = {'domestic_wind_2012': curve}
+        con.exposure_att = data_frame
+        self.assertRaises(ValueError, con.categorise, [0, 7.5, 2.5, 10],
+                          ['Low', 'Medium', 'High'], 'category')
+
     def test_tabulate(self):
         with tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False) as f:
             con = context.Context()

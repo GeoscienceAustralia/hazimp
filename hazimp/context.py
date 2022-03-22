@@ -445,6 +445,9 @@ class Context(object):
             vc = self.exposure_vuln_curves[intensity_key]
             lct = vc.loss_category_type
         LOGGER.info(f"Categorising {lct} values into {len(labels)} categories")
+        if sorted(bins) != bins:
+            msg = f"Bins are not in monotonically increasing order: {bins}"
+            raise ValueError(msg)
         self.exposure_att[field_name] = pd.cut(self.exposure_att[lct],
                                                bins, right=False,
                                                labels=labels)
