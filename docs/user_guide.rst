@@ -271,7 +271,10 @@ Provenance tracking
 -------------------
 
 The provenance of information used in generating an impact analysis is tracked
-using the `Prov <https://prov.readthedocs.io/en/latest/>`_ module. 
+using the `Prov <https://prov.readthedocs.io/en/latest/>`_ module. This
+information is stored in an xml-format file alongside the other output files. A
+graphical representation of the connections between the components is also
+created.
 
 Contributions to the code base should incorporate appropriate provenance
 statements to ensure consistency.

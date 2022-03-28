@@ -12,27 +12,22 @@ line based and can be executed in parallel.
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    
    Basic User Guide <docs/user_guide>
    Installation <docs/install>
    Vulnerability <docs/vulnerability>
    Exposure <docs/exposure>
-   Templates <docs/templates>
-   Aggregation <docs/aggregate>
-   Categorise <docs/categorise>
-   Tabulate <docs/tabulate>
-   Permutation <docs/permutation>
-   API documentation <docs/code>
+   Jobs <docs/jobs>
    Contributing <docs/contributing>
    History <docs/history>
   
 .. code
    
-.. Commenting this out so the pdf looks better
+
   Indices and tables
   ==================
-..
+
   * :ref:`genindex`
   * :ref:`modindex`
   * :ref:`search`

@@ -50,7 +50,8 @@ for function in aggregate_functions:
 def choropleth(dframe, boundaries, impactcode, bcode, filename,
                fields, categories, categorise) -> bool:
     """
-    Aggregate to geospatial boundaries and save to file
+    Aggregate to geospatial boundaries using joins on attributes and save to
+    file.
 
     :param dframe: `pandas.DataFrame` containing point data to be aggregated
     :param str boundaries: File name of a geospatial dataset that contains

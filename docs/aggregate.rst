@@ -1,7 +1,7 @@
 .. _aggregate:
 
 Saving to geospatial formats
-============================
+----------------------------
 
 Data can optionally be saved to a geospatial format that aggregates the impact
 data to spatial regions (for example suburbs, post codes). 
@@ -25,7 +25,7 @@ data to spatial regions (for example suburbs, post codes).
         code for each geographic region. Preferably the `impactcode` and
         `boundarycode` will be of the same type (e.g. `int` or `str`)
     *categories*
-        If True, and the `Categorise <categorise>`_ job is included in the pipeline, the
+        If True, and the :ref:`Categorise <categorise>` job is included in the pipeline, the
         number of assets in each damage state defined by the categories will be added as an attribute to the output
         file for each geographic region. **Note the different spelling used in this section.**
 
@@ -34,7 +34,7 @@ Presently, HazImp will aggregate the following fields::
     'structural': 'mean', 'min', 'max'
     'contents': 'mean', 'min', 'max'
 
-If :ref:`permutation` of the exposure is performed, then the corresponding
+If :ref:`permutation <permutation>` of the exposure is performed, then the corresponding
 '_max' field can also be included in the aggregation::
 
     'structural_max': 'mean', 'min', 'max'
@@ -61,6 +61,12 @@ Output data to multiple files::
    categories: True
    fields:
       structural: [mean]
+
+.. NOTE::
+    The length of some attribute names exceeds the maximum length allowed for
+    ESRI shape files and will be automatically truncated when saving to that
+    format. A warning message will be generated indicating this truncation is
+    being applied.
 
 Aggregate with permuted exposure::
 

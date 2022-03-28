@@ -44,13 +44,16 @@ INSURE_MAP = {
 
 def _flood_fabric_v2_reader(config: dict) -> list:
     """
-    This function does two things;
+    This function does two things::
+
        * From a flood fabric template v2 configuration dictionary
        build the job list.
        * Set up the attributes of the jobs and calc's specifically
        for a flood study.
+
     :param config_list: A list describing the simulation.
     :returns: A list of jobs to process over.
+
     """
     job_insts = []
 
@@ -104,13 +107,16 @@ def _flood_fabric_v2_reader(config: dict) -> list:
 
 def _flood_contents_v2_reader(config: dict) -> list:  # pylint: disable=R0915
     """
-    This function does two things;
+    This function does two things::
+
        * From a flood contents template v2 configuration dictionary
        build the job list.
        * Set up the attributes of the jobs and calc's specifically
        for a flood study.
+
     :param config_list: A list describing the simulation.
     :returns: A list of jobs to process over.
+
     """
     job_insts = []
 
