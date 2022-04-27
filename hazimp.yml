@@ -4,8 +4,6 @@ channels:
   - defaults
 dependencies:
   - python
-  - gdal
-  - libgdal
   - nose
   - coverage
   - pytz
@@ -31,3 +29,5 @@ dependencies:
   - pytest-cov
   - mock
   - lxml
+  - pip:
+      gdal
