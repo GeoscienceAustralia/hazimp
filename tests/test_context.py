@@ -38,7 +38,7 @@ import pandas as pd
 from mock import MagicMock
 from numpy.testing import assert_array_equal
 from pandas._testing import assert_frame_equal
-from scipy import allclose, array, arange
+from numpy import allclose, array, arange
 
 from hazimp import context
 from hazimp import misc

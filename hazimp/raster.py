@@ -21,9 +21,9 @@ Manipulate raster data.
 import threading
 from concurrent.futures.thread import ThreadPoolExecutor
 
-import gdal
+from osgeo import gdal
 import numpy
-from gdalconst import GA_ReadOnly
+from osgeo.gdalconst import GA_ReadOnly
 
 
 class Raster(object):

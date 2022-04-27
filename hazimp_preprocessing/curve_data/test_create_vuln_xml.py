@@ -34,7 +34,7 @@ import unittest
 import tempfile
 import os
 
-from scipy import asarray, allclose, array
+from numpy import asarray, allclose, array
 
 # W0403: 37: Relative import 'create_vuln_xml', should be 'curve_data.yadda'
 # pylint: disable=w0403
@@ -90,8 +90,8 @@ class TestCreateVulnXML(unittest.TestCase):
 
         loss_rs = {"dw1": asarray([0.01, 0.1]),
                    "dw2": asarray([0.02, 0.2])}
-        covs = {"dw1": asarray([0., 0.]),
-                "dw2": asarray([0., 0.])}
+        covs = {"dw1": asarray([10., 10.]),
+                "dw2": asarray([10., 10.])}
 
         for key in loss_rs:
             vul_funct = vuln_sets["d2012"].vulnerability_functions[key]

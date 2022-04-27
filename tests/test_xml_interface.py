@@ -26,7 +26,7 @@ Test the xml interface module.
 import math
 import unittest
 
-from scipy import allclose, asarray
+from numpy import allclose, asarray
 
 from hazimp.xml_interface import XmlLayer
 
