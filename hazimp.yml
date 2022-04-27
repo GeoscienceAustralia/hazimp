@@ -3,30 +3,31 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.6
-  - nose=1.3.7
-  - coverage=5.4
-  - pytz=2019.3
-  - gdal=3.0.2
-  - libgdal=3.0.2
-  - pyyaml=5.1.2
-  - geopandas=0.8.1
-  - pandas=1.1.0
-  - blas=1.0
-  - geos=3.7.2
-  - zstd=1.4.4
-  - seaborn=0.10.1
-  - prov=1.5.3
-  - gitpython=3.1.3
-  - pylint=2.5.3
-  - botocore=1.17.41
-  - boto3=1.14.18
-  - moto=1.3.14
-  - pep8=1.7.1
-  - pycodestyle=2.6.0
-  - openpyxl=3.0.7
-  - sphinx=3.5.2
-  - sphinx_rtd_theme=0.4.3
+  - python
+  - gdal
+  - libgdal
+  - nose
+  - coverage
+  - pytz
+  - pyyaml
+  - geopandas
+  - pandas
+  - blas
+  - geos
+  - zstd
+  - seaborn
+  - prov
+  - gitpython
+  - pylint
+  - botocore
+  - boto3
+  - moto
+  - pep8
+  - pycodestyle
+  - openpyxl
+  - sphinx
+  - sphinx_rtd_theme
   - pytest
   - pytest-cov
   - mock
+  - lxml
