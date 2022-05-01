@@ -3,19 +3,17 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python
-  - nose
-  - coverage
-  - pytz
-  - pyyaml
-  - geopandas
+  - gdal
   - pandas
-  - blas
-  - geos
-  - zstd
+  - geopandas
   - seaborn
   - prov
   - gitpython
+  - coverage
+  - pytz
+  - pyyaml
+  - blas
+  - zstd
   - pylint
   - botocore
   - boto3
@@ -23,11 +21,10 @@ dependencies:
   - pep8
   - pycodestyle
   - openpyxl
+  - xlrd
   - sphinx
   - sphinx_rtd_theme
   - pytest
   - pytest-cov
   - mock
   - lxml
-  - pip:
-      gdal

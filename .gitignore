@@ -5,6 +5,7 @@ nosetest*
 .idea/
 _build/
 .vscode/
+cover/
 
 debug.log
 *.~*~
