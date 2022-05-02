@@ -46,7 +46,7 @@ jobs:
     - name: Test with pyest
       shell: bash -l {0}
       run: |
-        pytest --cov-report xml:coverage.xml --cov=${PACKAGE}
+        pytest --cov-report xml:coverage.xml --cov=hazimp
         
     - name: Upload coverage.xml as artifact
       uses: actions/upload-artifact@v2
