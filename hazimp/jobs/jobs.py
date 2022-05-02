@@ -156,7 +156,7 @@ class Const(Job):
         shape = context.get_site_shape()
         # This uses a lot of memory,
         # but it keeps the context instance simple.
-        context.exposure_att[var] = scipy.tile(scipy.asarray(value), shape)
+        context.exposure_att[var] = np.tile(np.asarray(value), shape)
 
 
 class RandomConst(Job):
@@ -182,8 +182,8 @@ class RandomConst(Job):
         """
         shape = context.get_site_shape()
         s_keys, s_probs = misc.sorted_dict_values(values)
-        s_probs = scipy.asarray(s_probs)
-        s_keys = scipy.asarray(s_keys)
+        s_probs = np.asarray(s_probs)
+        s_keys = np.asarray(s_keys)
         values_array = misc.weighted_values(s_keys, s_probs, shape,
                                             forced_random=forced_random)
 
@@ -263,21 +263,21 @@ class MultipleDimensionMult(Job):
         """
 
         rolled = context.exposure_att[var1]
-        context.exposure_att[var1] = scipy.rollaxis(rolled, 0,
-                                                    rolled.ndim)
+        context.exposure_att[var1] = np.rollaxis(rolled, 0,
+                                                 rolled.ndim)
 
         context.exposure_att[var_out] = (context.exposure_att[var1] *
                                          context.exposure_att[var2])
         rolled = context.exposure_att[var1]
 
         # Roll var1 back
-        context.exposure_att[var1] = scipy.rollaxis(rolled,
-                                                    rolled.ndim - 1, 0)
+        context.exposure_att[var1] = np.rollaxis(rolled,
+                                                 rolled.ndim - 1, 0)
 
         # Roll the output so the asset dimension is 0.
         result = context.exposure_att[var_out]
-        context.exposure_att[var_out] = scipy.rollaxis(result,
-                                                       rolled.ndim - 1, 0)
+        context.exposure_att[var_out] = np.rollaxis(result,
+                                                    rolled.ndim - 1, 0)
 
 
 class LoadCsvExposure(Job):

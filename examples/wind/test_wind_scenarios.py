@@ -18,7 +18,7 @@ import tempfile
 from time import sleep
 import numpy
 
-from scipy import allclose
+from numpy import allclose
 
 from hazimp import misc
 from hazimp import main
@@ -102,8 +102,8 @@ class TestWind(unittest.TestCase):
                                     'synthetic_domestic_wind_vul_curves.xml')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
         a_config = [{TEMPLATE: WINDV3},
-                    {VULNFILE: vul_filename},
-                    {VULNSET: 'domestic_wind_2012'},
+                    {VULNFILE: {'filename': vul_filename,
+                                VULNSET: 'domestic_wind_2012'}},
                     {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                        'exposure_latitude': 'LATITUDE',
                                        'exposure_longitude': 'LONGITUDE'}},
@@ -149,8 +149,9 @@ class TestWind(unittest.TestCase):
             delete=False)
 
         f.write(f" - {TEMPLATE}: {WINDV3}\n")
-        f.write(f" - {VULNFILE}: {vul_filename}\n")
-        f.write(f" - {VULNSET}: domestic_wind_2012\n")
+        f.write(f" - {VULNFILE}:\n")
+        f.write(f"      filename: {vul_filename}\n")
+        f.write(f"      {VULNSET}: domestic_wind_2012\n")
         f.write(f" - {LOADCSVEXPOSURE}:\n")
         f.write(f"      file_name: {exp_filename}\n")
         f.write("      exposure_latitude: LATITUDE\n")
@@ -195,8 +196,8 @@ class TestWind(unittest.TestCase):
                      {'file_name': exp_filename,
                       'exposure_latitude': 'LATITUDE',
                       'exposure_longitude': 'LONGITUDE'}},
-                    {VULNFILE: vul_filename},
-                    {VULNSET: 'domestic_wind_2012'},
+                    {VULNFILE: {'filename': vul_filename,
+                                VULNSET: 'domestic_wind_2012'}},
                     {LOADWINDTCRM: [wind_filename]},
                     {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                     {SAVE: f.name}]

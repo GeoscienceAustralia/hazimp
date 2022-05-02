@@ -50,8 +50,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {'file_list': 'hazard.tif'},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                VULNSET: 'wind'},
             SAVE: 'output.csv'
         }
 
@@ -74,8 +74,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {'file_list': ['hazard.tif']},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'wind'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
@@ -113,8 +113,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {'file_list': ['hazard.tif']},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'eq',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'eq'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
@@ -152,8 +152,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {'file_list': 'hazard.tif'},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'eq',
+            VULNFILE: {'filename': 'curve.xml',
+                        VULNSET: 'eq'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
@@ -191,8 +191,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {'file_list': 'hazard.tif'},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'wind'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {},
             AGGREGATION: {},
@@ -217,8 +217,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'wind'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
@@ -250,8 +250,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'wind'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
@@ -287,8 +287,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'wind'},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             SAVE: 'output.csv',
             SAVEAGG: 'aggregation.csv',
@@ -316,7 +316,9 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
-            VULNSET: 'wind',
+            VULNFILE: {'filename': os.path.join(misc.RESOURCE_DIR, 
+            'synthetic_domestic_wind_vul_curves.xml'), 
+                       VULNSET: 'wind'},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             SAVE: 'output.csv',
             SAVEAGG: 'aggregation.csv',
@@ -344,6 +346,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
+            VULNFILE: {'filename': 'content_flood_avg_curve.xml',
+                       VULNSET: 'contents_domestic_flood_2012'},
             FLOOR_HEIGHT: 0.3,
             CONT_ACTIONS: {
                 'save': 0.2,
@@ -395,6 +399,8 @@ class TestTemplates(unittest.TestCase):
             LOADCSVEXPOSURE: {
                 'file_name': 'exposure.csv'
             },
+            VULNFILE: {'filename': 'fabric_flood_avg_curve.xml',
+                       VULNSET: 'structural_domestic_flood_2012'},
             HAZARDRASTER: {},
             FLOOR_HEIGHT: 0.3,
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
