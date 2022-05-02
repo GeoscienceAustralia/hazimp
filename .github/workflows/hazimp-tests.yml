@@ -39,10 +39,16 @@ jobs:
         auto-activate-base: false
         use-only-tar-bz2: true
 
-    - name: Test with nose
-      shell: bash -l {0}
+    - name: set pythonpath
       run: |
-        pytest --cov-report xml:coverage.xml --cov=hazimp
+        echo "PYTHONPATH=$GITHUB_WORKSPACE/$PACKAGE" >> $GITHUB_ENV
+
+    - name: Test with pyest
+      shell: bash -l {0}
+      env: 
+        PYTHONPATH: ${GITHUB_WORKSPACE}
+      run: |
+        pytest --cov-report xml:coverage.xml --cov=${PACKAGE}
         
     - name: Upload coverage.xml as artifact
       uses: actions/upload-artifact@v2
