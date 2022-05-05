@@ -1,7 +1,10 @@
 #  python ../hazimp/hazimp/main.py -c olwyn_hazimp.yaml 
 - template: wind_nc
-- vulnerability_filename: domestic_wind_vul_curves_2021.xml
-- vulnerability_set: domestic_wind_2021
+- vulnerability:
+   filename: domestic_wind_vul_curves_2021.xml
+   vulnerability_set: domestic_wind_2021
+   vulnerability_method: mean
+
 - load_exposure:
    file_name: WA_Wind_Exposure_2013_Test_only.csv
    exposure_latitude: LATITUDE
@@ -22,7 +25,7 @@
 - save_agg: olwyn_agg.csv
 - categorise:
    field_name: 'Damage state'
-   bins: [0.05, 0.02, 0.1, 0.2, 0.5, 1.0]
+   bins: [0.005, 0.02, 0.1, 0.2, 0.5, 1.0]
    labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
 - tabulate:
    file_name: olwyn_dmg_by_age.xlsx

@@ -38,7 +38,7 @@ import pandas as pd
 from mock import MagicMock
 from numpy.testing import assert_array_equal
 from pandas._testing import assert_frame_equal
-from scipy import allclose, array, arange
+from numpy import allclose, array, arange
 
 from hazimp import context
 from hazimp import misc
@@ -220,6 +220,18 @@ class TestContext(unittest.TestCase):
         con.categorise([0, 2.5, 7.5, 10], ['Low', 'Medium', 'High'], 'category')
 
         self.assertEqual(['Low', 'Medium', 'High'], data_frame['category'].to_list())
+
+    def test_categorise_unsorted_bins(self):
+        curve = MagicMock()
+        curve.loss_category_type = 'damage_index'
+
+        data_frame = pd.DataFrame(data={'damage_index': [0, 5, 9]})
+
+        con = context.Context()
+        con.exposure_vuln_curves = {'domestic_wind_2012': curve}
+        con.exposure_att = data_frame
+        self.assertRaises(ValueError, con.categorise, [0, 7.5, 2.5, 10],
+                          ['Low', 'Medium', 'High'], 'category')
 
     def test_tabulate(self):
         with tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False) as f:

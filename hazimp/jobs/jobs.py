@@ -122,7 +122,7 @@ class ConstTest(Job):
     """
 
     def __init__(self):
-        super(ConstTest, self).__init__()
+        super().__init__()
         self.call_funct = 'const_test'
 
     def __call__(self, context, c_test=None):
@@ -142,7 +142,7 @@ class Const(Job):
     """
 
     def __init__(self):
-        super(Const, self).__init__()
+        super().__init__()
         self.call_funct = CONSTANT
 
     def __call__(self, context, var, value):
@@ -156,7 +156,7 @@ class Const(Job):
         shape = context.get_site_shape()
         # This uses a lot of memory,
         # but it keeps the context instance simple.
-        context.exposure_att[var] = scipy.tile(scipy.asarray(value), shape)
+        context.exposure_att[var] = np.tile(np.asarray(value), shape)
 
 
 class RandomConst(Job):
@@ -167,7 +167,7 @@ class RandomConst(Job):
     """
 
     def __init__(self):
-        super(RandomConst, self).__init__()
+        super().__init__()
         self.call_funct = RANDOM_CONSTANT
 
     def __call__(self, context, var, values, forced_random=None):
@@ -182,8 +182,8 @@ class RandomConst(Job):
         """
         shape = context.get_site_shape()
         s_keys, s_probs = misc.sorted_dict_values(values)
-        s_probs = scipy.asarray(s_probs)
-        s_keys = scipy.asarray(s_keys)
+        s_probs = np.asarray(s_probs)
+        s_keys = np.asarray(s_keys)
         values_array = misc.weighted_values(s_keys, s_probs, shape,
                                             forced_random=forced_random)
 
@@ -197,7 +197,7 @@ class Add(Job):
     """
 
     def __init__(self):
-        super(Add, self).__init__()
+        super().__init__()
         self.call_funct = ADD
 
     def __call__(self, context, var1, var2, var_out):
@@ -212,7 +212,6 @@ class Add(Job):
         context.exposure_att[var_out] = misc.add(context.exposure_att[var1],
                                                  context.exposure_att[var2])
 
-
 class Mult(Job):
 
     """
@@ -220,7 +219,7 @@ class Mult(Job):
     """
 
     def __init__(self):
-        super(Mult, self).__init__()
+        super().__init__()
         self.call_funct = MULT
 
     def __call__(self, context, var1, var2, var_out):
@@ -246,7 +245,7 @@ class MultipleDimensionMult(Job):
     """
 
     def __init__(self):
-        super(MultipleDimensionMult, self).__init__()
+        super().__init__()
         self.call_funct = MDMULT
 
     def __call__(self, context, var1, var2, var_out):
@@ -263,21 +262,21 @@ class MultipleDimensionMult(Job):
         """
 
         rolled = context.exposure_att[var1]
-        context.exposure_att[var1] = scipy.rollaxis(rolled, 0,
-                                                    rolled.ndim)
+        context.exposure_att[var1] = np.rollaxis(rolled, 0,
+                                                 rolled.ndim)
 
         context.exposure_att[var_out] = (context.exposure_att[var1] *
                                          context.exposure_att[var2])
         rolled = context.exposure_att[var1]
 
         # Roll var1 back
-        context.exposure_att[var1] = scipy.rollaxis(rolled,
-                                                    rolled.ndim - 1, 0)
+        context.exposure_att[var1] = np.rollaxis(rolled,
+                                                 rolled.ndim - 1, 0)
 
         # Roll the output so the asset dimension is 0.
         result = context.exposure_att[var_out]
-        context.exposure_att[var_out] = scipy.rollaxis(result,
-                                                       rolled.ndim - 1, 0)
+        context.exposure_att[var_out] = np.rollaxis(result,
+                                                    rolled.ndim - 1, 0)
 
 
 class LoadCsvExposure(Job):
@@ -287,7 +286,7 @@ class LoadCsvExposure(Job):
     """
 
     def __init__(self):
-        super(LoadCsvExposure, self).__init__()
+        super().__init__()
         self.call_funct = LOADCSVEXPOSURE
 
     def __call__(
@@ -334,7 +333,7 @@ class LoadCsvExposure(Job):
             context.exposure_lat = data_frame[lat_key].values
             del data_frame[lat_key]
         except KeyError:
-            msg = "No Exposure latitude column labelled '%s'." % lat_key
+            msg = f"No Exposure latitude column labelled {lat_key}."
             raise RuntimeError(msg)
 
         if exposure_longitude is None:
@@ -346,7 +345,7 @@ class LoadCsvExposure(Job):
             context.exposure_long = data_frame[long_key].values
             del data_frame[long_key]
         except KeyError:
-            msg = "No Exposure longitude column labelled '%s'." % long_key
+            msg = f"No Exposure longitude column labelled {long_key}."
             raise RuntimeError(msg)
 
         context.exposure_att = data_frame
@@ -359,7 +358,7 @@ class LoadXmlVulnerability(Job):
     """
 
     def __init__(self):
-        super(LoadXmlVulnerability, self).__init__()
+        super().__init__()
         self.call_funct = LOADXMLVULNERABILITY
 
     def __call__(self, context, file_name: Union[str, list]):
@@ -395,7 +394,7 @@ class SimpleLinker(Job):
     """
 
     def __init__(self):
-        super(SimpleLinker, self).__init__()
+        super().__init__()
         self.call_funct = SIMPLELINKER
 
     def __call__(self, context, vul_functions_in_exposure):
@@ -436,7 +435,7 @@ class SelectVulnFunction(Job):
     """
 
     def __init__(self):
-        super(SelectVulnFunction, self).__init__()
+        super().__init__()
         self.call_funct = SELECTVULNFUNCTION
 
     def __call__(self, context, variability_method=None):
@@ -492,7 +491,7 @@ class LookUp(Job):
     """
 
     def __init__(self):
-        super(LookUp, self).__init__()
+        super().__init__()
         self.call_funct = LOOKUP
 
     def __call__(self, context):
@@ -530,7 +529,7 @@ class PermutateExposure(Job):
     """
 
     def __init__(self):
-        super(PermutateExposure, self).__init__()
+        super().__init__()
         self.call_funct = PERMUTATE_EXPOSURE
 
     def __call__(self, context, groupby=None, iterations=1000, quantile=0.95):
@@ -584,9 +583,8 @@ class PermutateExposure(Job):
                     intensities = context.exposure_att[int_measure]
                 except KeyError:
                     vulnerability_set_id = vuln_curve.vulnerability_set_id
-                    msg = 'Invalid intensity measure, %s. \n' % int_measure
-                    msg += ('vulnerability_set_id is %s. \n' %
-                            vulnerability_set_id)
+                    msg = f'Invalid intensity measure: {int_measure}. \n'
+                    msg += f'vulnerability_set_id: {vulnerability_set_id}. \n'
                     raise RuntimeError(msg)
 
                 losses[n, :] = vuln_curve.look_up(intensities)
@@ -624,7 +622,7 @@ class LoadRaster(Job):
     """
 
     def __init__(self):
-        super(LoadRaster, self).__init__()
+        super().__init__()
         self.call_funct = LOADRASTER
 
     def __call__(self, context, attribute_label, file_list,
@@ -688,7 +686,7 @@ class AggregateLoss(Job):
     """
 
     def __init__(self):
-        super(AggregateLoss, self).__init__()
+        super().__init__()
         self.call_funct = AGGREGATE_LOSS
 
     def __call__(self, context, groupby=None, kwargs=None):
@@ -710,7 +708,7 @@ class SaveExposure(Job):
     """
 
     def __init__(self):
-        super(SaveExposure, self).__init__()
+        super().__init__()
         self.call_funct = SAVEALL
 
     def __call__(self, context, file_name=None, use_parallel=True):
@@ -726,7 +724,7 @@ class SaveExposure(Job):
 class SaveAggregation(Job):
 
     def __init__(self):
-        super(SaveAggregation, self).__init__()
+        super().__init__()
         self.call_funct = SAVEAGG
 
     def __call__(self, context, file_name=None, use_parallel=True):
@@ -743,7 +741,7 @@ class SaveAggregation(Job):
 class Aggregate(Job):
 
     def __init__(self):
-        super(Aggregate, self).__init__()
+        super().__init__()
         self.call_funct = AGGREGATE
 
     def __call__(self, context, filename=None, boundaries=None,
@@ -805,7 +803,7 @@ class Aggregate(Job):
 class Tabulate(Job):
 
     def __init__(self):
-        super(Tabulate, self).__init__()
+        super().__init__()
         self.call_funct = TABULATE
 
     def __call__(self, context, file_name=None, index=None,
@@ -816,7 +814,7 @@ class Tabulate(Job):
 class Categorise(Job):
 
     def __init__(self):
-        super(Categorise, self).__init__()
+        super().__init__()
         self.call_funct = CATEGORISE
 
     def __call__(self, context, bins=None, labels=None, field_name=None):
@@ -831,7 +829,7 @@ class Categorise(Job):
 class SaveProvenance(Job):
 
     def __init__(self):
-        super(SaveProvenance, self).__init__()
+        super().__init__()
         self.call_funct = SAVEPROVENANCE
 
     def __call__(self, context, file_name=None):

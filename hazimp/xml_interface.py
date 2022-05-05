@@ -23,7 +23,7 @@
 """
 
 
-from scipy import array
+from numpy import array
 import xml.dom.minidom
 
 
