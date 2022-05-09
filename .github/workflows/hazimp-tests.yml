@@ -31,17 +31,23 @@ jobs:
     - name: Set up environment
       uses: conda-incubator/setup-miniconda@v2.0.0
       with:
+        python-version: ${{ matrix.python-version }}
+        channels: conda-forge,defaults
+        mamba-version: "*"
         activate-environment: hazimp
         environment-file: hazimp.yml
-        python-version: ${{ matrix.python-version }}
         auto-activate-base: false
         use-only-tar-bz2: true
 
-    - name: Test with nose
+    - name: set pythonpath
+      run: |
+        echo "PYTHONPATH=$GITHUB_WORKSPACE/$PACKAGE" >> $GITHUB_ENV
+
+    - name: Test with pyest
       shell: bash -l {0}
       run: |
-        nosetests -v --exe --with-coverage --cover-xml --cover-xml-file=coverage.xml --cover-package=hazimp
-        nosetests examples/ --with-doctest -v
+        pytest --cov-report xml:coverage.xml --cov=hazimp
+        
         
     - name: Upload coverage.xml as artifact
       uses: actions/upload-artifact@v2
