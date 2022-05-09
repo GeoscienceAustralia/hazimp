@@ -566,11 +566,13 @@ class PermutateExposure(Job):
                                           field, groupby=groupby)
 
             for intensity_key in context.exposure_vuln_curves:
-                SelectVulnFunction().__call__(context, variability_method={
-                    intensity_key: 'mean'})
+                SelectVulnFunction()(
+                    context,
+                    variability_method={intensity_key: 'mean'}
+                    )
                 vuln_curve = context.exposure_vuln_curves[intensity_key]
                 int_measure = vuln_curve.intensity_measure_type
-                loss_category_type = vuln_curve.loss_category_type
+                lct = vuln_curve.loss_category_type
                 try:
                     intensities = context.exposure_att[int_measure]
                 except KeyError:
@@ -583,6 +585,7 @@ class PermutateExposure(Job):
                 losses[n, :] = vuln_curve.look_up(intensities)
 
         endtime = datetime.datetime.now()
+
         # Mean loss per unit across all permutations:
         mean_loss = np.mean(losses, axis=0)
 
@@ -597,6 +600,7 @@ class PermutateExposure(Job):
         context.exposure_att[loss_category_type] = mean_loss
         loss_category_type_max = loss_category_type + '_max'
         context.exposure_att[loss_category_type_max] = lossmax
+
         permatts = {"dcterms:title": "Exposure permutation",
                     ":iterations": iterations,
                     ":GroupingField": groupby,
