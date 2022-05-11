@@ -25,7 +25,7 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE)
 from hazimp.templates import (SAVE, FLOODFABRICV2,
                               TEMPLATE, FLOODCONTENTSV2, CALCCONTLOSS,
                               CALCSTRUCTLOSS, REP_VAL_NAME, HAZARDRASTER)
-from hazimp import templates as flood_conts
+from hazimp.templates import flood as flood_conts
 from hazimp import parallel
 
 

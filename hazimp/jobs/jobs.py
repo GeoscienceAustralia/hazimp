@@ -560,13 +560,6 @@ class PermutateExposure(Job):
 
         losses = np.zeros((iterations, len(context.exposure_att)))
         starttime = datetime.datetime.now()
-
-        # This calls the damage calculation for the base vulnerability
-        # definition:
-        LookUp()(context)
-
-        # Iterate and randomly assign vulnerability within the given
-        # attribute grouping:
         for n in range(iterations):
             context.exposure_att = \
                 misc.permutate_att_values(context.exposure_att,
@@ -593,8 +586,20 @@ class PermutateExposure(Job):
 
         endtime = datetime.datetime.now()
 
-        lct_max = lct + '_upper'
-        context.exposure_att[lct_max] = np.quantile(losses, quantile, axis=0)
+        # Mean loss per unit across all permutations:
+        mean_loss = np.mean(losses, axis=0)
+
+        # Mean loss across separate permutations:
+        lossmean = losses.mean(axis=1)
+
+        # Gives the index of the permutation with the 95th percentile mean loss
+        idx = np.abs(lossmean - np.quantile(lossmean, quantile)).argmin()
+
+        # Unit losses for the event with 95th percentile mean loss
+        lossmax = losses[idx, :]
+        context.exposure_att[loss_category_type] = mean_loss
+        loss_category_type_max = loss_category_type + '_max'
+        context.exposure_att[loss_category_type_max] = lossmax
 
         permatts = {"dcterms:title": "Exposure permutation",
                     ":iterations": iterations,

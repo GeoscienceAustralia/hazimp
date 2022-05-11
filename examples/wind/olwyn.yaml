@@ -17,8 +17,9 @@
    groupby: MESHBLOCK_CODE_2011
    kwargs: 
      structural: [mean, std]
-     structural_upper: [mean]
+     structural_max: [mean]
      structural_loss: [mean, sum]
+
 - save_agg: olwyn_agg.csv
 - categorise:
    field_name: 'Damage state'
@@ -38,5 +39,6 @@
    categories: True
    fields:
       structural: [mean]
-      structural_upper: [mean]
+      structural_max: [mean]
+      'Damage state': [size]
 

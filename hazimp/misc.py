@@ -295,14 +295,14 @@ def get_git_commit():
     return commit, branch, dt, url
 
 
-def get_s3_client():
+def get_s3_client(**kwargs):
     """
     Returns service client for S3. It eliminates initialising service
     client if AWS path is not used.
     """
     global S3_CLIENT
     if S3_CLIENT is None:
-        S3_CLIENT = boto3.client('s3')
+        S3_CLIENT = boto3.client('s3', **kwargs)
     return S3_CLIENT
 
 
