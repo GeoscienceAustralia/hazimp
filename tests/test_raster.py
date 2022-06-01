@@ -37,6 +37,7 @@ import unittest
 
 import numpy
 from numpy import asarray, allclose, nan
+import xarray as xr
 
 from hazimp.raster import Raster, recalc_max, files_raster_data_at_points
 
@@ -194,6 +195,38 @@ class TestRaster(unittest.TestCase):
         extent = [-10, -20, 20, 40]
         max_extent = recalc_max(old_max_extent, extent)
         self.assertEqual(old_max_extent, max_extent)
+
+    def test4_nc_raster_data_at_points(self):
+        # Write a file to test
+        f = tempfile.NamedTemporaryFile(suffix='.aai',
+                                        prefix='test_misc',
+                                        delete=False,
+                                        mode='w+t')
+        f.write('ncols 3   \r\n')
+        f.write('nrows 2 \r\n')
+        f.write('xllcorner +0.   \r\n')
+        f.write('yllcorner +8. \r\n')
+        f.write('cellsize 1   \r\n')
+        f.write('NODATA_value -9999 \r\n')
+        f.write('1 2 3\r\n')
+        f.write('4 5 6')
+        f.close()
+        # lon 0 - 3
+        # lat 8 - 10
+
+        nc_filename = 'test.nc'
+        ds = xr.load_dataset(f.name, engine='rasterio')
+        ds.to_netcdf(nc_filename)
+
+        lon = asarray([0.8, 2.1, 2.5, 4.0, 20])
+        lat = asarray([8.9, 8.5, 20, 9.1, -10])
+        data1, max_extent1 = files_raster_data_at_points(lon, lat, [f.name])
+        data2, max_extent2 = files_raster_data_at_points(
+            lon, lat, [nc_filename])
+
+        os.remove(f.name)
+        os.remove(nc_filename)
+        assert numpy.allclose(data1, data2, equal_nan=True)
 
 
 if __name__ == "__main__":

@@ -24,6 +24,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from osgeo import gdal
 import numpy
 from osgeo.gdalconst import GA_ReadOnly
+import xarray as xr
 
 
 class Raster(object):
@@ -184,12 +185,31 @@ def files_raster_data_at_points(lon, lat, files):
     data = []
     max_extent = None
     for filename in files:
-        a_raster = Raster.from_file(filename)
-        results = a_raster.raster_data_at_points(lon, lat)
-        data.append(results)
+        if filename.endswith(".nc"):
+            ds = xr.open_dataset(filename)
+            # TODO: this uses the first band - enable band to be chosen or maybe iterate through bands
+            band_name = next(
+                band for band in ds.data_vars if ds[band].size > 1)
+            print(band_name)
+            band = ds[band_name].squeeze()
+            # Note: this assume the input data is in (lat, lon) format - is this always applicable?
+            ydim, xdim = band.dims
+            results = band.interp(
+                {ydim: xr.DataArray(lat, dims="z"),
+                 xdim: xr.DataArray(lon, dims="z")},
+                method='nearest',
+            ).data
+            extent = [
+                band.coords[xdim].data.min(), band.coords[ydim].data.min(),
+                band.coords[xdim].data.max(), band.coords[ydim].data.max(),
+            ]
+        else:
+            a_raster = Raster.from_file(filename)
+            results = a_raster.raster_data_at_points(lon, lat)
+            extent = a_raster.extent()
 
+        data.append(results)
         # Working out the maximum extent
-        extent = a_raster.extent()
         if max_extent is None:
             max_extent = list(extent)
         else:
