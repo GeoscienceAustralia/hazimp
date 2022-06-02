@@ -28,3 +28,4 @@ dependencies:
   - pytest-cov
   - mock
   - lxml
+  - xarray
