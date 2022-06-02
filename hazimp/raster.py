@@ -190,7 +190,6 @@ def files_raster_data_at_points(lon, lat, files):
             # TODO: this uses the first band - enable band to be chosen or maybe iterate through bands
             band_name = next(
                 band for band in ds.data_vars if ds[band].size > 1)
-            print(band_name)
             band = ds[band_name].squeeze()
             # Note: this assume the input data is in (lat, lon) format - is this always applicable?
             ydim, xdim = band.dims
