@@ -215,7 +215,15 @@ class TestRaster(unittest.TestCase):
         # lat 8 - 10
 
         nc_filename = 'test.nc'
-        ds = xr.load_dataset(f.name, engine='rasterio')
+        data = numpy.array([
+            [1.0, 2.0, 3.0],
+            [4.0, 5.0, 6.0],
+        ])
+        ds = xr.DataArray(
+            data,
+            dict(y=numpy.array([9.5, 8.5]), x=numpy.array([0.5, 1.5, 2.5])),
+            ('y', 'x')
+        )
         ds.to_netcdf(nc_filename)
 
         lon = asarray([0.8, 2.1, 2.5, 4.0, 20])

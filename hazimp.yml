@@ -29,4 +29,3 @@ dependencies:
   - mock
   - lxml
   - xarray
-  - rasterio
