@@ -13,6 +13,7 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                               RANDOM_CONSTANT, ADD)
 from hazimp.templates.constants import (HAZARDRASTER, CALCSTRUCTLOSS,
                                         REP_VAL_NAME, SAVE,
+                                        VULNFILE, VULNSET, VULNMETHOD,
                                         CALCCONTLOSS)
 
 LOGGER = logging.getLogger(__name__)
@@ -63,9 +64,12 @@ def _flood_fabric_v2_reader(config: dict) -> list:
     file_list = find_attributes(config, HAZARDRASTER)
     atts = {'file_list': file_list, 'attribute_label': WATER_DEPTH}
     add_job(job_insts, LOADRASTER, atts)
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'fabric_flood_avg_curve.xml')
+
+    vuln_atts = find_attributes(config, VULNFILE)
+    vul_filename = os.path.join(misc.RESOURCE_DIR, vuln_atts['filename'])
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
+    # The column title in the exposure file = 'FLOOD_VULNERABILITY_FUNCTION_ID'
+    vulnerability_set_id = vuln_atts[VULNSET]
 
     floor_height_value = find_attributes(config, FLOOR_HEIGHT)
     atts = {'var': FLOOR_HEIGHT, 'value': floor_height_value}
@@ -74,14 +78,18 @@ def _flood_fabric_v2_reader(config: dict) -> list:
     add_job(job_insts, FLOOR_HEIGHT_CALC)
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
-    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
+    # The column title in the exposure file = 'FABRIC_FLOOD_FUNCTION_ID'
     atts = {'vul_functions_in_exposure': {
-        'structural_domestic_flood_2012':
+        vulnerability_set_id:
             'FABRIC_FLOOD_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
-    atts = {'variability_method': {
-        'structural_domestic_flood_2012': 'mean'}}
+    if VULNMETHOD in vuln_atts:
+        atts = {'variability_method': {
+            vulnerability_set_id: vuln_atts[VULNMETHOD]}}
+    else:
+        atts = {'variability_method': {
+            vulnerability_set_id: 'mean'}}
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
@@ -126,8 +134,9 @@ def _flood_contents_v2_reader(config: dict) -> list:  # pylint: disable=R0915
     file_list = find_attributes(config, HAZARDRASTER)
     atts = {'file_list': file_list, 'attribute_label': WATER_DEPTH}
     add_job(job_insts, LOADRASTER, atts)
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'content_flood_avg_curve.xml')
+
+    vuln_atts = find_attributes(config, VULNFILE)
+    vul_filename = os.path.join(misc.RESOURCE_DIR, vuln_atts['filename'])
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     floor_height_value = find_attributes(config, FLOOR_HEIGHT)
@@ -181,13 +190,19 @@ def _flood_contents_v2_reader(config: dict) -> list:  # pylint: disable=R0915
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'CONTENTS_FLOOD_FUNCTION_ID'
+    vulnerability_set_id = vuln_atts[VULNSET]
     atts = {'vul_functions_in_exposure': {
-        'contents_domestic_flood_2012':
+        vulnerability_set_id:
             'CONTENTS_FLOOD_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
-    atts = {'variability_method': {
-        'contents_domestic_flood_2012': 'mean'}}
+    if VULNMETHOD in vuln_atts:
+        atts = {'variability_method': {
+            vulnerability_set_id: vuln_atts[VULNMETHOD]}}
+    else:
+        atts = {'variability_method': {
+            vulnerability_set_id: 'mean'}}
+
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)

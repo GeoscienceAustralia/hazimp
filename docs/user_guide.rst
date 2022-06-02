@@ -83,8 +83,11 @@ which uses the wind template.
 
      #  python hazimp.py -c wind_nc.yaml
       - template: wind_nc
-      - vulnerability_filename: domestic_wind_vuln_curves.xml
-      - vulnerability_set: domestic_wind_2012
+      - vulnerability:
+         filename: domestic_wind_vuln_curves.xml
+         vulnerability_set: domestic_wind_2012
+         vulnerability_method: 'mean'
+
       - load_exposure:
          file_name: WA_Wind_Exposure_2013_Test_only.csv
          exposure_latitude: LATITUDE
@@ -101,6 +104,7 @@ which uses the wind template.
          boundarycode: SA1_MAIN16
          impactcode: SA1_CODE
          save: gust01_impact.shp
+      - save_agg: wind_impact_add.csv
 
 The first line is a comment, so this is ignored.
 The rest of the file can be understood by the following key value pairs; 
@@ -146,16 +150,24 @@ which describes the vulnerability set to use (see below for more details).
     ``0.2s gust at 10m height m/s``, since that is the axis of the HazImp wind
     vulnerability curves.
 
-*vulnerability_filename*
-    The path to a correctly formatted vulnerability curve file. This is an xml
-    file produced using `hazimp_preprocessing/curve_data/create_vuln_xml.py`
+*vulnerability*
+    *filename* 
+        The path to a correctly formatted vulnerability curve file. This is an xml
+        file produced using `hazimp_preprocessing/curve_data/create_vuln_xml.py`
 
-*vulnerability_set*
-    This defines the suite of vulnerability curves to use. A vulnerability file
-    may contain a large number of different vulnerability functions that can be
-    applied to the same exposure assets. This option defines which set to use
-    from that vulnearbility file. The vulnerability set is used to calculate the
-    ``structural_loss_ratio`` given the ``0.2s gust at 10m height m/s``.
+    *vulnerability_set*
+        This defines the suite of vulnerability curves to use. A vulnerability file
+        may contain a large number of different vulnerability functions that can be
+        applied to the same exposure assets. This option defines which set to use
+        from that vulnearbility file. The vulnerability set is used to calculate the
+        ``structural_loss_ratio`` given the ``0.2s gust at 10m height m/s``.
+
+    *vulnerability_method*
+        Whether to use the mean loss ratio ("mean") or to vary around the mean with
+        standard normal distribution ("normal"), based on the mean value plus a 
+        coefficient of variation (CoV). CoV values must be included in the vulnerability
+        curve file, in the form of alpha and beta values (sample mean and standard deviation)
+
 
 *calc_struct_loss*
     This will multiply the replacement value and the ``structural``
@@ -236,6 +248,9 @@ This is an example structural damage flood template;::
     # Don't have a scenario test automatically run this.
     # Since the file location is not absolute,
     - template: flood_fabric_v2
+    - vulnerability:
+        filename: fabric_flood_vul_curve.xml
+        vulnearbility_set: structural_domestic_flood_2012
     - floor_height_(m): .3
     - load_exposure:
         file_name:  small_exposure.csv

@@ -36,21 +36,25 @@ def _wind_v3_reader(config: dict) -> list:
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
 
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                'synthetic_domestic_wind_vul_curves.xml')
+    vuln_atts = find_attributes(config, VULNFILE)
+    vul_filename = os.path.join(misc.RESOURCE_DIR, vuln_atts['filename'])
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    vulnerability_set_id = find_attributes(config, VULNSET)
+    vulnerability_set_id = vuln_atts[VULNSET]
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
-    vulnerability_method = find_attributes(config, VULNMETHOD)
-    atts = {'variability_method': {
-        vulnerability_set_id: vulnerability_method}}
+    if VULNMETHOD in vuln_atts:
+        atts = {'variability_method': {
+            vulnerability_set_id: vuln_atts[VULNMETHOD]}}
+    else:
+        atts = {'variability_method': {
+            vulnerability_set_id: 'mean'}}
+
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
@@ -93,21 +97,26 @@ def _wind_v4_reader(config: dict) -> list:
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
 
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                find_attributes(config, VULNFILE))
+    vuln_atts = find_attributes(config, VULNFILE)
+    vul_filename = os.path.join(misc.RESOURCE_DIR, vuln_atts['filename'])
+
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    vulnerability_set_id = find_attributes(config, VULNSET)
+    vulnerability_set_id = vuln_atts[VULNSET]
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
-    vulnerability_method = find_attributes(config, VULNMETHOD)
-    atts = {'variability_method': {
-        vulnerability_set_id: vulnerability_method}}
+    if VULNMETHOD in vuln_atts:
+        atts = {'variability_method': {
+            vulnerability_set_id: vuln_atts[VULNMETHOD]}}
+    else:
+        atts = {'variability_method': {
+            vulnerability_set_id: 'mean'}}
+
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     add_job(job_insts, LOOKUP)
@@ -151,20 +160,24 @@ def _wind_v5_reader(config: dict) -> list:
             'attribute_label': '0.2s gust at 10m height m/s'}
     add_job(job_insts, LOADRASTER, atts)
 
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                find_attributes(config, VULNFILE))
+    vuln_atts = find_attributes(config, VULNFILE)
+    vul_filename = os.path.join(misc.RESOURCE_DIR, vuln_atts['filename'])
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    vulnerability_set_id = find_attributes(config, VULNSET)
+    vulnerability_set_id = vuln_atts[VULNSET]
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
-    vulnerability_method = find_attributes(config, VULNMETHOD)
-    atts = {'variability_method': {
-        vulnerability_set_id: vulnerability_method}}
+    if VULNMETHOD in vuln_atts:
+        atts = {'variability_method': {
+            vulnerability_set_id: vuln_atts[VULNMETHOD]}}
+    else:
+        atts = {'variability_method': {
+            vulnerability_set_id: 'mean'}}
+
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     atts = find_attributes(config, PERMUTATION)
@@ -224,20 +237,25 @@ def _wind_nc_reader(config: dict) -> list:
     atts['attribute_label'] = '0.2s gust at 10m height m/s'
     add_job(job_insts, LOADRASTER, atts)
 
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                find_attributes(config, VULNFILE))
+    vuln_atts = find_attributes(config, VULNFILE)
+    vul_filename = os.path.join(misc.RESOURCE_DIR, vuln_atts['filename'])
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    vulnerability_set_id = find_attributes(config, VULNSET)
+    vulnerability_set_id = vuln_atts[VULNSET]
+
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
             'WIND_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
-    vulnerability_method = find_attributes(config, VULNMETHOD)
-    atts = {'variability_method': {
-        vulnerability_set_id: vulnerability_method}}
+    if VULNMETHOD in vuln_atts:
+        atts = {'variability_method': {
+            vulnerability_set_id: vuln_atts[VULNMETHOD]}}
+    else:
+        atts = {'variability_method': {
+            vulnerability_set_id: 'mean'}}
+
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     if PERMUTATION in config:

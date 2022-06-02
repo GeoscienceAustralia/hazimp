@@ -36,7 +36,7 @@ import os
 
 import numpy
 
-from scipy import allclose, asarray, isnan, array, rollaxis
+from numpy import allclose, asarray, isnan, array, rollaxis
 
 from hazimp.context import Context
 from hazimp.jobs.jobs import (JOBS, LOADRASTER, LOADCSVEXPOSURE,

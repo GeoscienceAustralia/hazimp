@@ -47,7 +47,7 @@ as:
 
 .. code-block:: bash
 
-  conda create -f hazimp.yml 
+  conda env create -f hazimp.yml 
 
 Before each session, remember to activate the corresponding environment, 
 e.g. `conda activate hazimp`.
@@ -82,7 +82,8 @@ On Ubuntu systems, the following requires system administrator privileges.
 Install HazImp
 --------------
 
-Install HazImp into your python environment:
+To install HazImp into your python environment, at a command prompt, enter the
+following command:
 
 .. code-block:: bash
 
