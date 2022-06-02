@@ -212,6 +212,7 @@ class Add(Job):
         context.exposure_att[var_out] = misc.add(context.exposure_att[var1],
                                                  context.exposure_att[var2])
 
+
 class Mult(Job):
 
     """
