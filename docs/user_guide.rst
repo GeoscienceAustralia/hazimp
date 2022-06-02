@@ -87,6 +87,7 @@ which uses the wind template.
          filename: domestic_wind_vuln_curves.xml
          vulnerability_set: domestic_wind_2012
          vulnerability_method: 'mean'
+
       - load_exposure:
          file_name: WA_Wind_Exposure_2013_Test_only.csv
          exposure_latitude: LATITUDE
@@ -166,6 +167,7 @@ which describes the vulnerability set to use (see below for more details).
         standard normal distribution ("normal"), based on the mean value plus a 
         coefficient of variation (CoV). CoV values must be included in the vulnerability
         curve file, in the form of alpha and beta values (sample mean and standard deviation)
+
 
 *calc_struct_loss*
     This will multiply the replacement value and the ``structural``

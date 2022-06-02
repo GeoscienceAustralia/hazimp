@@ -22,6 +22,7 @@
      structural: [mean, std]
      structural_upper: [mean]
      structural_loss: [mean, sum]
+
 - save_agg: olwyn_agg.csv
 - categorise:
    field_name: 'Damage state'

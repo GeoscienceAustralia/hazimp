@@ -47,7 +47,7 @@ as:
 
 .. code-block:: bash
 
-  conda create -f hazimp.yml 
+  conda env create -f hazimp.yml 
 
 Before each session, remember to activate the corresponding environment, 
 e.g. `conda activate hazimp`.
