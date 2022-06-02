@@ -187,11 +187,13 @@ def files_raster_data_at_points(lon, lat, files):
     for filename in files:
         if filename.endswith(".nc"):
             ds = xr.open_dataset(filename)
-            # TODO: this uses the first band - enable band to be chosen or maybe iterate through bands
+            # TODO: this uses the first band - enable band to be chosen
+            #  or maybe iterate through bands
             band_name = next(
                 band for band in ds.data_vars if ds[band].size > 1)
             band = ds[band_name].squeeze()
-            # Note: this assume the input data is in (lat, lon) format - is this always applicable?
+            # Note: this assume the input data is in (lat, lon) format
+            # - is this always applicable?
             ydim, xdim = band.dims
             results = band.interp(
                 {ydim: xr.DataArray(lat, dims="z"),
