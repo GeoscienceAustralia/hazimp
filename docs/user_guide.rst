@@ -86,6 +86,8 @@ which uses the wind template.
       - vulnerability:
          filename: domestic_wind_vuln_curves.xml
          vulnerability_set: domestic_wind_2012
+         vulnerability_method: 'mean'
+
       - load_exposure:
          file_name: WA_Wind_Exposure_2013_Test_only.csv
          exposure_latitude: LATITUDE
@@ -102,6 +104,7 @@ which uses the wind template.
          boundarycode: SA1_MAIN16
          impactcode: SA1_CODE
          save: gust01_impact.shp
+      - save_agg: wind_impact_add.csv
 
 The first line is a comment, so this is ignored.
 The rest of the file can be understood by the following key value pairs; 
@@ -160,9 +163,11 @@ which describes the vulnerability set to use (see below for more details).
         ``structural_loss_ratio`` given the ``0.2s gust at 10m height m/s``.
 
     *vulnerability_method*
-        Whether to use the mean loss ratio ("mean") or to vary around the mean
-        ("random"), based on the mean value plus a coefficient of variation
-        (CoV). CoV values must be included in the vulnerability curve file.
+        Whether to use the mean loss ratio ("mean") or to vary around the mean with
+        standard normal distribution ("normal"), based on the mean value plus a 
+        coefficient of variation (CoV). CoV values must be included in the vulnerability
+        curve file, in the form of alpha and beta values (sample mean and standard deviation)
+
 
 *calc_struct_loss*
     This will multiply the replacement value and the ``structural``
