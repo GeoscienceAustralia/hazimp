@@ -92,7 +92,10 @@ def start(config_list=None, config_file=None, cont_in=None):
 
 def cli():
     "Command-line interface to hazimp package"
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s: %(name)s: %(levelname)s: %(message)s',
+        datefmt='%y-%m-%d %H:%M:%s')
 
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
