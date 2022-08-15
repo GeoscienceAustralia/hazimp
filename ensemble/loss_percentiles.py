@@ -53,6 +53,9 @@ for eventid in os.listdir(low_res_impact_dir):
 
 # calculate the eventids for each quantile and apply wind multipliers
 # and hazimp
+
+# NOTE: ideally this should re-use the WM extracted by the low resolution wm script
+# to do this change the extent applied to 'yes' and the mult_path to the the m4.. file generated
 extent_applied = 'no'
 mult_path = os.path.join(working_dir, f"{int(quantiles[0] * 100)}_percentile", "m4_source.tif")
 print("Calculating in quantiles")
