@@ -1,0 +1,45 @@
+##  python3 /g/data/w85/software/hazimp/hazimp/main.py -c /g/data/w85/QFES_SWHA/configuration/hazimp/EVENTID.yaml
+
+ - template: wind_nc
+ 
+ - vulnerability:
+    filename: /g/data/w85/QFES_SWHA/vulnerability/domestic_wind_vul_curves_2022.xml
+    vulnerability_set: domestic_wind_2021
+    vulnerability_method: 'mean'
+ 
+ - load_exposure: 
+    file_name: /g/data/w85/QFES_SWHA/exposure/2020/Cairns_ResidentialExposure_NEXIS_2020_M4_updated.csv
+    exposure_latitude: LATITUDE
+    exposure_longitude: LONGITUDE  
+ 
+ - load_wind:
+     file_list: /g/data/w85/kr4383/yasi/multipliers/EVENTID/local_wind.tif
+ 
+ - calc_struct_loss:
+    replacement_value_label: REPLACEMENT_VALUE
+    
+ - save: /g/data/w85/kr4383/yasi/impact/high_res/EVENTID/EVENTID.csv
+
+ - categorise:
+    field_name: 'Damage state'
+    bins: [0.0, 0.02, 0.1, 0.2, 0.5, 1.0]
+    labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
+ 
+ - aggregate:
+     boundaries: /g/data/w85/QFES_SWHA/exposure/SA1_2016_AUST.shp
+     filename: /g/data/w85/kr4383/yasi/impact/high_res/EVENTID/EVENTID.shp
+     impactcode: SA1_CODE
+     boundarycode: SA1_MAIN16
+     categories: True
+     fields:
+        structural: [mean]
+     
+ - aggregation:
+     groupby: SA1_CODE
+     kwargs:
+      structural: [mean, max, std]
+      structural_loss: [mean, sum]
+      REPLACEMENT_VALUE: [mean, sum]
+
+
+ - save_agg: /g/data/w85/kr4383/yasi/impact/high_res/EVENTID/EVENTID_agg.csv
