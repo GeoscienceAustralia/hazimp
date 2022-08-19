@@ -7,6 +7,7 @@
 #PBS -lmem=64GB,ncpus=16,jobfs=4000MB
 #PBS -joe
 #PBS -lstorage=gdata/w85+gdata/v10
+#PBS -W umask=002
 
 module purge
 module load pbs
@@ -36,5 +37,5 @@ BRANCH=master
 
 export PYTHONPATH=$PYTHONPATH:$SOFTWARE/tcrm/$BRANCH:$SOFTWARE/tcrm/$BRANCH/Utilities
 
-cd /g/data/w85/kr4383/yasi
-python3 loss_percentiles.py 
+
+python3 loss_percentiles.py -l /g/data/w85/kr4383/yasi/impact/low_res -wd /g/data/w85/kr4383/yasi/percentile -wc pm_template.ini -hc hazimp_template.yaml
