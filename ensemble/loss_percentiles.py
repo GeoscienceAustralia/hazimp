@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
         # run hazimp
         os.system(
-            f"python3 ~/tcrm/ProcessMultipliers/processMultipliers.py -c {wm_config_path} > {outpath}/hazimp_{eventid}.stdout.{date} 2>&1"
+            f"python3 ~/hazimp/hazimp/main.py -c {hazimp_config_path} > {outpath}/hazimp_{eventid}.stdout.{date} 2>&1"
         )
 
     #export PYTHONPATH=$PYTHONPATH:~/tcrm
