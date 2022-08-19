@@ -106,6 +106,7 @@ if __name__ == "__main__":
         )
 
         # run hazimp
+        print("running hazimp!")
         os.system(
             f"python3 ~/hazimp/hazimp/main.py -c {hazimp_config_path} > {outpath}/hazimp_{eventid}.stdout.{date} 2>&1"
         )
