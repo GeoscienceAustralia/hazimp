@@ -95,7 +95,7 @@ def cli():
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s: %(name)s: %(levelname)s: %(message)s',
-        datefmt='%y-%m-%d %H:%M:%s')
+        datefmt='%Y-%m-%d %H:%M:%S')
 
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:
