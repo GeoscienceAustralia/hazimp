@@ -43,4 +43,5 @@
    fields:
       structural: [mean]
       structural_upper: [mean]
+      'Damage state': [size]
 

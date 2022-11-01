@@ -152,7 +152,7 @@ def csv_curve2nrml(csv_filename, xml_filename):
                 if numpy.isnan(iml):
                     continue
                 loss_ratio += str(row[str(int(iml))]) + ' '
-                coef_var += str((float(row['Alpha'])/float(row['Beta']))) + ' '
+                coef_var += '0 '
             write_nrml_curve(xml_h, row['vulnerabilityFunctionID'],
                              imls, csv_dict['IMT'][0],
                              loss_ratio, coef_var)

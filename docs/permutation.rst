@@ -3,15 +3,15 @@
 Using permutation to understand uncertainty in vulnerability
 ------------------------------------------------------------
 
-In many regions (in Australia), the attributes of individual buildings are
-unknown, but are recorded for some statistical area (e.g. suburb, local
-government area). In this case, the vulnerability curve assigned to a
-building may not be precisely determined, which can lead to uncertainty
+In many regions (in Australia), the attributes of individual buildings are 
+unknown, but are recorded for some statistical area (e.g. suburb, local 
+government area). In this case, the vulnerability curve assigned to a 
+building may not be precisely determined, which can lead to uncertainty 
 in the impact for a region.
 
-To overcome this, users can run the impact calculation multiple times,
-while permuting the vulnerability curves for each region (suburb, local
-government area, etc.). This requires some additional entries in the
+To overcome this, users can run the impact calculation multiple times, 
+while permuting the vulnerability curves for each region (suburb, local 
+government area, etc.). This requires some additional entries in the 
 template file.
 
 *exposure_permutation*
@@ -39,6 +39,7 @@ Example::
 
 
 The resulting output calculates a mean loss per building from all permutations,
+
 as well as lower and upper loss estimats, which is the permutation that
 provides the lowest and highest mean loss over all buildings. In reality, we
 actually use the 5th and 95th percentile of the mean loss to determine these
