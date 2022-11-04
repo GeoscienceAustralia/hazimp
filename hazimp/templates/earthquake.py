@@ -10,7 +10,7 @@ from hazimp.jobs.jobs import (LOADCSVEXPOSURE, LOADRASTER,
                               AGGREGATE_LOSS, CATEGORISE, SAVEALL,
                               SAVEPROVENANCE)
 from hazimp.templates.constants import (HAZARDRASTER, VULNFILE,
-                                        VULNSET,
+                                        VULNSET, VULNMETHOD,
                                         PERMUTATION, CALCSTRUCTLOSS,
                                         REP_VAL_NAME,
                                         AGGREGATION, SAVEAGG, SAVE, AGGREGATE,
@@ -36,21 +36,25 @@ def _earthquake_v1_reader(config: dict) -> list:
 
     add_job(job_insts, LOADRASTER, atts)
 
-    vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                find_attributes(config, VULNFILE))
+    vuln_atts = find_attributes(config, VULNFILE)
+    vul_filename = os.path.join(misc.RESOURCE_DIR, vuln_atts['filename'])
     add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
 
     # The column title in the exposure file = 'EQ_VULNERABILITY_FUNCTION_ID'
-    vulnerability_set_id = find_attributes(config, VULNSET)
+    vulnerability_set_id = vuln_atts[VULNSET]
 
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
             'EQ_VULNERABILITY_FUNCTION_ID'}}
-
     add_job(job_insts, SIMPLELINKER, atts)
 
-    atts = {'variability_method': {
-        vulnerability_set_id: 'mean'}}
+    if VULNMETHOD in vuln_atts:
+        atts = {'variability_method': {
+            vulnerability_set_id: vuln_atts[VULNMETHOD]}}
+    else:
+        atts = {'variability_method': {
+            vulnerability_set_id: 'mean'}}
+
     add_job(job_insts, SELECTVULNFUNCTION, atts)
 
     if PERMUTATION in config:

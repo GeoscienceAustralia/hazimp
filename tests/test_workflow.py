@@ -31,7 +31,7 @@ import unittest
 import tempfile
 import os
 
-from scipy import allclose, asarray
+from numpy import allclose, asarray
 
 from hazimp import workflow
 from hazimp import context

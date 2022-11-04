@@ -69,7 +69,7 @@ tools:
 -  Code with good unittest coverage, check with::
 
           $ pip install nose coverage
-          $ nosetests --with-coverage path/to/tests_for_package
+          $ nosetests --with-coverage tests/
 
 -  No pyflakes warnings, check with::
 

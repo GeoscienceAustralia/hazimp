@@ -44,7 +44,7 @@ from git import InvalidGitRepositoryError, Repo
 from mock import Mock
 from moto import mock_s3
 from numpy.random.mtrand import permutation
-from scipy import allclose
+from numpy import allclose
 
 from hazimp.misc import (csv2dict, get_required_args, sorted_dict_values,
                          squash_narray, weighted_values, get_s3_client,

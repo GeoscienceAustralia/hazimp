@@ -31,7 +31,7 @@ import unittest
 import tempfile
 import os
 
-from scipy import allclose
+from numpy import allclose
 
 from hazimp import main
 from hazimp.jobs import jobs

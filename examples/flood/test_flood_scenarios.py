@@ -16,13 +16,13 @@ import unittest
 import os
 import tempfile
 import numpy
-from scipy import allclose
+from numpy import allclose
 
 from hazimp import misc
 from hazimp import main
 from hazimp.calcs.calcs import FLOOR_HEIGHT
 from hazimp.jobs.jobs import (LOADCSVEXPOSURE)
-from hazimp.templates import (SAVE, FLOODFABRICV2,
+from hazimp.templates import (SAVE, FLOODFABRICV2, VULNFILE,
                               TEMPLATE, FLOODCONTENTSV2, CALCCONTLOSS,
                               CALCSTRUCTLOSS, REP_VAL_NAME, HAZARDRASTER)
 from hazimp.templates import flood as flood_conts
@@ -53,6 +53,9 @@ class TestFlood(unittest.TestCase):
                   {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                      'exposure_latitude': 'LATITUDE',
                                      'exposure_longitude': 'LONGITUDE'}},
+                  {VULNFILE: {'filename': 'fabric_flood_vul_curves.xml',
+                              'vulnerability_set': 'structural_domestic_flood_2012'}
+                              },
                   {FLOOR_HEIGHT: .3},
                   {HAZARDRASTER: [haz_filename]},
                   {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
@@ -98,6 +101,9 @@ class TestFlood(unittest.TestCase):
         print('      file_name: ' + exp_filename, file=f)
         print('      exposure_latitude: LATITUDE', file=f)
         print('      exposure_longitude: LONGITUDE', file=f)
+        print(' - ' + VULNFILE + ':', file=f)
+        print('      filename: fabric_flood_vul_curves.xml', file=f)
+        print('      vulnerability_set: structural_domestic_flood_2012', file=f)
         print(' - ' + FLOOR_HEIGHT + ': .3', file=f)
         a_str = ' - ' + HAZARDRASTER + ': [' + flood_filename + ']'
         print(a_str, file=f)
@@ -136,6 +142,9 @@ class TestFlood(unittest.TestCase):
                   {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                      'exposure_latitude': 'LATITUDE',
                                      'exposure_longitude': 'LONGITUDE'}},
+                  {VULNFILE: {'filename': 'content_flood_vul_curves.xml',
+                              'vulnerability_set': 'contents_domestic_flood_2012'}
+                              },
                   {FLOOR_HEIGHT: .3},
                   {HAZARDRASTER: [haz_filename]},
                   {flood_conts.INSURE_PROB: {flood_conts.INSURED: 1.0,
