@@ -568,6 +568,7 @@ class PermutateExposure(Job):
 
         # Iterate and randomly assign vulnerability within the given
         # attribute grouping:
+
         for n in range(iterations):
             context.exposure_att = \
                 misc.permutate_att_values(context.exposure_att,
@@ -602,6 +603,7 @@ class PermutateExposure(Job):
                     ":iterations": iterations,
                     ":GroupingField": groupby,
                     ":quantile": repr(quantile)}
+
         permact = context.prov.activity(":ExposurePermutation",
                                         starttime.strftime(DATEFMT),
                                         endtime.strftime(DATEFMT),
