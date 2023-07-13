@@ -40,17 +40,31 @@ helps to avoid version conflicts between different python packages and other
 dependencies. Download (wget) and install miniconda_, then use the conda
 environment file `hazimp.yml` included with the software to install the
 set of compatible packages. conda_ is available for Linux, MacOS and Windows
-environments. 
+environments.
 
 Once you have installed miniconda_, create a new environment with a command such
 as:
 
 .. code-block:: bash
 
-  conda create -f hazimp.yml 
+  conda env create -f hazimp.yml
 
-Before each session, remember to activate the corresponding environment, 
+Before each session, remember to activate the corresponding environment,
 e.g. `conda activate hazimp`.
+
+
+mamba
+^^^^^
+
+Because of the complex set of dependencies, the build time can be quite long.
+To get around this, you can use the mamba_ package manager to build the
+environment:
+
+.. code-block:: bash
+
+    conda install mamba -n base -c conda-forge
+    mamba env create -f hazimp.yml
+
 
 User install using system python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -63,7 +77,7 @@ On MS-Windows::
 
   for %x in (pep8, coverage, pyyaml, pylint, pandas, prov, pydot) do pip install
   --user %x
-  
+
 NOTE:: This is not the exhaustive list of required packages. See the full list
 in `hazimp.yml`.
 
@@ -96,7 +110,7 @@ the location where you have downloaded the HazImp source:
 
   python setup.py develop
 
-Please read the `Contributing code`_ notes if you wish to modify HazImp. 
+Please read the `Contributing code`_ notes if you wish to modify HazImp.
 
 To use HazImp, run `hazimp --help` from the command line.
 You can also verify the code using `./run_tests`.
@@ -111,9 +125,10 @@ Python. The :command:`run_tests` script is a shell script, so needs to
 be executed in a shell (e.g. `bash`, `sh` or `csh`).
 
 On a Windows command line::
-  
+
   nosetests tests/ --with-doctest --cover-package=hazimp --with-xunit --xunit-file=nosetests.xml --nocapture
 
 
 .. _conda: https://conda.io/en/latest/index.html
 .. _miniconda: https://conda.io/en/latest/miniconda.html
+.. _mamba: https://mamba.readthedocs.io/en/latest/index.html
