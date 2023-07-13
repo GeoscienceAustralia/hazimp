@@ -14,6 +14,9 @@
 - exposure_permutation:
       groupby: MESHBLOCK_CODE_2011
       iterations: 100
+- exposure_permutation:
+      groupby: MESHBLOCK_CODE_2011
+      iterations: 100
 - calc_struct_loss:
    replacement_value_label: REPLACEMENT_VALUE
 - aggregation:
@@ -21,12 +24,14 @@
    kwargs: 
      structural: [mean, std]
      structural_upper: [mean]
+     structural_upper: [mean]
      structural_loss: [mean, sum]
+
 
 - save_agg: olwyn_agg.csv
 - categorise:
    field_name: 'Damage state'
-   bins: [0.005, 0.02, 0.1, 0.2, 0.5, 1.0]
+   bins: [0.00505, 0.02, 0.1, 0.2, 0.5, 1.0]
    labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
 - tabulate:
    file_name: olwyn_dmg_by_age.xlsx
