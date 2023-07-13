@@ -50,8 +50,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {'file_list': 'hazard.tif'},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                VULNSET: 'wind'},
             SAVE: 'output.csv'
         }
 
@@ -74,8 +74,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {'file_list': ['hazard.tif']},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'wind'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
@@ -113,8 +113,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {'file_list': ['hazard.tif']},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'eq',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'eq'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
@@ -152,8 +152,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {'file_list': 'hazard.tif'},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'eq',
+            VULNFILE: {'filename': 'curve.xml',
+                        VULNSET: 'eq'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
@@ -191,8 +191,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {'file_list': 'hazard.tif'},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'wind'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {},
             AGGREGATION: {},
@@ -217,8 +217,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'wind'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
@@ -250,8 +250,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'wind'},
             PERMUTATION: {},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             AGGREGATION: {},
@@ -287,8 +287,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
-            VULNFILE: 'curve.xml',
-            VULNSET: 'wind',
+            VULNFILE: {'filename': 'curve.xml',
+                       VULNSET: 'wind'},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             SAVE: 'output.csv',
             SAVEAGG: 'aggregation.csv',
@@ -316,7 +316,9 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
-            VULNSET: 'wind',
+            VULNFILE: {'filename': os.path.join(misc.RESOURCE_DIR, 
+            'synthetic_domestic_wind_vul_curves.xml'), 
+                       VULNSET: 'wind'},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             SAVE: 'output.csv',
             SAVEAGG: 'aggregation.csv',
@@ -344,6 +346,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
+            VULNFILE: {'filename': 'content_flood_avg_curve.xml',
+                       VULNSET: 'contents_domestic_flood_2012'},
             FLOOR_HEIGHT: 0.3,
             CONT_ACTIONS: {
                 'save': 0.2,
@@ -379,7 +383,7 @@ class TestTemplates(unittest.TestCase):
                    'var2': 'contents_action',
                    'var_out': 'CONTENTS_FLOOD_FUNCTION_ID'}),
             (SimpleLinker, {'vul_functions_in_exposure':
-                                {'contents_domestic_flood_2012': 'CONTENTS_FLOOD_FUNCTION_ID'}
+                            {'contents_domestic_flood_2012': 'CONTENTS_FLOOD_FUNCTION_ID'}
                             }),
             (SelectVulnFunction, {'variability_method': {'contents_domestic_flood_2012': 'mean'}}),
             (LookUp, {}),
@@ -395,6 +399,8 @@ class TestTemplates(unittest.TestCase):
             LOADCSVEXPOSURE: {
                 'file_name': 'exposure.csv'
             },
+            VULNFILE: {'filename': 'fabric_flood_avg_curve.xml',
+                       VULNSET: 'structural_domestic_flood_2012'},
             HAZARDRASTER: {},
             FLOOR_HEIGHT: 0.3,
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
@@ -410,7 +416,7 @@ class TestTemplates(unittest.TestCase):
             (Const, {'var': 'floor_height_(m)', 'value': 0.3}),
             (CalcFloorInundation, {}),
             (SimpleLinker, {'vul_functions_in_exposure':
-                                {'structural_domestic_flood_2012': 'FABRIC_FLOOD_FUNCTION_ID'}
+                            {'structural_domestic_flood_2012': 'FABRIC_FLOOD_FUNCTION_ID'}
                             }),
 
             (SelectVulnFunction, {'variability_method': {'structural_domestic_flood_2012': 'mean'}}),
@@ -424,7 +430,6 @@ class TestTemplates(unittest.TestCase):
 
     def assertJobs(self, actual: list, expected: list):
         for i, job in enumerate(actual):
-            #print(type(job.job_instance).__name__)
             (instance, attributes) = expected[i]
             self.assertIsInstance(job.job_instance, instance)
             self.assertEqual(attributes, job.atts_to_add)

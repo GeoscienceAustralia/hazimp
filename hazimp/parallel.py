@@ -17,6 +17,7 @@
 
 """
 Functions that haven't found a proper module.
+
 """
 import atexit
 
@@ -35,13 +36,15 @@ class Parallel(object):
     :param node: name of the cluster node.
     :param is_parallel: True if parallel is operational
     :param file_tag: A string that can be added to files to identify who
-    wrote the file.
+      wrote the file.
+
     """
 
     def __init__(self):
         """
         Use is_parallel = False to stop parallelism, eg when running
         several scenarios.
+
         """
 
         try:
@@ -65,6 +68,7 @@ class Parallel(object):
     def _not_parallel(self):
         """
         Set the attributes if there is only one node.
+
         """
         self.rank = 0
         self.size = 1
@@ -84,6 +88,7 @@ def scatter_dict(whole):
 
     :param whole: The dictionary of 1d arrays to subdict.
     :returns: (chunk of dictionary of 1d arrays, indexes of whole array)
+
     """
     if not STATE.is_parallel:
         array_len = len(whole[list(whole.keys())[0]])
@@ -118,6 +123,7 @@ def gather_dict(subdict, indexes):
     :param indexes: The indexes into the whole array.
     :param subdict: The dictionary of 1d arrays to subset.
     :returns: whole array
+
     """
     if not STATE.is_parallel:
         return subdict
@@ -160,6 +166,7 @@ def csv2dict(filename, use_parallel=True):
 
     :param filename: The csv file path string.
     :returns: subsection of the array
+
     """
     if STATE.is_parallel and use_parallel:
         whole = None

@@ -52,8 +52,7 @@ def timer(f):
     return wrap
 
 
-NUMVER = numpy.__version__
-NUMVER = NUMVER.split('.')
+NUMVER = numpy.__version__.split('.')
 if NUMVER[0] == '1' and int(NUMVER[1]) < 9:
     raise RuntimeError("Must use numpy 1.9 or greater")
 
@@ -93,7 +92,10 @@ def start(config_list=None, config_file=None, cont_in=None):
 
 def cli():
     "Command-line interface to hazimp package"
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s: %(name)s: %(levelname)s: %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S')
 
     CMD_LINE_ARGS = console.cmd_line()
     if CMD_LINE_ARGS:

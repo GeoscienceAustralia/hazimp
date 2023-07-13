@@ -96,7 +96,8 @@ On Ubuntu systems, the following requires system administrator privileges.
 Install HazImp
 --------------
 
-Install HazImp into your python environment:
+To install HazImp into your python environment, at a command prompt, enter the
+following command:
 
 .. code-block:: bash
 

@@ -35,7 +35,7 @@ class TestCodeFormat(unittest.TestCase):
         root = os.path.abspath(hazimp.__file__)
         result = pep8style.check_files([os.path.dirname(root)])
         self.assertEqual(result.total_errors, 0,
-                        "Found code syntax errors (and warnings).")
+                         "Found code syntax errors (and warnings).")
 
 
 if __name__ == '__main__':

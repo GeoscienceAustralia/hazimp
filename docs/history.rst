@@ -1,14 +1,36 @@
-.. _history:
-
 History
 =======
+
+1.2.1 (2023-07-13)
+------------------
+
+* Add updated wind vulnerability functions
+
+1.1 (2021-07-XX)
+----------------
+
+* Add permutation of exposure attributes
+
+1.0.2 (2021-05-05)
+------------------
+
+* Minor updates to complete development of aggregation functions.
+* Supports multiple output formats
+* Aggregated features can now be categorised (labelled) based on selected structural loss values (e.g. mean, max, min)
+
+
+1.0.1 (2021-03-17)
+------------------
+
+* Hotfix update to include a new suite of wind vulnerability functions
+
 
 1.0.0 (2021-03-12)
 ------------------
 
 * Add provenance records
 * Add categorisation, tabulation and aggregation
-* Implemented AWS S3 download and upload funcitonality. Also allow the configuration file to be stored on S3 as well. 
+* Implemented AWS S3 download and upload funcitonality. Also allow the configuration file to be stored on S3 as well.
 * Update hazimp-tests.yml - add coveralls, remove flake8 and pytest install
 * Calculate percentages of assets in damage state tabulation
 * Updates to documentation (user guide and in-code)

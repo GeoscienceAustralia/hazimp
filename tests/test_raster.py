@@ -36,7 +36,7 @@ import tempfile
 import unittest
 
 import numpy
-from scipy import asarray, allclose, nan
+from numpy import asarray, allclose, nan
 
 from hazimp.raster import Raster, recalc_max, files_raster_data_at_points
 

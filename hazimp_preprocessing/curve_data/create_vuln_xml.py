@@ -1,5 +1,5 @@
 """
-This is a script to convert curve info in other formats to NRML, v0.4.
+This is a script to convert curve info in other formats to NRML, v0.5.
 
 It is being modified on a needs basis.
 
@@ -67,8 +67,8 @@ def write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category):
     xml_h.write('>\n')
 
 
-def write_nrml_curve(xml_h, vulnerability_function_id, imls: list, imt: str, loss_ratio,
-                     coef_var):
+def write_nrml_curve(xml_h, vulnerability_function_id, imls: list, imt: str,
+                     loss_ratio, coef_var):
     """
     Write the curve info of an nrml file.
 
@@ -137,7 +137,8 @@ def csv_curve2nrml(csv_filename, xml_filename):
     # open the csv file to read the rows
     reader = csv.DictReader(open(csv_filename, 'r'))
     with open(xml_filename, 'w') as xml_h:
-        write_nrml_top(xml_h, vulnerability_set_id, asset_category, loss_category)
+        write_nrml_top(xml_h, vulnerability_set_id, asset_category,
+                       loss_category)
 
         # Loop over the csv file info
         for row in reader:
@@ -151,8 +152,9 @@ def csv_curve2nrml(csv_filename, xml_filename):
                 if numpy.isnan(iml):
                     continue
                 loss_ratio += str(row[str(int(iml))]) + ' '
-                coef_var += '0 '
-            write_nrml_curve(xml_h, row['vulnerabilityFunctionID'], imls, csv_dict['IMT'][0],
+                coef_var += str((float(row['Alpha'])/float(row['Beta']))) + ' '
+            write_nrml_curve(xml_h, row['vulnerabilityFunctionID'],
+                             imls, csv_dict['IMT'][0],
                              loss_ratio, coef_var)
 
         write_nrml_close(xml_h)
@@ -341,25 +343,51 @@ def excel_curve2nrml(contents_filename, fabric_filename, xls_filename):
                 for iml in curve_values:
                     loss_ratio += str(iml) + ' '
                     coef_var += '0 '
-                write_nrml_curve(xml_h, curve_dic_key, depths, FLOOD_IMT, loss_ratio,
-                                 coef_var)
+                write_nrml_curve(xml_h, curve_dic_key, depths, FLOOD_IMT,
+                                 loss_ratio, coef_var)
 
             write_nrml_close(xml_h)
 
 
 # -----------------------------------------------------------
 if __name__ == "__main__":
-    if True:
-        csv_curve2nrml('domestic_wind_vul_curves_2021.csv',
-                       'domestic_wind_vul_curves_2021.xml')
-    if False:
-        csv_curve2nrml('synthetic_domestic_wind_vul_curves.csv',
-                       'synthetic_domestic_wind_vul_curves.xml')
-    if False:
-        excel_curve2nrml('content_flood_vul_curves.xml',
-                         'fabric_flood_vul_curves.xml',
-                         'Flood_2012_actual_cleaned.xls')
-    if False:
-        excel_curve2nrml('content_flood_avg_curve.xml',
-                         'fabric_flood_avg_curve.xml',
-                         'Flood_2012_averaged.xls')
+
+    import os
+    import argparse
+    parser = argparse.ArgumentParser(
+        description="Convert curve data to NRML format"
+        )
+
+    parser.add_argument("-i", "--input", required=True,
+                help="Input curve file (either Excel or csv)")
+    parser.add_argument("-o", "--output", help="Output file name")
+    parser.add_argument("-f", "--format", choices=['csv', 'xlsx'],
+                help="File format (inferred from input file if not given)")
+
+    args = parser.parse_args()
+
+    input_file = args.input
+    base, ext = os.path.splitext(input_file)
+
+    if args.output:
+        output_file = args.output
+    else:
+        output_file = f"{base}.xml"
+
+    if args.format:
+        informat = args.format
+    else:
+        if ext=='.csv':
+            informat = 'csv'
+        elif ext.strip('.') in ['xls', 'xlsx']:
+            informat = 'xlsx'
+        else:
+            print("Not sure what the file format is")
+            print("Use the -f option to specify")
+
+    if informat == 'csv':
+        csv_curve2nrml(input_file, output_file)
+    elif informat == 'xlsx':
+        output_contents_file = f"{base}_contents.xml"
+        output_fabric_file = f"{base}_fabric.xml"
+        excel_curve2nrml(output_contents_file, output_fabric_file, input_file)

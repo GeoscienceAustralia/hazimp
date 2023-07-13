@@ -44,14 +44,15 @@ from git import InvalidGitRepositoryError, Repo
 from mock import Mock
 from moto import mock_s3
 from numpy.random.mtrand import permutation
-from scipy import allclose
+from numpy import allclose
 
 from hazimp.misc import (csv2dict, get_required_args, sorted_dict_values,
                          squash_narray, weighted_values, get_s3_client,
                          get_temporary_directory, s3_path_segments_from_vsis3,
                          create_temp_file_path_for_s3,
                          download_from_s3, upload_to_s3_if_applicable,
-                         download_file_from_s3_if_needed, mod_file_list, permutate_att_values, get_git_commit)
+                         download_file_from_s3_if_needed, mod_file_list,
+                         permutate_att_values, get_git_commit)
 from tests import CWD
 
 
@@ -224,13 +225,13 @@ class TestMisc(unittest.TestCase):
             permutate_att_values(data_frame, 'x', 'y')
 
     def test_get_git_commit(self):
-        self.assertEqual((ANY, ANY, ANY), get_git_commit())
+        self.assertEqual((ANY, ANY, ANY, ANY), get_git_commit())
 
     @patch.object(Repo, 'commit')
     def test_get_git_commit_without_git(self, mock):
         mock.side_effect = InvalidGitRepositoryError()
 
-        self.assertEqual(('unknown', '', ANY), get_git_commit())
+        self.assertEqual(('unknown', '', ANY, 'unknown'), get_git_commit())
 
     def test_get_s3_client(self):
         s3_client = get_s3_client()
@@ -249,7 +250,7 @@ class TestMisc(unittest.TestCase):
 
     @mock_s3
     def test_download_from_s3(self):
-        s3 = get_s3_client()
+        s3 = get_s3_client(region_name='us-east-1')
         s3.create_bucket(Bucket='bucket')
         s3.put_object(Bucket='bucket', Key='subdir/file.ext', Body='')
         directory_path = get_temporary_directory()
@@ -260,7 +261,7 @@ class TestMisc(unittest.TestCase):
 
     @mock_s3
     def test_download_file_from_s3_if_needed(self):
-        s3 = get_s3_client()
+        s3 = get_s3_client(region_name='us-east-1')
         s3.create_bucket(Bucket='bucket')
         file_path = download_file_from_s3_if_needed('/local/path/to/file')
         self.assertEqual(file_path, '/local/path/to/file')
@@ -308,7 +309,7 @@ class TestMisc(unittest.TestCase):
 
     @mock_s3
     def test_upload_to_s3_if_applicable(self):
-        s3 = get_s3_client()
+        s3 = get_s3_client(region_name='us-east-1')
         s3.create_bucket(Bucket='bucket')
         directory_path = get_temporary_directory()
         file_path = os.path.join(directory_path, 'file.ext')

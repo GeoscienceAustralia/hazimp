@@ -15,21 +15,46 @@ jobs:
     runs-on: ubuntu-latest
     strategy: 
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
+    - name: Cache conda
+      uses: actions/cache@v2
+      env:
+        CACHE_NUMBER: 0
+      with:
+        path: ~/conda_pkgs_dir
+        key:
+          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('hazimp.yml') }}
+          
     - name: Set up environment
       uses: conda-incubator/setup-miniconda@v2.0.0
       with:
+        python-version: ${{ matrix.python-version }}
+        channels: conda-forge,defaults
+        mamba-version: "*"
         activate-environment: hazimp
         environment-file: hazimp.yml
-        python-version: ${{ matrix.python-version }}
         auto-activate-base: false
+        use-only-tar-bz2: true
 
-    - name: Test with nose
+    - name: set pythonpath
+      run: |
+        echo "PYTHONPATH=$GITHUB_WORKSPACE/$PACKAGE" >> $GITHUB_ENV
+
+    - name: Test with pyest
       shell: bash -l {0}
       run: |
-        nosetests -v --exe
-        nosetests examples/ --with-doctest -v
+        pytest --cov-report xml:coverage.xml --cov=hazimp
 
+    - name: Upload coverage.xml as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage report
+        path: coverage.xml
+    - uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        env_vars: PYTHON
+        files: ./coverage.xml

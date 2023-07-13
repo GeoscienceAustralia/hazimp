@@ -7,6 +7,9 @@
     file_name:  small_exposure.csv
     exposure_latitude: LATITUDE
     exposure_longitude: LONGITUDE 
+- vulnerability:
+    filename: fabric_flood_vul_curves.xml
+    vulnerability_set: structural_domestic_flood_2012
 - hazard_raster: depth_small_synthetic.txt
 - calc_struct_loss:
     replacement_value_label: REPLACEMENT_VALUE

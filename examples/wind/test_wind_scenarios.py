@@ -18,7 +18,7 @@ import tempfile
 from time import sleep
 import numpy
 
-from scipy import allclose
+from numpy import allclose
 
 from hazimp import misc
 from hazimp import main
@@ -31,7 +31,6 @@ from hazimp import parallel
 from hazimp.templates import (SAVE, LOADWINDTCRM, WINDV3,
                               TEMPLATE, DEFAULT, CALCSTRUCTLOSS,
                               REP_VAL_NAME, VULNFILE, VULNSET)
-
 
 
 class TestWind(unittest.TestCase):
@@ -84,7 +83,7 @@ class TestWind(unittest.TestCase):
 
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
-        #os.remove(f.name)
+        # os.remove(f.name)
 
     def test_wind_v3_template(self):
         # Test running an end to end cyclone test based
@@ -103,8 +102,8 @@ class TestWind(unittest.TestCase):
                                     'synthetic_domestic_wind_vul_curves.xml')
         wind_filename = os.path.join(wind_dir, 'gust01.txt')
         a_config = [{TEMPLATE: WINDV3},
-                    {VULNFILE: vul_filename},
-                    {VULNSET: 'domestic_wind_2012'},
+                    {VULNFILE: {'filename': vul_filename,
+                                VULNSET: 'domestic_wind_2012'}},
                     {LOADCSVEXPOSURE: {'file_name': exp_filename,
                                        'exposure_latitude': 'LATITUDE',
                                        'exposure_longitude': 'LONGITUDE'}},
@@ -123,7 +122,7 @@ class TestWind(unittest.TestCase):
             exp_dict = numpy.load(f.name)
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
-        #os.remove(f.name)
+        # os.remove(f.name)
 
     def test_wind_yaml_v3_list(self):
         # Test running an end to end cyclone test based
@@ -150,8 +149,9 @@ class TestWind(unittest.TestCase):
             delete=False)
 
         f.write(f" - {TEMPLATE}: {WINDV3}\n")
-        f.write(f" - {VULNFILE}: {vul_filename}\n")
-        f.write(f" - {VULNSET}: domestic_wind_2012\n")
+        f.write(f" - {VULNFILE}:\n")
+        f.write(f"      filename: {vul_filename}\n")
+        f.write(f"      {VULNSET}: domestic_wind_2012\n")
         f.write(f" - {LOADCSVEXPOSURE}:\n")
         f.write(f"      file_name: {exp_filename}\n")
         f.write("      exposure_latitude: LATITUDE\n")
@@ -172,8 +172,8 @@ class TestWind(unittest.TestCase):
             exp_dict = numpy.load(f_out.name)
             self.assertTrue(allclose(exp_dict['structural_loss'],
                                      exp_dict['calced-loss']))
-        #os.remove(f.name)
-        #os.remove(f_out.name)
+        # os.remove(f.name)
+        # os.remove(f_out.name)
 
     def test_wind_v3_template_list_csv(self):
         # Test running an end to end cyclone test based
@@ -196,8 +196,8 @@ class TestWind(unittest.TestCase):
                      {'file_name': exp_filename,
                       'exposure_latitude': 'LATITUDE',
                       'exposure_longitude': 'LONGITUDE'}},
-                    {VULNFILE: vul_filename},
-                    {VULNSET: 'domestic_wind_2012'},
+                    {VULNFILE: {'filename': vul_filename,
+                                VULNSET: 'domestic_wind_2012'}},
                     {LOADWINDTCRM: [wind_filename]},
                     {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
                     {SAVE: f.name}]
@@ -217,13 +217,11 @@ class TestWind(unittest.TestCase):
             # number of significant figures in the output
             self.assertTrue(allclose(exp_dict['exposure_latitude'],
                                      [-22.99, -23.01, -22.99, -23.99, -23]))
-        #os.remove(f.name)
-
+        # os.remove(f.name)
 
 
 # -------------------------------------------------------------
 if __name__ == "__main__":
     SUITE = unittest.makeSuite(TestWind, 'test')
-    # SUITE = unittest.makeSuite(TestWind, 'test_wind_v3_template')
     RUNNER = unittest.TextTestRunner()
     RUNNER.run(SUITE)
