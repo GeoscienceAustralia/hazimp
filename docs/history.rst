@@ -1,6 +1,11 @@
 History
 =======
 
+1.2.1 (2023-07-13)
+------------------
+
+* Add updated wind vulnerability functions
+
 1.1 (2021-07-XX)
 ----------------
 
@@ -25,7 +30,7 @@ History
 
 * Add provenance records
 * Add categorisation, tabulation and aggregation
-* Implemented AWS S3 download and upload funcitonality. Also allow the configuration file to be stored on S3 as well. 
+* Implemented AWS S3 download and upload funcitonality. Also allow the configuration file to be stored on S3 as well.
 * Update hazimp-tests.yml - add coveralls, remove flake8 and pytest install
 * Calculate percentages of assets in damage state tabulation
 * Updates to documentation (user guide and in-code)
