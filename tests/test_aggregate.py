@@ -103,10 +103,16 @@ class TestAggregate(unittest.TestCase):
         self.assertFalse(status)
 
     def test_aggregate_loss_atts(self):
-        data_frame = pd.DataFrame({'A': ['X', 'Y', 'Y'], 'B': [1, 2, 3]})
-        aggregated = aggregate_loss_atts(data_frame, 'A', {'B': 'sum'})
+        data_frame = pd.DataFrame({'AA': ['X', 'Y', 'Y'], 'B': [1, 2, 3]})
+        aggregated = aggregate_loss_atts(data_frame, 'AA', {'B': ['sum']})
 
-        assert_frame_equal(pd.DataFrame({'A': ['X', 'Y'], 'B': [1, 5]}), aggregated)
+        assert_frame_equal(pd.DataFrame({'AA': ['X', 'Y'], 'B_sum': [1, 5]}), aggregated)
+
+    def test_aggregate_loss_atts_multifunc(self):
+        data_frame = pd.DataFrame({'AA': ['X', 'Y', 'Y'], 'B': [1, 2, 3]})
+        aggregated = aggregate_loss_atts(data_frame, 'AA', {'B': ['sum', 'mean']})
+
+        assert_frame_equal(pd.DataFrame({'AA': ['X', 'Y'], 'B_sum': [1, 5], 'B_mean': [1, 2.5]}), aggregated)
 
     def test_aggregate_loss_atts_invalid_field(self):
         with self.assertRaises(SystemExit) as context:
