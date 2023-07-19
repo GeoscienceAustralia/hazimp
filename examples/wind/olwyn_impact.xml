@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<prov:document xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:void="http://vocab.deri.ie/void#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns="" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <prov:agent prov:id="hazimp">
+    <prov:type>prov:SoftwareAgent</prov:type>
+    <prov:Revision>3f64e1c4400ab7fbb76e7bcf93e33e43b038c824</prov:Revision>
+    <prov:branch>develop</prov:branch>
+    <prov:date>2022-10-17 09:04:36 fixed</prov:date>
+    <prov:url>git@github.com:GeoscienceAustralia/hazimp.git</prov:url>
+  </prov:agent>
+  <prov:agent prov:id="u12161">
+    <prov:type xsi:type="xsd:string">foaf:Person</prov:type>
+  </prov:agent>
+  <prov:actedOnBehalfOf>
+    <prov:delegate prov:ref="hazimp"/>
+    <prov:responsible prov:ref="u12161"/>
+  </prov:actedOnBehalfOf>
+  <prov:entity prov:id="Exposure data">
+    <prov:type>prov:Dataset</prov:type>
+    <dcterms:title>Exposure data</dcterms:title>
+    <prov:atLocation>WA_Wind_Exposure_2013_Test_only.csv</prov:atLocation>
+    <prov:format>Comma-separated values</prov:format>
+    <prov:generatedAtTime>2021-07-29 08:41:35 </prov:generatedAtTime>
+  </prov:entity>
+  <prov:used>
+    <prov:activity prov:ref="HazImp_analysis"/>
+    <prov:entity prov:ref="Exposure data"/>
+  </prov:used>
+  <prov:entity prov:id="Hazard data">
+    <prov:type>prov:Dataset</prov:type>
+    <dcterms:title>Source hazard data</dcterms:title>
+    <prov:atLocation>olwyn.tif</prov:atLocation>
+    <prov:format>tif</prov:format>
+    <prov:generatedAtTime>2021-07-29 08:41:35 </prov:generatedAtTime>
+  </prov:entity>
+  <prov:used>
+    <prov:activity prov:ref="HazImp_analysis"/>
+    <prov:entity prov:ref="Hazard data"/>
+  </prov:used>
+  <prov:entity prov:id="vulnerability file">
+    <prov:type>prov:Collection</prov:type>
+    <prov:atLocation>domestic_wind_vul_curves_2021.xml</prov:atLocation>
+    <prov:generatedAtTime>2021-07-29 08:41:35 </prov:generatedAtTime>
+  </prov:entity>
+  <prov:used>
+    <prov:activity prov:ref="HazImp_analysis"/>
+    <prov:entity prov:ref="vulnerability file"/>
+  </prov:used>
+  <prov:entity prov:id="vulnerability set">
+    <prov:value xsi:type="xsd:string">WIND_VULNERABILITY_FUNCTION_ID</prov:value>
+    <dcterms:title>domestic_wind_2021</dcterms:title>
+  </prov:entity>
+  <prov:wasDerivedFrom>
+    <prov:generatedEntity prov:ref="HazImp_analysis"/>
+    <prov:usedEntity prov:ref="vulnerability set"/>
+  </prov:wasDerivedFrom>
+  <prov:specializationOf>
+    <prov:specificEntity prov:ref="vulnerability set"/>
+    <prov:generalEntity prov:ref="vulnerability file"/>
+  </prov:specializationOf>
+  <prov:activity prov:id="ExposurePermutation">
+    <prov:startTime>2022-10-31T10:41:57</prov:startTime>
+    <prov:endTime>2022-10-31T10:42:02</prov:endTime>
+    <GroupingField>MESHBLOCK_CODE_2011</GroupingField>
+    <dcterms:title>Exposure permutation</dcterms:title>
+    <iterations xsi:type="xsd:int">100</iterations>
+    <quantile>[0.05, 0.95]</quantile>
+  </prov:activity>
+  <prov:entity prov:id="Permuted exposure">
+    <prov:label>Permuted exposure data</prov:label>
+    <prov:type xsi:type="xsd:string">void:Dataset</prov:type>
+  </prov:entity>
+  <prov:wasGeneratedBy>
+    <prov:entity prov:ref="Permuted exposure"/>
+    <prov:activity prov:ref="ExposurePermutation"/>
+  </prov:wasGeneratedBy>
+  <prov:used>
+    <prov:activity prov:ref="ExposurePermutation"/>
+    <prov:entity prov:ref="Exposure data"/>
+  </prov:used>
+  <prov:used>
+    <prov:activity prov:ref="HazImp_analysis"/>
+    <prov:entity prov:ref="Permuted exposure"/>
+  </prov:used>
+  <prov:activity prov:id="AggregateLoss">
+    <prov:startTime>2022-10-31T10:42:02</prov:startTime>
+    <prov:type xsi:type="xsd:string">Aggregation</prov:type>
+    <void:aggregator>'MESHBLOCK_CODE_2011'</void:aggregator>
+  </prov:activity>
+  <prov:wasInformedBy>
+    <prov:informed prov:ref="AggregateLoss"/>
+    <prov:informant prov:ref="HazImp_analysis"/>
+  </prov:wasInformedBy>
+  <prov:entity prov:id="Aggregated HazImp output file">
+    <prov:label>Aggregated HazImp output file</prov:label>
+    <prov:type xsi:type="xsd:string">void:Dataset</prov:type>
+    <prov:atLocation>olwyn_agg.csv</prov:atLocation>
+  </prov:entity>
+  <prov:activity prov:id="SaveAggregatedImpactData">
+    <prov:startTime>2022-10-31T10:42:02</prov:startTime>
+  </prov:activity>
+  <prov:wasGeneratedBy>
+    <prov:entity prov:ref="Aggregated HazImp output file"/>
+    <prov:activity prov:ref="SaveAggregatedImpactData"/>
+  </prov:wasGeneratedBy>
+  <prov:activity prov:id="AggregateLoss"/>
+  <prov:wasInformedBy>
+    <prov:informed prov:ref="SaveAggregatedImpactData"/>
+    <prov:informant prov:ref="AggregateLoss"/>
+  </prov:wasInformedBy>
+  <prov:entity prov:id="HazImp output file">
+    <prov:label>Full HazImp output file</prov:label>
+    <prov:type xsi:type="xsd:string">void:Dataset</prov:type>
+    <prov:atLocation>olwyn_impact.csv</prov:atLocation>
+  </prov:entity>
+  <prov:activity prov:id="SaveImpactData">
+    <prov:startTime>2022-10-31T10:42:02</prov:startTime>
+  </prov:activity>
+  <prov:wasGeneratedBy>
+    <prov:entity prov:ref="HazImp output file"/>
+    <prov:activity prov:ref="SaveImpactData"/>
+  </prov:wasGeneratedBy>
+  <prov:wasInformedBy>
+    <prov:informed prov:ref="SaveImpactData"/>
+    <prov:informant prov:ref="HazImp_analysis"/>
+  </prov:wasInformedBy>
+  <prov:entity prov:id="Aggregation boundaries">
+    <prov:type xsi:type="xsd:string">void:Dataset</prov:type>
+    <prov:atLocation>northwestcape_meshblocks.geojson</prov:atLocation>
+    <prov:generatedAtTime>2021-07-29 08:41:35 </prov:generatedAtTime>
+    <void:boundary_code>MB_CODE11</void:boundary_code>
+  </prov:entity>
+  <prov:activity prov:id="AggregationByRegions">
+    <prov:startTime>2022-10-31T10:42:03</prov:startTime>
+    <prov:type xsi:type="xsd:string">Spatial aggregation</prov:type>
+    <void:functions>{'structural': ['mean'], 'structural_upper': ['mean']}</void:functions>
+  </prov:activity>
+  <prov:entity prov:id="AggregationFile">
+    <prov:type xsi:type="xsd:string">void:Dataset</prov:type>
+    <prov:atLocation>olwyn_impact.geojson</prov:atLocation>
+    <prov:generatedAtTime>2022-10-31 10:42:03 </prov:generatedAtTime>
+  </prov:entity>
+  <prov:used>
+    <prov:activity prov:ref="AggregationByRegions"/>
+    <prov:entity prov:ref="Aggregation boundaries"/>
+  </prov:used>
+  <prov:wasInformedBy>
+    <prov:informed prov:ref="AggregationByRegions"/>
+    <prov:informant prov:ref="HazImp_analysis"/>
+  </prov:wasInformedBy>
+  <prov:wasGeneratedBy>
+    <prov:entity prov:ref="AggregationFile"/>
+    <prov:activity prov:ref="AggregationByRegions"/>
+  </prov:wasGeneratedBy>
+  <prov:activity prov:id="Tabulate">
+    <prov:startTime>2022-10-31T10:42:03</prov:startTime>
+    <prov:type xsi:type="xsd:string">Tabulation</prov:type>
+    <void:aggregation>'size'</void:aggregation>
+    <void:aggregator>'YEAR_BUILT'</void:aggregator>
+    <void:attributes>'Damage state'</void:attributes>
+  </prov:activity>
+  <prov:entity prov:id="TabulationFile">
+    <prov:type xsi:type="xsd:string">void:Dataset</prov:type>
+    <prov:atLocation>olwyn_dmg_by_age.xlsx</prov:atLocation>
+    <prov:generatedAtTime>2022-10-31 10:42:03 </prov:generatedAtTime>
+  </prov:entity>
+  <prov:wasGeneratedBy>
+    <prov:entity prov:ref="TabulationFile"/>
+    <prov:activity prov:ref="Tabulate"/>
+  </prov:wasGeneratedBy>
+  <prov:wasInformedBy>
+    <prov:informed prov:ref="Tabulate"/>
+    <prov:informant prov:ref="HazImp_analysis"/>
+  </prov:wasInformedBy>
+  <prov:activity prov:id="HazImp_analysis">
+    <prov:startTime>2022-10-31T10:41:56</prov:startTime>
+    <prov:endTime>2022-10-31T10:42:06</prov:endTime>
+    <prov:type xsi:type="xsd:string">void:Analysis</prov:type>
+    <dcterms:title>HazImp analysis</dcterms:title>
+  </prov:activity>
+  <prov:wasAttributedTo>
+    <prov:entity prov:ref="HazImp_analysis"/>
+    <prov:agent prov:ref="hazimp"/>
+  </prov:wasAttributedTo>
+</prov:document>
