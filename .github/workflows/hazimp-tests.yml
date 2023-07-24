@@ -16,6 +16,9 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9]
+    defaults:
+      run:
+        shell: bash -l {0}
 
     steps:
     - uses: actions/checkout@v3
@@ -29,11 +32,11 @@ jobs:
           ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('hazimp.yml') }}
 
     - name: Set up environment
-      uses: conda-incubator/setup-miniconda@v2.2.0
+      uses: conda-incubator/setup-miniconda@v2
       with:
-        python-version: ${{ matrix.python-version }}
-        channels: conda-forge,defaults
         mamba-version: "*"
+        channels: conda-forge,defaults
+        python-version: ${{ matrix.python-version }}
         activate-environment: hazimp
         environment-file: hazimp.yml
         auto-activate-base: false
