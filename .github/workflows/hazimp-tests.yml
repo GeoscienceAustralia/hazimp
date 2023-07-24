@@ -13,12 +13,12 @@ jobs:
   Hazimp:
     name: Test HazImp
     runs-on: ubuntu-latest
-    strategy: 
+    strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Cache conda
       uses: actions/cache@v2
       env:
@@ -27,9 +27,9 @@ jobs:
         path: ~/conda_pkgs_dir
         key:
           ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('hazimp.yml') }}
-          
+
     - name: Set up environment
-      uses: conda-incubator/setup-miniconda@v2.0.0
+      uses: conda-incubator/setup-miniconda@v2.2.0
       with:
         python-version: ${{ matrix.python-version }}
         channels: conda-forge,defaults
