@@ -455,6 +455,7 @@ def upload_to_s3_if_applicable(local_path, bucket_name, bucket_key,
             LOGGER.exception("S3 write error: {0}".format(local_path))
             raise e
 
+
 def check_data_type(data):
     """
     Function to check the data type of a given attribute

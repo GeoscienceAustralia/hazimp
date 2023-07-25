@@ -100,7 +100,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
 
     try:
         dframe[left] = dframe[left].astype(dtype)
-    except:
+    except ValueError:
         LOGGER.exception(f"Cannot convert {left} to {dtype}")
         sys.exit(1)
 
