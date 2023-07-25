@@ -36,6 +36,7 @@ jobs:
       with:
         mamba-version: "*"
         channels: conda-forge,defaults
+        channel-priority: true
         python-version: ${{ matrix.python-version }}
         activate-environment: hazimp
         environment-file: hazimp.yml
