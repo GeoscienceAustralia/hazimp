@@ -9,7 +9,7 @@ from os.path import abspath, isdir, dirname
 import geopandas
 import pandas as pd
 import numpy as np
-
+from hazimp.misc import check_data_type
 LOGGER = logging.getLogger(__name__)
 
 # List of possible drivers for output:
@@ -91,6 +91,19 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
 
     left, right = impactcode, bcode
 
+    shapes = geopandas.read_file(boundaries)
+    try:
+        dtype = check_data_type(shapes[right])
+    except KeyError:
+        LOGGER.exception(f"Aggregation boundaries have no attribute '{right}'")
+        sys.exit(1)
+
+    try:
+        dframe[left] = dframe[left].astype(dtype)
+    except ValueError:
+        LOGGER.exception(f"Cannot convert {left} to {dtype}")
+        sys.exit(1)
+
     aggregate = dframe.groupby(left).agg(fields).reset_index()
     aggregate.columns = [
         '_'.join(columns).rstrip('_') for columns in aggregate.columns.values
@@ -111,18 +124,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
     else:
         aggregate.set_index(left, inplace=True)
 
-    shapes = geopandas.read_file(boundaries)
-
-    try:
-        shapes['key'] = shapes[right].astype(np.int64)
-    except KeyError:
-        LOGGER.error(f"{boundaries} does not contain an attribute {right}")
-        sys.exit(1)
-    except OverflowError:
-        LOGGER.error(f"Unable to convert {right} values to ints")
-        sys.exit(1)
-
-    result = shapes.merge(aggregate, left_on='key', right_index=True)
+    result = shapes.merge(aggregate, left_on=right, right_index=True)
 
     fileext = os.path.splitext(filename)[1].replace('.', '')
     try:
