@@ -37,6 +37,7 @@ from botocore.exceptions import ClientError
 import pandas as pd
 
 from git import Repo, InvalidGitRepositoryError
+from gitdb import GitDB
 
 LOGGER = logging.getLogger(__name__)
 
@@ -278,13 +279,13 @@ def get_git_commit():
 
     """
     try:
-        r = Repo(ROOT_DIR)
+        r = Repo(ROOT_DIR, odbt=GitDB)
         commit = str(r.commit('HEAD'))
         branch = r.active_branch.name
         dt = r.commit('HEAD').committed_datetime.strftime(DATEFMT)
         url = r.remote().url
 
-    except (InvalidGitRepositoryError, TypeError):
+    except (InvalidGitRepositoryError, TypeError, ValueError):
         # We're not using a git repo
         commit = 'unknown'
         branch = ''
