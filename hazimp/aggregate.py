@@ -117,7 +117,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
     if categories and (field_name in dframe.columns):
         dsg = dframe.pivot_table(index=left, columns=field_name,
                                  aggfunc='size', fill_value=0)
-        dsg.rename({dsg.columns[0]:dsg.columns[0]}, inplace=True, axis=1)
+        dsg.rename({dsg.columns[0]: dsg.columns[0]}, inplace=True, axis=1)
         aggregate = aggregate.merge(dsg, on=left).set_index(left)
     elif categories and (field_name not in dframe.columns):
         LOGGER.warning("No categorisation will be performed")
