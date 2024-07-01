@@ -316,8 +316,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
-            VULNFILE: {'filename': os.path.join(misc.RESOURCE_DIR, 
-            'synthetic_domestic_wind_vul_curves.xml'), 
+            VULNFILE: {'filename': os.path.join(misc.RESOURCE_DIR,
+            'synthetic_domestic_wind_vul_curves.xml'),
                        VULNSET: 'wind'},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             SAVE: 'output.csv',
@@ -370,7 +370,7 @@ class TestTemplates(unittest.TestCase):
             (LoadCsvExposure, {'file_name': 'exposure.csv'}),
             (LoadRaster, {'file_list': {}, 'attribute_label': 'water_depth'}),
             (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'content_flood_avg_curve.xml')}),
-            (Const, {'var': 'floor_height_(m)', 'value': 0.3}),
+            (Const, {'var': 'floor_height_above_ground_(m)', 'value': 0.3}),
             (CalcFloorInundation, {}),
             (RandomConst, {'values': {'_EXPOSE': 0.1, '_NOACTION': 0.7, '_SAVE': 0.2},
                            'var': 'contents_action'}),
@@ -413,7 +413,7 @@ class TestTemplates(unittest.TestCase):
             (LoadCsvExposure, {'file_name': 'exposure.csv'}),
             (LoadRaster, {'file_list': {}, 'attribute_label': 'water_depth'}),
             (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'fabric_flood_avg_curve.xml')}),
-            (Const, {'var': 'floor_height_(m)', 'value': 0.3}),
+            (Const, {'var': 'floor_height_above_ground_(m)', 'value': 0.3}),
             (CalcFloorInundation, {}),
             (SimpleLinker, {'vul_functions_in_exposure':
                             {'structural_domestic_flood_2012': 'FABRIC_FLOOD_FUNCTION_ID'}
