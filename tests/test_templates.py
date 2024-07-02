@@ -36,13 +36,39 @@ from hazimp.templates import (WINDNC, READERS, VULNFILE, PERMUTATION,
                               CALCSTRUCTLOSS, AGGREGATION, SAVE,
                               VULNSET, HAZARDRASTER, AGGREGATE, TABULATE,
                               SAVEAGG, WINDV5, CALCCONTLOSS, FLOODCONTENTSV2,
-                              FLOODFABRICV2, WINDV4, WINDV3, EARTHQUAKEV1)
+                              FLOODFABRICV2, WINDV4, WINDV3, EARTHQUAKEV1,
+                              SURGENC)
 from hazimp.templates.flood import CONT_ACTIONS, INSURE_PROB
 
 
 class TestTemplates(unittest.TestCase):
     def setUp(self):
         pass
+
+    def test_template_surge_without_optional_config(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            HAZARDRASTER: {'file_list': 'hazard.tif'},
+            VULNFILE: {'filename': 'curve.xml',
+                VULNSET: 'surge'},
+            SAVE: 'output.csv'
+        }
+
+        jobs = READERS[SURGENC](config)
+
+        self.assertJobs(jobs, [
+            (LoadCsvExposure, {'file_name': 'exposure.csv'}),
+            (LoadRaster, {'attribute_label': 'water_depth', 'file_list': 'hazard.tif'}),
+            (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'curve.xml')}),
+            (CalcFloorInundation, {}),
+            (SimpleLinker, {'vul_functions_in_exposure': {'surge': 'SURGE_VULNERABILITY_FUNCTION_ID'}}),
+            (SelectVulnFunction, {'variability_method': {'surge': 'mean'}}),
+            (LookUp, {}),
+            (SaveExposure, {'file_name': 'output.csv'}),
+            (SaveProvenance, {'file_name': 'output.xml'})
+        ])
 
     def test_template_wind_nc_without_optional_config(self):
         config = {
