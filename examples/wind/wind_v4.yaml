@@ -1,5 +1,5 @@
-#  python ../../hazimp/hazimp.py -c wind_v3.yaml
- - template: wind_v3
+#  python ../../hazimp/hazimp.py -c wind_v4.yaml
+ - template: wind_v4
  - load_exposure: 
      file_name:  WA_subset.csv
      exposure_latitude: LATITUDE

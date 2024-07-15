@@ -1,6 +1,5 @@
 DEFAULT = 'default'
 
-WINDV3 = 'wind_v3'
 WINDV4 = 'wind_v4'
 WINDV5 = 'wind_v5'
 WINDNC = 'wind_nc'
