@@ -25,8 +25,9 @@ from hazimp.config_build import add_job
 from hazimp.templates.earthquake import _earthquake_v1_reader
 from hazimp.templates.flood import (_flood_fabric_v2_reader,
                                     _flood_contents_v2_reader)
-from hazimp.templates.wind import (_wind_v3_reader, _wind_v4_reader,
-                                   _wind_v5_reader, _wind_nc_reader)
+from hazimp.templates.wind import (_wind_v4_reader,
+                                   _wind_v5_reader,
+                                   _wind_nc_reader)
 
 from hazimp.templates.surge import _surge_nc_reader
 from hazimp.templates.constants import *
@@ -56,7 +57,6 @@ def _reader2(config: dict) -> list:
 
 READERS = {
     DEFAULT: _reader2,
-    WINDV3: _wind_v3_reader,
     WINDV4: _wind_v4_reader,
     WINDV5: _wind_v5_reader,
     WINDNC: _wind_nc_reader,
