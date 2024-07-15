@@ -38,14 +38,13 @@ sequence in a specific order:
 Available templates
 ~~~~~~~~~~~~~~~~~~~
 
-There are currently 6 templates pre-packaged with HazImp (plus one deprecated
-template). Most are built around wind impacts, but there are also templates for
-earthquake and flood (both structural and contents losses):
+There are currently 7 templates pre-packaged with HazImp. Most are built around wind impacts, but there are also templates for
+earthquake and flood (both structural and contents losses) and storm tide inundation:
 
-  #. 'wind_v3' - (DEPRECATED) a basic wind impact template for structural loss and structural loss ratio.
   #. 'wind_v4' - Base wind impact template. Allows user to specify the vulnerability function set in the configuration.
   #. 'wind_v5' - Optional categorisation and tabulation of output data.
   #. 'wind_nc' - Includes option to permute exposure data for mean and upper limit of impact (structural loss ratio).
   #. 'earthquake_v1' - Base earthquake impact template. Allows similar functions (aggregation, permutation, etc.) to the wind_nc template.
   #. 'flood_fabric_v2' - calculate structural loss due to flood inundation.
   #. 'flood_contents_v2' - contents loss due to flood inundation.
+  #. 'surge_nc' - Structural loss due to storm tide inundation. This calculates water depth above floor from floor height above ground as an attribute for each exposure attribute.
