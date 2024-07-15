@@ -10,6 +10,8 @@ EARTHQUAKEV1 = 'earthquake_v1'
 FLOODFABRICV2 = 'flood_fabric_v2'
 FLOODCONTENTSV2 = 'flood_contents_v2'
 
+SURGENC = 'surge_nc'
+
 REP_VAL_NAME = 'replacement_value_label'
 
 TEMPLATE = 'template'

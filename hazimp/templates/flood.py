@@ -71,6 +71,8 @@ def _flood_fabric_v2_reader(config: dict) -> list:
     # The column title in the exposure file = 'FLOOD_VULNERABILITY_FUNCTION_ID'
     vulnerability_set_id = vuln_atts[VULNSET]
 
+    # This adds an attribute to the context with 'var' name and constant
+    # value 'value'
     floor_height_value = find_attributes(config, FLOOR_HEIGHT)
     atts = {'var': FLOOR_HEIGHT, 'value': floor_height_value}
     add_job(job_insts, CONSTANT, atts)
