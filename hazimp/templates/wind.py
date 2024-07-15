@@ -18,68 +18,6 @@ from hazimp.templates.constants import (HAZARDRASTER, LOADWINDTCRM, VULNSET,
 LOGGER = logging.getLogger(__name__)
 
 
-def _wind_v3_reader(config: dict) -> list:
-    """
-    DEPRECATED
-    From a wind configuration list build the job list.
-
-    :param config_list: A list describing the simulation.
-    :returns: A list of jobs to process over.
-    """
-    job_insts = []
-
-    atts = find_attributes(config, LOADCSVEXPOSURE)
-    add_job(job_insts, LOADCSVEXPOSURE, atts)
-
-    file_list = find_attributes(config, [HAZARDRASTER, LOADWINDTCRM])
-    atts = {'file_list': file_list,
-            'attribute_label': '0.2s gust at 10m height m/s'}
-    add_job(job_insts, LOADRASTER, atts)
-
-    vuln_atts = find_attributes(config, VULNFILE)
-    vul_filename = os.path.join(misc.RESOURCE_DIR, vuln_atts['filename'])
-    add_job(job_insts, LOADXMLVULNERABILITY, {'file_name': vul_filename})
-
-    # The vulnerabilitySetID from the nrml file = 'domestic_flood_2012'
-    # The column title in the exposure file = 'WIND_VULNERABILITY_FUNCTION_ID'
-    vulnerability_set_id = vuln_atts[VULNSET]
-    atts = {'vul_functions_in_exposure': {
-        vulnerability_set_id:
-            'WIND_VULNERABILITY_FUNCTION_ID'}}
-    add_job(job_insts, SIMPLELINKER, atts)
-
-    if VULNMETHOD in vuln_atts:
-        atts = {'variability_method': {
-            vulnerability_set_id: vuln_atts[VULNMETHOD]}}
-    else:
-        atts = {'variability_method': {
-            vulnerability_set_id: 'mean'}}
-
-    add_job(job_insts, SELECTVULNFUNCTION, atts)
-
-    add_job(job_insts, LOOKUP)
-
-    atts_dict = find_attributes(config, CALCSTRUCTLOSS)
-    if REP_VAL_NAME not in atts_dict:
-        msg = '\nMandatory key not found in config file; %s\n' % REP_VAL_NAME
-        raise RuntimeError(msg)
-    attributes = {
-        'var1': 'structural',
-        'var2': atts_dict[REP_VAL_NAME],
-        'var_out': 'structural_loss'}
-    add_job(job_insts, MDMULT, attributes)
-
-    file_name = find_attributes(config, SAVE)
-    add_job(job_insts, SAVEALL, {'file_name': file_name})
-
-    file_name = find_attributes(config, SAVE)
-    base = os.path.splitext(file_name)[0]
-    file_name = f"{base}.xml"
-    add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
-
-    return job_insts
-
-
 def _wind_v4_reader(config: dict) -> list:
     """
     From a wind configuration list build the job list.

@@ -1,10 +1,11 @@
 History
 =======
 
-1.3 (2024-07-01)
+1.3 (2024-07-16)
 ----------------
 
 * Add surge template and examples
+* Remove deprecated wind template
 
 1.2.1 (2023-07-13)
 ------------------
