@@ -36,7 +36,7 @@ from hazimp.templates import (WINDNC, READERS, VULNFILE, PERMUTATION,
                               CALCSTRUCTLOSS, AGGREGATION, SAVE,
                               VULNSET, HAZARDRASTER, AGGREGATE, TABULATE,
                               SAVEAGG, WINDV5, CALCCONTLOSS, FLOODCONTENTSV2,
-                              FLOODFABRICV2, WINDV4, WINDV3, EARTHQUAKEV1,
+                              FLOODFABRICV2, WINDV4, EARTHQUAKEV1,
                               SURGENC)
 from hazimp.templates.flood import CONT_ACTIONS, INSURE_PROB
 
