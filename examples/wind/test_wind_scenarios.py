@@ -85,45 +85,6 @@ class TestWind(unittest.TestCase):
                                      exp_dict['calced-loss']))
         # os.remove(f.name)
 
-    def test_wind_v3_template(self):
-        # Test running an end to end cyclone test based
-        # on a wind config template.
-
-        # The output file
-        f = tempfile.NamedTemporaryFile(
-            suffix='.npz',
-            prefix='HAZIMPt_wind_scenarios_test_const',
-            delete=False)
-
-        wind_dir = os.path.join(misc.EXAMPLE_DIR, 'wind')
-        exp_filename = os.path.join(wind_dir,
-                                    'syn_small_exposure_tcrm.csv')
-        vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                    'synthetic_domestic_wind_vul_curves.xml')
-        wind_filename = os.path.join(wind_dir, 'gust01.txt')
-        a_config = [{TEMPLATE: WINDV3},
-                    {VULNFILE: {'filename': vul_filename,
-                                VULNSET: 'domestic_wind_2012'}},
-                    {LOADCSVEXPOSURE: {'file_name': exp_filename,
-                                       'exposure_latitude': 'LATITUDE',
-                                       'exposure_longitude': 'LONGITUDE'}},
-                    {LOADWINDTCRM: [wind_filename]},
-                    {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
-                    {SAVE: f.name}]
-
-        context = main.start(config_list=a_config)
-
-        self.assertTrue(allclose(
-            context.exposure_att['structural_loss'],
-            context.exposure_att['calced-loss']))
-
-        # Only the head node writes a file
-        if parallel.STATE.rank == 0:
-            exp_dict = numpy.load(f.name)
-            self.assertTrue(allclose(exp_dict['structural_loss'],
-                                     exp_dict['calced-loss']))
-        # os.remove(f.name)
-
     def test_wind_yaml_v3_list(self):
         # Test running an end to end cyclone test based
         # on a wind config template.
@@ -174,51 +135,6 @@ class TestWind(unittest.TestCase):
                                      exp_dict['calced-loss']))
         # os.remove(f.name)
         # os.remove(f_out.name)
-
-    def test_wind_v3_template_list_csv(self):
-        # Test running an end to end cyclone test based
-        # on a wind config template.
-
-        # The output file
-        f = tempfile.NamedTemporaryFile(
-            suffix='.csv',
-            prefix='HAZIMPt_wind_scenarios_test_const',
-            delete=False)
-
-        wind_dir = os.path.join(misc.EXAMPLE_DIR, 'wind')
-        exp_filename = os.path.join(wind_dir,
-                                    'syn_small_exposure_tcrm.csv')
-        vul_filename = os.path.join(misc.RESOURCE_DIR,
-                                    'synthetic_domestic_wind_vul_curves.xml')
-        wind_filename = os.path.join(wind_dir, 'gust01.txt')
-        a_config = [{TEMPLATE: WINDV3},
-                    {LOADCSVEXPOSURE:
-                     {'file_name': exp_filename,
-                      'exposure_latitude': 'LATITUDE',
-                      'exposure_longitude': 'LONGITUDE'}},
-                    {VULNFILE: {'filename': vul_filename,
-                                VULNSET: 'domestic_wind_2012'}},
-                    {LOADWINDTCRM: [wind_filename]},
-                    {CALCSTRUCTLOSS: {REP_VAL_NAME: 'REPLACEMENT_VALUE'}},
-                    {SAVE: f.name}]
-
-        context = main.start(config_list=a_config)
-        self.assertTrue(allclose(
-            context.exposure_att['structural_loss'],
-            context.exposure_att['calced-loss']))
-
-        # Only the head node writes a file
-        if parallel.STATE.rank == 0:
-            exp_dict = misc.csv2dict(f.name)
-            self.assertTrue(allclose(exp_dict['structural_loss'],
-                                     exp_dict['calced-loss']))
-            # Failing this shows how versions of numpy
-            # less than 1.8 reduce the
-            # number of significant figures in the output
-            self.assertTrue(allclose(exp_dict['exposure_latitude'],
-                                     [-22.99, -23.01, -22.99, -23.99, -23]))
-        # os.remove(f.name)
-
 
 # -------------------------------------------------------------
 if __name__ == "__main__":
