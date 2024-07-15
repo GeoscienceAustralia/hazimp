@@ -36,13 +36,39 @@ from hazimp.templates import (WINDNC, READERS, VULNFILE, PERMUTATION,
                               CALCSTRUCTLOSS, AGGREGATION, SAVE,
                               VULNSET, HAZARDRASTER, AGGREGATE, TABULATE,
                               SAVEAGG, WINDV5, CALCCONTLOSS, FLOODCONTENTSV2,
-                              FLOODFABRICV2, WINDV4, WINDV3, EARTHQUAKEV1)
+                              FLOODFABRICV2, WINDV4, WINDV3, EARTHQUAKEV1,
+                              SURGENC)
 from hazimp.templates.flood import CONT_ACTIONS, INSURE_PROB
 
 
 class TestTemplates(unittest.TestCase):
     def setUp(self):
         pass
+
+    def test_template_surge_without_optional_config(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            HAZARDRASTER: {'file_list': 'hazard.tif'},
+            VULNFILE: {'filename': 'curve.xml',
+                VULNSET: 'surge'},
+            SAVE: 'output.csv'
+        }
+
+        jobs = READERS[SURGENC](config)
+
+        self.assertJobs(jobs, [
+            (LoadCsvExposure, {'file_name': 'exposure.csv'}),
+            (LoadRaster, {'attribute_label': 'water_depth_above_ground_(m)', 'file_list': 'hazard.tif'}),
+            (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'curve.xml')}),
+            (CalcFloorInundation, {}),
+            (SimpleLinker, {'vul_functions_in_exposure': {'surge': 'SURGE_VULNERABILITY_FUNCTION_ID'}}),
+            (SelectVulnFunction, {'variability_method': {'surge': 'mean'}}),
+            (LookUp, {}),
+            (SaveExposure, {'file_name': 'output.csv'}),
+            (SaveProvenance, {'file_name': 'output.xml'})
+        ])
 
     def test_template_wind_nc_without_optional_config(self):
         config = {
@@ -316,8 +342,8 @@ class TestTemplates(unittest.TestCase):
                 'file_name': 'exposure.csv'
             },
             HAZARDRASTER: {},
-            VULNFILE: {'filename': os.path.join(misc.RESOURCE_DIR, 
-            'synthetic_domestic_wind_vul_curves.xml'), 
+            VULNFILE: {'filename': os.path.join(misc.RESOURCE_DIR,
+            'synthetic_domestic_wind_vul_curves.xml'),
                        VULNSET: 'wind'},
             CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
             SAVE: 'output.csv',
@@ -368,9 +394,9 @@ class TestTemplates(unittest.TestCase):
 
         self.assertJobs(jobs, [
             (LoadCsvExposure, {'file_name': 'exposure.csv'}),
-            (LoadRaster, {'file_list': {}, 'attribute_label': 'water_depth'}),
+            (LoadRaster, {'file_list': {}, 'attribute_label': 'water_depth_above_ground_(m)'}),
             (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'content_flood_avg_curve.xml')}),
-            (Const, {'var': 'floor_height_(m)', 'value': 0.3}),
+            (Const, {'var': 'floor_height_above_ground_(m)', 'value': 0.3}),
             (CalcFloorInundation, {}),
             (RandomConst, {'values': {'_EXPOSE': 0.1, '_NOACTION': 0.7, '_SAVE': 0.2},
                            'var': 'contents_action'}),
@@ -411,15 +437,47 @@ class TestTemplates(unittest.TestCase):
 
         self.assertJobs(jobs, [
             (LoadCsvExposure, {'file_name': 'exposure.csv'}),
-            (LoadRaster, {'file_list': {}, 'attribute_label': 'water_depth'}),
+            (LoadRaster, {'file_list': {}, 'attribute_label': 'water_depth_above_ground_(m)'}),
             (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'fabric_flood_avg_curve.xml')}),
-            (Const, {'var': 'floor_height_(m)', 'value': 0.3}),
+            (Const, {'var': 'floor_height_above_ground_(m)', 'value': 0.3}),
             (CalcFloorInundation, {}),
             (SimpleLinker, {'vul_functions_in_exposure':
                             {'structural_domestic_flood_2012': 'FABRIC_FLOOD_FUNCTION_ID'}
                             }),
 
             (SelectVulnFunction, {'variability_method': {'structural_domestic_flood_2012': 'mean'}}),
+            (LookUp, {}),
+            (MultipleDimensionMult, {'var1': 'structural',
+                                     'var2': 'REPLACEMENT_VALUE',
+                                     'var_out': 'structural_loss'}),
+            (SaveExposure, {'file_name': 'output.csv'}),
+            (SaveProvenance, {'file_name': 'output.xml'})
+        ])
+
+    def test_template_surge_config(self):
+        config = {
+            LOADCSVEXPOSURE: {
+                'file_name': 'exposure.csv'
+            },
+            VULNFILE: {'filename': 'domestic_surge_2022.xml',
+                       VULNSET: 'domestic_surge_2022'},
+            HAZARDRASTER: {'file_list': {}},
+            CALCSTRUCTLOSS: {'replacement_value_label': 'REPLACEMENT_VALUE'},
+            SAVE: 'output.csv'
+        }
+
+        jobs = READERS[SURGENC](config)
+
+        self.assertJobs(jobs, [
+            (LoadCsvExposure, {'file_name': 'exposure.csv'}),
+            (LoadRaster, {'file_list': {}, 'attribute_label': 'water_depth_above_ground_(m)'}),
+            (LoadXmlVulnerability, {'file_name': os.path.join(misc.RESOURCE_DIR, 'domestic_surge_2022.xml')}),
+            (CalcFloorInundation, {}),
+            (SimpleLinker, {'vul_functions_in_exposure':
+                            {'domestic_surge_2022': 'SURGE_VULNERABILITY_FUNCTION_ID'}
+                            }),
+
+            (SelectVulnFunction, {'variability_method': {'domestic_surge_2022': 'mean'}}),
             (LookUp, {}),
             (MultipleDimensionMult, {'var1': 'structural',
                                      'var2': 'REPLACEMENT_VALUE',

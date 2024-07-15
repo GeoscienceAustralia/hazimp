@@ -1,0 +1,20 @@
+#  python ../hazimp/hazimp/main.py -c olwyn_hazimp.yaml
+- template: surge_nc
+- vulnerability:
+   filename: domestic_surge_2022.xml
+   vulnerability_set: domestic_surge_2022
+   vulnerability_method: mean
+
+# Exposure data requires an attribute called 'floor_height_(m)'
+- load_exposure:
+   file_name: exposure.csv
+   exposure_latitude: LATITUDE
+   exposure_longitude: LONGITUDE
+- hazard_raster:
+   file_list: surge.tif
+
+- calc_struct_loss:
+   replacement_value_label: REPLACEMENT_VALUE
+- save: surge_impact.csv
+
+

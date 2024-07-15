@@ -27,6 +27,8 @@ from hazimp.templates.flood import (_flood_fabric_v2_reader,
                                     _flood_contents_v2_reader)
 from hazimp.templates.wind import (_wind_v3_reader, _wind_v4_reader,
                                    _wind_v5_reader, _wind_nc_reader)
+
+from hazimp.templates.surge import _surge_nc_reader
 from hazimp.templates.constants import *
 
 
@@ -60,5 +62,6 @@ READERS = {
     WINDNC: _wind_nc_reader,
     EARTHQUAKEV1: _earthquake_v1_reader,
     FLOODFABRICV2: _flood_fabric_v2_reader,
-    FLOODCONTENTSV2: _flood_contents_v2_reader
+    FLOODCONTENTSV2: _flood_contents_v2_reader,
+    SURGENC: _surge_nc_reader
 }
