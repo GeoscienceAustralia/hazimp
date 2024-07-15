@@ -30,7 +30,7 @@ from hazimp import misc
 
 STRUCT_LOSS = 'structural_loss'
 FLOOR_HEIGHT_CALC = 'floor_height'
-WATER_DEPTH = 'water_depth'
+WATER_DEPTH = 'water_depth_above_ground_(m)'
 FLOOR_HEIGHT = 'floor_height_above_ground_(m)'
 FLOOD_X_AXIS = 'water depth above ground floor (m)'
 # 'ground_floor_water_depth_m'

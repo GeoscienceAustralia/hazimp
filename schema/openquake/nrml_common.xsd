@@ -42,7 +42,7 @@
             <xs:enumeration value="MMI"/> <!-- modified mercalli intensity -->
             <xs:enumeration value="0.2s gust at 10m height m/s"/> <!-- surface gust wind speed -->
             <xs:enumeration value="water depth above ground floor (m)"/> <!-- water depth -->
-            <xs:enumeration value="Depth above floor level [m]"/> <!-- water depth -->
+            <xs:enumeration value="water depth above floor level [m]"/> <!-- water depth -->
         </xs:restriction>
     </xs:simpleType>
 
