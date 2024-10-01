@@ -50,7 +50,9 @@ INSURE_MAP = {
 
 def _flood_impact_reader(config: dict) -> list:
     """
-    Build a job list from a flood impact configuration file
+    Build a job list from a flood impact configuration file. This template 
+    assumes floor height is included in the exposure attributes, rather than
+    assuming a fixed floor height for all buildings.
 
     :param config: a dict of jobs describing the pipeline
     :return: a list of job objects representing the pipeline
@@ -134,6 +136,7 @@ def _flood_impact_reader(config: dict) -> list:
     base = os.path.splitext(file_name)[0]
     file_name = f"{base}.xml"
     add_job(job_insts, SAVEPROVENANCE, {'file_name': file_name})
+    return job_insts
 
 
 def _flood_fabric_v2_reader(config: dict) -> list:
