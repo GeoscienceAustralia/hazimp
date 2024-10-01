@@ -265,7 +265,8 @@ The first 4 lines are comments, so they are ignored. The new key value
 pairs are;
 
 *floor_height_(m)*
-    This is used to calculate the water depth above ground floor;
+    This is used to calculate the water depth above ground floor, 
+    assuming a fixed floor height;
     water depth(m) - floor height(m) = water depth above ground floor(m)
 
 *hazard_raster*

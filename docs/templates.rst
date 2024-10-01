@@ -47,4 +47,5 @@ earthquake and flood (both structural and contents losses) and storm tide inunda
   #. 'earthquake_v1' - Base earthquake impact template. Allows similar functions (aggregation, permutation, etc.) to the wind_nc template.
   #. 'flood_fabric_v2' - calculate structural loss due to flood inundation.
   #. 'flood_contents_v2' - contents loss due to flood inundation.
+  #. 'flood_impact' - structural loss due to flood inundation. Finished floor height specified as exposure attribute.
   #. 'surge_nc' - Structural loss due to storm tide inundation. This calculates water depth above floor from floor height above ground as an attribute for each exposure attribute.
