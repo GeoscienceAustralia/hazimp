@@ -129,17 +129,12 @@ other issues.
 Documentation
 -------------
 
-We are in the process of creating sphinx based documentation for HazImp. 
-Any help in setting this up will be gratefully accepted!
-
-At present you will find the user_manual in the docs folder. 
-
 We are glad to accept any sort of documentation: function docstrings,
 reStructuredText documents (like this one), tutorials, etc.
 reStructuredText documents (will) live in the source code repository under the
 docs/ directory.
 
-When you are writing documentation, it is important to keep a good
+When writing documentation, it is important to keep a good
 compromise between mathematical and algorithmic details, and give
 intuition to the reader on what the algorithm does. It is best to always
 start with a small paragraph with a hand-waving explanation of what the

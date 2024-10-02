@@ -1,6 +1,11 @@
 History
 =======
 
+1.4 (2024-10-XX)
+----------------
+
+* Add new flood impact template, update documentation
+
 1.3 (2024-07-16)
 ----------------
 
