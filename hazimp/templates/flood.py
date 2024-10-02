@@ -50,7 +50,7 @@ INSURE_MAP = {
 
 def _flood_impact_reader(config: dict) -> list:
     """
-    Build a job list from a flood impact configuration file. This template 
+    Build a job list from a flood impact configuration file. This template
     assumes floor height is included in the exposure attributes, rather than
     assuming a fixed floor height for all buildings.
 
