@@ -42,7 +42,13 @@ import pandas as pd
 from botocore.exceptions import ClientError
 from git import InvalidGitRepositoryError, Repo
 from mock import Mock
-from moto import mock_aws
+
+# mock_s3 was changed to mock_aws for moto>=5.0
+try:
+    from moto import mock_aws
+except ImportError:
+    from moto import mock_s3 as mock_aws
+
 from numpy.random.mtrand import permutation
 from numpy import allclose
 
