@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.5"
+      xmlns:gml="http://www.opengis.net/gml">
+
+    <vulnerabilityModel id="domestic_surge_2022" assetCategory="" lossCategory="structural" >
+<vulnerabilityFunction id="SS1" dist="LN">
+  <imls imt="water depth above ground floor (m)" >0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 </imls>
+<meanLRs>0 0 0 0 0 0 0 0 0 0 0.54663564 0.54663564 0.54663564 0.54663564 0.54663564 0.54663564 0.54663564 0.54663564 0.54663564 0.54663564 0.996035077 0.996035077 0.996035077 0.996035077 0.996035077 0.996035077 </meanLRs>
+<covLRs>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </covLRs>
+</vulnerabilityFunction>
+
+<vulnerabilityFunction id="SS2" dist="LN">
+  <imls imt="water depth above ground floor (m)" >0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 </imls>
+<meanLRs>0 0 0 0 0 0 0 0 0 0 0.566772893 0.566772893 0.566772893 0.566772893 0.566772893 0.566772893 0.566772893 0.566772893 0.566772893 0.566772893 1 1 1 1 1 1 </meanLRs>
+<covLRs>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </covLRs>
+</vulnerabilityFunction>
+
+<vulnerabilityFunction id="SS3" dist="LN">
+  <imls imt="water depth above ground floor (m)" >0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 </imls>
+<meanLRs>0 0 0 0 0 0 0 0 0 0 0.63774158 0.63774158 0.63774158 0.63774158 0.63774158 0.63774158 0.63774158 0.63774158 0.63774158 0.63774158 1 1 1 1 1 1 </meanLRs>
+<covLRs>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </covLRs>
+</vulnerabilityFunction>
+
+<vulnerabilityFunction id="SS4" dist="LN">
+  <imls imt="water depth above ground floor (m)" >0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 </imls>
+<meanLRs>0 0 0 0 0 0 0 0 0 0 0.338720003 0.338720003 0.338720003 0.338720003 0.338720003 0.338720003 0.338720003 0.338720003 0.338720003 0.338720003 0.717070251 0.717070251 0.717070251 0.717070251 0.717070251 0.717070251 </meanLRs>
+<covLRs>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </covLRs>
+</vulnerabilityFunction>
+
+<vulnerabilityFunction id="SS5" dist="LN">
+  <imls imt="water depth above ground floor (m)" >0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 </imls>
+<meanLRs>0 0 0 0 0 0 0 0 0 0 0.326068516 0.326068516 0.326068516 0.326068516 0.326068516 0.326068516 0.326068516 0.326068516 0.326068516 0.326068516 0.506288938 0.506288938 0.506288938 0.506288938 0.506288938 0.506288938 </meanLRs>
+<covLRs>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </covLRs>
+</vulnerabilityFunction>
+
+<vulnerabilityFunction id="SS6" dist="LN">
+  <imls imt="water depth above ground floor (m)" >0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 </imls>
+<meanLRs>0 0 0 0 0 0 0 0 0 0 0.219160771 0.219160771 0.219160771 0.219160771 0.219160771 0.219160771 0.219160771 0.219160771 0.219160771 0.219160771 0.451423344 0.451423344 0.451423344 0.451423344 0.451423344 0.451423344 </meanLRs>
+<covLRs>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </covLRs>
+</vulnerabilityFunction>
+
+<vulnerabilityFunction id="SS7" dist="LN">
+  <imls imt="water depth above ground floor (m)" >0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 </imls>
+<meanLRs>0 0 0 0 0 0 0 0 0 0 0.173895004 0.173895004 0.173895004 0.173895004 0.173895004 0.173895004 0.173895004 0.173895004 0.173895004 0.173895004 0.539990578 0.539990578 0.539990578 0.539990578 0.539990578 0.539990578 </meanLRs>
+<covLRs>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </covLRs>
+</vulnerabilityFunction>
+
+</vulnerabilityModel>
+</nrml>

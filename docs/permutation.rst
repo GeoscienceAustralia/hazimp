@@ -39,8 +39,7 @@ Example::
 
 
 The resulting output calculates a mean loss per building from all permutations,
-
-as well as lower and upper loss estimats, which is the permutation that
+as well as lower and upper loss estimates, which is the permutation that
 provides the lowest and highest mean loss over all buildings. In reality, we
 actually use the 5th and 95th percentile of the mean loss to determine these
 extremes of the distribution. The values are stored in an attribute with the
@@ -87,4 +86,11 @@ hazard level is uniform across the region, then there will be little to no
 variability in the permutations. Similarly a more diverse range of asset types
 (specifically  with a wide range of vulnerabilities) will lead to greater
 variability as well, when there's at least moderate variability in the hazard
-level. \
+level. 
+
+The required number of permutations to determine the true distribution will
+vary, depending on the number of assets, classes and range of hazard values
+within the region. A test for convergence of the statistics would be to examine
+the mean structural loss ratio as the number of permutations increases. For 
+increasing number of permutations, the mean (and other distribution statistics)
+should converge. 
