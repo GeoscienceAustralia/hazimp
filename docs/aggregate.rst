@@ -82,7 +82,5 @@ Aggregate with permuted exposure::
 
 
 
-This option has only been implemented in the ``wind_nc`` and ``wind_v5``
-templates at this time (June 2021).
-
-
+Not all templates include this option. Check before adding the jobs to the 
+configuration file.

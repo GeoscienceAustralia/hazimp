@@ -138,7 +138,7 @@ class Raster(object):
                     data.dataset = gdal.Open(self.filename, GA_ReadOnly)
                     data.band = data.dataset.GetRasterBand(1)
 
-                values[i] = data.band.ReadAsArray(x, y, 1, 1)[0]
+                values[i] = data.band.ReadAsArray(x, y, 1, 1)[0][0]
 
             with ThreadPoolExecutor() as executor:
                 for index in good_indexes:

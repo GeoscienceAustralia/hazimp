@@ -73,10 +73,10 @@ simplifying the configuration file.
 Wind Template
 -------------
 
-Given gust information from TCRM and point exposure data the loss
+Given a wind event footprint and point exposure data the loss
 associated with each site is calculated using the wind template.  
 
-Here is the example wind configuration file (from examples/wind),
+Here is the example wind configuration file (from `examples/wind`),
 which uses the wind template.
 
 .. code-block:: yaml
@@ -110,7 +110,31 @@ The first line is a comment, so this is ignored.
 The rest of the file can be understood by the following key value pairs; 
 
 *template*
-    The type of template to use.  This example describes the *wind_nc* template.
+    The type of :ref:`template` to use.  This example describes the *wind_nc* template.
+
+*vulnerability*
+    This loads the vulnerability models for calculating the level of damage.
+
+    *filename* 
+        The name of the vulnerability model file to load
+
+    *vulnerability_set*
+        A vulnerability file may contain multiple sets (the
+        ``vulnerabilityModel`` element in the NRML schema) of vulnerability 
+        functions. This specifies which set of models to use.
+
+    *vulnerability_method*
+        HazImp can add a level of random variability to loss levels for an
+        individual asset, as the curve typically represents the mean damage 
+        level in a population of buildings. Valid options here are ``mean``,
+        ``normal`` or ``normal_uniform``. ``mean`` will return the value as 
+        defined in the vulnerability function. ``normal`` will use the 
+        coefficient of variation defined in the vulnerability model and 
+        randomly vary the damage value using a normal distribution and the 
+        given coefficient of variation. ``normal_uniform`` will return a random value,
+        using the coefficient of variation multiplied by a random normal
+        variable with zero mean and unit variance. All values will be bounded
+        between 0 and 1. see :py:meth:`VulnerabilityFunction.get_loss` for details.
 
 *load_exposure*
     This loads the exposure data. It has 3 sub-sections:
@@ -265,7 +289,8 @@ The first 4 lines are comments, so they are ignored. The new key value
 pairs are;
 
 *floor_height_(m)*
-    This is used to calculate the water depth above ground floor;
+    This is used to calculate the water depth above ground floor, 
+    assuming a fixed floor height for all assets;
     water depth(m) - floor height(m) = water depth above ground floor(m)
 
 *hazard_raster*

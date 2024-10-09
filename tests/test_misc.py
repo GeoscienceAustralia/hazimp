@@ -42,7 +42,13 @@ import pandas as pd
 from botocore.exceptions import ClientError
 from git import InvalidGitRepositoryError, Repo
 from mock import Mock
-from moto import mock_s3
+
+# mock_s3 was changed to mock_aws for moto>=5.0
+try:
+    from moto import mock_aws
+except ImportError:
+    from moto import mock_s3 as mock_aws
+
 from numpy.random.mtrand import permutation
 from numpy import allclose
 
@@ -248,7 +254,7 @@ class TestMisc(unittest.TestCase):
         self.assertEqual(bucket_key, 'subdir/file.ext')
         self.assertEqual(file_name, 'file.ext')
 
-    @mock_s3
+    @mock_aws
     def test_download_from_s3(self):
         s3 = get_s3_client(region_name='us-east-1')
         s3.create_bucket(Bucket='bucket')
@@ -259,7 +265,7 @@ class TestMisc(unittest.TestCase):
         self.assertEqual(file_path, os.path.join(directory_path, 'file.ext'))
         self.assertTrue(os.path.exists(file_path))
 
-    @mock_s3
+    @mock_aws
     def test_download_file_from_s3_if_needed(self):
         s3 = get_s3_client(region_name='us-east-1')
         s3.create_bucket(Bucket='bucket')
@@ -307,7 +313,7 @@ class TestMisc(unittest.TestCase):
         self.assertEqual(bucket_name, 'bucket')
         self.assertEqual(bucket_key, 'subdir/file.ext')
 
-    @mock_s3
+    @mock_aws
     def test_upload_to_s3_if_applicable(self):
         s3 = get_s3_client(region_name='us-east-1')
         s3.create_bucket(Bucket='bucket')

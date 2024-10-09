@@ -27,24 +27,39 @@ sequence in a specific order:
   #. LOADCVSEXPOSURE - load the exposure data
   #. LOADRASTER - load the hazard raster data
   #. LOADXMLVULNERABILITY - load the vulnerability functions
-  #. SIMPLELINKER - select a group of vulnerability functions - some vulnerability files may have multiple sets of curves identified by `vulnerabilitySetID`
-  #. SELECTVULNFUNCTION - link the selected vulnerability function set (specified by the `vulnerabilitySetID` option) to each exposure asset
-  #. LOOKUP - do a table lookup to determine the damage index for each asset, based on the intensity measure level (e.g. the wind speed)
-  #. CALCSTRUCTLOSS - combine the calculated damage index with the building value to calculate $$$ loss
+  #. SIMPLELINKER - select a group of vulnerability functions - some
+   vulnerability files may have multiple sets of curves identified by
+   `vulnerabilitySetID`
+  #. SELECTVULNFUNCTION - link the selected vulnerability function set
+   (specified by the `vulnerabilitySetID` option) to each exposure asset
+  #. LOOKUP - do a table lookup to determine the damage index for each
+   asset, based on the intensity measure level (e.g. the wind speed)
+  #. CALCSTRUCTLOSS - combine the calculated damage index with the building
+   value to calculate structural loss values.
   #. SAVE - should speak for itself - saves the building level loss data
-  #. SAVEPROVENANCE - saves provenance data (like the version of HazImp, source of the hazard data, etc.)
+  #. SAVEPROVENANCE - saves provenance data (like the version of HazImp,
+   source of the hazard data, etc.)
 
 
 Available templates
 ~~~~~~~~~~~~~~~~~~~
 
-There are currently 7 templates pre-packaged with HazImp. Most are built around wind impacts, but there are also templates for
-earthquake and flood (both structural and contents losses) and storm tide inundation:
+There are currently 8 templates pre-packaged with HazImp. Most are built 
+around wind impacts, but there are also templates for earthquake, flood (both 
+structural and contents losses) and storm tide inundation:
 
-  #. 'wind_v4' - Base wind impact template. Allows user to specify the vulnerability function set in the configuration.
+  #. 'wind_v4' - Base wind impact template. Allows user to specify the
+   vulnerability function set in the configuration.
   #. 'wind_v5' - Optional categorisation and tabulation of output data.
-  #. 'wind_nc' - Includes option to permute exposure data for mean and upper limit of impact (structural loss ratio).
-  #. 'earthquake_v1' - Base earthquake impact template. Allows similar functions (aggregation, permutation, etc.) to the wind_nc template.
-  #. 'flood_fabric_v2' - calculate structural loss due to flood inundation.
+  #. 'wind_nc' - Includes option to permute exposure data for mean and upper
+   limit of impact (structural loss ratio).
+  #. 'earthquake_v1' - Base earthquake impact template. Allows similar
+   functions (aggregation, permutation, etc.) to the wind_nc template.
+  #. 'flood_fabric_v2' - calculate structural loss due to flood inundation,
+   where floor height above ground is fixed.
   #. 'flood_contents_v2' - contents loss due to flood inundation.
-  #. 'surge_nc' - Structural loss due to storm tide inundation. This calculates water depth above floor from floor height above ground as an attribute for each exposure attribute.
+  #. 'flood_impact' - structural loss due to flood inundation. Finished floor
+   height above ground specified as exposure attribute.
+  #. 'surge_nc' - Structural loss due to storm tide inundation. This calculates
+   water depth above floor from floor height above ground as an attribute for 
+   each exposure attribute.
