@@ -110,7 +110,7 @@ class Raster(object):
         assert lon.size == lat.size
 
         values = numpy.empty(lon.size)
-        values[:] = numpy.NAN
+        values[:] = numpy.nan
 
         # get an index of all the values inside the grid
         # there has to be a better way...
@@ -147,7 +147,7 @@ class Raster(object):
                                     row_offset[index].item())
 
         # Change NODATA_value to NAN
-        values = numpy.where(values == self.no_data_value, numpy.NAN,
+        values = numpy.where(values == self.no_data_value, numpy.nan,
                              values)
 
         return values
