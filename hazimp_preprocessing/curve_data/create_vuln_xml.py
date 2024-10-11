@@ -151,7 +151,7 @@ def csv_curve2nrml(csv_filename, xml_filename):
             for iml in imls:
                 if numpy.isnan(iml):
                     continue
-                loss_ratio += str(row[str(int(iml))]) + ' '
+                loss_ratio += str(row[str(iml)]) + ' '
                 if (row['Alpha'] == '') | (row['Beta'] == ''):
                     coef_var += '0.0 '
                 else:

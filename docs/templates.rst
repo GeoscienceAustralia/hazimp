@@ -13,7 +13,7 @@ Templates are used to set out the flow of processing invoked in separate
 :class:`Job` functions that are then connected into a :class:`PipeLine` that is
 subsequently executed.
 
-.. NOTE:: 
+.. NOTE::
   Because some of the :class:`Job` functions in the templates are essential, the
   order of key/value pairs in the configuration files is important. The code
   will raise a `RuntimeError` if the order is incorrect, or if a mandatory
@@ -44,8 +44,8 @@ sequence in a specific order:
 Available templates
 ~~~~~~~~~~~~~~~~~~~
 
-There are currently 8 templates pre-packaged with HazImp. Most are built 
-around wind impacts, but there are also templates for earthquake, flood (both 
+There are currently 8 templates pre-packaged with HazImp. Most are built
+around wind impacts, but there are also templates for earthquake, flood (both
 structural and contents losses) and storm tide inundation:
 
   #. 'wind_v4' - Base wind impact template. Allows user to specify the
@@ -61,5 +61,5 @@ structural and contents losses) and storm tide inundation:
   #. 'flood_impact' - structural loss due to flood inundation. Finished floor
    height above ground specified as exposure attribute.
   #. 'surge_nc' - Structural loss due to storm tide inundation. This calculates
-   water depth above floor from floor height above ground as an attribute for 
+   water depth above floor from floor height above ground as an attribute for
    each exposure attribute.
