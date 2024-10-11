@@ -4,6 +4,7 @@ channels:
   - defaults
 dependencies:
   - gdal
+  - libgdal-netcdf
   - pandas
   - geopandas
   - seaborn
