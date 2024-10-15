@@ -1,4 +1,4 @@
-name: hazimp
+name: hazimppy12
 channels:
   - conda-forge
   - defaults
