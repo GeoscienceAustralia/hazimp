@@ -4,7 +4,7 @@ channels:
   - defaults
 dependencies:
   - python
-  - conda-forge::gdal
+  - defaults::gdal
   - pandas
   - geopandas
   - seaborn
