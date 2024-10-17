@@ -79,7 +79,7 @@ def _flood_impact_reader(config: dict) -> list:
 
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
-            'SURGE_VULNERABILITY_FUNCTION_ID'}}
+            'VULN_FN_CODE'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     if VULNMETHOD in vuln_atts:

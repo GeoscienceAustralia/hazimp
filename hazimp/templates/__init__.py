@@ -24,7 +24,8 @@ Templates convert a YAML template configuration file to jobs and calcs.
 from hazimp.config_build import add_job
 from hazimp.templates.earthquake import _earthquake_v1_reader
 from hazimp.templates.flood import (_flood_fabric_v2_reader,
-                                    _flood_contents_v2_reader)
+                                    _flood_contents_v2_reader,
+                                    _flood_impact_reader)
 from hazimp.templates.wind import (_wind_v4_reader,
                                    _wind_v5_reader,
                                    _wind_nc_reader)
@@ -63,5 +64,6 @@ READERS = {
     EARTHQUAKEV1: _earthquake_v1_reader,
     FLOODFABRICV2: _flood_fabric_v2_reader,
     FLOODCONTENTSV2: _flood_contents_v2_reader,
-    SURGENC: _surge_nc_reader
+    SURGENC: _surge_nc_reader,
+    FLOODIMPACT: _flood_impact_reader
 }
