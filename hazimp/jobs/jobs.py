@@ -633,10 +633,11 @@ class LoadRaster(Job):
 
     def __call__(self, context, attribute_label, file_list,
                  clip_exposure2all_hazards=False,
-                 file_format=None, variable=None, no_data_value=None):
+                 file_format=None, variable=None,
+                 no_data_value=None, scaling_factor=None):
         """
         Load one or more files and get the value for all the
-        exposure points. All files have to be of the same attribute.
+        exposure points. All files have to be of the same attribute and unit.
         Alternatively a numeric array of the raster data can be passed in.
 
         :param context: The context instance, used to move data around.
@@ -645,6 +646,8 @@ class LoadRaster(Job):
             clippped to the hazard data, so no hazard values are ignored.
         :param file_list: A list of files or a single file to be loaded.
         :param no_data_value: Values in the raster that represent no data.
+        :param scaling_factor: An optional scaling factor to apply to
+            the raster values.
 
         Context return:
            exposure_att: Add the file values into this dictionary.
@@ -673,8 +676,8 @@ class LoadRaster(Job):
             file_list = misc.mod_file_list(file_list, variable)
 
         file_data, extent = raster_module.files_raster_data_at_points(
-            context.exposure_long,
-            context.exposure_lat, file_list)
+            context.exposure_long, context.exposure_lat,
+            file_list, scaling_factor)
         file_data[file_data == no_data_value] = np.nan
 
         context.exposure_att[attribute_label] = file_data

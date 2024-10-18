@@ -98,12 +98,14 @@ class Raster(object):
 
         return instance
 
-    def raster_data_at_points(self, lon, lat):
+    def raster_data_at_points(self, lon, lat, scaling_factor=None):
         """
         Get data at lat lon points of the raster.
 
         :param lon: A 1D array of the longitude of the points.
         :param lat: A 1D array of the latitude of the points.
+        :param scaling_factor: An optional scaling factor to
+            apply to the values.
         :returns: A numpy array, First dimension being the points/sites.
         """
 
@@ -150,6 +152,9 @@ class Raster(object):
         values = numpy.where(values == self.no_data_value, numpy.nan,
                              values)
 
+        if scaling_factor:
+            values *= scaling_factor
+
         return values
 
     def extent(self):
@@ -166,13 +171,14 @@ class Raster(object):
         return min_long, min_lat, max_long, max_lat
 
 
-def files_raster_data_at_points(lon, lat, files):
+def files_raster_data_at_points(lon, lat, files, scaling_factor=None):
     """
     Get data at lat lon points, based on a set of files
 
     :param files: A list of files.
     :param lon: A 1D array of the longitude of the points.
     :param lat: A 1d array of the latitude of the points.
+    :param scaling_factor: An optional scaling factor to apply to the values.
     :returns: reshaped_data, max_extent
       reshaped_data: A numpy array, shape (sites, hazards) or shape (sites),
       for one hazard.
@@ -185,7 +191,7 @@ def files_raster_data_at_points(lon, lat, files):
     max_extent = None
     for filename in files:
         a_raster = Raster.from_file(filename)
-        results = a_raster.raster_data_at_points(lon, lat)
+        results = a_raster.raster_data_at_points(lon, lat, scaling_factor)
         data.append(results)
 
         # Working out the maximum extent
