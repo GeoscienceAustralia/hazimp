@@ -64,8 +64,8 @@ def _flood_impact_reader(config: dict) -> list:
     add_job(job_insts, LOADCSVEXPOSURE, atts)
 
     atts = find_attributes(config, [HAZARDRASTER])
+    atts.setdefault('attribute_label', WATER_DEPTH)
 
-    atts['attribute_label'] = WATER_DEPTH
     add_job(job_insts, LOADRASTER, atts)
 
     vuln_atts = find_attributes(config, VULNFILE)
@@ -79,7 +79,7 @@ def _flood_impact_reader(config: dict) -> list:
 
     atts = {'vul_functions_in_exposure': {
         vulnerability_set_id:
-            'SURGE_VULNERABILITY_FUNCTION_ID'}}
+            'FLOOD_VULNERABILITY_FUNCTION_ID'}}
     add_job(job_insts, SIMPLELINKER, atts)
 
     if VULNMETHOD in vuln_atts:
