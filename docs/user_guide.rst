@@ -34,7 +34,7 @@ Follow the install notes in the README.md file.
 A configuration file can be used to define a HazImp simulation. The
 configuration file is described using yaml, a data serialisation
 format. HazImp can also be used by another Python application, by
-passing the configuration infomation in as a dictionary. 
+passing the configuration information in as a dictionary. 
 
 For example, to run a wind example do::
 
@@ -50,7 +50,7 @@ HazImp can also be ran in parallel, using mpirun. For example::
  
 
 There are a suite of HazImp tests to test the install and code during
-software developemnt. To run these, in the root HazImp directory
+software developement. To run these, in the root HazImp directory
 do;::
 
     ./all_tests
@@ -110,13 +110,15 @@ The first line is a comment, so this is ignored.
 The rest of the file can be understood by the following key value pairs; 
 
 *template*
-    The type of :ref:`template` to use.  This example describes the *wind_nc* template.
+    The type of template to use.  This example describes the *wind_nc* template.
+    See `docs/templates.rst`
 
 *vulnerability*
     This loads the vulnerability models for calculating the level of damage.
 
     *filename* 
-        The name of the vulnerability model file to load
+        The name of the vulnerability model file to load. This is an xml
+        file produced using `hazimp_preprocessing/curve_data/create_vuln_xml.py`
 
     *vulnerability_set*
         A vulnerability file may contain multiple sets (the
@@ -154,13 +156,13 @@ called ``WIND_VULNERABILITY_FUNCTION_ID`` which describe the vulnerability
 functions to be used. It must also have a column called "WIND_VULNERABILITY_SET"
 which describes the vulnerability set to use (see below for more details).
 
-*load_wind*
-    This loads the hazard data. It can have up to three subsections;
+*hazard_raster*
+    This loads the hazard data.
 
     *file_list*
         A list of raster wind hazard files (one or more). The file format can be
         ascii grid, geotiff or netcdf (or potentially any raster format
-        recognised by GDAL, but these are all that have ben tested to date).
+        recognised by GDAL, but these are all that have been tested to date).
 
     *file_format* 
         This specifies the data format - specifically used for netcdf, where the
@@ -170,43 +172,34 @@ which describes the vulnerability set to use (see below for more details).
         For use when the file format is 'nc'. This specifies the name of the
         variable in the netcdf file that contains the hazard data. 
 
-    The values in the file must represent
-    ``0.2s gust at 10m height m/s``, since that is the axis of the HazImp wind
-    vulnerability curves.
+    *scaling_factor*
+        For use when the hazard units do not match the units of the vulnerability 
+        function. e.g. hazard units are in cm, vulnerability function is in m
+        scaling factor is 0.01.
 
-*vulnerability*
-    *filename* 
-        The path to a correctly formatted vulnerability curve file. This is an xml
-        file produced using `hazimp_preprocessing/curve_data/create_vuln_xml.py`
-
-    *vulnerability_set*
-        This defines the suite of vulnerability curves to use. A vulnerability file
-        may contain a large number of different vulnerability functions that can be
-        applied to the same exposure assets. This option defines which set to use
-        from that vulnearbility file. The vulnerability set is used to calculate the
-        ``structural_loss_ratio`` given the ``0.2s gust at 10m height m/s``.
-
-    *vulnerability_method*
-        Whether to use the mean loss ratio ("mean") or to vary around the mean with
-        standard normal distribution ("normal"), based on the mean value plus a 
-        coefficient of variation (CoV). CoV values must be included in the vulnerability
-        curve file, in the form of alpha and beta values (sample mean and standard deviation)
-
+*exposure_permutation*
+    *groupby* 
+        The exposure attribute that will be used to conduct the permutation
+        within. It is strongly recommended to use the same attribute as
+        used for aggregation.
+    
+    *iterations*
+        The number of iterations of the permutation conducted.
 
 *calc_struct_loss*
-    This will multiply the replacement value and the ``structural``
+    This will multiply the replacement value by the ``structural`` value
     to get the ``structural_loss``.
 
     *replacement_value_label*
         The title of the exposure data column that has the replacement values.
 
 *save*
-    The file where the results will be saved.  All the results to calculate the
+    The file where the unit level results will be saved.  All the results to calculate the
     damage due to the wind hazard are saved to file. The above example saves to
     a csv file, since the file name ends in *.csv*.  This has the disadvantage
     of averaging data from multiple wind hazards.  The information can also be
     saved as numpy arrays.  This can be done by using the *.npz* extension.
-    This data can be accessed using Python scripts and is not averaged.
+    These data can be accessed using Python scripts and are not averaged.
 
 Output
 ~~~~~~
@@ -231,9 +224,9 @@ value of the asset. This will appear in the output file under the attribute
 Aggregation
 ~~~~~~~~~~~
 
-*aggregation* 
-    This determines the way HazImp will aggregate results
-
+*aggregation*
+    This determines the way HazImp will aggregate the results (table output)
+    
     *groupby* 
     The exposure attribute that will be used to aggregate
     results. It is strongly recommended to use the same attribute as
@@ -251,21 +244,66 @@ Aggregation
         structural_loss: [mean, sum]
         REPLACEMENT_VALUE: [mean, sum]
 
-
 *save_agg*
     The file where the aggregated results will be saved. This will save data to
     a csv-format file::
 
     - save_agg: olwyn_agg.csv
 
-This option has only been implemented in the ``wind_nc`` and ``wind_v5``
-templates at this time (June 2020).
+*categorise*
+    Categorisation of the structural loss ratio to damage state
+    See `docs/categorise.rst` for examples
+
+    *field_name*
+    The name of the created categorical field
+
+    *bins*
+    Monotonically increasing array of bin edges, including the rightmost 
+    edge, allowing for non-uniform bin widths. There must be 
+    (number of labels) + 1 values, and range from 0.0 to 1.0.
+
+    *labels*
+    Specifies the labels for the bins
+
+*aggregate* 
+    This determines the way HazImp will aggregate results (spatial output)
+   
+   *boundaries*
+   Name of geospatial dataset that contains geographical boundaries
+   to use for aggregation. file format options *.shp*, *.json*, *.geojson*, *.gpkg*
+   
+   *boundarycode*
+   Field name in the boundaries geospatial dataset
+
+   *impactcode*
+   field name in the dataframe to aggregate
+
+   *filename*
+   destination file name for the aggregated spatial output
+   file format options *.shp*, *.json*, *.geojson*, *.gpkg*
+
+   *categories*
+   Boolean option (True or False) to add columns for the number of buildings 
+   in each damage state defined in the 'Damage state' attribute. This 
+   requires that a 'categorise` job has been included in the pipeline, 
+   which in turn requires the bins and labels to be defined in the job 
+   configuration file.
+
+   *fields*
+   A dictionary with column names from the dataframe with lists of 
+   aggregation functions to apply to the columns
+   For example:
+
+      - Fields:
+          structural: [mean]
+          structural_upper: [mean]
+          'Damage state': [size]
 
 
 Flood Template - Structural Damage
 ----------------------------------
 
-The structural damage flood template is very similar to the the wind template.
+The structural damage flood template is very similar to the wind template.
 This is an example structural damage flood template;::
 
     #  python ../../hazimp/hazimp.py -c list_flood_v2.yaml
