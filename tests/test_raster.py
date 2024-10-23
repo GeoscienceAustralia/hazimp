@@ -39,6 +39,7 @@ import numpy
 from numpy import asarray, allclose, nan
 
 from hazimp.raster import Raster, recalc_max, files_raster_data_at_points
+from tests import CWD
 
 
 class TestRaster(unittest.TestCase):
@@ -194,6 +195,17 @@ class TestRaster(unittest.TestCase):
         extent = [-10, -20, 20, 40]
         max_extent = recalc_max(old_max_extent, extent)
         self.assertEqual(old_max_extent, max_extent)
+
+    def test4_raster_scaling_factor(self):
+        files = [str(CWD / 'data/basic_raster.aai')]
+
+        longitude = asarray([0.5, 2.6, 1.3])
+        latitude = asarray([9.3, 9.5, 9.5])
+
+        data, _ = files_raster_data_at_points(
+            longitude, latitude, files, 0.01)
+        actual = numpy.array([0.01, numpy.nan, 0.02])
+        numpy.testing.assert_equal(data, actual)
 
 
 if __name__ == "__main__":

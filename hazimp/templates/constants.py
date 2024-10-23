@@ -8,6 +8,7 @@ EARTHQUAKEV1 = 'earthquake_v1'
 
 FLOODFABRICV2 = 'flood_fabric_v2'
 FLOODCONTENTSV2 = 'flood_contents_v2'
+FLOODIMPACT = 'flood_impact'
 
 SURGENC = 'surge_nc'
 
