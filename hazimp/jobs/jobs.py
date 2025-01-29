@@ -533,26 +533,27 @@ class PermutateExposure(Job):
         super().__init__()
         self.call_funct = PERMUTATE_EXPOSURE
 
-    def __call__(self, context, groupby=None, iterations=1000, quantile=0.95):
+    def __call__(self, context, groupby=None, iterations=1000,
+                 quantile=[0.05, 0.95]):
         """
         Calculates the loss for the given vulnerability set, randomly
         permutating the exposure attributes to arrive at a
         distribution of loss outcomes. We do not take the absolute maximum
         loss, rather we use an upper quantile of the accumulated loss to define
-        "maximum" (or "worst-case") loss.
+        "minimum" (or "best-case") and "maximum" (or "worst-case") loss.
 
-        The result is that the "structural_max" is the loss associated with the
-        permutation that gives the upper percentile of total loss for the
-        analysis area. The "structural" value is the average loss across all
-        permutations.
+        The result is that the "structural_min" and "structural_max" is the
+        loss associated with the permutation that gives the lower and upper
+        percentile of total loss for the analysis area. The "structural"
+        value is the *average* loss across all permutations.
 
         :param context: The context instance, used to move data around.
         :param str groupby: The name of the exposure attribute to group
             exposure assets by before randomly permutating the corresponding
             vulnerability curves.
         :param int iterations: Number of iterations to perform
-        :param float quantile: Represents the "maximum" event loss in the range
-            [0, 1], default=0.95
+        :param list quantile: Represents the "minimum" and "maximum" event
+            loss in the range [0, 1], default=[0.05, 0.95]
 
         """
         vulnerability_set_id = list(context.exposure_vuln_curves)[0]
@@ -567,6 +568,7 @@ class PermutateExposure(Job):
 
         # Iterate and randomly assign vulnerability within the given
         # attribute grouping:
+
         for n in range(iterations):
             context.exposure_att = \
                 misc.permutate_att_values(context.exposure_att,
@@ -593,12 +595,15 @@ class PermutateExposure(Job):
         endtime = datetime.datetime.now()
 
         lct_max = lct + '_upper'
-        context.exposure_att[lct_max] = np.quantile(losses, quantile, axis=0)
+        lct_min = lct + '_lower'
+        context.exposure_att[lct_min], context.exposure_att[lct_max] = \
+            np.quantile(losses, quantile, axis=0)
 
         permatts = {"dcterms:title": "Exposure permutation",
                     ":iterations": iterations,
                     ":GroupingField": groupby,
-                    ":quantile": quantile}
+                    ":quantile": repr(quantile)}
+
         permact = context.prov.activity(":ExposurePermutation",
                                         starttime.strftime(DATEFMT),
                                         endtime.strftime(DATEFMT),
@@ -628,10 +633,11 @@ class LoadRaster(Job):
 
     def __call__(self, context, attribute_label, file_list,
                  clip_exposure2all_hazards=False,
-                 file_format=None, variable=None, no_data_value=None):
+                 file_format=None, variable=None,
+                 no_data_value=None, scaling_factor=None):
         """
         Load one or more files and get the value for all the
-        exposure points. All files have to be of the same attribute.
+        exposure points. All files have to be of the same attribute and unit.
         Alternatively a numeric array of the raster data can be passed in.
 
         :param context: The context instance, used to move data around.
@@ -640,6 +646,8 @@ class LoadRaster(Job):
             clippped to the hazard data, so no hazard values are ignored.
         :param file_list: A list of files or a single file to be loaded.
         :param no_data_value: Values in the raster that represent no data.
+        :param scaling_factor: An optional scaling factor to apply to
+            the raster values.
 
         Context return:
            exposure_att: Add the file values into this dictionary.
@@ -668,9 +676,9 @@ class LoadRaster(Job):
             file_list = misc.mod_file_list(file_list, variable)
 
         file_data, extent = raster_module.files_raster_data_at_points(
-            context.exposure_long,
-            context.exposure_lat, file_list)
-        file_data[file_data == no_data_value] = np.NAN
+            context.exposure_long, context.exposure_lat,
+            file_list, scaling_factor)
+        file_data[file_data == no_data_value] = np.nan
 
         context.exposure_att[attribute_label] = file_data
 

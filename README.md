@@ -17,7 +17,7 @@ Status
 [![codecov](https://codecov.io/gh/GeoscienceAustralia/hazimp/branch/master/graph/badge.svg?token=YPcgBIMxts)](https://codecov.io/gh/GeoscienceAustralia/hazimp)
 
 Data
-==== 
+====
 
 All exposure and hazard data under version control is for
 testing purposes only and should not be considered as realistic.  The
@@ -34,7 +34,7 @@ create a new (temporary) branch, make the fix, then submit teh fix as
 a pull request. Once the pull request has been approved and merged,
 the temporary branch can be deleted.
 
-The preferred way to contribute to HazImp is to fork the 
+The preferred way to contribute to HazImp is to fork the
 [main repository](http://github.com/GeoscienceAustralia/hazimp) on GitHub:
 
 1. Fork the [project repository](http://github.com/GeoscienceAustralia/hazimp):
@@ -50,12 +50,13 @@ The preferred way to contribute to HazImp is to fork the
           $ git checkout -b my-feature
 
    and start making changes. Never work in the ``master`` branch! We recommend
-   starting from the ``develop`` branch, where we do our development work. 
+   starting from the ``develop`` branch, where we do our development work.
 
 4. Check the code using the unit test suite. This will also run a quick check of
-   the code syntax using ``pycodestyle``::
+   the code syntax using ``pycodestyle`` and produce a test coverage report
+   using ``coverage``::
 
-         $ nosetests -v --exe
+         $ pytest --cov
 
    If this passes with no errors, then you can commit the changes.
 
@@ -73,7 +74,7 @@ Finally, go to the web page of your fork of the hazimp repo,
 and click 'Pull request' to send your changes to the maintainers for
 review. request. This will send an email to the committers.
 
-(If any of the above seems like magic to you, then look up the 
+(If any of the above seems like magic to you, then look up the
 [Git documentation](http://git-scm.com/documentation) on the web.)
 
 It is recommended to check that your contribution complies with the
@@ -94,15 +95,11 @@ following rules before submitting a pull request:
 You can also check for common programming errors with the following
 tools:
 
--  Code with good unittest coverage, check with::
+-  Code with good unittest coverage. This will also check syntax to
+ ensure PEP8 conformance. Check with::
 
-          $ pip install nose coverage --user
-          $ nosetests --with-coverage path/to/tests_for_package
-
--  No pyflakes warnings, check with::
-
-           $ pip install pyflakes
-           $ pyflakes path/to/module.py
+          $ pip install pytest coverage --user
+          $ pytest
 
 -  No PEP8 warnings, check with::
 
@@ -119,7 +116,7 @@ Issues
 
 A great way to start contributing to HazImp is to pick an item
 from the list of [Issues](https://github.com/GeoscienceAustralia/hazimp/issues)
-in the issue tracker. (Well there are none there yet, but we will be 
+in the issue tracker. (Well there are none there yet, but we will be
 putting some up soon!) Resolving these issues allow you to start
 contributing to the project without much prior knowledge. Your
 assistance in this area will be greatly appreciated by the more
@@ -129,17 +126,12 @@ other issues.
 Documentation
 -------------
 
-We are in the process of creating sphinx based documentation for HazImp. 
-Any help in setting this up will be gratefully accepted!
-
-At present you will find the user_manual in the docs folder. 
-
 We are glad to accept any sort of documentation: function docstrings,
 reStructuredText documents (like this one), tutorials, etc.
 reStructuredText documents (will) live in the source code repository under the
 docs/ directory.
 
-When you are writing documentation, it is important to keep a good
+When writing documentation, it is important to keep a good
 compromise between mathematical and algorithmic details, and give
 intuition to the reader on what the algorithm does. It is best to always
 start with a small paragraph with a hand-waving explanation of what the

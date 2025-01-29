@@ -9,7 +9,7 @@ from os.path import abspath, isdir, dirname
 import geopandas
 import pandas as pd
 import numpy as np
-
+from hazimp.misc import check_data_type
 LOGGER = logging.getLogger(__name__)
 
 # List of possible drivers for output:
@@ -91,6 +91,19 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
 
     left, right = impactcode, bcode
 
+    shapes = geopandas.read_file(boundaries)
+    try:
+        dtype = check_data_type(shapes[right])
+    except KeyError:
+        LOGGER.exception(f"Aggregation boundaries have no attribute '{right}'")
+        sys.exit(1)
+
+    try:
+        dframe[left] = dframe[left].astype(dtype)
+    except ValueError:
+        LOGGER.exception(f"Cannot convert {left} to {dtype}")
+        sys.exit(1)
+
     aggregate = dframe.groupby(left).agg(fields).reset_index()
     aggregate.columns = [
         '_'.join(columns).rstrip('_') for columns in aggregate.columns.values
@@ -104,6 +117,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
     if categories and (field_name in dframe.columns):
         dsg = dframe.pivot_table(index=left, columns=field_name,
                                  aggfunc='size', fill_value=0)
+        dsg.rename({dsg.columns[0]: dsg.columns[0]}, inplace=True, axis=1)
         aggregate = aggregate.merge(dsg, on=left).set_index(left)
     elif categories and (field_name not in dframe.columns):
         LOGGER.warning("No categorisation will be performed")
@@ -111,18 +125,7 @@ def choropleth(dframe, boundaries, impactcode, bcode, filename,
     else:
         aggregate.set_index(left, inplace=True)
 
-    shapes = geopandas.read_file(boundaries)
-
-    try:
-        shapes['key'] = shapes[right].astype(np.int64)
-    except KeyError:
-        LOGGER.error(f"{boundaries} does not contain an attribute {right}")
-        sys.exit(1)
-    except OverflowError:
-        LOGGER.error(f"Unable to convert {right} values to ints")
-        sys.exit(1)
-
-    result = shapes.merge(aggregate, left_on='key', right_index=True)
+    result = shapes.merge(aggregate, left_on=right, right_index=True)
 
     fileext = os.path.splitext(filename)[1].replace('.', '')
     try:
@@ -209,7 +212,8 @@ def aggregate_loss_atts(dframe, groupby=None, kwargs=None):
         LOGGER.exception(f"No field named {groupby} in the exposure data")
         sys.exit(1)
     outdf = grouped.agg(kwargs)
-    outdf.columns = ['_'.join(col).strip() for col in outdf.columns.values]
+
+    outdf.columns = ['_'.join(col).rstrip('_') for col in outdf.columns.values]
     outdf.reset_index(col_level=1)
     outdf.columns = outdf.columns.get_level_values(0)
     return outdf

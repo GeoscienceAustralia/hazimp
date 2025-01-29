@@ -1,0 +1,49 @@
+#  python ../hazimp/hazimp/main.py -c olwyn_hazimp.yaml
+- template: surge_nc
+- vulnerability:
+   filename: domestic_surge_2022.xml
+   vulnerability_set: domestic_surge_2022
+   vulnerability_method: mean
+
+# Exposure data requires an attribute called 'floor_height_(m)'
+- load_exposure:
+   file_name: exposure.csv
+   exposure_latitude: LATITUDE
+   exposure_longitude: LONGITUDE
+- hazard_raster:
+   file_list: surge.tif
+- exposure_permutation:
+      groupby: SA1_CODE
+      iterations: 100
+- calc_struct_loss:
+   replacement_value_label: REPLACEMENT_VALUE
+- aggregation:
+   groupby: MB_CODE
+   kwargs:
+     structural: [mean, std]
+     structural_upper: [mean]
+     structural_loss: [mean, sum]
+
+
+- save_agg: surge_agg.csv
+- categorise:
+   field_name: 'Damage state'
+   bins: [0.005, 0.02, 0.1, 0.2, 0.5, 1.0]
+   labels: ['Negligible', 'Slight', 'Moderate', 'Extensive', 'Complete']
+- tabulate:
+   file_name: surge_dmg_by_age.xlsx
+   index: YEAR_BUILT
+   columns: Damage state
+   aggfunc: size
+- save: surge_impact.csv
+- aggregate:
+   boundaries: surge_example_meshblocks.shp
+   boundarycode: MB_CODE
+   impactcode: MB_CODE
+   filename: surge_impact.geojson
+   categories: True
+   fields:
+      structural: [mean]
+      structural_upper: [mean]
+      'Damage state': [size]
+

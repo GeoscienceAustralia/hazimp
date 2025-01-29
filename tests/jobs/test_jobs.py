@@ -450,7 +450,7 @@ class TestJobs(unittest.TestCase):
         f.write('7.9, 1.5, 2, -9999\n')  # Out of Haz area
         f.write('8.9, 2.9, 3, 6\n')
         f.write('8.9, 3.1, 4, -9999.\n')  # Out of Haz area
-        f.write('9.9, 2.9, 5, NaN\n')  # In no data area
+        f.write('9.9, 2.9, 5, nan\n')  # In no data area
         f.close()
 
         inst = JOBS[LOADCSVEXPOSURE]
@@ -482,7 +482,7 @@ class TestJobs(unittest.TestCase):
         inst(con_in, **test_kwargs)
         the_nans = isnan(con_in.exposure_att[haz_v])
 
-        con_in.exposure_att.loc[the_nans, (haz_v,)] = numpy.NAN
+        con_in.exposure_att.loc[the_nans, (haz_v,)] = numpy.nan
         msg = ("con_in.exposure_att[haz_v] \n" +
                str(con_in.exposure_att[haz_v].values))
         msg += "\n not = con_in.exposure_att['haz_actual'] \n" + \

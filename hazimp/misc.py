@@ -37,6 +37,7 @@ from botocore.exceptions import ClientError
 import pandas as pd
 
 from git import Repo, InvalidGitRepositoryError
+from gitdb import GitDB
 
 LOGGER = logging.getLogger(__name__)
 
@@ -278,13 +279,13 @@ def get_git_commit():
 
     """
     try:
-        r = Repo(ROOT_DIR)
+        r = Repo(ROOT_DIR, odbt=GitDB)
         commit = str(r.commit('HEAD'))
         branch = r.active_branch.name
         dt = r.commit('HEAD').committed_datetime.strftime(DATEFMT)
         url = r.remote().url
 
-    except (InvalidGitRepositoryError, TypeError):
+    except (InvalidGitRepositoryError, TypeError, ValueError):
         # We're not using a git repo
         commit = 'unknown'
         branch = ''
@@ -454,3 +455,18 @@ def upload_to_s3_if_applicable(local_path, bucket_name, bucket_key,
         if not ignore_exception:
             LOGGER.exception("S3 write error: {0}".format(local_path))
             raise e
+
+
+def check_data_type(data):
+    """
+    Function to check the data type of a given attribute
+
+    :param data: Sample of the data
+    :type data: `pd.Series` or `pd.DataFrame`
+    """
+    try:
+        dtype = data[0].dtype
+    except AttributeError:
+        dtype = type(data[0])
+
+    return dtype

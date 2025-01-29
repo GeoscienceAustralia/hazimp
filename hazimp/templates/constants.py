@@ -1,6 +1,5 @@
 DEFAULT = 'default'
 
-WINDV3 = 'wind_v3'
 WINDV4 = 'wind_v4'
 WINDV5 = 'wind_v5'
 WINDNC = 'wind_nc'
@@ -9,6 +8,9 @@ EARTHQUAKEV1 = 'earthquake_v1'
 
 FLOODFABRICV2 = 'flood_fabric_v2'
 FLOODCONTENTSV2 = 'flood_contents_v2'
+FLOODIMPACT = 'flood_impact'
+
+SURGENC = 'surge_nc'
 
 REP_VAL_NAME = 'replacement_value_label'
 
